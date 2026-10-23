@@ -1,0 +1,830 @@
+<!doctype html><html lang="vi"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Shop Gọn</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: phone-first app shell — sticky brand bar, single column views, fixed bottom tab bar */
+:root{
+  --bg:#eef3f4; --card:#ffffff; --line:#dfe4ef; --ink:#17203d; --muted:#5d6785;
+  --pen:#0f766e; --pen-soft:#d5f3ec; --on-pen:#ffffff;
+  --green:#16794a; --green-soft:#dff3e8; --amber:#9a5c00; --amber-soft:#fff0d6; --red:#c32f39; --red-soft:#fde8ea; --acc:#d9620f; --acc-soft:#ffe8d6;
+  color-scheme:light;
+  --font:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.45}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--pen)}
+.num{font-variant-numeric:tabular-nums}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--pen);outline-offset:2px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--pen);color:var(--on-pen);padding-block:12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.hw{max-width:620px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-weight:800;font-size:22px;letter-spacing:-.01em;line-height:1.2;overflow-wrap:anywhere}
+.shopname{font-size:13px;opacity:.9}
+.mode{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border:1px solid currentColor;border-radius:999px;padding:3px 9px;white-space:nowrap}
+main{max-width:620px;margin:0 auto;padding-block:16px 120px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.view{display:flex;flex-direction:column;gap:14px}
+h2{font-size:17px;margin:0 0 10px;font-weight:700}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px 14px;min-width:0}
+.kpi .v{font-size:22px;font-weight:800;margin-top:2px;overflow-wrap:anywhere}
+.kpi .d{font-size:13px;color:var(--muted)}
+.kpi.hero{grid-column:1/-1;background:var(--pen);border-color:var(--pen);color:var(--on-pen)}
+.kpi.hero .eyebrow,.kpi.hero .d{color:inherit;opacity:.85}
+.kpi.hero .v{font-size:30px}
+.kpi.hero{text-align:left;font:inherit;cursor:pointer;display:block;width:100%}
+.kpi.hero .more{margin-top:8px;font-size:14px;font-weight:700}
+.todaylist{grid-column:1/-1}
+.tag{display:inline-block;font-size:11px;font-weight:800;border-radius:6px;padding:1px 6px;vertical-align:2px;margin-right:2px}
+.tag.tm{background:var(--pen-soft);color:var(--pen)}
+.tag.tk{background:var(--acc-soft);color:var(--acc)}
+.tag.ts{background:#ece8fb;color:#4c35a8}
+.tag.tl{background:#e3eefb;color:#1d4f8a}
+.right small{font-size:13px;font-weight:700}
+.neg{color:var(--red)}
+.grp{display:flex;flex-direction:column;gap:10px}
+.grp+.grp{margin-top:18px;padding-top:16px;border-top:1px dashed var(--line)}
+.gh{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px}
+.gh b{margin-left:auto}
+.sw{width:12px;height:12px;border-radius:3px;flex:none}
+.sw.sp{background:var(--pen)} .sw.sk{background:var(--acc)}
+.hb .t.cp{background:var(--pen-soft)} .hb .t.cp i{background:var(--pen)}
+.hb .t.ck{background:var(--acc-soft)} .hb .t.ck i{background:var(--acc)}
+.sw2{flex:none;width:52px;height:30px;border-radius:15px;border:0;background:var(--line);position:relative;padding:0}
+.sw2 i{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:left .15s}
+.sw2[aria-checked="true"]{background:var(--pen)}
+.sw2[aria-checked="true"] i{left:25px}
+.hint{font-size:13px;font-weight:700}.hint.new{color:var(--pen)}.hint.old{color:var(--amber)}
+.mg+.mg{border-top:1px solid var(--line)}
+.mrow{width:100%;display:flex;align-items:center;gap:10px;border:0;background:none;padding:12px 0;text-align:left}
+.mrow .n{flex:1;min-width:0}.mrow .n b{display:block;font-weight:700;overflow-wrap:anywhere}.mrow .n small{display:block;color:var(--muted);font-size:13px}
+.mrow .cnt{font-weight:800;font-size:17px;white-space:nowrap}.mrow .chev{color:var(--muted);font-size:14px}
+.imeis{background:var(--bg);border-radius:12px;padding:0 12px;margin-bottom:10px}
+.tgd{display:grid;grid-template-columns:1fr;gap:6px;padding-top:10px}
+.tgd div{display:flex;justify-content:space-between;gap:10px;font-size:14px}.tgd span{color:var(--muted)}.tgd b{text-align:right;overflow-wrap:anywhere}
+.tl{display:flex;flex-direction:column;gap:2px}
+.tl div{display:grid;grid-template-columns:16px 1fr auto;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
+.tl i{width:12px;height:12px;border-radius:50%;border:2px solid var(--line);background:var(--card)}
+.tl .on{color:var(--ink);font-weight:700}.tl .on i{background:var(--pen);border-color:var(--pen)}
+.rb{height:130px;gap:3px}
+.rb .bar{border:0;background:none;padding:0;cursor:pointer}
+.rb .bar i{border-radius:3px 3px 0 0}
+.rsel{margin-top:10px;font-size:14px;color:var(--muted);display:flex;flex-direction:column;gap:2px;min-height:40px}
+.rsel b{color:var(--ink)}
+/* nổi khối */
+header{background:linear-gradient(135deg,#13998b,#0b5e57);box-shadow:0 4px 14px rgba(11,94,87,.28)}
+body::before{background:#0f7f74}
+.panel,.kpi,.menu button,.found{border-color:rgba(15,60,70,.06);box-shadow:0 1px 2px rgba(16,42,52,.06),0 8px 20px rgba(16,42,52,.08)}
+.kpi.hero{background:linear-gradient(135deg,#14a293,#0b5e57);border:0;box-shadow:0 10px 24px rgba(11,94,87,.35),inset 0 1px 0 rgba(255,255,255,.18)}
+.btn{background:linear-gradient(180deg,#14a293,#0f766e);box-shadow:0 4px 0 #0a4f49,0 8px 18px rgba(11,94,87,.3);transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #0a4f49,0 4px 10px rgba(11,94,87,.25)}
+.seg{box-shadow:inset 0 1px 3px rgba(16,42,52,.08);background:#e4ecee}
+.seg button[aria-pressed="true"]{background:linear-gradient(180deg,#14a293,#0f766e);box-shadow:0 3px 8px rgba(11,94,87,.3)}
+.chip{box-shadow:0 1px 2px rgba(16,42,52,.08)}
+.chip[aria-pressed="true"]{background:linear-gradient(180deg,#14a293,#0f766e);box-shadow:0 3px 8px rgba(11,94,87,.28)}
+.ghost{box-shadow:0 1px 0 rgba(16,42,52,.1),0 2px 6px rgba(16,42,52,.06)}
+.ghost:active,.chip:active,.menu button:active{transform:translateY(1px)}
+nav.tabs{box-shadow:0 -6px 20px rgba(16,42,52,.10);border-top:0}
+nav.tabs button[aria-selected="true"]{background:linear-gradient(180deg,#e2f6f1,#cdefe7);box-shadow:inset 0 1px 0 #fff,0 2px 6px rgba(11,94,87,.15)}
+.bar i{background:linear-gradient(180deg,#bfe9df,#9fd9cc)}
+.bar.now i,.rb .bar.now i{background:linear-gradient(180deg,#14a293,#0b5e57)}
+.hb .t.cp i{background:linear-gradient(90deg,#14a293,#0b5e57)}
+.hb .t.ck i{background:linear-gradient(90deg,#f08a3c,#d9620f)}
+input,select,textarea{background:#fff;box-shadow:inset 0 1px 2px rgba(16,42,52,.06)}
+.alert{box-shadow:0 4px 12px rgba(16,42,52,.06)}
+.sw2[aria-checked="true"]{background:linear-gradient(180deg,#14a293,#0f766e)}
+.rcwrap{position:fixed;inset:0;z-index:15;background:rgba(10,30,35,.55);overflow-y:auto;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.rc{max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.rcp{background:#fff;border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:12px;box-shadow:0 20px 40px rgba(0,0,0,.25)}
+.rct{font-size:20px;font-weight:800;text-align:center}.rcs{text-align:center;color:var(--muted);font-size:13px;margin-top:-8px}
+.rcl{display:flex;justify-content:space-between;gap:12px;border-top:1px dashed var(--line);border-bottom:1px dashed var(--line);padding:12px 0}
+.rcl small{display:block;color:var(--muted);font-size:13px}
+.rctot{display:flex;justify-content:space-between;align-items:baseline;font-weight:700}.rctot b{font-size:26px;color:var(--pen)}
+.qrbox{display:flex;flex-direction:column;align-items:center;gap:10px}
+#qr{padding:10px;background:#fff;border:1px solid var(--line);border-radius:14px;min-height:240px;min-width:240px;display:grid;place-items:center}
+#qr img,#qr canvas{display:block}
+.qri{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:14px;text-align:center}
+.rcthanks{text-align:center;font-weight:700;color:var(--muted);padding:8px 0}
+.rca{display:flex;gap:10px}.rca .btn{flex:1}.rca .ghost{flex:none;padding:14px 16px;font-size:16px}
+@media print{body *{visibility:hidden}#rcPrint,#rcPrint *{visibility:visible}#rcPrint{position:absolute;left:0;top:0;width:100%;box-shadow:none}.rcseg{display:none}}
+.rcl{border-top:0}.rcls{border-top:1px dashed var(--line);border-bottom:1px dashed var(--line)}.rcls .rcl{border:0;padding:10px 0}.rcls .rcl+.rcl{border-top:1px dotted var(--line)}
+.cartp{border:2px solid var(--pen)}
+.ctot{display:flex;justify-content:space-between;align-items:baseline;border-top:2px solid var(--ink);margin-top:6px;padding-top:10px;font-weight:700}.ctot b{font-size:24px;color:var(--pen)}
+.xbtn{border:0;background:var(--red-soft);color:var(--red);border-radius:8px;width:30px;height:30px;font-weight:800;margin-left:8px}
+.welcome{position:fixed;inset:0;z-index:30;background:linear-gradient(160deg,#14a293,#0b5e57);display:flex;align-items:center;justify-content:center;padding:max(24px,env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) max(24px,env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px))}
+.wc{width:100%;max-width:400px;background:#fff;border-radius:24px;padding:28px 22px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;box-shadow:0 24px 50px rgba(0,0,0,.25)}
+.wc h1{margin:0;font-size:24px;font-weight:800}.wc p{margin:0;color:var(--muted)}
+.wlogo{width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,#14a293,#0b5e57);display:grid;place-items:center;box-shadow:0 8px 18px rgba(11,94,87,.35)}
+.wlogo svg{width:40px;height:40px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round}
+.gbtn{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;border:1px solid #dadce0;background:#fff;color:#1f1f1f;border-radius:999px;padding:14px 18px;font-weight:700;font-size:17px;box-shadow:0 2px 6px rgba(0,0,0,.12);text-decoration:none}
+.gbtn svg{width:22px;height:22px}
+.wc small{color:var(--muted);font-size:13px;line-height:1.4}
+.wlink{border:0;background:none;color:var(--pen);font-weight:700;padding:8px}
+a.ghost{display:inline-block;text-decoration:none;color:var(--ink)}
+body.locked main,body.locked nav.tabs,body.locked header{visibility:hidden}
+.good{color:var(--green)}
+.alert{display:flex;flex-direction:column;gap:4px;border-radius:14px;padding:12px 14px;font-size:15px}
+.alert.red{background:var(--red-soft);color:var(--red)}
+.alert.amber{background:var(--amber-soft);color:var(--amber)}
+.alert b{font-weight:700}
+.alert button{align-self:flex-start;margin-top:4px}
+.list{display:flex;flex-direction:column}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row .n{min-width:0}
+.row .n b{font-weight:600;display:block;overflow-wrap:anywhere}
+.row .n small{display:block;color:var(--muted);font-size:13px}
+.right{text-align:right;flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.pill{font-size:12px;font-weight:700;border-radius:999px;padding:3px 10px;white-space:nowrap}
+.pill.g{background:var(--green-soft);color:var(--green)}
+.pill.a{background:var(--amber-soft);color:var(--amber)}
+.pill.r{background:var(--red-soft);color:var(--red)}
+.pill.b{background:var(--pen-soft);color:var(--pen)}
+.bars{display:flex;align-items:flex-end;gap:6px;height:120px}
+.bar{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:100%;min-width:0}
+.bar i{display:block;width:100%;background:var(--pen-soft);border-radius:5px 5px 0 0;min-height:2px}
+.bar.now i{background:var(--pen)}
+.bar span{font-size:11px;color:var(--muted)}
+.hb{display:flex;flex-direction:column;gap:8px}
+.hb .l{display:flex;justify-content:space-between;font-size:14px}
+.hb .t{height:8px;background:var(--pen-soft);border-radius:4px;overflow:hidden}
+.hb .t i{display:block;height:100%;background:var(--pen)}
+form{display:flex;flex-direction:column;gap:12px}
+label{display:flex;flex-direction:column;gap:5px;font-size:14px;font-weight:600}
+label small{font-weight:400;color:var(--muted)}
+input,select,textarea{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);font-size:16px}
+textarea{min-height:92px;resize:vertical;font-variant-numeric:tabular-nums}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.two>*{min-width:0}
+.inrow{display:flex;gap:8px}
+.inrow input{flex:1;min-width:0}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px}
+.seg button{border:0;background:none;border-radius:10px;padding:10px 6px;font-weight:700;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--pen);color:var(--on-pen)}
+.btn{border:0;border-radius:14px;padding:14px;font-weight:700;font-size:17px;background:var(--pen);color:var(--on-pen)}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.ghost{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:8px 12px;font-size:14px;font-weight:600;white-space:nowrap}
+.ghost.red{color:var(--red)}
+.icon{display:inline-grid;place-items:center;border:1px solid var(--line);background:var(--card);border-radius:12px;width:50px;flex:none}
+.icon svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.found{border:2px solid var(--pen);border-radius:14px;padding:12px 14px;background:var(--pen-soft)}
+.found b{display:block}
+.found small{color:var(--muted)}
+.profit{display:flex;justify-content:space-between;align-items:baseline;padding:12px 14px;border-radius:14px;background:var(--green-soft);color:var(--green);font-weight:700}
+.profit .v{font-size:22px;font-weight:800}
+.profit.neg{background:var(--red-soft);color:var(--red)}
+.err{color:var(--red);font-size:14px;font-weight:600}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;font-size:14px;font-weight:600}
+.chip[aria-pressed="true"]{background:var(--pen);border-color:var(--pen);color:var(--on-pen)}
+.empty{color:var(--muted);font-size:15px;padding:6px 0}
+.confirm{display:flex;flex-direction:column;gap:8px;padding:10px 0 4px}
+.confirm .inrow button{flex:none}
+.menu{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.menu button{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 12px;text-align:left;display:flex;flex-direction:column;gap:6px;min-width:0}
+.menu button svg{width:26px;height:26px;stroke:var(--pen);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.menu button b{font-size:15px}
+.menu button small{color:var(--muted);font-size:13px}
+.back{align-self:flex-start;border:0;background:none;color:var(--pen);font-weight:700;padding:0}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--card);border-top:1px solid var(--line);padding-top:6px;padding-bottom:calc(6px + env(safe-area-inset-bottom,0px));padding-left:max(6px,env(safe-area-inset-left,0px));padding-right:max(6px,env(safe-area-inset-right,0px))}
+nav.tabs .in{max-width:620px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:2px}
+nav.tabs button{border:0;background:none;border-radius:12px;padding:6px 2px;font-size:12px;font-weight:700;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;position:relative}
+nav.tabs svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+nav.tabs button[aria-selected="true"]{color:var(--pen);background:var(--pen-soft)}
+.dot{position:absolute;top:2px;right:calc(50% - 20px);min-width:18px;height:18px;border-radius:9px;background:var(--red);color:#fff;font-size:11px;display:grid;place-items:center;padding:0 4px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(88px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:999px;font-weight:700;font-size:15px;z-index:9;max-width:calc(100% - 32px);text-align:center}
+.scan{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));color:#fff}
+.scan video{width:100%;max-width:420px;border-radius:16px;background:#000}
+.scan p{margin:0;text-align:center;max-width:36ch}
+.foot{font-size:13px;color:var(--muted);text-align:center}
+</style>
+
+<header><div class="hw">
+  <div style="min-width:0"><div class="brand" id="shopName"></div><div class="shopname" id="today"></div></div>
+  <span class="mode" id="mode">Dùng thử</span>
+</div></header>
+
+<main>
+  <section class="view" id="v-home"></section>
+  <section class="view" id="v-sell" hidden></section>
+  <section class="view" id="v-add" hidden></section>
+  <section class="view" id="v-stock" hidden></section>
+  <section class="view" id="v-more" hidden></section>
+</main>
+
+<nav class="tabs"><div class="in" role="tablist">
+  <button role="tab" data-v="home" aria-selected="true"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Hôm nay</button>
+  <button role="tab" data-v="sell" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M3 4h2l2.4 11.2a1 1 0 0 0 1 .8h9.2a1 1 0 0 0 1-.8L20 8H6"/><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/></svg>Bán</button>
+  <button role="tab" data-v="add" aria-selected="false"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M12 8v6M9 11h6"/></svg>Nhập máy</button>
+  <button role="tab" data-v="stock" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M3 8l9-5 9 5v9l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v9"/></svg>Kho<span class="dot" id="dotStock" hidden></span></button>
+  <button role="tab" data-v="more" aria-selected="false"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Thêm</button>
+</div></nav>
+<div class="toast" id="toast" hidden></div>
+<div class="rcwrap" id="rc" hidden></div>
+<div class="welcome" id="welcome" hidden></div>
+<div class="scan" id="scan" hidden><video id="cam" playsinline muted></video><p id="scanMsg">Đưa mã vạch IMEI vào giữa khung</p><button class="ghost" id="scanClose">Đóng</button></div>
+
+<script>
+/* ===== Lớp lưu trữ =====
+   LocalStore: lưu trên máy (bản dùng thử).
+   Bản thật sẽ thay bằng GoogleSheetsStore với cùng 2 hàm load()/save(), dữ liệu nằm trong Google Drive của shop. */
+const KEY='shopgon_v1';
+let memory=null;
+const LocalStore={
+  load(){try{const s=localStorage.getItem(KEY);return s?JSON.parse(s):null}catch(e){return memory}},
+  save(db){memory=db;try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}}
+};
+const Store=LocalStore;
+
+/* ===== Tiện ích ===== */
+const DAY=86400000;
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>Math.round(n).toLocaleString('vi-VN')+'đ';
+const short=n=>Math.abs(n)>=1e9?(n/1e9).toLocaleString('vi-VN',{maximumFractionDigits:2})+' tỷ':Math.abs(n)>=1e6?(n/1e6).toLocaleString('vi-VN',{maximumFractionDigits:1})+'tr':Math.round(n/1000).toLocaleString('vi-VN')+'k';
+const parseMoney=s=>{const d=String(s||'').replace(/[^\d]/g,'');return d?+d:0};
+const iso=d=>{const x=new Date(d);return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0')};
+const todayIso=()=>iso(Date.now());
+const dmy=s=>{const [y,m,d]=s.split('-');return d+'/'+m+'/'+y};
+const ageDays=m=>Math.max(0,Math.floor((new Date(todayIso())-new Date(m.ngayNhap))/DAY));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const BRANDS=['OPPO','Samsung','iPhone','Xiaomi','vivo','realme','Honor','Nokia','Tecno','Infinix','itel','Masstel','Benco','ZTE','Huawei','Pixel','Khác'];
+const BRAND_DEF=['OPPO','Samsung','iPhone','Xiaomi','vivo','realme','Honor','Khác'];
+const brandOn=b=>b==='Khác'||(db.shop.brands||BRAND_DEF).includes(b);
+const brandsOn=()=>BRANDS.filter(brandOn);
+const DV={thuho:['Tiền điện','Tiền nước','Internet, truyền hình','Trả góp hộ','Cước điện thoại','Khác'],ck:['Chuyển khoản hộ','Rút tiền mặt','Nạp tiền ví','Khác']};
+const isDv=k=>k==='thuho'||k==='ck';
+const KHO=[{k:'pk',t:'Phụ kiện',l:['Cường lực','Ốp lưng','Sạc, cáp','Tai nghe','Loa','Pin dự phòng','Thẻ nhớ, USB','Đồng hồ thông minh','Giá đỡ, gậy selfie','Phụ kiện khác']},{k:'sim',t:'Sim số',l:['Sim số đẹp','Sim thường','Sim data','Thẻ cào','Sim khác']},{k:'sua',t:'Linh kiện sửa chữa',l:['Màn hình','Pin thay thế','Chân sạc','Camera','Loa, mic','Linh kiện khác']}];
+const khoOn=()=>KHO.filter(g=>on(g.k));
+const khoName={pk:'Phụ kiện',sim:'Sim số',sua:'Linh kiện'};
+const loaiOf=h=>h.loai||(h.nhom==='sim'?'Sim khác':h.nhom==='sua'?'Linh kiện khác':'Phụ kiện khác');
+const guessBrand=name=>{/*dùng đủ danh sách hãng*/const w=(name||'').trim().split(/\s+/)[0].toLowerCase();const hit=BRANDS.find(b=>b.toLowerCase()===w)||(/^(ip|apple)/.test(w)?'iPhone':/^(redmi|poco)/.test(w)?'Xiaomi':/^(galaxy)/.test(w)?'Samsung':/^(reno|find)/.test(w)?'OPPO':'');return hit||''};
+const luhnOk=s=>{if(!/^\d{15}$/.test(s))return false;let sum=0;for(let i=0;i<15;i++){let d=+s[14-i];if(i%2===1){d*=2;if(d>9)d-=9}sum+=d}return sum%10===0};
+const ageClass=a=>a>45?['r','Trên 45 ngày']:a>30?['a','31–45 ngày']:['g','Dưới 30 ngày'];
+const CTY=['HD Saison','FE Credit','Home Credit','Shinhan Finance','Mirae Asset','Khác'];
+const TG_STEPS=['Chờ duyệt','Đã duyệt','Đã giải ngân'];
+const NHOM=[{k:'pk',t:'Phụ kiện'},{k:'sim',t:'Sim số'},{k:'sua',t:'Sửa chữa'},{k:'thuho',t:'Thu hộ'},{k:'ck',t:'Chuyển tiền'},{k:'khac',t:'Khác'}];
+const MODS=[{k:'pk',t:'Phụ kiện',d:'Kho phụ kiện, bán phụ kiện theo số lượng'},{k:'sim',t:'Sim số',d:'Kho sim số, sim data, thẻ cào'},{k:'sua',t:'Sửa chữa',d:'Ghi đơn sửa chữa, thay linh kiện'},{k:'thuho',t:'Thu hộ',d:'Thu tiền điện, nước, internet, trả góp hộ khách'},{k:'ck',t:'Chuyển tiền',d:'Chuyển khoản hộ, rút tiền mặt, nạp ví'},{k:'baohanh',t:'Bảo hành',d:'Ghi tháng bảo hành khi bán, tra bảo hành theo IMEI'}];
+const on=k=>k!=='tragop'&&(!db.shop.mod||db.shop.mod[k]!==false);
+const nhomOn=()=>NHOM.filter(g=>g.k==='khac'||on(g.k));
+const hangOn=()=>db.hang.filter(h=>on(h.nhom));
+
+/* ===== Dữ liệu mẫu ===== */
+function makeImei(seed){let s='35'+String(seed).padStart(12,'0').slice(-12);let sum=0;for(let i=0;i<14;i++){let d=+s[13-i];if(i%2===0){d*=2;if(d>9)d-=9}sum+=d}return s+((10-sum%10)%10)}
+function sampleDb(){
+  const models=[['OPPO A6c 4/64',2550000,2890000],['OPPO A7 Pro 6/256',5900000,6490000],['OPPO Reno16 F 8/256',7800000,8490000],['Samsung Galaxy A26 8/128',5650000,6190000],['Samsung Galaxy A06 4/64',2600000,2890000],['iPhone 16 128GB',17900000,18990000],['iPhone 15 128GB',14800000,15790000],['Xiaomi Redmi 15C 4/128',2800000,3190000],['vivo Y29 8/128',4700000,5190000],['realme C75 8/128',4300000,4790000]];
+  const may=[],don=[];let n=1;
+  const ages=[2,5,9,12,16,21,26,33,38,41,48,52,61,7,14,19,24,36,44,58,3,11,29,47,8];
+  ages.forEach((a,i)=>{const [ten,gn,gb]=models[i%models.length];may.push({imei:makeImei(1000+n++),ten,hang:guessBrand(ten),giaNhap:gn,giaBan:gb,ngayNhap:iso(Date.now()-a*DAY),ncc:i%3?'NPP Mekong':'Đại lý cấp 1',tt:'ton'})});
+  const sold=[[0,'OPPO A7 Pro 6/256',5900000,6390000,'Tiền mặt'],[0,'iPhone 15 128GB',14800000,15690000,'Chuyển khoản'],[0,'Samsung Galaxy A06 4/64',2600000,2850000,'Chuyển khoản'],[1,'OPPO Reno16 F 8/256',7800000,8390000,'Chuyển khoản'],[1,'Xiaomi Redmi 15C 4/128',2800000,3150000,'Tiền mặt'],[2,'vivo Y29 8/128',4700000,5150000,'Tiền mặt'],[2,'OPPO A6c 4/64',2550000,2850000,'Tiền mặt'],[3,'iPhone 16 128GB',17900000,18890000,'Chuyển khoản'],[3,'realme C75 8/128',4300000,4690000,'Chuyển khoản'],[4,'Samsung Galaxy A26 8/128',5650000,6090000,'Tiền mặt'],[5,'OPPO A7 Pro 6/256',5900000,6450000,'Tiền mặt'],[5,'OPPO A6c 4/64',2550000,2890000,'Tiền mặt'],[6,'iPhone 15 128GB',14800000,15590000,'Chuyển khoản']];
+  const names=['Anh Tuấn','Chị Hoa','Anh Bảy','Cô Lan','Anh Phúc','Chị My','Anh Hải','Chị Trang','Anh Lộc','Chị Ngân','Anh Khang','Chị Thảo','Anh Đức'];
+  sold.forEach(([d,ten,gn,gb,tt],i)=>{const imei=makeImei(5000+i);const ngay=iso(Date.now()-d*DAY);may.push({imei,ten,hang:guessBrand(ten),giaNhap:gn,giaBan:gb,ngayNhap:iso(Date.now()-(d+8+i)*DAY),ncc:'NPP Mekong',tt:'ban'});
+    don.push({id:'s'+i,ngay,gio:(9+i%10)+':'+String(10+i*3%50).padStart(2,'0'),loai:'may',imei,ten,hang:guessBrand(ten),giaBan:gb,giaVon:gn,tt,cty:tt==='Trả góp'?CTY[i%3]:'',traTruoc:tt==='Trả góp'?Math.round(gb*0.3/100000)*100000:0,kyHan:tt==='Trả góp'?[6,9,12][i%3]:0,maHS:tt==='Trả góp'?'HS'+(240100+i*37):'',tgTT:tt==='Trả góp'?TG_STEPS[i%3]:'',khach:names[i],sdt:'09'+String(10000000+i*7919).slice(0,8),bh:12,huy:null})});
+  [[0,'pk','Cường lực + ốp',150000,45000],[0,'sim','Sim Viettel số đẹp',250000,180000],[0,'pk','Sạc nhanh 33W',290000,160000],[1,'sua','Thay pin',450000,220000],[1,'pk','Tai nghe Bluetooth',390000,210000],[2,'pk','Cáp Type-C',80000,25000],[3,'sim','Thẻ cào',200000,192000],[4,'pk','Cường lực',100000,25000],[5,'sua','Thay màn hình',1200000,800000],[6,'pk','Ốp lưng',120000,35000]].forEach(([d,n2,ten,gb,gv],i)=>don.push({id:'p'+i,ngay:iso(Date.now()-d*DAY),gio:'15:'+String(i*5).padStart(2,'0'),loai:n2,ten,giaBan:gb,giaVon:gv,tt:'Tiền mặt',huy:null}));
+  [[0,'thuho','Thu hộ Tiền điện',1250000,10000,'Cô Lan'],[0,'ck','Chuyển khoản hộ',3000000,15000,'Anh Bảy'],[0,'ck','Rút tiền mặt',2000000,20000,''],[1,'thuho','Thu hộ Trả góp hộ',1890000,10000,'Chị Hoa']].forEach(([d,l,ten,tien,phi,k],i)=>don.push({id:'d'+i,ngay:iso(Date.now()-d*DAY),gio:'1'+(i+1)+':2'+i,loai:l,ten,soTien:tien,giaBan:phi,giaVon:0,khach:k,tt:'Tiền mặt',huy:null}));
+  {let sd=11;const r=()=>((sd=sd*16807%2147483647)/2147483647);const pkL=[['pk','Cường lực',100000,25000],['pk','Ốp lưng',120000,35000],['sim','Sim số',300000,180000],['sua','Thay pin',450000,220000],['pk','Sạc nhanh',290000,160000]];
+    for(let d=7;d<=160;d++){const ngay=iso(Date.now()-d*DAY);const nm=Math.floor(r()*4);for(let j=0;j<nm;j++){const [ten,gn,gb]=models[Math.floor(r()*models.length)];const imei=makeImei(9000+d*10+j);const off=Math.round((r()*0.08)*gb/10000)*10000;
+      may.push({imei,ten,hang:guessBrand(ten),giaNhap:gn,giaBan:gb,ngayNhap:iso(Date.now()-(d+10)*DAY),ncc:'NPP Mekong',tt:'ban'});
+      don.push({id:'h'+d+'_'+j,ngay,gio:(9+j*3)+':15',loai:'may',imei,ten,hang:guessBrand(ten),giaBan:gb-off,giaVon:gn,tt:'Tiền mặt',khach:'',sdt:'',bh:12,huy:null})}
+      const np=1+Math.floor(r()*3);for(let j=0;j<np;j++){const [l,t2,gb,gv]=pkL[Math.floor(r()*pkL.length)];don.push({id:'q'+d+'_'+j,ngay,gio:'16:'+(10+j),loai:l,ten:t2,giaBan:gb,giaVon:gv,tt:'Tiền mặt',huy:null})}}}
+  const hang=[['Cường lực iPhone 15','pk',25000,100000,18,10],['Cường lực OPPO A-series','pk',20000,80000,4,10],['Ốp lưng silicon','pk',35000,120000,25,10],['Sạc nhanh 33W','pk',160000,290000,3,5],['Cáp Type-C','pk',25000,80000,30,10],['Tai nghe Bluetooth','pk',210000,390000,6,3],['Củ sạc 20W iPhone','pk',180000,350000,0,4],['Sim 0868 123 789','sim',180000,450000,1,0],['Sim 0379 888 168','sim',150000,350000,1,0],['Sim data Viettel 4G','sim',90000,150000,12,5],['Thẻ cào 100k','sim',96000,100000,3,10],['Màn hình iPhone 11','sua',600000,1200000,2,1],['Pin iPhone 11','sua',220000,450000,4,2]].map(([ten,nhom,gn,gb,sl,min],i)=>({id:'h'+i,ten,nhom,loai:['Cường lực','Cường lực','Ốp lưng','Sạc, cáp','Sạc, cáp','Tai nghe','Sạc, cáp','Sim số đẹp','Sim số đẹp','Sim data','Thẻ cào','Màn hình','Pin thay thế'][i],giaNhap:gn,giaBan:gb,sl,min,ngayNhap:iso(Date.now()-(i*3)*DAY)}));
+  return {v:1,sample:true,hang,shop:{ten:'Điện thoại Minh Phát (mẫu)',pct:{pk:40,sim:10,sua:45,khac:20},bh:12},may,don};
+}
+function emptyDb(){return {v:1,sample:false,hang:[],shop:{ten:'',pct:{pk:40,sim:10,sua:45,khac:20},bh:12},may:[],don:[]}}
+
+const firstOpen=!Store.load();
+let db=Store.load()||sampleDb();
+if(!db.hang)db.hang=db.sample?sampleDb().hang:[];
+const save=()=>{Store.save(db);if(GG.token&&GG.sheetId&&!db.sample)GG.queue()};
+
+/* ===== Google: đăng nhập 1 bước + lưu vào Google Sheet trong Drive của shop =====
+   Chỉ xin quyền drive.file: app chỉ thấy đúng file do chính nó tạo, không đụng file khác.
+   CLIENT_ID lấy từ Google Cloud của Shop Gọn (điền khi đăng ký xong). */
+const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleusercontent.com',LICENSE_URL:'https://script.google.com/macros/s/AKfycbyyqlK8nFmTxO_6ZNDee0FdTZeynwzHWsgRvQKxfKI0qZKtPEve_rrP4kL9O1PWj25bJg/exec',SCOPES:'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.email',
+  token:null,email:'',sheetId:'',tc:null,timer:null,busy:false,
+  ready(){return !!this.CLIENT_ID},
+  load(){return window.google&&google.accounts?Promise.resolve():new Promise((ok,bad)=>{const sc=document.createElement('script');sc.src='https://accounts.google.com/gsi/client';sc.onload=ok;sc.onerror=bad;document.head.appendChild(sc)})},
+  async login(silent){await this.load();return new Promise((ok,bad)=>{this.tc=google.accounts.oauth2.initTokenClient({client_id:this.CLIENT_ID,scope:this.SCOPES,callback:r=>r.error?bad(r):ok(r)});this.tc.requestAccessToken({prompt:silent?'':'select_account'})}).then(async r=>{this.token=r.access_token;
+    const u=await this.api('https://www.googleapis.com/oauth2/v3/userinfo');this.email=u.email;try{localStorage.setItem('shopgon_gg',JSON.stringify({email:this.email}))}catch(e){}})},
+  async api(url,opt={}){const r=await fetch(url,{...opt,headers:{Authorization:'Bearer '+this.token,'Content-Type':'application/json',...(opt.headers||{})}});if(!r.ok)throw new Error(r.status+' '+(await r.text()).slice(0,200));return r.status===204?{}:r.json()},
+  async findOrCreate(){const q=encodeURIComponent("appProperties has { key='shopgon' and value='1' } and trashed=false");
+    const f=await this.api('https://www.googleapis.com/drive/v3/files?q='+q+'&fields=files(id,name)');if(f.files&&f.files.length){this.sheetId=f.files[0].id;return false}
+    const sh=await this.api('https://sheets.googleapis.com/v4/spreadsheets',{method:'POST',body:JSON.stringify({properties:{title:'Shop Gọn - '+(db.shop.ten||'Sổ bán hàng')},sheets:['May','Don','Hang','CaiDat'].map(t=>({properties:{title:t}}))})});
+    this.sheetId=sh.spreadsheetId;await this.api('https://www.googleapis.com/drive/v3/files/'+this.sheetId,{method:'PATCH',body:JSON.stringify({appProperties:{shopgon:'1'}})});return true},
+  cols:{May:['imei','ten','hang','giaNhap','giaBan','ngayNhap','ncc','tt'],Don:['id','bill','ngay','gio','loai','imei','hangId','ten','hang','sl','giaBan','giaVon','soTien','tt','khach','sdt','bh','note','uocTinh','huy'],Hang:['id','ten','nhom','loai','sl','min','giaNhap','giaBan','ngayNhap']},
+  async push(){if(this.busy){this.queue();return}this.busy=true;try{const data=[];
+      for(const [t,c] of Object.entries(this.cols)){const rows=(t==='May'?db.may:t==='Don'?db.don:db.hang).map(o=>c.map(k=>o[k]??''));data.push({range:t+'!A1',values:[c,...rows]})}
+      data.push({range:'CaiDat!A1',values:[['shop'],[JSON.stringify(db.shop)]]});
+      await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${this.sheetId}/values:batchClear`,{method:'POST',body:JSON.stringify({ranges:['May','Don','Hang','CaiDat']})});
+      await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${this.sheetId}/values:batchUpdate`,{method:'POST',body:JSON.stringify({valueInputOption:'RAW',data})});
+      ggStatus('Đã lưu lên Google Drive');}catch(e){ggStatus('Chưa lưu được lên Drive, sẽ thử lại');this.queue(15000)}finally{this.busy=false}},
+  queue(ms=2500){clearTimeout(this.timer);this.timer=setTimeout(()=>this.push(),ms)},
+  async pull(){const r=await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${this.sheetId}/values:batchGet?ranges=May&ranges=Don&ranges=Hang&ranges=CaiDat`);
+    const [M,D,H,C]=r.valueRanges.map(v=>v.values||[]);const num=new Set(['giaNhap','giaBan','giaVon','soTien','sl','min','bh']);
+    const toObjs=V=>{if(!V.length)return [];const [h,...rows]=V;return rows.map(x=>{const o={};h.forEach((k,i)=>{let v=x[i]??'';if(num.has(k))v=v===''?0:+v;if(k==='huy'&&v==='')v=null;if(k==='uocTinh')v=v==='TRUE'||v===true;o[k]=v});return o})};
+    const shop=C[1]&&C[1][0]?JSON.parse(C[1][0]):db.shop;db={v:1,sample:false,shop,may:toObjs(M),don:toObjs(D),hang:toObjs(H)};Store.save(db)}
+};
+async function license(email){if(!GG.LICENSE_URL)return {status:'active'};const r=await fetch(GG.LICENSE_URL+'?email='+encodeURIComponent(email));return r.json()}
+function refSale(){let r='';try{const q=new URLSearchParams(location.search).get('ctv')||new URLSearchParams(location.search).get('sale');if(q){localStorage.setItem('shopgon_ref',q);r=q}else r=localStorage.getItem('shopgon_ref')||''}catch(e){}return String(r).toUpperCase().slice(0,20)}
+refSale();
+async function sendRequest(){const shop=(document.getElementById('rqShop')||{}).value||'',sdt=(document.getElementById('rqSdt')||{}).value||'',sale=(document.getElementById('rqSale')||{}).value||'';
+  if(!shop.trim()){welcomeMsg('Nhập tên shop trước khi gửi.');return}
+  try{await fetch(GG.LICENSE_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({email:GG.email,shop:shop.trim(),sdt:sdt.trim(),ctv:sale.trim()})});db.shop.ten=shop.trim();Store.save(db);
+    showPending({status:'pending'},true)}catch(e){welcomeMsg('Chưa gửi được, kiểm tra mạng rồi thử lại.')}}
+function showPending(lic,justSent){lockApp();const w=document.getElementById('welcome');w.hidden=false;
+  const st=lic.status;
+  w.innerHTML=`<div class="wc"><div class="wlogo"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+  ${st==='none'?`<h1>Kích hoạt Shop Gọn</h1><p>Gmail <b>${esc(GG.email)}</b> chưa được kích hoạt. Gửi yêu cầu, Shop Gọn kích hoạt ngay sau khi xác nhận thanh toán.</p>
+    <label style="width:100%;text-align:left">Tên shop<input id="rqShop" placeholder="VD: Điện thoại Minh Phát" value="${esc(db.sample?'':db.shop.ten)}"></label>
+    <label style="width:100%;text-align:left">SĐT liên hệ<input id="rqSdt" inputmode="tel"></label>
+    <label style="width:100%;text-align:left">SĐT cộng tác viên (nếu có)<input id="rqSale" value="${esc(refSale())}" placeholder="Người cài app cho shop" inputmode="tel"></label>
+    <button class="btn" style="width:100%" data-gg="request">Gửi yêu cầu kích hoạt</button>`
+  :st==='pending'?`<h1>Đang chờ kích hoạt</h1><p>${justSent?'Đã gửi yêu cầu. ':''}Gmail <b>${esc(GG.email)}</b> sẽ được kích hoạt sau khi Shop Gọn xác nhận thanh toán. Kích hoạt xong, bấm "Kiểm tra lại".</p>
+    <button class="btn" style="width:100%" data-gg="recheck">Kiểm tra lại</button>`
+  :st==='expired'?`<h1>Hết hạn sử dụng</h1><p>Gói của <b>${esc(GG.email)}</b> hết hạn ngày ${esc(lic.han||'')}. Dữ liệu vẫn còn nguyên trong Google Drive của shop. Liên hệ Shop Gọn để gia hạn.</p>
+    <button class="btn" style="width:100%" data-gg="recheck">Kiểm tra lại</button>`
+  :`<h1>Tài khoản tạm khóa</h1><p>Liên hệ Shop Gọn để được hỗ trợ.</p>`}
+  <small id="wMsg"></small><button class="wlink" data-gg="other">Đăng nhập Gmail khác</button></div>`}
+async function afterLogin(){welcomeMsg('Đang kiểm tra kích hoạt…');const lic=await license(GG.email);GG.ctv=lic.ctv||'';
+  if(lic.status!=='active'){showPending(lic);return false}
+  welcomeMsg('Đang chuẩn bị sổ dữ liệu trong Drive…');
+  const created=await GG.findOrCreate();
+  if(created){if(db.sample){const shop=db.shop;db=emptyDb();db.shop={...emptyDb().shop,ten:shop.ten&&!shop.ten.includes('(mẫu)')?shop.ten:''}}await GG.push()}
+  else await GG.pull();
+  try{localStorage.setItem('shopgon_gg',JSON.stringify({email:GG.email,sheetId:GG.sheetId}))}catch(e){}
+  closeWelcome();render();toast('Đã kết nối '+GG.email);return true}
+function ggStatus(t){const el=document.getElementById('ggState');if(el)el.textContent=t}
+async function ggConnect(){
+  if(!GG.ready()){toast('Đăng nhập Google sẽ mở khi app chạy chính thức trên shopgon.vn');return}
+  try{welcomeMsg('Đang mở đăng nhập Google…');await GG.login(false);await afterLogin()}catch(e){welcomeMsg('Chưa đăng nhập được. Thử lại nhé.')}
+}
+function ggLogout(){if(GG.ready()){lockApp();showWelcome()}try{google.accounts.oauth2.revoke(GG.token,()=>{})}catch(e){}GG.token=null;GG.email='';GG.sheetId='';try{localStorage.removeItem('shopgon_gg')}catch(e){}render();toast('Đã đăng xuất Google')}
+/* Màn hình chào: 1 bước đăng nhập */
+function showWelcome(){if(GG.ready())lockApp();const w=document.getElementById('welcome');w.hidden=false;w.innerHTML=`<div class="wc">
+  <div class="wlogo"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M9 7h6M9 11h6M9 15h3"/></svg></div>
+  <h1>Chào mừng đến Shop Gọn</h1><p>Quản lý bán hàng, kho máy, lời lỗ ngay trên điện thoại.</p>
+  <button class="gbtn" data-gg="login"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.5 13.6 17.8 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.6 5.9c4.4-4.1 7-10.1 7-17.6z"/><path fill="#FBBC05" d="M10.6 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.6-5.9c-2.1 1.4-4.9 2.3-8.3 2.3-6.2 0-11.5-4.1-13.4-9.9l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg>Đăng nhập bằng Google</button>
+  <small id="wMsg">Chọn Gmail của shop, nhập mật khẩu trên trang của Google. App tự tạo sổ dữ liệu trong Google Drive của shop.</small>
+  ${GG.ready()?'':'<button class="wlink" data-gg="demo">Đóng (bản xem trước)</button>'}</div>`}
+function welcomeMsg(t){const m=document.getElementById('wMsg');if(m)m.textContent=t;else toast(t)}
+function lockApp(){document.body.classList.add('locked')}
+function unlockApp(){document.body.classList.remove('locked')}
+function closeWelcome(){unlockApp();document.getElementById('welcome').hidden=true;try{localStorage.setItem('shopgon_seen','1')}catch(e){}}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-gg]');if(!b)return;const k=b.dataset.gg;if(k==='login')ggConnect();else if(k==='demo'){closeWelcome();Store.save(db)}else if(k==='logout')ggLogout();else if(k==='request')sendRequest();else if(k==='recheck')afterLogin().catch(()=>welcomeMsg('Chưa kiểm tra được, thử lại.'));else if(k==='other'){GG.token=null;GG.email='';try{localStorage.removeItem('shopgon_gg')}catch(e){}showWelcome()}else if(k==='open')showWelcome()});
+
+
+/* ===== Tính toán ===== */
+const live=()=>db.don.filter(d=>!d.huy);
+const profitOf=d=>d.giaBan-(d.giaVon||0);
+function sumRange(fromIso,toIso){const L=live().filter(d=>d.ngay>=fromIso&&d.ngay<=toIso);return {dt:L.reduce((s,d)=>s+d.giaBan,0),loi:L.reduce((s,d)=>s+profitOf(d),0),may:L.filter(d=>d.loai==='may').length,n:L.length}}
+const stock=()=>db.may.filter(m=>m.tt==='ton');
+const tgPending=()=>live().filter(d=>d.tt==='Trả góp'&&d.tgTT!=='Đã giải ngân');
+
+/* ===== Điều hướng ===== */
+let view='home', more='menu', showToday=false;
+function go(v){view=v;document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.v===v));['home','sell','add','stock','more'].forEach(x=>$('v-'+x).hidden=x!==v);render();window.scrollTo(0,0)}
+let tt;function toast(m){const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>t.hidden=true,2400)}
+
+/* ===== HÔM NAY ===== */
+let rptMode='ngay', rptMonth=null, rptSel=null;
+function monthsList(){const first=live().reduce((m,d)=>d.ngay<m?d.ngay:m,todayIso()).slice(0,7);const out=[];let d=new Date(todayIso().slice(0,7)+'-01');for(let i=0;i<24;i++){const k=iso(d).slice(0,7);out.push(k);if(k<=first&&i>=5)break;d.setMonth(d.getMonth()-1)}return out}
+const mLbl=k=>'Tháng '+(+k.slice(5))+'/'+k.slice(0,4);
+function reportPanel(){
+  const t=todayIso(), cur=t.slice(0,7), rm=rptMonth||cur;
+  let bars=[], sum;
+  if(rptMode==='ngay'){const last=new Date(+rm.slice(0,4),+rm.slice(5),0).getDate();const endD=rm===cur?+t.slice(8):last;
+    for(let d=1;d<=last;d++){const k=rm+'-'+String(d).padStart(2,'0');const r=d<=endD?sumRange(k,k):{dt:0,loi:0,may:0,n:0};bars.push({k,l:(d===1||d%5===0)?String(d):'',v:r.loi,r,lbl:'Ngày '+d+'/'+(+rm.slice(5))})}
+    sum=sumRange(rm+'-01',rm+'-31');}
+  else{const ms=monthsList().slice(0,12).reverse();ms.forEach(k=>{const r=sumRange(k+'-01',k+'-31');bars.push({k,l:'T'+(+k.slice(5)),v:r.loi,r,lbl:mLbl(k)})});
+    sum=bars.reduce((a,b)=>({dt:a.dt+b.r.dt,loi:a.loi+b.r.loi,may:a.may+b.r.may,n:a.n+b.r.n}),{dt:0,loi:0,may:0,n:0});}
+  const mx=Math.max(...bars.map(b=>b.v),1);const sel=bars.find(b=>b.k===rptSel);
+  let cmp='';if(rptMode==='ngay'){const pd=new Date(rm+'-01');pd.setMonth(pd.getMonth()-1);const pk=iso(pd).slice(0,7);const p=sumRange(pk+'-01',pk+'-31');if(p.loi)cmp=` · ${sum.loi>=p.loi?'▲':'▼'} ${Math.abs(Math.round((sum.loi/p.loi-1)*100))}% lời so với ${mLbl(pk).toLowerCase()}`}
+  return `<div class="panel"><div class="rh"><h2 style="margin:0">Tình hình kinh doanh</h2></div>
+    <div class="seg" role="group" style="margin:10px 0"><button data-rm="ngay" aria-pressed="${rptMode==='ngay'}">Theo ngày</button><button data-rm="thang" aria-pressed="${rptMode==='thang'}">Theo tháng</button></div>
+    ${rptMode==='ngay'?`<select id="rMonth" style="margin-bottom:10px">${monthsList().map(k=>`<option value="${k}" ${k===rm?'selected':''}>${mLbl(k)}</option>`).join('')}</select>`:''}
+    <div class="kpis" style="margin-bottom:12px"><div class="kpi"><div class="eyebrow">${rptMode==='ngay'?'Doanh thu tháng':'Doanh thu 12 tháng'}</div><div class="v num" style="font-size:20px">${short(sum.dt)}</div><div class="d">${sum.may} máy · ${sum.n-sum.may} đơn khác</div></div><div class="kpi"><div class="eyebrow">Tiền lời</div><div class="v num good" style="font-size:20px">${short(sum.loi)}</div><div class="d">${sum.dt?'Biên '+Math.round(sum.loi/sum.dt*100)+'%':'—'}</div></div></div>
+    <div class="bars rb">${bars.map(b=>`<button class="bar${b.k===rptSel?' now':''}" data-rsel="${b.k}" aria-label="${b.lbl}"><i style="height:${Math.max(0,b.v)/mx*100}%"></i><span>${b.l}</span></button>`).join('')}</div>
+    <div class="rsel">${sel?`<b>${sel.lbl}</b><span class="num">Doanh thu ${money(sel.r.dt)} · lời <b class="good">${money(sel.r.loi)}</b> · ${sel.r.may} máy</span>`:`<span>Bấm vào từng cột để xem chi tiết${cmp}</span>`}</div>
+  </div>`;
+}
+function renderHome(){
+  const t=todayIso(), y=iso(Date.now()-DAY), m0=t.slice(0,8)+'01';
+  const td=sumRange(t,t), yd=sumRange(y,y), mo=sumRange(m0,t);
+  const st=stock(), von=st.reduce((s,m)=>s+m.giaNhap,0);
+  const old=st.filter(m=>ageDays(m)>45).sort((a,b)=>ageDays(b)-ageDays(a));
+  const warn=st.filter(m=>{const a=ageDays(m);return a>30&&a<=45});
+  const tg=tgPending();
+  const rm=rptMonth||t.slice(0,7);const mDon=live().filter(d=>d.ngay.startsWith(rm));
+  const byBrand={};mDon.filter(d=>d.loai==='may').forEach(d=>{const k=d.hang||'Khác';byBrand[k]=(byBrand[k]||0)+profitOf(d)});
+  const phone=Object.entries(byBrand).sort((a,b)=>b[1]-a[1]);
+  const pkRows=nhomOn().map(g=>[g.t,mDon.filter(d=>d.loai===g.k).reduce((s,d)=>s+profitOf(d),0)]).filter(x=>x[1]);
+  const bmx=Math.max(...phone.map(x=>x[1]),...pkRows.map(x=>x[1]),1);
+  const sumP=phone.reduce((s,x)=>s+x[1],0), sumK=pkRows.reduce((s,x)=>s+x[1],0);
+  const hbRows=(rows,cls)=>rows.map(([k,v])=>`<div><div class="l"><span>${esc(k)}</span><b class="num">${money(v)}</b></div><div class="t ${cls}"><i style="width:${Math.max(0,v)/bmx*100}%"></i></div></div>`).join('');
+  const tdDon=live().filter(d=>d.ngay===t).sort((a,b)=>b.gio.localeCompare(a.gio,undefined,{numeric:true}));
+  const diff=yd.dt?Math.round((td.dt/yd.dt-1)*100):null;
+  $('v-home').innerHTML=`
+  ${db.sample?`<div class="alert amber"><b>Đang xem dữ liệu mẫu.</b><span>Bấm thử thoải mái. Khi dùng thật, vào Thêm → Cài đặt → Bắt đầu dữ liệu thật.</span></div>`:''}
+  <div class="kpis">
+    <button class="kpi hero" data-toggle="todayList" aria-expanded="${showToday}"><div class="eyebrow">Doanh thu hôm nay</div><div class="v num">${money(td.dt)}</div>
+      <div class="d">${td.may} máy · ${td.n-td.may} đơn phụ kiện, dịch vụ${diff!==null?` · ${diff>=0?'▲':'▼'} ${Math.abs(diff)}% so với hôm qua`:''}</div>
+      <div class="more">${showToday?'Ẩn chi tiết đơn ▴':'Xem chi tiết đơn ▾'}</div></button>
+    ${showToday?`<div class="panel todaylist">${tdDon.length?`<div class="list">${tdDon.map(d=>{const isM=d.loai==='may';const p=profitOf(d);return `<div class="row"><div class="n"><b><span class="tag ${isM?'tm':'tk'}">${isM?'Máy':esc((NHOM.find(g=>g.k===d.loai)||{}).t||'')}</span> ${esc(d.ten)}</b><small class="num">${d.gio} · ${d.soTien?'tiền '+money(d.soTien)+' · phí':esc(d.tt)}${d.khach?' · '+esc(d.khach):''}${isM?' · …'+d.imei.slice(-6):''}</small></div><div class="right"><b class="num">${money(d.giaBan)}</b><small class="num ${p<0?'neg':'good'}">${p<0?'Lỗ':'Lời'} ${money(Math.abs(p))}</small></div></div>`}).join('')}</div>`:'<div class="empty">Hôm nay chưa có đơn nào.</div>'}</div>`:''}
+    <div class="kpi"><div class="eyebrow">Lời hôm nay</div><div class="v num good">${money(td.loi)}</div><div class="d">Tháng này ${short(mo.loi)}</div></div>
+    <div class="kpi"><div class="eyebrow">Máy trong kho</div><div class="v num">${st.length}</div><div class="d">Vốn ${short(von)}</div></div>
+  </div>
+  ${reportPanel()}
+  ${(()=>{const L=tdDon.filter(d=>isDv(d.loai));if(!L.length)return '';const tien=L.reduce((s2,d)=>s2+(d.soTien||0),0),phi=L.reduce((s2,d)=>s2+d.giaBan,0);
+    return `<div class="panel"><h2>Thu hộ · Chuyển tiền hôm nay</h2><div class="kpis"><div class="kpi"><div class="eyebrow">Tiền qua tay</div><div class="v num">${money(tien)}</div><div class="d">${L.length} giao dịch</div></div><div class="kpi"><div class="eyebrow">Phí thu được</div><div class="v num good">${money(phi)}</div><div class="d">Đã tính vào lời</div></div></div></div>`})()}
+  <div class="panel"><h2>Lời tháng ${rm===t.slice(0,7)?'này':rm.slice(5)+'/'+rm.slice(0,4)}</h2>${phone.length||pkRows.length?`
+    ${phone.length?`<div class="grp"><div class="gh"><span class="sw sp"></span>Điện thoại<b class="num">${money(sumP)}</b></div><div class="hb">${hbRows(phone,'cp')}</div></div>`:''}
+    ${pkRows.length?`<div class="grp"><div class="gh"><span class="sw sk"></span>Phụ kiện · Dịch vụ<b class="num">${money(sumK)}</b></div><div class="hb">${hbRows(pkRows,'ck')}</div></div>`:''}`:'<div class="empty">Chưa có đơn bán nào trong tháng.</div>'}</div>
+  ${old.length?`<div class="alert red"><b>${old.length} máy nằm kho trên 45 ngày (vốn ${short(old.reduce((s,m)=>s+m.giaNhap,0))})</b><span>Tồn lâu nhất: ${old.slice(0,3).map(m=>esc(m.ten)+' ('+ageDays(m)+' ngày)').join(', ')}</span><button class="ghost" data-go="stock" data-filter="may">Xem danh sách</button></div>`:''}
+  ${warn.length?`<div class="alert amber"><b>${warn.length} máy sắp quá 45 ngày</b><span>Đẩy bán trong tuần này để khỏi rớt giá.</span></div>`:''}
+  ${(()=>{const lw=hangOn().filter(hangLow);return lw.length?`<div class="alert amber"><b>${lw.length} món hàng sắp hết</b><span>${lw.slice(0,4).map(h=>esc(h.ten)+' (còn '+Math.max(0,h.sl)+')').join(', ')}</span><button class="ghost" data-go="stock" data-filter="hang">Xem kho hàng</button></div>`:''})()}
+  ${on('tragop')&&tg.length?`<div class="alert amber"><b>${tg.length} hồ sơ trả góp chưa giải ngân</b><button class="ghost" data-more="tg">Xem trả góp</button></div>`:''}`;
+}
+
+/* ===== BÁN ===== */
+let sellMode='may', sellImei='', sellTT='Tiền mặt';
+let cart=[], cartKhach='', cartSdt='';
+const inCart=imei=>cart.some(c=>c.imei===imei);
+const cartQty=id=>cart.filter(c=>c.hangId===id).reduce((a,c)=>a+c.sl,0);
+const cartTotal=()=>cart.reduce((a,c)=>a+c.gia*(c.sl||1),0);
+function renderCart(){if(!cart.length)return '';
+  return `<div class="panel cartp"><h2>Đơn đang bán · ${cart.length} món</h2><div class="list">${cart.map((c,i)=>`<div class="row"><div class="n"><b>${esc(c.ten)}${c.sl>1?' ×'+c.sl:''}</b>${c.imei?`<small class="num">IMEI …${c.imei.slice(-6)}${c.bh?' · BH '+c.bh+' tháng':''}</small>`:''}</div><div class="right" style="flex-direction:row;align-items:center"><b class="num">${money(c.gia*(c.sl||1))}</b><button class="xbtn" data-cartdel="${i}" aria-label="Bỏ món này">✕</button></div></div>`).join('')}</div>
+    <div class="ctot"><span>Tổng tiền</span><b class="num">${money(cartTotal())}</b></div>
+    <div class="two"><label>Tên khách<input id="cKh" value="${esc(cartKhach)}" placeholder="Không bắt buộc"></label><label>SĐT<input id="cSd" inputmode="tel" value="${esc(cartSdt)}" placeholder="Để tra bảo hành"></label></div>
+    <button class="btn" data-checkout="1" style="margin-top:10px">In hóa đơn · ${money(cartTotal())}</button></div>`}
+function renderSell(){
+  const m0=db.may.find(x=>x.imei===sellImei&&x.tt==='ton');const m=m0&&!inCart(m0.imei)?m0:null;
+  const soldM=!m0&&sellImei.length>=6?db.may.find(x=>x.imei===sellImei&&x.tt==='ban'):null;
+  const cand=!m0&&sellImei.length>=4&&sellImei.length<15?stock().filter(x=>!inCart(x.imei)&&(x.imei.includes(sellImei)||x.ten.toLowerCase().includes(sellImei.toLowerCase()))).slice(0,5):[];
+  $('v-sell').innerHTML=`
+  ${renderCart()}
+  <div class="seg" role="group"><button data-sm="may" aria-pressed="${sellMode==='may'}">Điện thoại</button><button data-sm="pk" aria-pressed="${sellMode==='pk'}">${on('pk')||on('sim')?'Phụ kiện · Dịch vụ':'Dịch vụ khác'}</button></div>
+  ${sellMode==='may'?`
+  <div class="panel"><form id="fSell" autocomplete="off">
+    <label>IMEI hoặc tên máy<small>Quét mã vạch, gõ IMEI, hoặc gõ vài chữ của tên máy để tìm</small>
+      <span class="inrow"><input id="sImei" inputmode="search" value="${esc(sellImei)}" placeholder="VD: 3512… hoặc A7 Pro"><button type="button" class="icon" data-scan="sImei" aria-label="Quét IMEI"><svg viewBox="0 0 24 24"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 8v8M10 8v8M13 8v8M17 8v8"/></svg></button></span></label>
+    ${cand.length?`<div class="list">${cand.map(x=>`<div class="row"><div class="n"><b>${esc(x.ten)}</b><small class="num">IMEI …${x.imei.slice(-6)} · ${ageDays(x)} ngày</small></div><button type="button" class="ghost" data-pick="${x.imei}">Chọn</button></div>`).join('')}</div>`:''}
+    ${soldM?`<div class="err">Máy này đã bán rồi. Tra lịch sử ở Thêm → Tra IMEI.</div>`:''}
+    ${m0&&!m?`<div class="err">Máy này đã có trong đơn đang bán.</div>`:''}
+    ${m?`<div class="found"><b>${esc(m.ten)}</b><small class="num">IMEI ${m.imei} · Nhập ${dmy(m.ngayNhap)} (${ageDays(m)} ngày) · Giá nhập ${money(m.giaNhap)}</small></div>
+    <label>Giá bán<input id="sGia" inputmode="numeric" class="num" value="${(m.giaBan||'').toLocaleString('vi-VN')}"></label>
+    <div class="profit" id="sLoi"></div>
+    ${on('baohanh')?`<label>Bảo hành (tháng)<input id="sBh" inputmode="numeric" value="${db.shop.bh}"></label>`:''}
+    <div class="err" id="sErr"></div>
+    <button class="btn" type="submit">Thêm vào đơn</button>`:''}
+  </form></div>`:renderPkForm()}`;
+  if(m)updSellProfit();
+  if(sellMode==='pk')updPkProfit();
+}
+let pkNhom='pk', pkPick=null, pkQ='';
+const isStockNhom=k=>k==='pk'||k==='sim'||k==='sua';
+function renderPkForm(){
+  if(!nhomOn().some(g=>g.k===pkNhom)){pkNhom=nhomOn()[0].k;pkPick=null}
+  const it=pkPick&&db.hang.find(h=>h.id===pkPick);
+  const q=pkQ.trim().toLowerCase();
+  const cand=isStockNhom(pkNhom)&&!it?db.hang.filter(h=>h.nhom===pkNhom&&h.sl-cartQty(h.id)>0&&(!q||h.ten.toLowerCase().includes(q))).slice(0,8):[];
+  return `<div class="panel"><form id="fPk" autocomplete="off">
+    <div class="chips" role="group">${nhomOn().map(g=>`<button type="button" class="chip" data-nhom="${g.k}" aria-pressed="${g.k===pkNhom}">${g.t}</button>`).join('')}</div>
+    ${isStockNhom(pkNhom)&&!it?`<label>${pkNhom==='sua'?'Linh kiện dùng (lấy từ kho)':'Chọn món trong kho'}<input id="pQ" inputmode="search" placeholder="Gõ tên để tìm, VD: cường lực" value="${esc(pkQ)}"></label>
+      <div class="list">${cand.length?cand.map(h=>`<div class="row"><div class="n"><b>${esc(h.ten)}</b><small class="num">Còn ${h.sl-cartQty(h.id)} · giá bán ${money(h.giaBan)}</small></div><button type="button" class="ghost" data-pkpick="${h.id}">Chọn</button></div>`).join(''):'<div class="empty">Không có món nào khớp trong kho.</div>'}</div>
+      <div class="eyebrow" style="margin-top:4px">${pkNhom==='sua'?'Hoặc ghi đơn sửa không lấy linh kiện trong kho':'Hoặc bán món không có trong kho'}</div>`:''}
+    ${it?`<div class="found"><b>${esc(it.ten)}</b><small class="num">Còn ${it.sl-cartQty(it.id)} trong kho · giá nhập ${money(it.giaNhap)}</small></div><button type="button" class="back" data-pkpick="">‹ Chọn món khác</button>
+      <div class="two"><label>Số lượng<input id="pSl" inputmode="numeric" value="1"></label><label>${pkNhom==='sua'?'Tiền sửa thu khách / cái':'Giá bán / cái'}<input id="pGia" inputmode="numeric" class="num" value="${it.giaBan?it.giaBan.toLocaleString('vi-VN'):''}"></label></div>`:`
+${isDv(pkNhom)?`
+      <label>Loại<select id="dLoai">${DV[pkNhom].map(x=>`<option>${x}</option>`).join('')}</select></label>
+      <div class="two"><label>Số tiền giao dịch<input id="dTien" inputmode="numeric" class="num" placeholder="VD: 1.250.000"></label><label>Phí thu khách<input id="pGia" inputmode="numeric" class="num" placeholder="VD: 10.000"></label></div>
+      <div class="two"><label>Tên khách<input id="dKhach" placeholder="Không bắt buộc"></label><label>Ghi chú<input id="dNote" placeholder="Mã KH, số TK…"></label></div>
+      <small style="color:var(--muted)">Doanh thu và lời chỉ tính phí. Số tiền giao dịch ghi riêng để đối chiếu tiền mặt cuối ngày.</small>`:`
+      <label>Tên món<input id="pTen" placeholder="${pkNhom==='sua'?'VD: Thay pin iPhone 11':'VD: Cường lực + ốp'}"></label>
+      <div class="two"><label>Giá bán<input id="pGia" inputmode="numeric" class="num"></label><label>Giá vốn<small>Bỏ trống: tính lời ước tính</small><input id="pVon" inputmode="numeric" class="num"></label></div>`}`}
+    <div class="profit" id="pLoi"></div>
+    <div class="err" id="pErr"></div>
+    <button class="btn" type="submit">${isDv(pkNhom)?'Lưu giao dịch':'Thêm vào đơn'}</button>
+  </form></div>`;
+}
+function updSellProfit(){const m=db.may.find(x=>x.imei===sellImei);const g=parseMoney($('sGia').value);const p=g-m.giaNhap;const el=$('sLoi');el.className='profit'+(p<0?' neg':'');el.innerHTML=`<span>${p<0?'Lỗ':'Lời'} máy này</span><span class="v num">${money(Math.abs(p))}</span>`}
+function updPkProfit(){const el=$('pLoi');if(!el)return;const it=pkPick&&db.hang.find(h=>h.id===pkPick);let p,lbl;
+  if(it){const sl=Math.max(1,parseMoney($('pSl').value));p=(parseMoney($('pGia').value)-it.giaNhap)*sl;lbl=p<0?'Lỗ':'Lời'}
+  else if(isDv(pkNhom)){p=parseMoney($('pGia').value);lbl='Lời (phí dịch vụ)'}
+  else{const g=parseMoney($('pGia').value),v=$('pVon').value.trim()?parseMoney($('pVon').value):null;p=v===null?g*db.shop.pct[pkNhom]/100:g-v;lbl=v===null?'Lời ước tính ('+db.shop.pct[pkNhom]+'%)':(p<0?'Lỗ':'Lời')}
+  el.className='profit'+(p<0?' neg':'');el.innerHTML=`<span>${lbl}</span><span class="v num">${money(Math.abs(p))}</span>`}
+
+/* ===== NHẬP ===== */
+let addMode='may', addPre='';
+function renderAdd(){
+  const hOn=khoOn().length>0;if(!hOn)addMode='may';
+  const hLbl=khoOn().length>1?'hàng khác':khoName[khoOn()[0]?.k]||'';
+  const seg=hOn?`<div class="seg" role="group"><button data-am="may" aria-pressed="${addMode==='may'}">Nhập điện thoại</button><button data-am="hang" aria-pressed="${addMode==='hang'}">Nhập ${hLbl}</button></div>`:'';
+  if(addMode==='hang'){const names=[...new Set(db.hang.map(h=>h.ten))].sort();const pre=addPre&&db.hang.find(h=>h.id===addPre);
+    $('v-add').innerHTML=seg+`<div class="panel"><h2>Nhập ${khoOn().map(g=>g.t.toLowerCase()).join(', ')}</h2><form id="fAddH" autocomplete="off">
+    <label>Tên món<small>Gõ tên mới nếu là hàng mới, hoặc chọn từ gợi ý</small><input id="hTen" list="dlH" placeholder="VD: Cường lực iPhone 15, Sim 0868 123 789, Pin iPhone 11" value="${pre?esc(pre.ten):''}"><small class="hint" id="hHint"></small><datalist id="dlH">${names.map(n=>`<option value="${esc(n)}">`).join('')}</datalist></label>
+    <label>Nhóm hàng<select id="hNhom">${khoOn().map(g=>`<optgroup label="${g.t}">${g.l.map(x=>{const v=g.k+'|'+x;return `<option value="${esc(v)}" ${pre&&pre.nhom===g.k&&loaiOf(pre)===x?'selected':''}>${x}</option>`}).join('')}</optgroup>`).join('')}</select></label>
+    <div class="two"><label>Số lượng<input id="hSl" inputmode="numeric" placeholder="VD: 20"></label><label>Báo sắp hết khi còn<input id="hMin" inputmode="numeric" value="${pre?pre.min:5}"></label></div>
+    <div class="two"><label>Giá nhập / cái<input id="hGN" inputmode="numeric" class="num" value="${pre?pre.giaNhap.toLocaleString('vi-VN'):''}"></label><label>Giá bán / cái<input id="hGB" inputmode="numeric" class="num" value="${pre&&pre.giaBan?pre.giaBan.toLocaleString('vi-VN'):''}"></label></div>
+    <div class="err" id="hErr"></div>
+    <button class="btn" type="submit">Nhập vào kho</button></form></div>`;addPre='';return}
+  const names=[...new Set(db.may.map(m=>m.ten))].sort();
+  $('v-add').innerHTML=seg+`<div class="panel"><h2>Nhập điện thoại vào kho</h2><form id="fAdd" autocomplete="off">
+    <label>Tên máy<small>Gõ tên mới nếu là máy mới ra, hoặc chọn từ gợi ý</small><input id="aTen" list="dlTen" placeholder="VD: OPPO Reno17 F 8/256"><small class="hint" id="aHint"></small><datalist id="dlTen">${names.map(n=>`<option value="${esc(n)}">`).join('')}</datalist></label>
+    <label>Hãng<select id="aHang">${brandsOn().map(b=>`<option>${b}</option>`).join('')}</select></label>
+    <label>IMEI<small>Mỗi dòng 1 máy. Nhập cả lô cùng model một lần.</small>
+      <span class="inrow" style="align-items:stretch"><textarea id="aImei" inputmode="numeric" placeholder="Quét hoặc gõ IMEI, mỗi máy 1 dòng"></textarea><button type="button" class="icon" data-scan="aImei" aria-label="Quét IMEI"><svg viewBox="0 0 24 24"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 8v8M10 8v8M13 8v8M17 8v8"/></svg></button></span></label>
+    <div class="two"><label>Giá nhập / máy<input id="aGN" inputmode="numeric" class="num"></label><label>Giá bán dự kiến<input id="aGB" inputmode="numeric" class="num"></label></div>
+    <div class="two"><label>Nhà cung cấp<input id="aNcc" placeholder="Không bắt buộc"></label><label>Ngày nhập<input id="aNgay" type="date" value="${todayIso()}"></label></div>
+    <div class="err" id="aErr"></div>
+    <button class="btn" type="submit">Nhập vào kho</button>
+  </form></div>`;
+}
+
+/* ===== KHO ===== */
+let expModel=new Set();
+let stockMode='may', stockBrand='Tất cả', stockQ='', stockOld=false, hangNhom='all', hangQ='';
+const hangLow=h=>h.sl<=0||(h.min>0&&h.sl<=h.min);
+function renderStock(){
+  const hOn=khoOn().length>0;if(!hOn)stockMode='may';if(hangNhom!=='all'&&!on(hangNhom))hangNhom='all';
+  const seg=hOn?`<div class="seg" role="group"><button data-km="may" aria-pressed="${stockMode==='may'}">Điện thoại</button><button data-km="hang" aria-pressed="${stockMode==='hang'}">${khoOn().length>1?'Hàng khác':khoName[khoOn()[0]?.k]||''}</button></div>`:'';
+  if(stockMode==='hang'){
+    const all=hangOn();const lowN=all.filter(hangLow).length;
+    let L=all.filter(h=>(hangNhom==='all'||h.nhom===hangNhom)&&(!hangQ||(h.ten+' '+loaiOf(h)).toLowerCase().includes(hangQ.toLowerCase())));
+    L.sort((a,b)=>(hangLow(b)-hangLow(a))||a.ten.localeCompare(b.ten));
+    $('v-stock').innerHTML=seg+`
+    <input id="hQ" inputmode="search" placeholder="Tìm tên hàng, số sim" value="${esc(hangQ)}">
+    <div class="chips" role="group">${(khoOn().length>1?[['all','Tất cả'],...khoOn().map(g=>[g.k,khoName[g.k]])]:[]).map(([k,t])=>`<button class="chip" data-hn="${k}" aria-pressed="${k===hangNhom}">${t}</button>`).join('')}</div>
+    <div class="panel"><div class="list">${L.length?L.map(h=>{const k=h.sl<=0?'r':hangLow(h)?'a':'g';return `<div class="row"><div class="n"><b>${esc(h.ten)}</b><small class="num">nhập ${money(h.giaNhap)} · bán ${money(h.giaBan)}</small></div><div class="right"><span class="pill ${k} num">${h.sl<=0?'Hết':'Còn '+h.sl}</span></div></div>`}).join(''):'<div class="empty">Chưa có hàng nào. Vào tab Nhập để thêm.</div>'}</div></div>`;return}
+  const st=stock();
+  const brands=['Tất cả',...BRANDS.filter(b=>st.some(m=>m.hang===b))];
+  let L=st.filter(m=>(stockBrand==='Tất cả'||m.hang===stockBrand)&&(!stockOld||ageDays(m)>45)&&(!stockQ||m.ten.toLowerCase().includes(stockQ.toLowerCase())||m.imei.includes(stockQ)));
+  L.sort((a,b)=>ageDays(b)-ageDays(a));
+  const c={r:st.filter(m=>ageDays(m)>45).length,a:st.filter(m=>{const x=ageDays(m);return x>30&&x<=45}).length};
+  $('v-stock').innerHTML=seg+`
+  <input id="kQ" inputmode="search" placeholder="Tìm tên máy hoặc IMEI" value="${esc(stockQ)}">
+  <div class="chips" role="group">${brands.map(b=>`<button class="chip" data-brand="${esc(b)}" aria-pressed="${b===stockBrand}">${esc(b)}</button>`).join('')}</div>
+`;
+  const G={};L.forEach(m=>{(G[m.ten]=G[m.ten]||[]).push(m)});
+  const groups=Object.entries(G).map(([ten,ms])=>({ten,ms,old:Math.max(...ms.map(ageDays))})).sort((x,y)=>y.old-x.old);
+  const imeiHit=/^\d{4,}$/.test(stockQ.trim());
+  $('v-stock').innerHTML+=`<div class="panel"><div class="list">${groups.length?groups.map(g=>{const [k]=ageClass(g.old);const open=imeiHit||expModel.has(g.ten);
+    return `<div class="mg"><button class="mrow" data-model="${esc(g.ten)}" aria-expanded="${open}"><span class="n"><b>${esc(g.ten)}</b><small class="num">Vốn ${short(g.ms.reduce((s2,m)=>s2+m.giaNhap,0))} · lâu nhất ${g.old} ngày</small></span><span class="cnt num">${g.ms.length} máy</span><span class="pill ${k}">${g.old>45?'Tồn lâu':g.old>30?'Tồn vừa':'Mới'}</span><span class="chev">${open?'▴':'▾'}</span></button>
+    ${open?`<div class="imeis">${g.ms.map(m=>{const a2=ageDays(m),[k2]=ageClass(a2);return `<div class="row"><div class="n"><b class="num">${m.imei}</b><small class="num">Nhập ${dmy(m.ngayNhap)} · ${money(m.giaNhap)}</small></div><div class="right"><span class="pill ${k2} num">${a2} ngày</span></div></div>`}).join('')}</div>`:''}</div>`}).join(''):'<div class="empty">Không có máy nào khớp.</div>'}</div></div>`;
+}
+
+/* ===== THÊM ===== */
+let tgOpen=null, tgReject=null;
+let lookQ='', cancelId=null, resetAsk=false, histDays=1;
+function renderMore(){
+  const el=$('v-more');
+  if(more==='menu'){el.innerHTML=`<div class="menu">
+    ${[['tien','Tiện ích','Bật, tắt chức năng cho gọn app','M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0M14 4v4M8 10v4M16 16v4'],['look','Tra IMEI · Bảo hành','Máy bán cho ai, còn bảo hành không','M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-5-5'],['tg','Trả góp',tgPending().length+' hồ sơ chưa giải ngân','M3 6h18v12H3zM3 10h18M7 15h4'],['hist','Lịch sử đơn','Xem lại, hủy đơn nhập sai','M12 8v4l3 2M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5'],['ctv','Cộng tác viên','Người cài app cho shop','M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM2 21c.8-4 3.6-6 7-6s6.2 2 7 6M17 11l2 2 4-4'],['set','Cài đặt','Tên shop, % lời, dữ liệu','M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z']].filter(x=>(x[0]!=='tg'||on('tragop'))&&(x[0]!=='look'||on('baohanh')||true)).map(([k,t,s,p])=>`<button data-more="${k}"><svg viewBox="0 0 24 24"><path d="${p}"/></svg><b>${t}</b><small>${s}</small></button>`).join('')}
+  </div><p class="foot">Ứng dụng Shop Gọn · shopgon.vn<br>Bản dùng thử, dữ liệu đang lưu trên điện thoại này.</p>`;return}
+  const back=`<button class="back" data-more="menu">‹ Quay lại</button>`;
+  if(more==='look'){
+    const q=lookQ.trim();const hits=q.length>=4?db.may.filter(m=>m.imei.includes(q)):[];
+    el.innerHTML=`${back}<div class="panel"><h2>Tra IMEI · Bảo hành</h2><span class="inrow"><input id="lQ" inputmode="numeric" placeholder="Gõ ít nhất 4 số IMEI" value="${esc(q)}"><button class="icon" data-scan="lQ" aria-label="Quét IMEI"><svg viewBox="0 0 24 24"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 8v8M10 8v8M13 8v8M17 8v8"/></svg></button></span>
+    <div class="list" style="margin-top:8px">${q.length<4?'':hits.length?hits.slice(0,10).map(m=>{const d=live().find(x=>x.imei===m.imei);let st;if(m.tt==='ton')st=`<span class="pill b">Trong kho · ${ageDays(m)} ngày</span>`;else if(d){const end=new Date(d.ngay);end.setMonth(end.getMonth()+(+d.bh||0));const left=Math.ceil((end-new Date(todayIso()))/DAY);st=left>=0?`<span class="pill g">Còn BH ${left} ngày</span>`:`<span class="pill r">Hết BH</span>`}else st='<span class="pill a">Đã bán</span>';
+      return `<div class="row"><div class="n"><b>${esc(m.ten)}</b><small class="num">IMEI ${m.imei}</small>${d?`<small>Bán ${dmy(d.ngay)} · ${esc(d.khach||'Khách lẻ')}${d.sdt?' · '+esc(d.sdt):''} · ${money(d.giaBan)}</small>`:''}</div><div class="right">${st}</div></div>`}).join(''):'<div class="empty">Không tìm thấy IMEI này.</div>'}</div></div>`;
+    const i=$('lQ');i.focus();i.setSelectionRange(i.value.length,i.value.length);return}
+  if(more==='tg'){
+    const L=live().filter(d=>d.tt==='Trả góp').sort((a,b)=>TG_STEPS.indexOf(a.tgTT)-TG_STEPS.indexOf(b.tgTT)||b.ngay.localeCompare(a.ngay));
+    const vay=d=>Math.max(0,d.giaBan-(d.traTruoc||0));
+    const cho=L.filter(d=>d.tgTT!=='Đã giải ngân');const byCty={};cho.forEach(d=>{byCty[d.cty]=(byCty[d.cty]||0)+vay(d)});
+    el.innerHTML=`${back}
+    <div class="panel"><h2>Tiền công ty tài chính chưa trả shop</h2>${cho.length?`<div class="v num" style="font-size:26px;font-weight:800">${money(cho.reduce((s2,d)=>s2+vay(d),0))}</div><small style="color:var(--muted)">${cho.length} hồ sơ chưa giải ngân</small>
+      <div class="list" style="margin-top:6px">${Object.entries(byCty).sort((a,b)=>b[1]-a[1]).map(([c,v])=>`<div class="row"><span>${esc(c)}</span><b class="num">${money(v)}</b></div>`).join('')}</div>`:'<div class="empty">Không còn hồ sơ nào chờ giải ngân.</div>'}</div>
+    <div class="panel"><h2>Hồ sơ trả góp</h2><div class="list">${L.length?L.map(d=>{const i=TG_STEPS.indexOf(d.tgTT);const k=i===2?'g':i===1?'b':'a';const open=tgOpen===d.id;const log=d.tgLog||[{tt:'Chờ duyệt',ngay:d.ngay,gio:d.gio}];
+      return `<div class="mg"><button class="mrow" data-tgopen="${d.id}" aria-expanded="${open}"><span class="n"><b>${esc(d.khach||'Khách lẻ')} · ${esc(d.ten)}</b><small>${esc(d.cty)} · vay ${short(vay(d))}${d.kyHan?' · '+d.kyHan+' tháng':''} · ${dmy(d.ngay)}</small></span><span class="pill ${k}">${d.tgTT}</span><span class="chev">${open?'▴':'▾'}</span></button>
+      ${open?`<div class="imeis"><div class="tgd">
+        <div><span>Khách</span><b>${esc(d.khach||'Khách lẻ')}${d.sdt?' · '+esc(d.sdt):''}</b></div>
+        <div><span>Máy</span><b>${esc(d.ten)}</b></div>
+        <div><span>IMEI</span><b class="num">${d.imei||''}</b></div>
+        <div><span>Giá bán</span><b class="num">${money(d.giaBan)}</b></div>
+        <div><span>Trả trước</span><b class="num">${money(d.traTruoc||0)}</b></div>
+        <div><span>Khoản vay</span><b class="num">${money(vay(d))}</b></div>
+        <div><span>Kỳ hạn</span><b>${d.kyHan?d.kyHan+' tháng':'Chưa ghi'}</b></div>
+        <div><span>Công ty</span><b>${esc(d.cty)}</b></div>
+        <div><span>Mã hồ sơ</span><b>${esc(d.maHS||'Chưa ghi')}</b></div>
+      </div>
+      <div class="eyebrow" style="margin:10px 0 4px">Lịch sử</div>
+      <div class="tl">${TG_STEPS.map(st=>{const e=log.find(x=>x.tt===st);return `<div class="${e?'on':''}"><i></i><span>${st}</span><small class="num">${e?dmy(e.ngay)+' '+(e.gio||''):'Chưa'}</small></div>`}).join('')}</div>
+      ${i<2?`<div class="inrow" style="margin:10px 0 12px;flex-wrap:wrap"><button class="ghost" data-tgnext="${d.id}">Chuyển sang: ${TG_STEPS[i+1]}</button>${i===0?(tgReject===d.id?`<span class="inrow"><button class="ghost red" data-tgrejok="${d.id}">Xác nhận bị từ chối</button><button class="ghost" data-tgrejno="1">Thôi</button></span>`:`<button class="ghost red" data-tgrej="${d.id}">Bị từ chối</button>`):''}</div>`:'<div style="height:12px"></div>'}
+      </div>`:''}</div>`}).join(''):'<div class="empty">Chưa có hồ sơ trả góp.</div>'}</div></div>
+    <p class="foot">Trạng thái hồ sơ xem trên ứng dụng của công ty tài chính hoặc hỏi nhân viên tài chính tại shop, rồi bấm cập nhật ở đây.</p>`;return}
+  if(more==='hist'){
+    const from=iso(Date.now()-(histDays-1)*DAY);const L=db.don.filter(d=>d.ngay>=from).sort((a,b)=>(b.ngay+b.gio).localeCompare(a.ngay+a.gio));
+    el.innerHTML=`${back}<div class="seg" role="group">${[[1,'Hôm nay'],[7,'7 ngày'],[30,'30 ngày']].map(([n,t])=>`<button data-hd="${n}" aria-pressed="${histDays===n}">${t}</button>`).join('')}</div>
+    <div class="panel"><div class="list">${L.length?L.map(d=>`<div class="row" style="flex-wrap:wrap"><div class="n" style="flex:1"><b style="${d.huy?'text-decoration:line-through;opacity:.6':''}">${esc(d.ten)}</b><small>${dmy(d.ngay)} ${d.gio} · ${d.loai==='may'?esc(d.tt):esc((NHOM.find(g=>g.k===d.loai)||{}).t||'')}${d.huy?' · Đã hủy: '+esc(d.huy):''}</small></div><div class="right"><b class="num">${money(d.giaBan)}</b>${d.huy?'':`<button class="ghost red" data-cancel="${d.id}">Hủy</button>`}</div>
+      ${cancelId===d.id?`<div class="confirm" style="flex-basis:100%"><span class="inrow"><input id="cReason" placeholder="Lý do hủy, VD: nhập sai giá"><button class="ghost red" data-cancelok="${d.id}">Xác nhận hủy</button></span><small style="color:var(--muted)">${d.loai==='may'?'Máy sẽ quay lại kho. ':d.hangId?'Hàng sẽ cộng lại vào kho. ':''}Đơn không bị xóa, chỉ đánh dấu đã hủy.</small></div>`:''}</div>`).join(''):'<div class="empty">Chưa có đơn nào.</div>'}</div></div>`;return}
+  if(more==='tien'){
+    el.innerHTML=`${back}<div class="panel"><h2>Tiện ích</h2><p style="margin:0 0 6px;color:var(--muted);font-size:14px">Tắt những gì shop không dùng để app gọn hơn. Bật lại lúc nào cũng được, dữ liệu cũ vẫn còn nguyên.</p>
+    <div class="list">${MODS.map(m=>`<div class="row"><div class="n"><b>${m.t}</b><small>${m.d}</small></div><button class="sw2" role="switch" aria-checked="${on(m.k)}" data-mod="${m.k}" aria-label="${m.t}"><i></i></button></div>`).join('')}</div>
+    <p style="margin:10px 0 0;color:var(--muted);font-size:13px">Bán điện thoại, kho máy, lời lỗ và lịch sử đơn là phần chính, luôn bật.</p></div>
+    <div class="panel"><h2>Hãng điện thoại shop bán</h2><p style="margin:0 0 10px;color:var(--muted);font-size:14px">Chỉ những hãng được chọn mới hiện khi nhập máy.</p>
+    <div class="chips">${BRANDS.filter(b=>b!=='Khác').map(b=>`<button class="chip" data-brandon="${b}" aria-pressed="${brandOn(b)}">${b}</button>`).join('')}</div></div>`;return}
+  if(more==='ctv'){
+    const can=GG.ready()&&GG.email&&GG.LICENSE_URL;
+    el.innerHTML=`${back}<div class="panel"><h2>Cộng tác viên</h2>
+      <p style="margin:0 0 10px;color:var(--muted);font-size:14px">Người cài Shop Gọn cho shop nhập số điện thoại của mình rồi bấm Lưu. Shop Gọn ghi nhận cộng tác viên này cho shop.</p>
+      ${GG.ctv?`<div class="found" style="margin-bottom:10px"><b>Đã gắn cộng tác viên</b><small class="num">${esc(GG.ctv)}</small></div>`:''}
+      ${can?`<form id="fCtv"><label>Số điện thoại cộng tác viên<input id="ctvSdt" inputmode="tel" placeholder="VD: 0901 234 567" autocomplete="off"></label><div class="err" id="ctvErr"></div><button class="btn" type="submit">Lưu</button></form>`
+        :`<div class="alert amber"><b>Chưa dùng được</b><span>Mục này hoạt động khi app đã đăng nhập Google và gửi yêu cầu kích hoạt trên shopgon.vn.</span></div>`}</div>`;return}
+  if(more==='set'){
+    el.innerHTML=`${back}<div class="panel"><h2>Cài đặt</h2><form id="fSet">
+      <label>Tên shop<input id="cTen" value="${esc(db.shop.ten)}"></label>
+      <label>Bảo hành mặc định (tháng)<input id="cBh" inputmode="numeric" value="${db.shop.bh}"></label>
+      <div class="eyebrow">% lời ước tính khi không nhập giá vốn</div>
+      <div class="two">${NHOM.filter(g=>!isDv(g.k)).map(g=>`<label>${g.t}<input id="cP_${g.k}" inputmode="numeric" value="${db.shop.pct[g.k]}"></label>`).join('')}</div>
+      <button class="btn" type="submit">Lưu cài đặt</button></form></div>
+    <div class="panel"><h2>Dữ liệu</h2>
+      <p style="margin:0 0 10px;color:var(--muted);font-size:14px">${db.sample?'Đang dùng dữ liệu mẫu. Bắt đầu thật sẽ xóa dữ liệu mẫu, giữ lại cài đặt.':'Dữ liệu đang lưu trên điện thoại này. Bản chính thức sẽ lưu trong Google Drive của shop.'}</p>
+      ${resetAsk?`<div class="confirm"><b style="color:var(--red)">${db.sample?'Xóa dữ liệu mẫu và bắt đầu thật?':'Xóa toàn bộ dữ liệu trên máy này?'}</b><span class="inrow"><button class="ghost red" data-reset="ok">Đồng ý</button><button class="ghost" data-reset="no">Thôi</button></span></div>`:`<button class="ghost ${db.sample?'':'red'}" data-reset="ask">${db.sample?'Bắt đầu dữ liệu thật':'Xóa dữ liệu trên máy'}</button>`}
+      <button class="ghost" data-reset="sample" style="margin-top:8px">Nạp lại dữ liệu mẫu</button></div>
+    <div class="panel"><h2>Kết nối Google Drive</h2>${GG.email?`<p style="margin:0 0 8px;font-size:15px">Đang kết nối: <b>${esc(GG.email)}</b></p><small id="ggState" style="color:var(--muted)">Dữ liệu tự lưu lên Google Drive của shop</small>
+      <div class="inrow" style="margin-top:10px;flex-wrap:wrap"><a class="ghost" href="https://docs.google.com/spreadsheets/d/${GG.sheetId}" target="_blank" rel="noopener">Mở sổ dữ liệu</a><button class="ghost red" data-gg="logout">Đăng xuất</button></div>`
+      :`<p style="margin:0 0 10px;color:var(--muted);font-size:14px">Chỉ 1 bước: bấm nút, chọn Gmail của shop, nhập mật khẩu trên trang của Google. App tự tạo sổ dữ liệu trong Drive của shop và tự lưu từ đó về sau.</p>
+      <button class="gbtn" data-gg="login" style="width:100%"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.5 13.6 17.8 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.6 5.9c4.4-4.1 7-10.1 7-17.6z"/><path fill="#FBBC05" d="M10.6 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.6-5.9c-2.1 1.4-4.9 2.3-8.3 2.3-6.2 0-11.5-4.1-13.4-9.9l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg>Đăng nhập bằng Google</button><button class="wlink" data-gg="open" style="display:block;margin:6px auto 0">Xem màn hình chào lần đầu</button>`}</div>
+    <div class="panel"><h2>Tài khoản ngân hàng của shop</h2><p style="margin:0 0 10px;color:var(--muted);font-size:14px">Dùng để tạo mã QR chuyển khoản đúng số tiền trên hóa đơn.</p><form id="fBank">
+      <label>Ngân hàng<select id="cBank"><option value="">Chọn ngân hàng</option>${BANKS.map(([b,n])=>`<option value="${b}" ${db.shop.bank&&db.shop.bank.bin===b?'selected':''}>${n}</option>`).join('')}</select></label>
+      <label>Số tài khoản<input id="cAcc" inputmode="numeric" value="${esc(db.shop.bank?db.shop.bank.acc:'')}"></label>
+      <label>Tên chủ tài khoản<input id="cAccName" value="${esc(db.shop.bank?db.shop.bank.name:'')}" placeholder="VD: NGUYEN VAN A"></label>
+      <div class="err" id="bErr"></div>
+      <button class="btn" type="submit">Lưu tài khoản</button></form></div>`;return}
+}
+
+function render(){
+  $('shopName').textContent=db.shop.ten||'Chưa đặt tên shop';
+  $('today').textContent=['Chủ nhật','Thứ hai','Thứ ba','Thứ tư','Thứ năm','Thứ sáu','Thứ bảy'][new Date().getDay()]+', '+dmy(todayIso());
+  $('mode').textContent=db.sample?'Dữ liệu mẫu':'Dùng thử';
+  const old=stock().filter(m=>ageDays(m)>45).length;$('dotStock').textContent=old;$('dotStock').hidden=!old;
+  ({home:renderHome,sell:renderSell,add:renderAdd,stock:renderStock,more:renderMore})[view]();
+}
+
+/* ===== Sự kiện ===== */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.cartdel){cart.splice(+b.dataset.cartdel,1);render();return}
+  if(b.dataset.checkout){if(!cart.length)return;const bill=uid();const n0=new Date();const gio=n0.getHours()+':'+String(n0.getMinutes()).padStart(2,'0');
+    cart.forEach(c=>{const base={id:uid(),bill,ngay:todayIso(),gio,khach:cartKhach.trim(),sdt:cartSdt.trim(),tt:'Tiền mặt',huy:null};
+      if(c.type==='may'){const m=db.may.find(x=>x.imei===c.imei);if(m)m.tt='ban';db.don.push({...base,loai:'may',imei:c.imei,ten:c.ten,hang:c.hang,giaBan:c.gia,giaVon:c.von,bh:c.bh})}
+      else if(c.type==='hang'){const h=db.hang.find(x=>x.id===c.hangId);if(h)h.sl-=c.sl;db.don.push({...base,loai:c.nhom,ten:c.ten+(c.sl>1?' ×'+c.sl:''),hangId:c.hangId,sl:c.sl,giaBan:c.gia*c.sl,giaVon:c.von*c.sl})}
+      else db.don.push({...base,loai:c.nhom,ten:c.ten,giaBan:c.gia,giaVon:c.von,uocTinh:c.uocTinh})});
+    cart=[];cartKhach='';cartSdt='';save();render();openReceipt(bill);return}
+  if(b.dataset.rm){rptMode=b.dataset.rm;rptSel=null;render();return}
+  if(b.dataset.rsel){rptSel=rptSel===b.dataset.rsel?null:b.dataset.rsel;render();return}
+  if(b.dataset.toggle==='todayList'){showToday=!showToday;render();return}
+  if(b.dataset.v){if(b.dataset.v==='more')more='menu';go(b.dataset.v);return}
+  if(b.dataset.go){if(b.dataset.filter==='may'){stockMode='may';stockBrand='Tất cả'}if(b.dataset.filter==='hang')stockMode='hang';go(b.dataset.go);return}
+  if(b.dataset.more){more=b.dataset.more;cancelId=null;resetAsk=false;if(view!=='more')go('more');else{render();window.scrollTo(0,0)}return}
+  if(b.dataset.sm){sellMode=b.dataset.sm;render();return}
+  if(b.dataset.pick){sellImei=b.dataset.pick;sellTT='Tiền mặt';render();return}
+  if(b.dataset.sellimei){sellMode='may';sellImei=b.dataset.sellimei;sellTT='Tiền mặt';go('sell');return}
+  if(b.dataset.nhom){pkNhom=b.dataset.nhom;pkPick=null;pkQ='';renderSell();return}
+  if('pkpick' in b.dataset){pkPick=b.dataset.pkpick||null;renderSell();return}
+  if(b.dataset.am){addMode=b.dataset.am;render();return}
+  if(b.dataset.km){stockMode=b.dataset.km;render();return}
+  if(b.dataset.hn){hangNhom=b.dataset.hn;render();return}
+  if(b.dataset.sellhang){const h=db.hang.find(x=>x.id===b.dataset.sellhang);sellMode='pk';pkNhom=h.nhom;pkPick=h.id;go('sell');return}
+  if(b.dataset.addhang){addMode='hang';addPre=b.dataset.addhang;go('add');return}
+  if(b.dataset.model){const k=b.dataset.model;expModel.has(k)?expModel.delete(k):expModel.add(k);render();return}
+  if(b.dataset.brand){stockBrand=b.dataset.brand;render();return}
+  if(b.dataset.old){stockOld=!stockOld;render();return}
+  if(b.dataset.hd){histDays=+b.dataset.hd;cancelId=null;render();return}
+  if(b.dataset.brandon){const cur=db.shop.brands||[...BRAND_DEF];const k=b.dataset.brandon;db.shop.brands=cur.includes(k)?cur.filter(x=>x!==k):[...cur,k];save();render();return}
+  if(b.dataset.mod){db.shop.mod=db.shop.mod||{};db.shop.mod[b.dataset.mod]=!on(b.dataset.mod);save();render();toast((on(b.dataset.mod)?'Đã bật ':'Đã tắt ')+MODS.find(m=>m.k===b.dataset.mod).t);return}
+  if(b.dataset.tgopen){const k=b.dataset.tgopen;tgOpen=tgOpen===k?null:k;tgReject=null;render();return}
+  if(b.dataset.tgrej){tgReject=b.dataset.tgrej;render();return}
+  if(b.dataset.tgrejno){tgReject=null;render();return}
+  if(b.dataset.tgrejok){const d=db.don.find(x=>x.id===b.dataset.tgrejok);d.huy='Hồ sơ trả góp bị từ chối';const m=db.may.find(x=>x.imei===d.imei);if(m)m.tt='ton';tgReject=null;tgOpen=null;save();render();toast('Đã hủy đơn, máy quay lại kho');return}
+  if(b.dataset.tgnext){const d=db.don.find(x=>x.id===b.dataset.tgnext);d.tgTT=TG_STEPS[TG_STEPS.indexOf(d.tgTT)+1];const n0=new Date();(d.tgLog=d.tgLog||[{tt:'Chờ duyệt',ngay:d.ngay,gio:d.gio}]).push({tt:d.tgTT,ngay:todayIso(),gio:n0.getHours()+':'+String(n0.getMinutes()).padStart(2,'0')});save();render();toast('Đã chuyển: '+d.tgTT);return}
+  if(b.dataset.cancel){cancelId=b.dataset.cancel;render();setTimeout(()=>$('cReason')&&$('cReason').focus(),0);return}
+  if(b.dataset.cancelok){const r=$('cReason').value.trim();if(!r){$('cReason').focus();toast('Ghi lý do hủy trước');return}
+    const d=db.don.find(x=>x.id===b.dataset.cancelok);d.huy=r;if(d.loai==='may'){const m=db.may.find(x=>x.imei===d.imei);if(m)m.tt='ton'}if(d.hangId){const h=db.hang.find(x=>x.id===d.hangId);if(h)h.sl+=d.sl||1}cancelId=null;save();render();toast('Đã hủy đơn');return}
+  if(b.dataset.reset){const k=b.dataset.reset;if(k==='ask'){resetAsk=true;render();return}if(k==='no'){resetAsk=false;render();return}
+    if(k==='ok'){const shop=db.sample?{...emptyDb().shop}:db.shop;db=emptyDb();db.shop=shop;resetAsk=false;save();toast('Đã sẵn sàng dùng thật');go('add');return}
+    if(k==='sample'){db=sampleDb();save();resetAsk=false;toast('Đã nạp dữ liệu mẫu');go('home');return}}
+  if(b.dataset.scan){openScan(b.dataset.scan);return}
+});
+document.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.id==='cKh'){cartKhach=t.value;return}
+  if(t.id==='cSd'){cartSdt=t.value;return}
+  if(t.id==='sImei'){const pos=t.selectionStart;sellImei=t.value.trim();const before=document.activeElement===t;renderSell();const i=$('sImei');if(before){i.focus();try{i.setSelectionRange(pos,pos)}catch(_){}}return}
+  if(t.id==='sGia'){updSellProfit();return}
+  if(t.id==='pGia'||t.id==='pVon'||t.id==='pSl'){updPkProfit();return}
+  if(t.id==='pQ'){pkQ=t.value;renderSell();const i=$('pQ');i.focus();i.setSelectionRange(i.value.length,i.value.length);return}
+  if(t.id==='hQ'){hangQ=t.value;renderStock();const i=$('hQ');i.focus();i.setSelectionRange(i.value.length,i.value.length);return}
+  if(t.id==='hTen'){const v=t.value.trim();const h=$('hHint');if(h){const ex2=v&&db.hang.find(x=>x.ten===v);h.className='hint '+(ex2?'old':'new');h.textContent=!v?'':ex2?'Đã có trong kho (còn '+ex2.sl+'), số nhập sẽ cộng thêm':'Hàng mới, sẽ tạo món mới trong kho'}const ex=db.hang.find(h=>h.ten===t.value.trim());if(ex){$('hNhom').value=ex.nhom+'|'+loaiOf(ex);$('hMin').value=ex.min;if(!$('hGN').value)$('hGN').value=ex.giaNhap.toLocaleString('vi-VN');if(!$('hGB').value&&ex.giaBan)$('hGB').value=ex.giaBan.toLocaleString('vi-VN')}return}
+  if(t.id==='kQ'){stockQ=t.value;renderStock();const i=$('kQ');i.focus();i.setSelectionRange(i.value.length,i.value.length);return}
+  if(t.id==='lQ'){lookQ=t.value.replace(/\D/g,'');renderMore();return}
+  if(t.id==='aTen'){const v=t.value.trim();const h=$('aHint');if(h){const ex2=v&&db.may.some(m=>m.ten===v);h.className='hint '+(ex2?'old':'new');h.textContent=!v?'':ex2?'Đã có máy này, giá lần trước được điền sẵn':'Máy mới, sẽ tạo mẫu máy mới khi nhập'}const g=guessBrand(t.value);if(g)$('aHang').value=g;const ex=db.may.filter(m=>m.ten===t.value.trim()).pop();if(ex){if(!$('aGN').value)$('aGN').value=ex.giaNhap.toLocaleString('vi-VN');if(!$('aGB').value&&ex.giaBan)$('aGB').value=ex.giaBan.toLocaleString('vi-VN')}return}
+});
+document.addEventListener('change',e=>{if(e.target.id==='rMonth'){rptMonth=e.target.value;rptSel=null;render();return}if(e.target.id==='sTT'){sellTT=e.target.value;const keep={g:$('sGia').value,k:$('sKhach').value,s:$('sSdt').value};renderSell();$('sGia').value=keep.g;$('sKhach').value=keep.k;$('sSdt').value=keep.s;updSellProfit()}});
+document.addEventListener('focusout',e=>{const t=e.target;if(['sGia','aGN','aGB','pGia','pVon','sTraTruoc','hGN','hGB'].includes(t.id)&&t.value){const n=parseMoney(t.value);t.value=n?n.toLocaleString('vi-VN'):''}});
+document.addEventListener('submit',e=>{
+  e.preventDefault();const f=e.target;const now=new Date();const gio=now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
+  if(f.id==='fSell'){const m=db.may.find(x=>x.imei===sellImei&&x.tt==='ton');if(!m||inCart(m.imei))return;const g=parseMoney($('sGia').value);
+    if(!g){$('sErr').textContent='Nhập giá bán.';return}
+    cart.push({type:'may',imei:m.imei,ten:m.ten,hang:m.hang,gia:g,von:m.giaNhap,bh:$('sBh')?parseMoney($('sBh').value):0,sl:1});
+    sellImei='';render();window.scrollTo(0,0);toast('Đã thêm '+m.ten+' vào đơn');return}
+  if(f.id==='fPk'){const it=pkPick&&db.hang.find(h=>h.id===pkPick);const g=parseMoney($('pGia').value);if(!g&&!isDv(pkNhom)){$('pErr').textContent='Nhập giá bán.';return}
+    if(it){const sl=Math.max(1,parseMoney($('pSl').value));const left=it.sl-cartQty(it.id);if(sl>left){$('pErr').textContent='Kho chỉ còn '+left+'.';return}
+      cart.push({type:'hang',hangId:it.id,ten:it.ten,nhom:it.nhom,gia:g,von:it.giaNhap,sl});
+      pkPick=null;pkQ='';render();window.scrollTo(0,0);toast('Đã thêm '+it.ten+' vào đơn');return}
+    if(isDv(pkNhom)){const tien=parseMoney($('dTien').value);if(!tien){$('pErr').textContent='Nhập số tiền giao dịch.';return}
+      const loai=$('dLoai').value;db.don.push({id:uid(),ngay:todayIso(),gio,loai:pkNhom,ten:(pkNhom==='thuho'?'Thu hộ ':'')+loai.toLowerCase().replace(/^./,c=>pkNhom==='thuho'?c:c.toUpperCase()),soTien:tien,giaBan:g,giaVon:0,khach:$('dKhach').value.trim(),note:$('dNote').value.trim(),tt:'Tiền mặt',huy:null});
+      save();render();toast(`Đã ghi ${loai} ${money(tien)} · phí ${money(g)}`);return}
+    const vRaw=$('pVon').value.trim();const v=vRaw?parseMoney(vRaw):Math.round(g*(1-db.shop.pct[pkNhom]/100));
+    const ten=$('pTen').value.trim()||NHOM.find(x=>x.k===pkNhom).t;cart.push({type:'free',nhom:pkNhom,ten,gia:g,von:v,uocTinh:!vRaw,sl:1});render();window.scrollTo(0,0);toast('Đã thêm '+ten+' vào đơn');return}
+  if(f.id==='fAddH'){const ten=$('hTen').value.trim(),nhomRaw=$('hNhom').value,nhom=nhomRaw.split('|')[0],loai=nhomRaw.split('|')[1],sl=parseMoney($('hSl').value),gn=parseMoney($('hGN').value),gb=parseMoney($('hGB').value),mn=parseMoney($('hMin').value);const err=$('hErr');
+    if(!ten){err.textContent='Nhập tên món.';return} if(!sl){err.textContent='Nhập số lượng.';return} if(!gn){err.textContent='Nhập giá nhập.';return}
+    let h=db.hang.find(x=>x.ten===ten&&x.nhom===nhom);if(h)h.loai=loai;
+    if(h){h.giaNhap=Math.round((h.giaNhap*Math.max(0,h.sl)+gn*sl)/(Math.max(0,h.sl)+sl));h.sl+=sl;if(gb)h.giaBan=gb;h.min=mn;h.ngayNhap=todayIso()}
+    else{h={id:uid(),ten,nhom,loai,giaNhap:gn,giaBan:gb,sl,min:mn,ngayNhap:todayIso()};db.hang.push(h)}
+    save();render();toast(`Đã nhập ${sl} ${ten} · tồn ${h.sl}`);return}
+  if(f.id==='fAdd'){const ten=$('aTen').value.trim();const lines=[...new Set($('aImei').value.split(/[\s,;]+/).map(s=>s.replace(/\D/g,'')).filter(Boolean))];const gn=parseMoney($('aGN').value),gb=parseMoney($('aGB').value);const err=$('aErr');
+    if(!ten){err.textContent='Nhập tên máy.';return} if(!lines.length){err.textContent='Nhập ít nhất 1 IMEI.';return} if(!gn){err.textContent='Nhập giá nhập.';return}
+    const bad=lines.filter(s=>s.length!==15);if(bad.length){err.textContent='IMEI phải đủ 15 số: '+bad.join(', ');return}
+    const dup=lines.filter(s=>db.may.some(m=>m.imei===s));if(dup.length){err.textContent='IMEI đã có trong hệ thống: '+dup.join(', ');return}
+    const wrong=lines.filter(s=>!luhnOk(s));
+    lines.forEach(imei=>db.may.push({imei,ten,hang:$('aHang').value,giaNhap:gn,giaBan:gb,ngayNhap:$('aNgay').value||todayIso(),ncc:$('aNcc').value.trim(),tt:'ton'}));
+    save();render();toast(`Đã nhập ${lines.length} máy ${ten}`+(wrong.length?` · ${wrong.length} IMEI nên kiểm tra lại`:''));return}
+  if(f.id==='fCtv'){const v=$('ctvSdt').value.trim(),err=$('ctvErr');if(!/^[\d\s+.]{9,15}$/.test(v)){err.textContent='Nhập đúng số điện thoại.';return}
+    err.textContent='Đang lưu…';fetch(GG.LICENSE_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({act:'ctv',email:GG.email,ctv:v})}).then(r=>r.json())
+      .then(d=>{if(d.ok){GG.ctv=d.ctv;render();toast('Đã lưu cộng tác viên')}else err.textContent=d.msg||'Chưa lưu được.'}).catch(()=>{err.textContent='Chưa lưu được, kiểm tra mạng rồi thử lại.'});return}
+  if(f.id==='fBank'){const bin=$('cBank').value,acc=$('cAcc').value.replace(/\s/g,''),name=$('cAccName').value.trim();
+    if(!bin&&!acc){db.shop.bank=null;save();toast('Đã xóa tài khoản ngân hàng');return}
+    if(!bin){$('bErr').textContent='Chọn ngân hàng.';return} if(!/^\d{6,19}$/.test(acc)){$('bErr').textContent='Số tài khoản chỉ gồm số, từ 6 đến 19 số.';return}
+    db.shop.bank={bin,acc,name:noMark(name).toUpperCase()};save();render();toast('Đã lưu tài khoản ngân hàng');return}
+  if(f.id==='fSet'){db.shop.ten=$('cTen').value.trim();db.shop.bh=parseMoney($('cBh').value)||12;NHOM.filter(g=>!isDv(g.k)).forEach(g=>db.shop.pct[g.k]=Math.min(95,parseMoney($('cP_'+g.k).value)));save();render();toast('Đã lưu cài đặt');return}
+});
+
+/* ===== Hóa đơn + QR chuyển khoản (chuẩn VietQR / NAPAS) ===== */
+const BANKS=[['970436','Vietcombank'],['970415','VietinBank'],['970418','BIDV'],['970405','Agribank'],['970407','Techcombank'],['970422','MB Bank'],['970416','ACB'],['970432','VPBank'],['970403','Sacombank'],['970423','TPBank'],['970441','VIB'],['970443','SHB'],['970437','HDBank'],['970448','OCB'],['970426','MSB'],['970440','SeABank'],['970449','LPBank'],['970431','Eximbank'],['970428','Nam A Bank'],['970409','Bac A Bank'],['970452','KienlongBank'],['970412','PVcomBank']];
+const tlv=(id,v)=>id+String(v.length).padStart(2,'0')+v;
+function crc16(str){let c=0xFFFF;for(let i=0;i<str.length;i++){c^=str.charCodeAt(i)<<8;for(let j=0;j<8;j++)c=(c&0x8000)?((c<<1)^0x1021)&0xFFFF:(c<<1)&0xFFFF}return c.toString(16).toUpperCase().padStart(4,'0')}
+function vietqr(bin,acc,amount,info){const mai=tlv('00','A000000727')+tlv('01',tlv('00',bin)+tlv('01',acc))+tlv('02','QRIBFTTA');
+  let p=tlv('00','01')+tlv('01','12')+tlv('38',mai)+tlv('53','704')+tlv('54',String(Math.round(amount)))+tlv('58','VN')+tlv('62',tlv('08',info))+'6304';return p+crc16(p)}
+const noMark=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').replace(/[^A-Za-z0-9 ]/g,'');
+function loadQr(){return window.QRCode?Promise.resolve():new Promise((ok,bad)=>{const sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';sc.onload=ok;sc.onerror=bad;document.head.appendChild(sc)})}
+let rcId=null, rcPay='ck';
+function openReceipt(id){rcId=id;rcPay=db.shop.bank?'ck':'tm';renderReceipt()}
+function renderReceipt(){const lines=db.don.filter(x=>x.bill===rcId||x.id===rcId);if(!lines.length)return;const d=lines[0];const tot=lines.reduce((a,x)=>a+x.giaBan,0);const el=$('rc');el.hidden=false;
+  const bank=db.shop.bank, bn=bank&&(BANKS.find(b=>b[0]===bank.bin)||[])[1];const code='SG'+rcId.slice(-6).toUpperCase();
+  const canPrint=(()=>{try{return window.self===window.top}catch(e){return false}})();
+  el.innerHTML=`<div class="rc"><div class="rcp" id="rcPrint">
+    <div class="rct">${esc(db.shop.ten||'Hóa đơn bán hàng')}</div><div class="rcs">Hóa đơn ${code} · ${dmy(d.ngay)} ${d.gio}</div>
+    ${d.khach||d.sdt?`<div class="rcs" style="margin-top:0">Khách: ${esc(d.khach||'')}${d.sdt?' · '+esc(d.sdt):''}</div>`:''}
+    <div class="rcls">${lines.map(x=>`<div class="rcl"><div><b>${esc(x.ten)}</b>${x.imei?`<small class="num">IMEI ${x.imei}</small>`:''}${x.bh?`<small>Bảo hành ${x.bh} tháng</small>`:''}</div><b class="num">${money(x.giaBan)}</b></div>`).join('')}</div>
+    <div class="rctot"><span>Tổng tiền</span><b class="num">${money(tot)}</b></div>
+    <div class="seg rcseg" role="group"><button data-rcpay="tm" aria-pressed="${rcPay==='tm'}">Tiền mặt</button><button data-rcpay="ck" aria-pressed="${rcPay==='ck'}">Chuyển khoản</button></div>
+    ${rcPay==='ck'?(bank?`<div class="qrbox"><div id="qr"></div><div class="qri"><b>${esc(bn||'')}</b><span class="num">${esc(bank.acc)}</span><span>${esc(bank.name)}</span><span class="num">Số tiền: <b>${money(tot)}</b></span><span class="num">Nội dung: ${code}</span></div></div>`
+      :`<div class="alert amber"><b>Chưa có tài khoản nhận tiền</b><span>Vào Thêm → Cài đặt, nhập ngân hàng và số tài khoản của shop để hiện mã QR.</span></div>`):`<div class="rcthanks">Cảm ơn quý khách!</div>`}
+  </div>
+  <div class="rca">${canPrint?`<button class="ghost" data-rcprint="1">In hóa đơn</button>`:''}<button class="btn" data-rcdone="1">Xong</button></div></div>`;
+  if(rcPay==='ck'&&bank){const amt=tot;loadQr().then(()=>{const q=$('qr');if(!q)return;q.innerHTML='';new QRCode(q,{text:vietqr(bank.bin,bank.acc,amt,code),width:220,height:220,correctLevel:QRCode.CorrectLevel.M})}).catch(()=>{const q=$('qr');if(q)q.textContent='Không tải được mã QR, kiểm tra mạng.'})}
+}
+function closeReceipt(){const lines=db.don.filter(x=>x.bill===rcId||x.id===rcId);lines.forEach(x=>x.tt=rcPay==='ck'?'Chuyển khoản':'Tiền mặt');save();$('rc').hidden=true;rcId=null;render();if(lines.length)toast('Đã lưu đơn '+money(lines.reduce((a,x)=>a+x.giaBan,0)))}
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.rcpay){rcPay=b.dataset.rcpay;renderReceipt()}else if(b.dataset.rcdone)closeReceipt();else if(b.dataset.rcprint){try{window.print()}catch(_){}}});
+
+/* ===== Quét mã vạch =====
+   Dùng BarcodeDetector của trình duyệt (Chrome Android). Nếu máy không hỗ trợ hoặc không cấp camera thì báo gõ tay. */
+let stream=null, scanTarget=null, scanTimer=null, zxReader=null;
+function loadZxing(){return window.ZXing?Promise.resolve():new Promise((ok,bad)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js';s.onload=ok;s.onerror=bad;document.head.appendChild(s)})}
+async function openScan(target){
+  scanTarget=target;const box=$('scan'),msg=$('scanMsg');box.hidden=false;msg.textContent='Đang mở camera…';
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){msg.textContent='Trình duyệt này không mở được camera. Tạm gõ IMEI bằng tay (bấm *#06# trên máy để xem IMEI).';return}
+  if(!('BarcodeDetector' in window)){ // iPhone (Safari) và máy cũ: dùng thư viện ZXing
+    try{await loadZxing();const reader=new ZXing.BrowserMultiFormatReader();zxReader=reader;msg.textContent='Đưa mã vạch IMEI vào giữa khung';
+      reader.decodeFromConstraints({video:{facingMode:'environment'}},$('cam'),res=>{if(!res)return;const s=res.getText().replace(/\D/g,'');if(s.length===15)gotCode(s)});
+    }catch(err){msg.textContent='Không mở được camera. Hãy cho phép camera, hoặc gõ IMEI bằng tay.'}
+    return}
+  try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});const v=$('cam');v.srcObject=stream;await v.play();msg.textContent='Đưa mã vạch IMEI vào giữa khung';
+    const det=new BarcodeDetector({formats:['code_128','ean_13','code_39']});
+    scanTimer=setInterval(async()=>{try{const r=await det.detect(v);const hit=r.map(x=>x.rawValue.replace(/\D/g,'')).find(s=>s.length===15);if(hit)gotCode(hit)}catch(_){}},350);
+  }catch(err){msg.textContent='Không mở được camera. Hãy cho phép camera, hoặc gõ IMEI bằng tay.'}
+}
+function closeScan(){clearInterval(scanTimer);if(zxReader){try{zxReader.reset()}catch(_){}zxReader=null}if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;$('scan').hidden=true}
+function gotCode(code){closeScan();const el=$(scanTarget);if(!el)return;
+  if(scanTarget==='aImei'){el.value=(el.value.trim()?el.value.trim()+'\n':'')+code;toast('Đã quét '+code)}
+  else{el.value=code;el.dispatchEvent(new Event('input',{bubbles:true}))}}
+$('scanClose').addEventListener('click',closeScan);
+
+render();
+(function boot(){let gs=null,seen=null;try{gs=JSON.parse(localStorage.getItem('shopgon_gg')||'null');seen=localStorage.getItem('shopgon_seen')}catch(e){}
+  if(GG.ready()){ /* bản chính thức: chưa đăng nhập + chưa kích hoạt thì không vào được app */
+    lockApp();if(db.sample){db=emptyDb();Store.save(db)}
+    if(gs&&gs.sheetId){GG.email=gs.email;GG.sheetId=gs.sheetId;welcomeMsg('');showWelcome();welcomeMsg('Đang đăng nhập lại…');
+      GG.login(true).then(()=>afterLogin()).catch(()=>{showWelcome()})}
+    else showWelcome();
+    setInterval(()=>{if(GG.email)license(GG.email).then(l=>{if(l.status!=='active'){Store.save(db);showPending(l)}}).catch(()=>{})},6*3600*1000);
+  } else if(firstOpen&&!seen)showWelcome();})();
+</script>
+
+</body></html>
