@@ -233,7 +233,9 @@ nav.tabs button[aria-selected="true"]{color:var(--pen);background:var(--pen-soft
 /* ===== Lớp lưu trữ =====
    LocalStore: lưu trên máy (bản dùng thử).
    Bản thật sẽ thay bằng GoogleSheetsStore với cùng 2 hàm load()/save(), dữ liệu nằm trong Google Drive của shop. */
-const KEY='shopgon_v1';
+/* 23/10 anh Thái: ?demo=1 = bản demo cho Sale/CTV mang xuống shop — dữ liệu mẫu, sổ riêng trên máy, không cần Google */
+const DEMO=/[?&]demo=1/.test(location.search);
+const KEY=DEMO?'shopgon_demo':'shopgon_v1';
 let memory=null;
 const LocalStore={
   load(){try{const s=localStorage.getItem(KEY);return s?JSON.parse(s):null}catch(e){return memory}},
@@ -661,7 +663,7 @@ function renderMore(){
 function render(){
   $('shopName').textContent=db.shop.ten||'Chưa đặt tên shop';
   $('today').textContent=['Chủ nhật','Thứ hai','Thứ ba','Thứ tư','Thứ năm','Thứ sáu','Thứ bảy'][new Date().getDay()]+', '+dmy(todayIso());
-  $('mode').textContent=db.sample?'Dữ liệu mẫu':'Dùng thử';
+  $('mode').textContent=DEMO?'Bản demo':db.sample?'Dữ liệu mẫu':'Dùng thử';
   const old=stock().filter(m=>ageDays(m)>45).length;$('dotStock').textContent=old;$('dotStock').hidden=!old;
   ({home:renderHome,sell:renderSell,add:renderAdd,stock:renderStock,more:renderMore})[view]();
 }
@@ -816,8 +818,12 @@ function gotCode(code){closeScan();const el=$(scanTarget);if(!el)return;
   else{el.value=code;el.dispatchEvent(new Event('input',{bubbles:true}))}}
 $('scanClose').addEventListener('click',closeScan);
 
+function demoBar(){const ref=refSale();const d=document.createElement('div');
+  d.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:calc(86px + env(safe-area-inset-bottom,0px));z-index:25;background:#17203d;color:#fff;border-radius:999px;padding:7px 8px 7px 14px;display:flex;gap:10px;align-items:center;font-size:13px;font-weight:700;box-shadow:0 8px 20px rgba(0,0,0,.25);max-width:calc(100% - 24px)';
+  d.innerHTML='<span style="white-space:nowrap">Bản demo</span><a href="./'+(ref?'?ctv='+encodeURIComponent(ref):'')+'" style="background:#14a293;color:#fff;border-radius:999px;padding:6px 12px;text-decoration:none;white-space:nowrap">Dùng thật ›</a>';document.body.appendChild(d)}
 render();
 (function boot(){let gs=null,seen=null;try{gs=JSON.parse(localStorage.getItem('shopgon_gg')||'null');seen=localStorage.getItem('shopgon_seen')}catch(e){}
+  if(DEMO){demoBar();return}
   if(GG.ready()){ /* bản chính thức: chưa đăng nhập + chưa kích hoạt thì không vào được app */
     lockApp();if(db.sample){db=emptyDb();Store.save(db)}
     if(gs&&gs.sheetId){GG.email=gs.email;GG.sheetId=gs.sheetId;welcomeMsg('');showWelcome();welcomeMsg('Đang đăng nhập lại…');
