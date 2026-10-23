@@ -524,7 +524,7 @@ function updPkProfit(){const el=$('pLoi');if(!el)return;const it=pkPick&&db.hang
 
 /* ===== NHẬP ===== */
 let addMode='may', addPre='';
-function renderAdd(){
+function renderAdd0(){
   const hOn=khoOn().length>0;if(!hOn)addMode='may';
   const hLbl=khoOn().length>1?'hàng khác':khoName[khoOn()[0]?.k]||'';
   const seg=hOn?`<div class="seg" role="group"><button data-am="may" aria-pressed="${addMode==='may'}">Nhập điện thoại</button><button data-am="hang" aria-pressed="${addMode==='hang'}">Nhập ${hLbl}</button></div>`:'';
@@ -849,6 +849,41 @@ document.addEventListener('change',async e=>{if(e.target.id!=='uncIn'||!e.target
   try{const img=await shrink(e.target.files[0]);const r=await fetch(GG.LICENSE_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({act:'unc',email:GG.email,img})}).then(x=>x.json());
     if(!r.ok){msg.textContent=r.msg||'Chưa gửi được.';return}if(payLic)payLic.unc=todayIso();msg.textContent='Đã gửi. Shop Gọn thấy tiền về sẽ kích hoạt — vài phút sau bấm "Kiểm tra lại".'}
   catch(_){msg.textContent='Chưa gửi được, kiểm tra mạng rồi thử lại.'}});
+/* 23/10: Nhập từ ảnh hóa đơn — AI đọc ảnh → shop xem lại → món trùng tên cộng dồn, món mới tạo mới; điện thoại chuyển sang quét IMEI */
+let ocrItems=null, ocrBusy=false;
+const norm=s=>noMark(String(s||'')).toLowerCase().replace(/\s+/g,' ').trim();
+function ocrBtn(){return `<label class="btn" style="display:flex;flex-direction:row;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-size:17px">${ocrBusy?'⏳ Đang đọc hóa đơn…':'📷 Nhập từ ảnh hóa đơn'}<input type="file" accept="image/*" id="ocrIn" hidden ${ocrBusy?'disabled':''}></label><small style="color:var(--muted);text-align:center;margin-top:-6px">Chụp phiếu nhập: món trùng tên tự cộng dồn, món mới tự tạo — xem lại trước khi lưu</small>`}
+function renderAdd(){if(ocrItems){renderOcr();return}renderAdd0();$('v-add').insertAdjacentHTML('afterbegin',ocrBtn())}
+function prepOcr(x){const k=norm(x.khop),k2=norm(x.ten);
+  if(x.loai==='may'){const t=[...new Set(db.may.map(m=>m.ten))].find(t=>norm(t)===k||norm(t)===k2);return Object.assign({},x,{ok:true,match:t||'',ten:t||x.ten})}
+  const h=(k&&db.hang.find(h=>norm(h.ten)===k))||db.hang.find(h=>norm(h.ten)===k2);return Object.assign({},x,{ok:true,match:h?h.id:'',ten:h?h.ten:x.ten,nhom:h?h.nhom:x.nhom})}
+function renderOcr(){const L=ocrItems;const nM=L.filter(x=>x.ok&&x.loai!=='may'&&x.match).length,nN=L.filter(x=>x.ok&&x.loai!=='may'&&!x.match).length,nP=L.filter(x=>x.ok&&x.loai==='may').length;
+  $('v-add').innerHTML=`<div class="panel"><h2>Hóa đơn: ${L.length} dòng</h2><p style="margin:0 0 8px;color:var(--muted);font-size:14px">Kiểm tra tên, số lượng, giá nhập. Bỏ chọn dòng không muốn nhập.</p>
+  <div class="list">${L.map((x,i)=>`<div class="row" style="flex-wrap:wrap;gap:6px;${x.ok?'':'opacity:.45'}"><div style="display:flex;align-items:center;gap:8px;flex:1;min-width:200px"><input type="checkbox" data-oi="${i}" data-of="ok" ${x.ok?'checked':''} style="width:22px;height:22px;flex:none" aria-label="Nhập dòng này"><input data-oi="${i}" data-of="ten" value="${esc(x.ten)}" style="padding:8px 10px"></div>
+    <span class="pill ${x.loai==='may'?'b':x.match?'g':'a'}">${x.loai==='may'?'Điện thoại · quét IMEI':x.match?'Cộng dồn':'Món mới'}</span>
+    <div class="two" style="flex-basis:100%"><label>Số lượng<input data-oi="${i}" data-of="sl" inputmode="numeric" value="${x.sl}"></label><label>Giá nhập / cái<input data-oi="${i}" data-of="giaNhap" inputmode="numeric" class="num" value="${x.giaNhap?x.giaNhap.toLocaleString('vi-VN'):''}"></label></div></div>`).join('')}</div>
+  <p style="margin:10px 0 0;font-size:14px">${nM} món cộng dồn · ${nN} món mới${nP?' · '+nP+' mẫu điện thoại (quét IMEI sau)':''}</p>
+  <div class="inrow" style="margin-top:12px"><button class="btn" style="flex:1" data-ocrok="1">Nhập vào kho</button><button class="ghost" data-ocrno="1">Hủy</button></div></div>`}
+function shrink2(file){return new Promise((ok,bad)=>{const u=URL.createObjectURL(file);const im=new Image();im.onload=()=>{const k=Math.min(1,1600/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);let q=.82,d=c.toDataURL('image/jpeg',q);while(d.length>1400000&&q>.35){q-=.12;d=c.toDataURL('image/jpeg',q)}ok(d)};im.onerror=bad;im.src=u})}
+document.addEventListener('change',async e=>{const t=e.target;
+  if(t.dataset&&t.dataset.oi!==undefined&&ocrItems){const x=ocrItems[+t.dataset.oi];if(t.dataset.of==='ok'){x.ok=t.checked;renderOcr()}else if(t.dataset.of==='ten'){x.ten=t.value.trim();const y=prepOcr(Object.assign({},x,{khop:''}));x.match=y.match;x.ten=y.ten;if(x.loai!=='may')x.nhom=y.nhom;renderOcr()}return}
+  if(t.id!=='ocrIn'||!t.files||!t.files[0])return;ocrBusy=true;renderAdd();
+  try{const img=await shrink2(t.files[0]);const names=[...new Set([...db.hang.map(h=>h.ten),...db.may.map(m=>m.ten)])];
+    const r=await fetch(GG.LICENSE_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({act:'ocr',email:DEMO?'':GG.email,ctv:DEMO?refSale():'',img,ten:names})}).then(x=>x.json());
+    if(!r.ok)toast(r.msg||'Chưa đọc được hóa đơn');else if(!r.items||!r.items.length)toast('Không thấy món hàng nào trong ảnh');else ocrItems=r.items.map(prepOcr)}
+  catch(_){toast('Chưa đọc được, kiểm tra mạng rồi thử lại')}
+  ocrBusy=false;renderAdd()});
+document.addEventListener('input',e=>{const t=e.target;if(!(t.dataset&&t.dataset.oi!==undefined&&ocrItems))return;const x=ocrItems[+t.dataset.oi];if(t.dataset.of==='sl')x.sl=parseMoney(t.value);else if(t.dataset.of==='giaNhap')x.giaNhap=parseMoney(t.value)});
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||!ocrItems)return;
+  if(b.dataset.ocrno){ocrItems=null;renderAdd();return}
+  if(!b.dataset.ocrok)return;const L=ocrItems.filter(x=>x.ok&&x.ten.trim()&&x.sl>0);let nH=0,nNew=0;const may=[];
+  L.forEach(x=>{if(x.loai==='may'){may.push(x);return}const h=db.hang.find(h=>h.id===x.match)||db.hang.find(h=>norm(h.ten)===norm(x.ten));
+    if(h){const gn=x.giaNhap||h.giaNhap;h.giaNhap=Math.round((h.giaNhap*Math.max(0,h.sl)+gn*x.sl)/(Math.max(0,h.sl)+x.sl));h.sl+=x.sl;h.ngayNhap=todayIso();nH++}
+    else{db.hang.push({id:uid(),ten:x.ten.trim(),nhom:x.nhom||'pk',loai:'',giaNhap:x.giaNhap,giaBan:0,sl:x.sl,min:5,ngayNhap:todayIso()});nNew++}});
+  save();ocrItems=null;
+  if(may.length){const x=may[0];addMode='may';renderAdd();setTimeout(()=>{const a=$('aTen');if(!a)return;a.value=x.ten;a.dispatchEvent(new Event('input',{bubbles:true}));if(x.giaNhap)$('aGN').value=x.giaNhap.toLocaleString('vi-VN');$('aImei').focus()},0);
+    toast(`Đã nhập ${nH+nNew} món hàng. Quét IMEI cho ${x.sl} máy ${x.ten}`+(may.length>1?` · còn ${may.length-1} mẫu máy khác`:''))}
+  else{renderAdd();toast(`Đã nhập: ${nH} món cộng dồn, ${nNew} món mới`)}});
 /* 23/10: bản demo — nút QR đăng ký nằm trên thanh tên shop, bấm là hiện QR */
 function demoBar(){const m=$('mode');if(!m)return;m.hidden=true;const b=document.createElement('button');b.id='demoQr';b.textContent='📱 QR đăng ký';b.style.cssText='background:#fff;color:#0b5e57;border:0;border-radius:999px;padding:8px 14px;font-weight:800;font-size:14px;white-space:nowrap;flex:none;box-shadow:0 2px 6px rgba(0,0,0,.18)';m.after(b)}
 render();
