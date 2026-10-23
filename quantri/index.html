@@ -253,7 +253,7 @@ function vCtv(){const t=D.today;const m0=t.slice(0,7);const p=pD(m0+'-01');p.set
 function pillOf(k){const s=trangThai(k),left=k.han?days(k.han,D.today):null;
   return s==='cho'?'<span class="pill p-a">Chờ duyệt</span>':s==='khoa'?`<span class="pill p-r">${esc(k.tt)}</span>`:s==='het'?'<span class="pill p-r">Hết hạn</span>':left<=7?`<span class="pill p-a">Còn ${left} ngày</span>`:`<span class="pill p-g">Còn ${left} ngày</span>`}
 function vCuaHang(){const nhom={cho:[],dung:[],het:[],khoa:[]};D.kh.forEach(k=>nhom[trangThai(k)].push(k));
-  nhom.dung.sort((a,b)=>(a.han||'').localeCompare(b.han||''));nhom.cho.sort((a,b)=>(b.yeuCau||'').localeCompare(a.yeuCau||''));
+  nhom.dung.sort((a,b)=>(!!b.unc-!!a.unc)||(a.han||'').localeCompare(b.han||''));nhom.het.sort((a,b)=>!!b.unc-!!a.unc);nhom.cho.sort((a,b)=>(b.yeuCau||'').localeCompare(a.yeuCau||''));
   let L=CH_LOC==='tat'?D.kh.slice():nhom[CH_LOC];const q=Q.trim().toLowerCase();
   if(q)L=L.filter(k=>(k.shop+' '+k.email+' '+k.sdt+' '+k.ctv+' '+tenOf(k.ctv)).toLowerCase().includes(q));
   return `<input class="f" id="q" placeholder="Tìm tên shop, Gmail, SĐT, CTV" value="${esc(Q)}" inputmode="search">
@@ -264,16 +264,17 @@ function shopCard(k){const s=trangThai(k),e=esc(k.email);const p=pick[k.email]||
   const ctvRow=editShopCtv===k.email?`<div class="act"><input id="sc" inputmode="tel" placeholder="SĐT CTV (bỏ trống = gỡ)" value="${esc(k.ctv)}" style="width:190px"><button class="ghost" data-setsc="${e}">Lưu</button><button class="ghost" data-editsc="">Thôi</button></div>`
     :`<div><button class="ctvtag" data-editsc="${e}">${k.ctv?'👤 CTV: '+ctvLbl(k.ctv):'＋ Gắn CTV'}</button></div>`;
   const duyet=s==='khoa'?`<div class="act"><button class="ghost" data-st="${e}" data-v="Đã duyệt">Mở lại</button></div>`
+    :(s!=='cho'&&!k.unc)?''
     :`<div class="act"><div class="chips" style="overflow:visible;flex-wrap:wrap">${D.goi.map(g=>`<button class="chip" data-pick="${e}" data-m="${g.m}" aria-pressed="${p.m===g.m}">${g.ten}</button>`).join('')}</div>
       <input inputmode="numeric" class="num" data-tien="${e}" value="${p.gia.toLocaleString('vi-VN')}" aria-label="Số tiền đã nhận"></div>
       ${k.ctv?`<small style="color:var(--muted)">${hhTxt(k.ctv)}: <b class="num" id="hh-${e}" data-p="${pctOf(k.ctv)}">${money(p.gia*pctOf(k.ctv)/100)}</b></small>`:''}
       ${ask===k.email?`<div class="act"><b style="color:var(--red)">${s==='cho'?'Từ chối shop này?':'Khóa shop này? Shop bị đẩy ra khỏi app.'}</b><button class="ghost red" data-st="${e}" data-v="${s==='cho'?'Từ chối':'Khóa'}">Xác nhận</button><button class="ghost" data-ask="">Thôi</button></div>`
         :`<div class="act"><button class="btn" data-ok="${e}" style="flex:1">${s==='cho'?'Duyệt':'Gia hạn'}</button><button class="ghost red" data-ask="${e}">${s==='cho'?'Từ chối':'Khóa'}</button></div>`}`;
-  return `<div class="shop"><div class="top"><div class="n"><b>${esc(k.shop||'(chưa ghi tên)')}</b><small>${e}</small><small class="num">${k.sdt?`<a href="tel:${esc(k.sdt.replace(/\s/g,''))}" style="color:var(--pen)">${esc(k.sdt)}</a> · `:''}${s==='cho'?'Gửi '+dmy(k.yeuCau):k.han?'Hạn '+dmy(k.han):''}</small></div>${s==='cho'?(k.unc?`<button class="pill p-g" data-unc="${e}" style="border:0;cursor:pointer">🧾 Đã chuyển tiền · ${dm(k.unc)}</button>`:'<span class="pill p-a">Chưa gửi UNC</span>'):pillOf(k)}</div>${ctvRow}${uncImg===k.email?'<div id="uncBox" class="ex" style="padding:8px;text-align:center">Đang tải ảnh…</div>':''}${duyet}</div>`}
+  return `<div class="shop"><div class="top"><div class="n"><b>${esc(k.shop||'(chưa ghi tên)')}</b><small>${e}</small><small class="num">${k.sdt?`<a href="tel:${esc(k.sdt.replace(/\s/g,''))}" style="color:var(--pen)">${esc(k.sdt)}</a> · `:''}${s==='cho'?'Gửi '+dmy(k.yeuCau):k.han?'Hạn '+dmy(k.han):''}</small></div>${s==='cho'?(k.unc?`<button class="pill p-g" data-unc="${e}" style="border:0;cursor:pointer">🧾 Đã chuyển tiền · ${dm(k.unc)}</button>`:'<span class="pill p-a">Chưa gửi UNC</span>'):k.unc&&s!=='khoa'?`<button class="pill p-g" data-unc="${e}" style="border:0;cursor:pointer">🧾 Chuyển tiền gia hạn · ${dm(k.unc)}</button>`:pillOf(k)}</div>${ctvRow}${uncImg===k.email?'<div id="uncBox" class="ex" style="padding:8px;text-align:center">Đang tải ảnh…</div>':''}${duyet}</div>`}
 
 /* ===== vẽ ===== */
 function render(){if(!D)return;
-  const cho=D.kh.filter(k=>trangThai(k)==='cho').length;$('dotCho').textContent=cho;$('dotCho').hidden=!cho;
+  const cho=D.kh.filter(k=>trangThai(k)==='cho'||(k.unc&&trangThai(k)!=='khoa')).length;$('dotCho').textContent=cho;$('dotCho').hidden=!cho;
   $('sub').textContent=(LIVE?'':'Bản xem trước · dữ liệu mẫu · ')+'Cập nhật '+new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});
   document.querySelectorAll('nav [data-tab]').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===TAB));
   $('v').innerHTML=TAB==='dt'?vDoanhThu():TAB==='ctv'?vCtv():vCuaHang()}
