@@ -337,7 +337,7 @@ refSale();
 async function sendRequest(){const shop=(document.getElementById('rqShop')||{}).value||'',sdt=(document.getElementById('rqSdt')||{}).value||'',sale=(document.getElementById('rqSale')||{}).value||'';
   if(!shop.trim()){welcomeMsg('Nhập tên shop trước khi gửi.');return}
   try{await fetch(GG.LICENSE_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({email:GG.email,shop:shop.trim(),sdt:sdt.trim(),ctv:sale.trim()})});db.shop.ten=shop.trim();Store.save(db);
-    showPending({status:'pending'},true)}catch(e){welcomeMsg('Chưa gửi được, kiểm tra mạng rồi thử lại.')}}
+    try{localStorage.setItem('shopgon_sdt',sdt.trim())}catch(_){}license(GG.email).then(l=>showPending(l,true)).catch(()=>showPending({status:'pending'},true))}catch(e){welcomeMsg('Chưa gửi được, kiểm tra mạng rồi thử lại.')}}
 function showPending(lic,justSent){lockApp();const w=document.getElementById('welcome');w.hidden=false;
   const st=lic.status;
   w.innerHTML=`<div class="wc"><div class="wlogo"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
@@ -347,11 +347,13 @@ function showPending(lic,justSent){lockApp();const w=document.getElementById('we
     <label style="width:100%;text-align:left">SĐT cộng tác viên (nếu có)<input id="rqSale" value="${esc(refSale())}" placeholder="Người cài app cho shop" inputmode="tel"></label>
     <button class="btn" style="width:100%" data-gg="request">Gửi yêu cầu kích hoạt</button>`
   :st==='pending'?`<h1>Đang chờ kích hoạt</h1><p>${justSent?'Đã gửi yêu cầu. ':''}Gmail <b>${esc(GG.email)}</b> sẽ được kích hoạt sau khi Shop Gọn xác nhận thanh toán. Kích hoạt xong, bấm "Kiểm tra lại".</p>
+    ${payBlock(lic)}
     <button class="btn" style="width:100%" data-gg="recheck">Kiểm tra lại</button>`
   :st==='expired'?`<h1>Hết hạn sử dụng</h1><p>Gói của <b>${esc(GG.email)}</b> hết hạn ngày ${esc(lic.han||'')}. Dữ liệu vẫn còn nguyên trong Google Drive của shop. Liên hệ Shop Gọn để gia hạn.</p>
+    ${payBlock(lic)}
     <button class="btn" style="width:100%" data-gg="recheck">Kiểm tra lại</button>`
   :`<h1>Tài khoản tạm khóa</h1><p>Liên hệ Shop Gọn để được hỗ trợ.</p>`}
-  <small id="wMsg"></small><button class="wlink" data-gg="other">Đăng nhập Gmail khác</button></div>`}
+  <small id="wMsg"></small><button class="wlink" data-gg="other">Đăng nhập Gmail khác</button></div>`;drawPay(lic)}
 async function afterLogin(){welcomeMsg('Đang kiểm tra kích hoạt…');const lic=await license(GG.email);GG.ctv=lic.ctv||'';
   if(lic.status!=='active'){showPending(lic);return false}
   welcomeMsg('Đang chuẩn bị sổ dữ liệu trong Drive…');
@@ -818,9 +820,24 @@ function gotCode(code){closeScan();const el=$(scanTarget);if(!el)return;
   else{el.value=code;el.dispatchEvent(new Event('input',{bubbles:true}))}}
 $('scanClose').addEventListener('click',closeScan);
 
+/* 23/10: QR thanh toán gói ngay trên màn chờ duyệt — TK nhận tiền + bảng giá lấy từ máy chủ (tab CauHinh), không ghi trong code */
+let payGoi=0, payLic=null;
+function sdtShop(lic){let s=(lic&&lic.sdt)||'';if(!s)try{s=localStorage.getItem('shopgon_sdt')||''}catch(e){}return String(s).replace(/\D/g,'')}
+function payBlock(lic){const G=(lic&&lic.goi)||[];if(!G.length)return '';const bk=lic.bank;const i0=Math.min(payGoi,G.length-1),g=G[i0];const nd='SG '+sdtShop(lic);
+  return `<div style="width:100%;text-align:left;border-top:1px dashed var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px"><b>Thanh toán để kích hoạt</b>
+  <div class="seg" role="group">${G.map((x,i)=>`<button type="button" data-paygoi="${i}" aria-pressed="${i===i0}">${esc(x.ten)}<br><small class="num">${short(x.gia)}</small></button>`).join('')}</div>
+  ${bk&&bk.acc&&bk.bin?`<div class="qrbox"><div id="payQr" style="padding:10px;background:#fff;border:1px solid var(--line);border-radius:14px;min-height:220px;min-width:220px;display:grid;place-items:center"></div><div class="qri"><b>${esc(bk.nh||'')}</b><span class="num">${esc(bk.acc)}</span><span>${esc(bk.name||'')}</span><span class="num">Số tiền: <b>${money(g.gia)}</b></span><span class="num">Nội dung: <b>${esc(nd)}</b></span></div></div><small style="text-align:center">Quét mã bằng app ngân hàng, giữ nguyên nội dung. Chuyển xong vài phút bấm "Kiểm tra lại".</small>`
+  :`<div class="alert amber"><b>Gói ${esc(g.ten)}: ${money(g.gia)}</b><span>Liên hệ người cài app hoặc Shop Gọn để nhận thông tin chuyển khoản.</span></div>`}</div>`}
+function drawPay(lic){payLic=lic;const bk=lic&&lic.bank,G=(lic&&lic.goi)||[];if(!bk||!bk.acc||!bk.bin||!G.length)return;const g=G[Math.min(payGoi,G.length-1)];const nd=noMark('SG '+sdtShop(lic));
+  loadQr().then(()=>{const q=$('payQr');if(!q)return;q.innerHTML='';new QRCode(q,{text:vietqr(bk.bin,bk.acc,g.gia,nd),width:200,height:200,correctLevel:QRCode.CorrectLevel.M})}).catch(()=>{const q=$('payQr');if(q)q.textContent='Không tải được mã QR, kiểm tra mạng.'})}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-paygoi]');if(!b||!payLic)return;payGoi=+b.dataset.paygoi;showPending(payLic)});
+/* 23/10: bản demo có nút "QR cho shop" — shop quét bằng điện thoại của shop, đăng nhập Gmail trên máy shop (không đăng nhập trên máy Sale) */
+document.addEventListener('click',e=>{if(e.target.closest('[data-demoqrx]')){$('rc').hidden=true;return}if(!e.target.closest('#demoQr'))return;const ref=refSale();const url='https://shopgon.vn/app/'+(ref?'?ctv='+encodeURIComponent(ref):'');const el=$('rc');el.hidden=false;
+  el.innerHTML=`<div class="rc"><div class="rcp"><div class="rct">Quét để cài Shop Gọn</div><div class="rcs">Chủ shop mở camera trên điện thoại của shop, quét mã này rồi đăng nhập bằng Gmail của shop.</div><div class="qrbox"><div id="qr"></div><div class="qri"><span class="num">${esc(url.replace('https://',''))}</span>${ref?`<span>Cộng tác viên: <b class="num">${esc(ref)}</b></span>`:''}</div></div></div><div class="rca"><button class="btn" data-demoqrx="1">Đóng</button></div></div>`;
+  loadQr().then(()=>{const q=$('qr');if(!q)return;q.innerHTML='';new QRCode(q,{text:url,width:220,height:220,correctLevel:QRCode.CorrectLevel.M})}).catch(()=>{const q=$('qr');if(q)q.textContent='Không tải được mã QR, kiểm tra mạng.'})});
 function demoBar(){const ref=refSale();const d=document.createElement('div');
   d.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:calc(86px + env(safe-area-inset-bottom,0px));z-index:25;background:#17203d;color:#fff;border-radius:999px;padding:7px 8px 7px 14px;display:flex;gap:10px;align-items:center;font-size:13px;font-weight:700;box-shadow:0 8px 20px rgba(0,0,0,.25);max-width:calc(100% - 24px)';
-  d.innerHTML='<span style="white-space:nowrap">Bản demo</span><a href="./'+(ref?'?ctv='+encodeURIComponent(ref):'')+'" style="background:#14a293;color:#fff;border-radius:999px;padding:6px 12px;text-decoration:none;white-space:nowrap">Dùng thật ›</a>';document.body.appendChild(d)}
+  d.innerHTML='<span style="white-space:nowrap">Bản demo</span><button id="demoQr" style="background:#fff;color:#17203d;border:0;border-radius:999px;padding:6px 12px;font-weight:700;font-size:13px;white-space:nowrap">QR cho shop</button><a href="./'+(ref?'?ctv='+encodeURIComponent(ref):'')+'" style="background:#14a293;color:#fff;border-radius:999px;padding:6px 12px;text-decoration:none;white-space:nowrap">Dùng thật ›</a>';document.body.appendChild(d)}
 render();
 (function boot(){let gs=null,seen=null;try{gs=JSON.parse(localStorage.getItem('shopgon_gg')||'null');seen=localStorage.getItem('shopgon_seen')}catch(e){}
   if(DEMO){demoBar();return}
