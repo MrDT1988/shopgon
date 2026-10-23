@@ -167,7 +167,7 @@ function showGate(msg){$('gate').hidden=false;$('pinErr').textContent=msg||'';se
 document.getElementById('gateF').addEventListener('submit',e=>{e.preventDefault();const v=$('pinIn').value.replace(/\D/g,'');if(!v){$('pinErr').textContent='Nhập mã PIN';return}
   PIN=v;$('pinErr').textContent='Đang kiểm tra…';call('adminData').then(d=>{try{localStorage.setItem(KPIN,v)}catch(_){}$('gate').hidden=true;$('pinIn').value='';D=d;render()}).catch(er=>{$('pinErr').textContent=er.message;$('pinIn').select()})});
 function fake(fn,a,b,c){if(fn==='adminData')return D||sample();
-  if(fn==='adminSaveCtv'){const x=D.ctv.find(o=>o.sdt===a);if(x)x.ten=b;else D.ctv.push({sdt:a,ten:b,ngay:D.today});return D}
+  if(fn==='adminSaveCtv'){const x=D.ctv.find(o=>o.sdt===a);if(x&&arguments[3]!==undefined){x.role=arguments[3]==='Leader'?'Leader':'';x.leader=arguments[4]||''}if(x)x.ten=b;else D.ctv.push({sdt:a,ten:b,ngay:D.today});return D}
   const k=D.kh.find(r=>r.email===a);
   if(fn==='adminSetShopCtv'){k.ctv=b;return D}
   if(fn==='adminApprove'){const gh=k.tt==='Đã duyệt';const base=gh&&k.han>D.today?k.han:D.today;const x=pD(base);x.setMonth(x.getMonth()+b);k.tt='Đã duyệt';k.han=fD(x);D.tt.push({ngay:D.today,email:a,shop:k.shop,m:b,tien:c,loai:gh?'Gia hạn':'Kích hoạt',ctv:k.ctv,hh:k.ctv?Math.round(c*D.hhPct/100):0})}
@@ -175,6 +175,10 @@ function fake(fn,a,b,c){if(fn==='adminData')return D||sample();
 let tmr;function toast(m){const e=$('toast');e.textContent=m;e.hidden=false;clearTimeout(tmr);tmr=setTimeout(()=>e.hidden=true,2300)}
 function load(){if(LIVE&&!PIN){showGate('');return}$('sub').textContent='Đang tải…';call('adminData').then(d=>{D=d;render()}).catch(e=>{$('v').innerHTML='<div class="card">Không tải được: '+esc(e.message)+'</div>'})}
 const tenOf=s=>{if(!s)return '';const c=D.ctv.find(x=>x.sdt===s);return c&&c.ten?c.ten:''};
+/* 23/10: Sale 40% + Leader 10%; Leader tự bán 50% */
+const ciOf=s=>{const c=(D.ctv||[]).find(x=>x.sdt===s)||{};return{role:c.role||'',leader:c.leader||''}};
+const pctOf=s=>{const c=ciOf(s);return c.role==='Leader'?D.hhPct:(D.hhSale||40)+(c.leader?(D.hhLeader||10):0)};
+const hhTxt=s=>{const c=ciOf(s);return c.role==='Leader'?'Leader tự bán nhận '+D.hhPct+'%':c.leader?'Sale '+(D.hhSale||40)+'% + Leader '+(D.hhLeader||10)+'%':'Sale nhận '+(D.hhSale||40)+'% (chưa có leader)'};
 const ctvLbl=s=>s?(tenOf(s)?esc(tenOf(s))+' · ':'')+fmtSdt(s):'';
 const trangThai=k=>k.tt==='Đã duyệt'?(k.han&&k.han<D.today?'het':'dung'):k.tt==='Chờ duyệt'?'cho':'khoa';
 
@@ -185,7 +189,7 @@ function ky(kind,t){ // trả {tu,den,ten,truoc:{tu,den}}
   const m0=t.slice(0,8)+'01';const p=pD(m0);p.setMonth(p.getMonth()-1);const pm=fD(p);const pEnd=addD(m0,-1);const dayN=+t.slice(8);const pDen=pm.slice(0,8)+String(Math.min(dayN,+pEnd.slice(8))).padStart(2,'0');
   return{tu:m0,den:t,ten:'Tháng '+(+t.slice(5,7))+'/'+t.slice(0,4),truoc:{tu:pm,den:pDen},tenTruoc:'cùng kỳ tháng trước'}}
 const inR=(s,r)=>s>=r.tu&&s<=r.den;
-function sumTT(r){const L=D.tt.filter(x=>inR(x.ngay,r));return{L,dt:L.reduce((a,x)=>a+x.tien,0),hh:L.reduce((a,x)=>a+(x.hh||0),0),n:L.length,moi:L.filter(x=>x.loai!=='Gia hạn').length,gh:L.filter(x=>x.loai==='Gia hạn').length}}
+function sumTT(r){const L=D.tt.filter(x=>inR(x.ngay,r));return{L,dt:L.reduce((a,x)=>a+x.tien,0),hh:L.reduce((a,x)=>a+(x.hh||0)+(x.hhL||0),0),n:L.length,moi:L.filter(x=>x.loai!=='Gia hạn').length,gh:L.filter(x=>x.loai==='Gia hạn').length}}
 function cot(kind,t){const out=[];
   if(kind==='ngay'){for(let i=13;i>=0;i--){const d=addD(t,-i);out.push({l:i%2?'':dm(d),r:{tu:d,den:d},now:i===0})}}
   else if(kind==='tuan'){const m=monday(t);for(let i=7;i>=0;i--){const a=addD(m,-7*i);out.push({l:dm(a),r:{tu:a,den:addD(a,6)},now:i===0})}}
@@ -207,29 +211,30 @@ function vDoanhThu(){const t=D.today,K=ky(KY,t),s=sumTT(K),p=sumTT(K.truoc);
     <div class="kpi"><div class="eb">Chờ duyệt</div><div class="v num" style="color:${cho?'var(--amber)':'inherit'}">${cho}</div><div class="d">${cho?'<a href="#" data-goch="cho" style="color:var(--pen);font-weight:700">Duyệt ngay ›</a>':'Đã duyệt hết'}</div></div>
   </div>
   <div class="card"><h2>Doanh thu ${KY==='ngay'?'14 ngày':KY==='tuan'?'8 tuần':'6 tháng'}</h2><div class="bars">${C.map(c=>`<div class="bar${c.now?' now':''}"><em class="num">${c.v.dt?short(c.v.dt):''}</em><i style="height:${c.v.dt/mx*100}%"></i><span>${c.l}</span></div>`).join('')}</div></div>
-  <div class="card"><h2>Giao dịch · ${esc(K.ten)}</h2>${s.L.length?[...s.L].reverse().map(x=>`<div class="row"><div class="n"><b>${esc(x.shop)}</b><small>${dmy(x.ngay)} · ${esc(x.loai||'')} gói ${goiTen(x.m)}${x.ctv?' · CTV '+ctvLbl(x.ctv):''}</small></div><div class="r"><b class="num">${money(x.tien)}</b>${x.hh?`<small class="num">HH ${money(x.hh)}</small>`:''}</div></div>`).join(''):'<div class="empty">Chưa bán gói nào trong kỳ này.</div>'}</div>`}
+  <div class="card"><h2>Giao dịch · ${esc(K.ten)}</h2>${s.L.length?[...s.L].reverse().map(x=>`<div class="row"><div class="n"><b>${esc(x.shop)}</b><small>${dmy(x.ngay)} · ${esc(x.loai||'')} gói ${goiTen(x.m)}${x.ctv?' · CTV '+ctvLbl(x.ctv):''}</small></div><div class="r"><b class="num">${money(x.tien)}</b>${(x.hh||x.hhL)?`<small class="num">HH ${money((x.hh||0)+(x.hhL||0))}</small>`:''}</div></div>`).join(''):'<div class="empty">Chưa bán gói nào trong kỳ này.</div>'}</div>`}
 
 /* ===== TAB 2: CỘNG TÁC VIÊN ===== */
 function vCtv(){const t=D.today;const m0=t.slice(0,7);const p=pD(m0+'-01');p.setMonth(p.getMonth()-1);const pm=fD(p).slice(0,7);
   const mk=CTV_KY==='nay'?m0:pm;const R={tu:mk+'-01',den:mk+'-31'};
   const all=new Set([...D.ctv.map(c=>c.sdt),...D.kh.map(k=>k.ctv).filter(Boolean),...D.tt.map(x=>x.ctv).filter(Boolean)]);
-  const list=[...all].map(s=>{const shops=D.kh.filter(k=>k.ctv===s);const L=D.tt.filter(x=>x.ctv===s);const Lk=L.filter(x=>inR(x.ngay,R));
-    return{s,ten:tenOf(s),shops,dung:shops.filter(k=>trangThai(k)==='dung').length,n:Lk.length,dt:Lk.reduce((a,x)=>a+x.tien,0),hh:Lk.reduce((a,x)=>a+(x.hh||0),0),hhAll:L.reduce((a,x)=>a+(x.hh||0),0),L}})
+  const list=[...all].map(s=>{const shops=D.kh.filter(k=>k.ctv===s);const L=D.tt.filter(x=>x.ctv===s||x.ld===s).map(x=>x.ctv===s?x:Object.assign({},x,{hh:x.hhL||0,doi:1}));const Lk=L.filter(x=>inR(x.ngay,R));
+    return{s,ten:tenOf(s),ci:ciOf(s),shops,dung:shops.filter(k=>trangThai(k)==='dung').length,n:Lk.length,dt:Lk.reduce((a,x)=>a+x.tien,0),hh:Lk.reduce((a,x)=>a+(x.hh||0),0),hhAll:L.reduce((a,x)=>a+(x.hh||0),0),L}})
     .sort((a,b)=>b.hh-a.hh||b.shops.length-a.shops.length);
-  const tong=list.reduce((a,x)=>a+x.hh,0),tongDt=list.reduce((a,x)=>a+x.dt,0),coBan=list.filter(x=>x.n).length;
+  const tong=list.reduce((a,x)=>a+x.hh,0),tongDt=D.tt.filter(x=>x.ctv&&inR(x.ngay,R)).reduce((a,x)=>a+x.tien,0),coBan=list.filter(x=>x.n).length;
   const khongCtv=D.tt.filter(x=>inR(x.ngay,R)&&!x.ctv).reduce((a,x)=>a+x.tien,0);
   return `<div class="seg" role="group"><button data-ctvky="nay" aria-pressed="${CTV_KY==='nay'}">Tháng ${+m0.slice(5)}</button><button data-ctvky="truoc" aria-pressed="${CTV_KY==='truoc'}">Tháng ${+pm.slice(5)}</button></div>
-  <div class="kpis"><div class="kpi hero"><div class="eb">Hoa hồng phải trả · tháng ${+mk.slice(5)}/${mk.slice(0,4)}</div><div class="v num">${money(tong)}</div><div class="d">${coBan} CTV có bán · ${D.hhPct}% trên tiền gói · doanh thu qua CTV ${short(tongDt)}</div></div>
+  <div class="kpis"><div class="kpi hero"><div class="eb">Hoa hồng phải trả · tháng ${+mk.slice(5)}/${mk.slice(0,4)}</div><div class="v num">${money(tong)}</div><div class="d">${coBan} CTV có bán · Sale ${D.hhSale||40}% · Leader ${D.hhLeader||10}% · doanh thu qua CTV ${short(tongDt)}</div></div>
     <div class="kpi"><div class="eb">Tổng CTV</div><div class="v num">${list.length}</div><div class="d">${D.kh.filter(k=>k.ctv).length} shop có CTV</div></div>
     <div class="kpi"><div class="eb">Bán không qua CTV</div><div class="v num">${short(khongCtv)}</div><div class="d">Không tính hoa hồng</div></div></div>
   <div class="card"><div class="top"><h2 style="margin:0">Danh sách cộng tác viên</h2><button class="ghost" data-addctv="1">＋ Thêm CTV</button></div>
   ${addCtv?`<div class="ex" style="margin-top:10px;padding:12px;display:flex;flex-direction:column;gap:8px"><input class="f" id="nSdt" inputmode="tel" placeholder="Số điện thoại CTV (mã đăng nhập)"><input class="f" id="nTen" placeholder="Tên CTV, VD: Khánh"><div class="act"><button class="btn" data-savectv="new">Lưu CTV</button><button class="ghost" data-addctv="0">Thôi</button></div></div>`:''}
-  <div style="margin-top:6px">${list.length?list.map(c=>{const open=openCtv===c.s;return `<div class="row" style="flex-wrap:wrap;cursor:pointer" data-openctv="${c.s}"><div class="n"><b>${c.ten?esc(c.ten):'<span style="color:var(--muted)">Chưa đặt tên</span>'}</b><small class="num">${fmtSdt(c.s)} · ${c.shops.length} shop (${c.dung} đang dùng) · ${c.n} gói tháng này</small></div><div class="r"><b class="num" style="color:var(--pen)">${money(c.hh)}</b><small class="num">DT ${short(c.dt)}</small></div>
+  <div style="margin-top:6px">${list.length?list.map(c=>{const open=openCtv===c.s;return `<div class="row" style="flex-wrap:wrap;cursor:pointer" data-openctv="${c.s}"><div class="n"><b>${c.ten?esc(c.ten):'<span style="color:var(--muted)">Chưa đặt tên</span>'}</b><small class="num">${c.ci.role==='Leader'?'<b style="color:var(--pen)">Leader</b> · ':c.ci.leader?'Đội '+esc(tenOf(c.ci.leader)||fmtSdt(c.ci.leader))+' · ':'<span style="color:var(--amber)">Chưa có leader</span> · '}${fmtSdt(c.s)} · ${c.shops.length} shop (${c.dung} đang dùng) · ${c.n} gói tháng này</small></div><div class="r"><b class="num" style="color:var(--pen)">${money(c.hh)}</b><small class="num">DT ${short(c.dt)}</small></div>
     ${open?`<div class="ex" style="flex-basis:100%"><div class="act" style="padding:10px 0"><input class="f" style="flex:1;min-width:160px" id="eTen" value="${esc(c.ten)}" placeholder="Tên CTV"><button class="ghost" data-savectv="${c.s}">Lưu tên</button></div>
+      <div class="act" style="padding:0 0 10px"><select class="f" id="eRole" style="flex:1;min-width:110px"><option value="Sale" ${c.ci.role!=='Leader'?'selected':''}>Sale</option><option value="Leader" ${c.ci.role==='Leader'?'selected':''}>Leader</option></select><select class="f" id="eLd" style="flex:2;min-width:160px"><option value="">Chưa có leader</option>${D.ctv.filter(x=>x.role==='Leader'&&x.sdt!==c.s).map(x=>`<option value="${x.sdt}" ${c.ci.leader===x.sdt?'selected':''}>Đội ${esc(x.ten||fmtSdt(x.sdt))}</option>`).join('')}</select><button class="ghost" data-saverole="${c.s}">Lưu vai trò</button></div>
       <div class="split"><div class="mini"><small>Hoa hồng từ trước tới nay</small><b class="num">${money(c.hhAll)}</b></div><div class="mini"><small>Shop đang dùng</small><b class="num">${c.dung}/${c.shops.length}</b></div></div>
       <div class="eb" style="margin:12px 0 2px">Shop</div>${c.shops.length?c.shops.map(k=>`<div class="row"><div class="n"><b>${esc(k.shop)}</b><small>${k.han?'Hạn '+dmy(k.han):'Gửi '+dmy(k.yeuCau)}</small></div>${pillOf(k)}</div>`).join(''):'<div class="empty">Chưa có shop.</div>'}
-      <div class="eb" style="margin:12px 0 2px">Lịch sử hoa hồng</div>${c.L.length?[...c.L].reverse().map(x=>`<div class="row"><div class="n"><b>${esc(x.shop)}</b><small>${dmy(x.ngay)} · ${esc(x.loai)} ${goiTen(x.m)} · ${money(x.tien)}</small></div><b class="num">+${money(x.hh)}</b></div>`).join(''):'<div class="empty">Chưa có.</div>'}</div>`:''}</div>`}).join(''):'<div class="empty">Chưa có cộng tác viên. Sale cài app cho shop xong, nhập SĐT ở app Shop Gọn › Thêm › Cộng tác viên là tự hiện ở đây.</div>'}</div></div>
-  <p class="note">CTV đăng nhập bằng số điện thoại. Hoa hồng ${D.hhPct}% tính khi anh xác nhận đã nhận đủ tiền gói (cả gia hạn).</p>`}
+      <div class="eb" style="margin:12px 0 2px">Lịch sử hoa hồng</div>${c.L.length?[...c.L].reverse().map(x=>`<div class="row"><div class="n"><b>${esc(x.shop)}</b><small>${dmy(x.ngay)} · ${esc(x.loai)} ${goiTen(x.m)} · ${money(x.tien)}</small></div><b class="num">${x.doi?'<small style="color:var(--muted);font-weight:600">đội · </small>':''}+${money(x.hh)}</b></div>`).join(''):'<div class="empty">Chưa có.</div>'}</div>`:''}</div>`}).join(''):'<div class="empty">Chưa có cộng tác viên. Sale cài app cho shop xong, nhập SĐT ở app Shop Gọn › Thêm › Cộng tác viên là tự hiện ở đây.</div>'}</div></div>
+  <p class="note">CTV đăng nhập bằng số điện thoại. Hoa hồng: Sale ${D.hhSale||40}% + Leader ${D.hhLeader||10}% (Leader tự bán ${D.hhPct}%), tính khi anh xác nhận đã nhận đủ tiền gói (cả gia hạn).</p>`}
 
 /* ===== TAB 3: CỬA HÀNG ===== */
 function pillOf(k){const s=trangThai(k),left=k.han?days(k.han,D.today):null;
@@ -248,7 +253,7 @@ function shopCard(k){const s=trangThai(k),e=esc(k.email);const p=pick[k.email]||
   const duyet=s==='khoa'?`<div class="act"><button class="ghost" data-st="${e}" data-v="Đã duyệt">Mở lại</button></div>`
     :`<div class="act"><div class="chips" style="overflow:visible;flex-wrap:wrap">${D.goi.map(g=>`<button class="chip" data-pick="${e}" data-m="${g.m}" aria-pressed="${p.m===g.m}">${g.ten}</button>`).join('')}</div>
       <input inputmode="numeric" class="num" data-tien="${e}" value="${p.gia.toLocaleString('vi-VN')}" aria-label="Số tiền đã nhận"><button class="btn" data-ok="${e}">${s==='cho'?'Duyệt':'Gia hạn'}</button></div>
-      ${k.ctv?`<small style="color:var(--muted)">CTV nhận ${D.hhPct}%: <b class="num" id="hh-${e}">${money(p.gia*D.hhPct/100)}</b></small>`:''}
+      ${k.ctv?`<small style="color:var(--muted)">${hhTxt(k.ctv)}: <b class="num" id="hh-${e}" data-p="${pctOf(k.ctv)}">${money(p.gia*pctOf(k.ctv)/100)}</b></small>`:''}
       ${ask===k.email?`<div class="act"><b style="color:var(--red)">${s==='cho'?'Từ chối shop này?':'Khóa shop này? Shop bị đẩy ra khỏi app.'}</b><button class="ghost red" data-st="${e}" data-v="${s==='cho'?'Từ chối':'Khóa'}">Xác nhận</button><button class="ghost" data-ask="">Thôi</button></div>`
         :`<div><button class="ghost red" data-ask="${e}">${s==='cho'?'Từ chối':'Khóa'}</button></div>`}`;
   return `<div class="shop"><div class="top"><div class="n"><b>${esc(k.shop||'(chưa ghi tên)')}</b><small>${e}</small><small class="num">${k.sdt?`<a href="tel:${esc(k.sdt.replace(/\s/g,''))}" style="color:var(--pen)">${esc(k.sdt)}</a> · `:''}${s==='cho'?'Gửi '+dmy(k.yeuCau):k.han?'Hạn '+dmy(k.han):''}</small></div>${pillOf(k)}</div>${ctvRow}${duyet}</div>`}
@@ -270,6 +275,7 @@ document.addEventListener('click',e=>{const a=e.target.closest('[data-goch]');if
   if(d.ctvky){CTV_KY=d.ctvky;render();return}
   if(d.loc){CH_LOC=d.loc;ask=null;render();return}
   if('addctv' in d){addCtv=d.addctv==='1';render();if(addCtv)setTimeout(()=>$('nSdt')&&$('nSdt').focus(),0);return}
+  if(d.saverole){const s=d.saverole;b.disabled=true;call('adminSaveCtv',s,$('eTen').value,$('eRole').value,$('eRole').value==='Leader'?'':$('eLd').value).then(x=>{D=x;render();toast('Đã lưu vai trò')}).catch(er=>{b.disabled=false;toast(er.message)});return}
   if(d.savectv){const isNew=d.savectv==='new';const sdt=isNew?$('nSdt').value:d.savectv,ten=isNew?$('nTen').value:$('eTen').value;
     b.disabled=true;call('adminSaveCtv',sdt,ten).then(x=>{D=x;addCtv=false;render();toast('Đã lưu CTV')}).catch(er=>{b.disabled=false;toast(er.message)});return}
   if(d.openctv&&b.tagName!=='BUTTON'){openCtv=openCtv===d.openctv?null:d.openctv;render();return}
@@ -284,7 +290,7 @@ document.addEventListener('click',e=>{const a=e.target.closest('[data-goch]');if
 });
 document.addEventListener('input',e=>{const t=e.target;
   if(t.id==='q'){Q=t.value;const pos=t.selectionStart;render();const i=$('q');i.focus();try{i.setSelectionRange(pos,pos)}catch(_){}return}
-  if(t.dataset&&t.dataset.tien){const h=document.getElementById('hh-'+t.dataset.tien);if(h)h.textContent=money((+t.value.replace(/\D/g,'')||0)*D.hhPct/100)}});
+  if(t.dataset&&t.dataset.tien){const h=document.getElementById('hh-'+t.dataset.tien);if(h)h.textContent=money((+t.value.replace(/\D/g,'')||0)*(+h.dataset.p||D.hhPct)/100)}});
 document.addEventListener('focusout',e=>{const t=e.target;if(t.dataset&&t.dataset.tien&&t.value){const n=+t.value.replace(/\D/g,'');t.value=n?n.toLocaleString('vi-VN'):''}});
 load();
 </script>
