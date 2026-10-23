@@ -149,7 +149,7 @@ const days=(a,b)=>Math.round((pD(a)-pD(b))/864e5);
 const monday=s=>{const x=pD(s);const k=(x.getDay()+6)%7;x.setDate(x.getDate()-k);return fD(x)};
 const goiTen=m=>m%12===0?(m/12)+' năm':m+' tháng';
 const fmtSdt=s=>s?s.replace(/^(\d{4})(\d{3})(\d+)$/,'$1 $2 $3'):'';
-let D=null, TAB='dt', KY='thang', CTV_KY='nay', CH_LOC='cho', Q='', pick={}, ask=null, openCtv=null, editShopCtv=null, addCtv=false;
+let uncImg=null, D=null, TAB='dt', KY='thang', CTV_KY='nay', CH_LOC='cho', Q='', pick={}, ask=null, openCtv=null, editShopCtv=null, addCtv=false;
 
 /* ===== dữ liệu ===== */
 function sample(){const t=fD(new Date());const ago=n=>addD(t,-n);
@@ -265,11 +265,11 @@ function shopCard(k){const s=trangThai(k),e=esc(k.email);const p=pick[k.email]||
     :`<div><button class="ctvtag" data-editsc="${e}">${k.ctv?'👤 CTV: '+ctvLbl(k.ctv):'＋ Gắn CTV'}</button></div>`;
   const duyet=s==='khoa'?`<div class="act"><button class="ghost" data-st="${e}" data-v="Đã duyệt">Mở lại</button></div>`
     :`<div class="act"><div class="chips" style="overflow:visible;flex-wrap:wrap">${D.goi.map(g=>`<button class="chip" data-pick="${e}" data-m="${g.m}" aria-pressed="${p.m===g.m}">${g.ten}</button>`).join('')}</div>
-      <input inputmode="numeric" class="num" data-tien="${e}" value="${p.gia.toLocaleString('vi-VN')}" aria-label="Số tiền đã nhận"><button class="btn" data-ok="${e}">${s==='cho'?'Duyệt':'Gia hạn'}</button></div>
+      <input inputmode="numeric" class="num" data-tien="${e}" value="${p.gia.toLocaleString('vi-VN')}" aria-label="Số tiền đã nhận"></div>
       ${k.ctv?`<small style="color:var(--muted)">${hhTxt(k.ctv)}: <b class="num" id="hh-${e}" data-p="${pctOf(k.ctv)}">${money(p.gia*pctOf(k.ctv)/100)}</b></small>`:''}
       ${ask===k.email?`<div class="act"><b style="color:var(--red)">${s==='cho'?'Từ chối shop này?':'Khóa shop này? Shop bị đẩy ra khỏi app.'}</b><button class="ghost red" data-st="${e}" data-v="${s==='cho'?'Từ chối':'Khóa'}">Xác nhận</button><button class="ghost" data-ask="">Thôi</button></div>`
-        :`<div><button class="ghost red" data-ask="${e}">${s==='cho'?'Từ chối':'Khóa'}</button></div>`}`;
-  return `<div class="shop"><div class="top"><div class="n"><b>${esc(k.shop||'(chưa ghi tên)')}</b><small>${e}</small><small class="num">${k.sdt?`<a href="tel:${esc(k.sdt.replace(/\s/g,''))}" style="color:var(--pen)">${esc(k.sdt)}</a> · `:''}${s==='cho'?'Gửi '+dmy(k.yeuCau):k.han?'Hạn '+dmy(k.han):''}</small></div>${pillOf(k)}</div>${ctvRow}${duyet}</div>`}
+        :`<div class="act"><button class="btn" data-ok="${e}" style="flex:1">${s==='cho'?'Duyệt':'Gia hạn'}</button><button class="ghost red" data-ask="${e}">${s==='cho'?'Từ chối':'Khóa'}</button></div>`}`;
+  return `<div class="shop"><div class="top"><div class="n"><b>${esc(k.shop||'(chưa ghi tên)')}</b><small>${e}</small><small class="num">${k.sdt?`<a href="tel:${esc(k.sdt.replace(/\s/g,''))}" style="color:var(--pen)">${esc(k.sdt)}</a> · `:''}${s==='cho'?'Gửi '+dmy(k.yeuCau):k.han?'Hạn '+dmy(k.han):''}</small></div>${s==='cho'?(k.unc?`<button class="pill p-g" data-unc="${e}" style="border:0;cursor:pointer">🧾 Đã chuyển tiền · ${dm(k.unc)}</button>`:'<span class="pill p-a">Chưa gửi UNC</span>'):pillOf(k)}</div>${ctvRow}${uncImg===k.email?'<div id="uncBox" class="ex" style="padding:8px;text-align:center">Đang tải ảnh…</div>':''}${duyet}</div>`}
 
 /* ===== vẽ ===== */
 function render(){if(!D)return;
@@ -288,6 +288,7 @@ document.addEventListener('click',e=>{const a=e.target.closest('[data-goch]');if
   if(d.ctvky){CTV_KY=d.ctvky;render();return}
   if(d.loc){CH_LOC=d.loc;ask=null;render();return}
   if('addctv' in d){addCtv=d.addctv==='0'?false:d.addctv;render();if(addCtv)setTimeout(()=>$('nSdt')&&$('nSdt').focus(),0);return}
+  if(d.unc){uncImg=uncImg===d.unc?null:d.unc;render();if(uncImg){const em=uncImg;call('adminUnc',em).then(src=>{const bx=$('uncBox');if(bx&&uncImg===em)bx.innerHTML=src?'<img src="'+src+'" style="max-width:100%;max-height:420px;border-radius:10px">':'Không có ảnh.'}).catch(er=>{const bx=$('uncBox');if(bx)bx.textContent=er.message})}return}
   if(d.savenew){const ld=d.savenew==='ld';const sdt=$('nSdt').value,ten=$('nTen').value.trim(),nl=ld?'':$('nLd').value;if(!ten){toast('Nhập tên');return}if(!ld&&!nl){toast('Chọn leader quản lý cho CTV');return}
     b.disabled=true;call('adminSaveCtv',sdt,ten,ld?'Leader':'Sale',nl).then(x=>{D=x;addCtv=false;render();toast(ld?'Đã thêm Leader':'Đã thêm CTV')}).catch(er=>{b.disabled=false;toast(er.message)});return}
   if(d.saverole){const s=d.saverole;b.disabled=true;call('adminSaveCtv',s,$('eTen').value,$('eRole').value,$('eRole').value==='Leader'?'':$('eLd').value).then(x=>{D=x;render();toast('Đã lưu vai trò')}).catch(er=>{b.disabled=false;toast(er.message)});return}
