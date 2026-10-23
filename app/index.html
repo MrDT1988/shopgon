@@ -71,7 +71,7 @@ h2{font-size:17px;margin:0 0 10px;font-weight:700}
 .tl div{display:grid;grid-template-columns:16px 1fr auto;align-items:center;gap:8px;font-size:14px;color:var(--muted)}
 .tl i{width:12px;height:12px;border-radius:50%;border:2px solid var(--line);background:var(--card)}
 .tl .on{color:var(--ink);font-weight:700}.tl .on i{background:var(--pen);border-color:var(--pen)}
-.rb{height:130px;gap:3px}
+.rb{height:210px;gap:3px}
 .rb .bar{border:0;background:none;padding:0;cursor:pointer}
 .rb .bar i{border-radius:3px 3px 0 0}
 .rsel{margin-top:10px;font-size:14px;color:var(--muted);display:flex;flex-direction:column;gap:2px;min-height:40px}
@@ -202,6 +202,8 @@ nav.tabs button[aria-selected="true"]{color:var(--pen);background:var(--pen-soft
 .scan video{width:100%;max-width:420px;border-radius:16px;background:#000}
 .scan p{margin:0;text-align:center;max-width:36ch}
 .foot{font-size:13px;color:var(--muted);text-align:center}
+/* 23/10: khối lời theo hãng gọn lại */
+.hb{gap:4px}.hb .l{font-size:13px}.hb .t{height:5px}.grp{gap:6px}.grp+.grp{margin-top:10px;padding-top:10px}.gh{font-size:14px}
 </style>
 
 <header><div class="hw">
@@ -411,7 +413,7 @@ function reportPanel(){
   return `<div class="panel"><div class="rh"><h2 style="margin:0">Tình hình kinh doanh</h2></div>
     <div class="seg" role="group" style="margin:10px 0"><button data-rm="ngay" aria-pressed="${rptMode==='ngay'}">Theo ngày</button><button data-rm="thang" aria-pressed="${rptMode==='thang'}">Theo tháng</button></div>
     ${rptMode==='ngay'?`<select id="rMonth" style="margin-bottom:10px">${monthsList().map(k=>`<option value="${k}" ${k===rm?'selected':''}>${mLbl(k)}</option>`).join('')}</select>`:''}
-    <div class="kpis" style="margin-bottom:12px"><div class="kpi"><div class="eyebrow">${rptMode==='ngay'?'Doanh thu tháng':'Doanh thu 12 tháng'}</div><div class="v num" style="font-size:20px">${short(sum.dt)}</div><div class="d">${sum.may} máy · ${sum.n-sum.may} đơn khác</div></div><div class="kpi"><div class="eyebrow">Tiền lời</div><div class="v num good" style="font-size:20px">${short(sum.loi)}</div><div class="d">${sum.dt?'Biên '+Math.round(sum.loi/sum.dt*100)+'%':'—'}</div></div></div>
+    <div class="kpis" style="margin-bottom:12px"><div class="kpi"><div class="eyebrow">${rptMode==='ngay'?'Doanh thu tháng':'Doanh thu 12 tháng'}</div><div class="v num" style="font-size:24px">${short(sum.dt)}</div><div class="d">${sum.may} máy · ${sum.n-sum.may} đơn khác</div></div><div class="kpi"><div class="eyebrow">Tiền lời</div><div class="v num good" style="font-size:24px">${short(sum.loi)}</div><div class="d">${sum.dt?'Biên '+Math.round(sum.loi/sum.dt*100)+'%':'—'}</div></div></div>
     <div class="bars rb">${bars.map(b=>`<button class="bar${b.k===rptSel?' now':''}" data-rsel="${b.k}" aria-label="${b.lbl}"><i style="height:${Math.max(0,b.v)/mx*100}%"></i><span>${b.l}</span></button>`).join('')}</div>
     <div class="rsel">${sel?`<b>${sel.lbl}</b><span class="num">Doanh thu ${money(sel.r.dt)} · lời <b class="good">${money(sel.r.loi)}</b> · ${sel.r.may} máy</span>`:`<span>Bấm vào từng cột để xem chi tiết${cmp}</span>`}</div>
   </div>`;
@@ -440,11 +442,9 @@ function renderHome(){
       <div class="more">${showToday?'Ẩn chi tiết đơn ▴':'Xem chi tiết đơn ▾'}</div></button>
     ${showToday?`<div class="panel todaylist">${tdDon.length?`<div class="list">${tdDon.map(d=>{const isM=d.loai==='may';const p=profitOf(d);return `<div class="row"><div class="n"><b><span class="tag ${isM?'tm':'tk'}">${isM?'Máy':esc((NHOM.find(g=>g.k===d.loai)||{}).t||'')}</span> ${esc(d.ten)}</b><small class="num">${d.gio} · ${d.soTien?'tiền '+money(d.soTien)+' · phí':esc(d.tt)}${d.khach?' · '+esc(d.khach):''}${isM?' · …'+d.imei.slice(-6):''}</small></div><div class="right"><b class="num">${money(d.giaBan)}</b><small class="num ${p<0?'neg':'good'}">${p<0?'Lỗ':'Lời'} ${money(Math.abs(p))}</small></div></div>`}).join('')}</div>`:'<div class="empty">Hôm nay chưa có đơn nào.</div>'}</div>`:''}
     <div class="kpi"><div class="eyebrow">Lời hôm nay</div><div class="v num good">${money(td.loi)}</div><div class="d">Tháng này ${short(mo.loi)}</div></div>
-    <div class="kpi"><div class="eyebrow">Máy trong kho</div><div class="v num">${st.length}</div><div class="d">Vốn ${short(von)}</div></div>
+    ${(()=>{const L=tdDon.filter(d=>isDv(d.loai));const tien=L.reduce((s2,d)=>s2+(d.soTien||0),0),phi=L.reduce((s2,d)=>s2+d.giaBan,0);return `<div class="kpi"><div class="eyebrow">Thu hộ hôm nay</div><div class="v num">${money(tien)}</div><div class="d">${L.length} giao dịch · phí ${short(phi)}</div></div>`})()}
   </div>
   ${reportPanel()}
-  ${(()=>{const L=tdDon.filter(d=>isDv(d.loai));if(!L.length)return '';const tien=L.reduce((s2,d)=>s2+(d.soTien||0),0),phi=L.reduce((s2,d)=>s2+d.giaBan,0);
-    return `<div class="panel"><h2>Thu hộ · Chuyển tiền hôm nay</h2><div class="kpis"><div class="kpi"><div class="eyebrow">Tiền qua tay</div><div class="v num">${money(tien)}</div><div class="d">${L.length} giao dịch</div></div><div class="kpi"><div class="eyebrow">Phí thu được</div><div class="v num good">${money(phi)}</div><div class="d">Đã tính vào lời</div></div></div></div>`})()}
   <div class="panel"><h2>Lời tháng ${rm===t.slice(0,7)?'này':rm.slice(5)+'/'+rm.slice(0,4)}</h2>${phone.length||pkRows.length?`
     ${phone.length?`<div class="grp"><div class="gh"><span class="sw sp"></span>Điện thoại<b class="num">${money(sumP)}</b></div><div class="hb">${hbRows(phone,'cp')}</div></div>`:''}
     ${pkRows.length?`<div class="grp"><div class="gh"><span class="sw sk"></span>Phụ kiện · Dịch vụ<b class="num">${money(sumK)}</b></div><div class="hb">${hbRows(pkRows,'ck')}</div></div>`:''}`:'<div class="empty">Chưa có đơn bán nào trong tháng.</div>'}</div>
@@ -571,8 +571,12 @@ function renderStock(){
   const c={r:st.filter(m=>ageDays(m)>45).length,a:st.filter(m=>{const x=ageDays(m);return x>30&&x<=45}).length};
   $('v-stock').innerHTML=seg+`
   <input id="kQ" inputmode="search" placeholder="Tìm tên máy hoặc IMEI" value="${esc(stockQ)}">
-  <div class="chips" role="group">${brands.map(b=>`<button class="chip" data-brand="${esc(b)}" aria-pressed="${b===stockBrand}">${esc(b)}</button>`).join('')}</div>
+  ${stockBrand!=='Tất cả'?`<button class="back" data-brand="Tất cả">‹ Tất cả hãng</button><h2 style="margin:0">${esc(stockBrand)} · ${st.filter(m=>m.hang===stockBrand).length} máy</h2>`:''}
 `;
+  /* 23/10: vào kho điện thoại thấy bảng theo hãng trước, bấm hãng mới ra danh sách máy */
+  if(stockBrand==='Tất cả'&&!stockQ.trim()){const B=BRANDS.map(b=>{const ms=st.filter(m=>m.hang===b);return{b,n:ms.length,von:ms.reduce((s2,m)=>s2+m.giaNhap,0),old:ms.filter(m=>ageDays(m)>45).length,md:new Set(ms.map(m=>m.ten)).size}}).filter(x=>x.n).sort((x,y)=>y.n-x.n);
+    $('v-stock').innerHTML+=`<div class="kpis"><div class="kpi"><div class="eyebrow">Tổng máy</div><div class="v num">${st.length}</div><div class="d">Vốn ${short(st.reduce((s2,m)=>s2+m.giaNhap,0))}</div></div><div class="kpi"><div class="eyebrow">Tồn trên 45 ngày</div><div class="v num${c.r?' neg':''}">${c.r}</div><div class="d">${c.a} máy 31–45 ngày</div></div></div>
+    <div class="panel"><h2>Theo hãng</h2><div class="list">${B.length?B.map(x=>`<div class="mg"><button class="mrow" data-brand="${esc(x.b)}"><span class="n"><b>${esc(x.b)}</b><small class="num">${x.md} mẫu · vốn ${short(x.von)}${x.old?` · <span class="neg">${x.old} tồn lâu</span>`:''}</small></span><span class="cnt num">${x.n} máy</span><span class="chev">›</span></button></div>`).join(''):'<div class="empty">Kho chưa có máy. Vào tab Nhập máy để thêm.</div>'}</div></div>`;return}
   const G={};L.forEach(m=>{(G[m.ten]=G[m.ten]||[]).push(m)});
   const groups=Object.entries(G).map(([ten,ms])=>({ten,ms,old:Math.max(...ms.map(ageDays))})).sort((x,y)=>y.old-x.old);
   const imeiHit=/^\d{4,}$/.test(stockQ.trim());
