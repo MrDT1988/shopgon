@@ -305,6 +305,7 @@ function emptyDb(){return {v:1,sample:false,hang:[],shop:{ten:'',pct:{pk:40,sim:
 
 const firstOpen=!Store.load();
 let db=Store.load()||sampleDb();
+if(DEMO&&firstOpen)Store.save(db);   /* 24/10: lưu ngay để trang Bảng giá (shopgon.vn/bg) đọc được tồn kho mẫu */
 if(!db.hang)db.hang=db.sample?sampleDb().hang:[];
 const save=()=>{Store.save(db);if(GG.token&&GG.sheetId&&!db.sample)GG.queue()};
 
