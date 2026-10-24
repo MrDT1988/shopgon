@@ -67,13 +67,13 @@ input,select,textarea{font:inherit;font-size:16px;padding:10px 12px;border:1px s
    <div style="display:flex;flex-direction:column;gap:10px">
     <label>Dung lượng<select id="dl"></select></label>
     <div><div style="font-size:13px;font-weight:600;color:var(--xam);margin-bottom:4px">Màu</div><div class="mau" id="mau"></div></div>
-    <div class="ny"><span>Giá niêm yết chính hãng</span><div id="nyg">—</div></div>
    </div>
   </div>
  </div>
  <div class="the"><h3>2 · Giá &amp; khuyến mãi</h3>
-  <div class="hai"><label>KM hãng / chương trình (đ)<input id="kmh" inputmode="numeric" placeholder="0"></label>
-  <label>KM của shop (đ)<input id="kms" inputmode="numeric" placeholder="0"></label></div>
+  <div class="hai"><label>Giá niêm yết (đ)<input id="ny" inputmode="numeric" placeholder="VD: 13.490.000"></label>
+  <label>Giá shop bán (đ)<input id="gb" inputmode="numeric" placeholder="VD: 11.990.000"></label></div>
+  <div style="font-size:12px;color:var(--xam);margin-top:-4px">Giá niêm yết tự điền theo web hãng (nếu có) — sửa được. Phần chênh lệch = khuyến mãi, tự hiện trên hình.</div>
   <div class="tinh" id="tinh"></div><div class="canh" id="canh"></div>
   <label>Quà tặng (mỗi dòng 1 món)<textarea id="qua" rows="3" placeholder="Ốp lưng + cường lực&#10;Củ sạc nhanh"></textarea></label>
   <div class="hai"><label>Trả góp/tháng (đ)<input id="gop" inputmode="numeric" placeholder="để trống nếu không"></label>
@@ -129,7 +129,7 @@ function chonSP(s) {
   SP = s; $('tim').value = s.ten; $('goiy').style.display = 'none'; $('chon').hidden = false;
   var bt = (s.bienThe && s.bienThe.length) ? s.bienThe : [{ dl: '', niemyet: 0, giaHang: 0 }];
   $('dl').innerHTML = bt.map(function (b, i) { return '<option value="' + i + '">' + (b.dl || 'Bản tiêu chuẩn') + (b.niemyet ? ' — ' + vnd(b.niemyet) : '') + '</option>'; }).join('');
-  $('dl').onchange = function () { BT = bt[+$('dl').value]; $('nyg').textContent = BT.niemyet ? vnd(BT.niemyet) : 'chưa có — gõ KM theo giá shop'; $('kmh').value = BT.giaHang && BT.niemyet > BT.giaHang ? (BT.niemyet - BT.giaHang).toLocaleString('vi-VN') : ''; tinh(); };
+  $('dl').onchange = function () { BT = bt[+$('dl').value]; $('ny').value = BT.niemyet ? BT.niemyet.toLocaleString('vi-VN') : ''; $('gb').value = ''; $('gb').placeholder = BT.giaHang && BT.giaHang < BT.niemyet ? 'Web hãng đang bán ' + BT.giaHang.toLocaleString('vi-VN') : 'VD: ' + (BT.niemyet ? Math.round(BT.niemyet * 0.93 / 10000) * 10000 : 11990000).toLocaleString('vi-VN'); tinh(); $('gb').focus(); };
   $('dl').onchange();
   var ms = (s.mau && s.mau.length) ? s.mau : [{ ten: '', anh: '' }];
   $('mau').innerHTML = ms.map(function (m, i) { return '<button data-i="' + i + '" class="' + (i ? '' : 'on') + '"><img src="' + esc(anhCua(m)) + '" alt="">' + esc(m.ten || ('Màu ' + (i + 1))) + '</button>'; }).join('');
@@ -137,18 +137,18 @@ function chonSP(s) {
   [].forEach.call($('mau').children, function (b) { b.onclick = function () { [].forEach.call($('mau').children, function (x) { x.classList.remove('on'); }); b.classList.add('on'); MAU = ms[+b.dataset.i]; }; });
 }
 function anhCua(m) { return m.file ? '../' + m.file : (m.anh || ''); }
-['kmh', 'kms', 'gop', 'tro'].forEach(function (k) { $(k).addEventListener('input', function () { var v = so(this.value); this.value = v ? v.toLocaleString('vi-VN') : ''; tinh(); }); });
+['ny', 'gb', 'gop', 'tro'].forEach(function (k) { $(k).addEventListener('input', function () { var v = so(this.value); this.value = v ? v.toLocaleString('vi-VN') : ''; tinh(); }); });
 function giaTinh() {
-  var ny = BT ? BT.niemyet : 0, a = so($('kmh').value), b = so($('kms').value), cuoi = Math.max(0, ny - a - b);
-  return { ny: ny, kmh: a, kms: b, giam: a + b, cuoi: cuoi, pt: ny ? Math.round((a + b) / ny * 100) : 0 };
+  var ny = so($('ny').value), gb = so($('gb').value) || ny; if (!ny) ny = gb;
+  var giam = Math.max(0, ny - gb);
+  return { ny: ny, kmh: 0, kms: 0, giam: giam, cuoi: gb, pt: ny ? Math.round(giam / ny * 100) : 0 };
 }
 function tinh() {
   var g = giaTinh();
   $('tinh').innerHTML = '<div class="dong"><span>Giá niêm yết</span><span>' + (g.ny ? vnd(g.ny) : 'chưa có') + '</span></div>' +
-    (g.kmh ? '<div class="dong"><span>− Hãng giảm</span><span>' + vnd(g.kmh) + '</span></div>' : '') +
-    (g.kms ? '<div class="dong"><span>− Shop giảm</span><span>' + vnd(g.kms) + '</span></div>' : '') +
+    (g.giam ? '<div class="dong"><span>− Khuyến mãi</span><span>' + vnd(g.giam) + '</span></div>' : '') +
     '<div class="cuoi"><span>Giá cuối</span><span>' + (g.ny ? vnd(g.cuoi) : '—') + '</span></div>';
-  $('canh').textContent = g.pt > 30 ? '⚠ Tổng giảm ' + g.pt + '% — kiểm tra lại có gõ thừa số 0 không.' : (g.giam ? 'Tổng giảm ' + vnd(g.giam) + ' (' + g.pt + '%)' : '');
+  $('canh').textContent = g.pt > 30 ? '⚠ Giảm ' + g.pt + '% so với niêm yết — kiểm tra lại có gõ thiếu/thừa số 0 không.' : (g.giam ? 'Tổng giảm ' + vnd(g.giam) + ' (' + g.pt + '%)' : '');
 }
 tinh();
 
@@ -222,7 +222,7 @@ var MAU5 = [
 ];
 
 $('tao').onclick = function () {
-  if (!SP) { alert('Chọn máy trước nhé'); return; }
+  if (!SP) { alert('Chọn máy trước nhé'); return; } if (!giaTinh().ny) { alert('Điền giá niêm yết hoặc giá bán trước nhé'); $('ny').focus(); return; }
   var g = giaTinh(); if (g.pt > 30 && !confirm('Tổng giảm ' + g.pt + '% so với giá hãng. Đúng chưa?')) return;
   var d = D();
   $('luoi').innerHTML = MAU5.map(function (m, i) { return '<div class="o"><div class="khung" id="kh' + i + '"><div>' + m[1](d) + '</div></div><button class="nut phu" data-i="' + i + '">⬇ Tải hình ' + (i + 1) + ' · ' + m[0] + '</button></div>'; }).join('');
