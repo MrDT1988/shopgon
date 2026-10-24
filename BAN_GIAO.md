@@ -1,0 +1,65 @@
+# BÀN GIAO DỰ ÁN SHOP GỌN — đọc file này TRƯỚC khi sửa bất cứ thứ gì
+
+Cập nhật: 24/10/2026 (chốt phiên tối 24/10). Chủ dự án: anh Duy Thái.
+
+## 1. Shop Gọn là gì
+App quản lý bán hàng cho shop điện thoại (shopgon.vn), chạy trên điện thoại, dữ liệu nằm trong Google Drive của chính shop.
+Định vị: **một gói đủ 3 việc** — quản lý bán hàng + truyền thông online (thiết kế hình) + website mini (bảng giá online).
+**Trạng thái: CHƯA BÁN cho ai.** Đang cập nhật + test toàn bộ, dự kiến mở bán tháng 11/2026.
+
+## 2. Bản đồ repo (MrDT1988/shopgon, GitHub Pages, tên miền shopgon.vn)
+| Đường dẫn | Là gì |
+|---|---|
+| `index.html` | Trang chủ giới thiệu (có thẻ "Kho máy có sẵn ảnh chính hãng" + lịch cập nhật) |
+| `app/` | App quản lý shop. `?demo=1` = bản demo cho Sale/đại lý (tồn kho mẫu trong mảng `TON`) |
+| `bg/` | Bảng giá online = website mini. Trình sửa cho shop + trang khách (`?d=` link nén, `?demo=1&xem=1` xem demo) |
+| `tt/` | Thiết kế hình sản phẩm (ảnh máy + giá + KM → ảnh đăng Zalo/Facebook) |
+| `so-sanh.html` | So sánh giá với KiotViet, Sapo, Nhanh.vn, MISA + bảng tính năng |
+| `kho/kho-may.json` | Kho máy (đang 225 mẫu, 100% có ảnh) — robot ghi, KHÔNG sửa tay trừ khi dọn dữ liệu |
+| `kho/bo-sung.json` | Danh sách máy bổ sung tay (máy web hãng không có) — sửa file này rồi push là robot tự tải ảnh |
+| `kho/lay-kho.mjs` | Robot kho máy |
+| `kho/anh/` | Ảnh đã tải về (webp, tên = md5 của URL ảnh) |
+| `kho/demo-ton.json` | Tồn kho mẫu cho bảng giá demo |
+| `.github/workflows/kho-may.yml` | Lịch chạy robot |
+| `quantri/` | Trang quản trị |
+
+## 3. Kho máy — luật đã chốt với anh Thái
+- **Danh sách máy:** web hãng (OPPO, Samsung, Xiaomi, Apple — robot tự quét) + máy đang bán trên Thế Giới Di Động (TGDD) mà web hãng không có (nằm trong `bo-sung.json`).
+- **Ảnh:** có ảnh hãng thì dùng ảnh hãng; hãng không có thì lấy ảnh TGDD (`"nguonAnh":"tgdd"`). Không để máy nào thiếu ảnh. Hiện 34/225 máy dùng ảnh TGDD (Motorola, TECNO, Nubia, Masstel/Mobell/Xphone, REDMI 15, POCO C95 Pro/X8s, Xiaomi 18 Pro/Pro Max, realme C01).
+- **Không dùng ảnh có nhân vật bản quyền** (đã bỏ HONOR 600 Pro Molly).
+- Chỉ cần phủ ~80% thị trường. Máy ngoài danh sách thì shop tự tải hình lên (nút trong trang Thiết kế hình).
+- **Lịch quét: 3 lần/tháng, 03:17 sáng ngày 10, ngày 20 và ngày cuối tháng (giờ VN).** Lịch này đã ghi trên trang chủ, bảng giá, thiết kế hình, so sánh giá để shop biết.
+
+## 4. Robot kho máy (`kho/lay-kho.mjs` + `kho-may.yml`)
+- Quét 4 web hãng bằng Playwright → **cộng dồn**: máy hãng gỡ khỏi web vẫn giữ (đánh dấu `ngung`), không bao giờ xoá.
+- Nạp `bo-sung.json`: máy mới thì thêm; máy web hãng thiếu ảnh thì vá ảnh.
+- Tải ảnh về `kho/anh/`, từ chối ảnh nhỏ hơn 300px, lỗi ghi vào `anhLoi` trong kho-may.json.
+- Chạy khi: (1) lịch cron `17 20 9,19,27,28,29,30 * *` + bước "Kiem tra lich" chỉ cho chạy đúng ngày 10/20/cuối tháng giờ VN; (2) push thay đổi `kho/bo-sung.json` → chạy nhanh chế độ `CHI_BO_SUNG` (không quét web hãng, ~2 phút); (3) bấm tay workflow_dispatch.
+- Kiểm kết quả: `kho-may.json` → `anhLoi` rỗng, đếm máy có `mau[].file` tồn tại.
+
+## 5. Bảng giá online (`bg/`) — luật đã chốt
+- Trang khách **chỉ để xem giá**: KHÔNG giỏ hàng. Khách liên hệ shop qua nút Gọi / Zalo cố định ở đáy + nút **"💬 Hỏi máy này"** dưới từng máy (chép sẵn câu hỏi có tên máy + giá rồi mở zalo.me/<số shop>).
+- **Không lộ số tồn:** khách chỉ thấy "✓ Còn hàng" / "Tạm hết hàng"; đầu trang "x mẫu còn hàng". Link khách chỉ mang q=1/0. Trình sửa của shop vẫn có số tồn.
+- Khớp hình: `khopKho()` — ưu tiên khớp đúng cả "5G", rồi bỏ "5G", rồi khớp đầu tên; hãng ngoài OPPO/Samsung/Xiaomi/Apple vào tab "Hãng khác" (`dsKho('Khac')` gộp mọi hãng còn lại). `vaAnh()` tự vá ảnh cho bảng đã lưu / link cũ.
+
+## 6. Kênh bán: App Sale (repo riêng tư MrDT1988/dashboard-phu-kien)
+- File `bc-sale-app.js`, tab **🧰 Công cụ** của Sale, thẻ `card('saSG', …)` **"🛒 Shop Gọn — giới thiệu cho đại lý"** ngay dưới thẻ "App của bạn", 4 mục: App demo (`/app/?demo=1`) · Thiết kế hình (`/tt/`) · Bảng giá online (`/bg/?demo=1&xem=1`) · So sánh giá (`/so-sanh.html`). Commit 24/10, `bao-cao.html` nạp `bc-sale-app.js?v=20261024sg`.
+- Sửa repo này theo skill `sua-trang-html-dashboard` (git trên Mac mini, dự phòng Chrome upload).
+
+## 7. So sánh giá (`so-sanh.html`)
+- Có: thanh giá 1 năm 5 bên · bảng giá Shop Gọn · "Một gói, đủ 3 việc" · bảng tính năng so gói thấp nhất KiotViet (Gói hỗ trợ) & Sapo (Start Up) · "Muốn có website 1 năm": Sapo 7.200.000đ (gói Advanced 600k/tháng), KiotViet 3.960.000đ (gói chuyên nghiệp 330k/tháng), Shop Gọn 1.000.000đ.
+- Số KiotViet/Sapo lấy từ bảng giá chính thức ngày 24/10/2026. Nhanh.vn/MISA chưa kiểm bảng gốc → chỉ ở phần so giá, không ở bảng tính năng.
+
+## 8. VIỆC TREO — làm đầu phiên sau
+1. ⚠️ **GIÁ BÁN LỆCH:** trang so-sanh.html đang ghi 1 năm 1.000.000đ / 2 năm 1.500.000đ / 3 năm 2.000.000đ. Phiên khác anh Thái đã chốt giá **1.190.000đ / 1.990.000đ / 2.490.000đ, ưu đãi 990.000đ cho 100 shop đầu**. Hỏi anh xác nhận rồi sửa so-sanh.html (thanh giá, bảng giá, ô tiết kiệm, bảng "website 1 năm") + mọi chỗ khác ghi giá.
+2. **Bộ test toàn bộ trước khi bán** (anh đã đồng ý hướng): em viết test tự động cho App · Bảng giá · Thiết kế hình · Robot kho · Trang chủ/So sánh; anh + 1–2 shop quen test tay phần camera IMEI, in hoá đơn, đăng nhập Google, mở Zalo trên điện thoại. Chưa bắt đầu.
+3. Thẻ Shop Gọn trong App Sale chưa xem được trên màn hình thật (cần mã Sale) — nhờ anh mở tab Công cụ kiểm.
+4. Dần thay 34 ảnh TGDD bằng ảnh hãng khi hãng đưa ảnh lên web (Motorola VN web đang lỗi 500 ngày 24/10).
+5. Ảnh TGDD cũ vẫn nằm trong lịch sử git công khai — chỉ xoá nếu anh yêu cầu (phải viết lại lịch sử repo).
+
+## 9. Bẫy đã gặp
+- Shell của phiên cloud bị chặn mạng ra ngoài → **không tải ảnh trong phiên được**; mọi việc tải ảnh để robot GitHub Actions làm (push bo-sung.json).
+- Lấy danh sách TGDD: mở thegioididong.com/dtdd bằng Chrome, bấm "Xem thêm" hết rồi đọc thẻ `a[title][href*="/dtdd/"]`; javascript_tool chỉ trả ~1.000 ký tự/lần → lọc máy chưa có trong kho ngay trên trang rồi đọc từng đoạn.
+- Web Motorola/TECNO/Nubia render ảnh bằng JS → WebFetch không thấy ảnh; ảnh REDMI trên mi.com là ô màu 30×30 → robot từ chối.
+- Bảng giá trên trình duyệt có thể còn bản lưu cũ (localStorage `sg_bg2`) → bấm "Lấy tồn kho" để làm mới.
+- Push file workflow cần quyền workflow (đã có trong phiên có add_repo access push).
