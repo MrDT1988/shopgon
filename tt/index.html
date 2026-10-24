@@ -55,7 +55,7 @@ input,select,textarea{font:inherit;font-size:16px;padding:10px 12px;border:1px s
 .k .gach{text-decoration:line-through;opacity:.75}
 .k .nhan{display:inline-block;padding:8px 20px;border-radius:14px;font-weight:900;font-size:34px}
 </style></head><body>
-<header><b>🖼 Thiết kế hình sản phẩm</b><small id="capnhat"></small></header>
+<header><a id="veapp" hidden style="color:inherit;font-size:13px;text-decoration:none;opacity:.85">‹ Về app</a><b>🖼 Thiết kế hình sản phẩm</b><small id="capnhat"></small></header>
 <div class="tab"><button class="on">🖼 Thiết kế hình</button><button onclick="alert('Đang làm')">🎬 Thiết kế video</button></div>
 <main>
 <section style="display:flex;flex-direction:column;gap:14px;padding-top:14px">
@@ -255,4 +255,5 @@ function chonCap(i) { $('cap').value = CAPS[i]; [].forEach.call($('capchon').chi
 $('copy').onclick = function () { var t = $('cap').value; (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function () { $('copy').textContent = '✓ Đã copy'; setTimeout(function () { $('copy').textContent = '📋 Copy caption'; }, 1500); }).catch(function () { $('cap').select(); document.execCommand('copy'); }); };
 document.addEventListener('click', function (e) { if (!e.target.closest('#goiy') && e.target.id !== 'tim') $('goiy').style.display = 'none'; });
 </script>
+<script>if(/[?&]tu=app/.test(location.search)){var va=document.getElementById('veapp');va.hidden=false;va.href='/app/'+(/[?&]demo=1/.test(location.search)?'?demo=1':'');}</script>
 </body></html>

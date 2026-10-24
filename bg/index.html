@@ -75,7 +75,7 @@ input,select{font:inherit;font-size:16px;padding:9px 11px;border:1px solid var(-
 .xem .cuoi{text-align:center;font-size:12px;color:var(--xam);padding:6px}
 </style></head><body>
 <div id="sua">
-<header><b>🏷 Bảng giá online</b><small>Bản demo · bản thật tự lấy từ tồn kho</small></header>
+<header><a id="veapp" hidden style="color:inherit;font-size:13px;text-decoration:none;opacity:.85">‹ Về app</a><b>🏷 Bảng giá online</b><small>Bản demo · bản thật tự lấy từ tồn kho</small></header>
 <div class="bao">
 <section style="display:flex;flex-direction:column;gap:14px">
  <button class="nut" id="layton" style="background:#b45309">📦 Lấy từ tồn kho app Shop Gọn</button>
@@ -184,11 +184,13 @@ function batDau() {
   try { var o = JSON.parse(localStorage.getItem('sg_bg2') || '{}'); ['shop', 'dc', 'dt', 'tieude'].forEach(function (k) { if (o[k]) $(k).value = o[k]; }); DS = o.ds || []; PK = o.pk || []; } catch (e) { }
   if (!PK.length) PK = [{ t: 'Ốp lưng + cường lực', g: 150000, k: 'Tặng khi mua máy' }, { t: 'Củ sạc nhanh 45W', g: 350000, k: '' }, { t: 'Thay pin (công)', g: 300000, k: 'Bảo hành 6 tháng' }];
   ['shop', 'dc', 'dt', 'tieude'].forEach(function (k) { $(k).oninput = capNhat; });
-  fetch('/kho/kho-may.json?v=' + Date.now()).then(function (r) { return r.json(); }).then(function (j) { KHO = j; veHang(); veDS(); }).catch(function () { veHang(); veDS(); });
+  fetch('/kho/kho-may.json?v=' + Date.now()).then(function (r) { return r.json(); }).then(function (j) { KHO = j; veHang(); veDS(); if (/[?&]tu=app/.test(location.search)) layTon(true); }).catch(function () { veHang(); veDS(); });
   veHang(); vePK();
   $('tim').oninput = goiY; $('tim').onfocus = goiY;
   document.addEventListener('click', function (e) { if (!e.target.closest('#goiy') && e.target.id !== 'tim') $('goiy').style.display = 'none'; });
-  $('layton').onclick = layTon;
+  $('layton').onclick = function () { layTon(); };
+  var TU_APP = /[?&]tu=app/.test(location.search);
+  if (TU_APP) { var va = $('veapp'); va.hidden = false; va.href = '/app/' + (/[?&]demo=1/.test(location.search) ? '?demo=1' : ''); }
   $('thempk').onclick = function () { PK.push({ t: '', g: 0, k: '' }); vePK(); };
   $('tai').onclick = taiPoster;
   $('copy').onclick = function () { if (!LINK) return; copyLink(LINK, $('copy')); };
@@ -269,10 +271,10 @@ function khopKho(h, ten) {
   if (tot && dl) { var b = (tot.bienThe || []).find(function (x) { return x.dl.replace(/GB/gi, '').indexOf(dl.replace(/GB/gi, '')) >= 0; }); if (b) dl = b.dl; }
   return { sp: tot, ten: tot ? tot.ten : goc, dl: dl };
 }
-function layTon() {
+function layTon(tuDong) {
   var r = docDb(); if (!r) { alert('Trên máy này chưa có tồn kho app Shop Gọn. Mở app (hoặc app demo) trước rồi quay lại.'); return; }
   if (!KHO) { alert('Kho máy chưa tải xong, đợi 2 giây rồi bấm lại.'); return; }
-  if ((DS.length || PK.some(function (x) { return x.t; })) && !confirm('Thay bảng hiện tại bằng tồn kho trong app?')) return;
+  if (!tuDong && (DS.length || PK.some(function (x) { return x.t; })) && !confirm('Thay bảng hiện tại bằng tồn kho trong app?')) return;
   var nhom = {};
   r.db.may.filter(function (m) { return m.tt === 'ton'; }).forEach(function (m) { var h = hangCua(m); if (!h) return; var k = h + '|' + m.ten; (nhom[k] = nhom[k] || { h: h, ten: m.ten, q: 0, gb: 0 }); nhom[k].q++; nhom[k].gb = Math.max(nhom[k].gb, m.giaBan || 0); });
   DS = Object.keys(nhom).map(function (k) { var x = nhom[k], kk = khopKho(x.h, x.ten), mau = kk.sp && kk.sp.mau && kk.sp.mau[0]; return { h: x.h, t: kk.ten, d: kk.dl, c: mau ? mau.ten : '', i: anhCua(mau), ny: x.gb, gb: x.gb, q: x.q, k: '' }; })
