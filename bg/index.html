@@ -106,6 +106,7 @@ input,select{font:inherit;font-size:16px;padding:9px 11px;border:1px solid var(-
 <div class="bao">
 <section style="display:flex;flex-direction:column;gap:14px">
  <button class="nut" id="layton" style="background:#b45309">📦 Lấy từ tồn kho app Shop Gọn</button>
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button class="nut" id="xemnhanh">👁 Xem trang khách</button><button class="nut zalo" id="copynhanh">📋 Copy link Zalo</button></div>
  <div class="ghi" id="laytonG" style="margin-top:-6px">Tự lấy máy còn tồn + số lượng + giá bán trong app (trên máy này). Shop chỉ cần điền giá niêm yết + khuyến mãi.</div>
  <div class="the"><h3>1 · Điện thoại theo hãng</h3>
   <div class="tabs" id="hang"></div>
@@ -241,6 +242,8 @@ function batDau() {
   if (TU_APP) { var va = $('veapp'); va.hidden = false; va.href = '/app/' + (/[?&]demo=1/.test(location.search) ? '?demo=1' : ''); }
   $('thempk').onclick = function () { PK.push({ t: '', g: 0, k: '' }); vePK(); };
   $('tai').onclick = taiPoster;
+  $('xemnhanh').onclick = function () { $('mo').click(); if (LINK) location.href = LINK; };
+  $('copynhanh').onclick = function () { if (LINK) copyLink(LINK, $('copynhanh')); };
   $('mo').onclick = function (e) { if (LINK) return; e.preventDefault(); capNhat(); setTimeout(function () { if (LINK_HUA) LINK_HUA.then(function (L) { if (L) location.href = L; }); }, 300); };
   $('copy').onclick = function () { if (!LINK) return; copyLink(LINK, $('copy')); };
   if (navigator.share) { $('chiase').hidden = false; $('chiase').onclick = function () { if (LINK) navigator.share({ title: $('tieude').value, text: 'Bảng giá ' + ($('shop').value || ''), url: LINK }).catch(function () { }); }; }
