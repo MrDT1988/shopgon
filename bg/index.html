@@ -4,39 +4,42 @@
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js"></script>
 <style>
-:root{--ngoc:#0f766e;--ngoc2:#e6f4f1;--muc:#10201e;--xam:#5d6f6c;--vien:#d5e4e1;--nen:#f6faf9;--do:#d61f1a}
+:root{--ngoc:#0f766e;--ngoc2:#e6f4f1;--muc:#10201e;--xam:#5d6f6c;--vien:#d5e4e1;--nen:#f6faf9;--do:#d61f1a;--vang:#ffd23f}
 *{box-sizing:border-box}
 body{margin:0;background:var(--nen);color:var(--muc);font:15px/1.45 "Be Vietnam Pro",system-ui,sans-serif}
 header{background:var(--ngoc);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:5}
-header b{font-size:17px}header small{opacity:.8;margin-left:auto}
-.bao{max-width:1100px;margin:0 auto;padding:14px 16px 40px;display:grid;grid-template-columns:minmax(0,460px) minmax(0,1fr);gap:20px}
-@media(max-width:900px){.bao{grid-template-columns:1fr}}
+header b{font-size:17px}header small{opacity:.8;margin-left:auto;font-size:12px}
+.bao{max-width:1150px;margin:0 auto;padding:14px 16px 40px;display:grid;grid-template-columns:minmax(0,520px) minmax(0,1fr);gap:20px}
+@media(max-width:940px){.bao{grid-template-columns:1fr}}
 .the{background:#fff;border:1px solid var(--vien);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px}
 .the h3{margin:0;font-size:15px;color:var(--ngoc);text-transform:uppercase;letter-spacing:.06em}
 label{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:var(--xam)}
 input,select{font:inherit;font-size:16px;padding:9px 11px;border:1px solid var(--vien);border-radius:10px;background:#fff;color:var(--muc);width:100%}
-.hang{display:flex;gap:6px;flex-wrap:wrap}
-.hang button{flex:1;min-width:64px;border:1.5px solid var(--vien);background:#fff;border-radius:10px;padding:8px 6px;font:inherit;font-weight:700;color:var(--xam)}
-.hang button.on{border-color:var(--ngoc);background:var(--ngoc2);color:var(--ngoc)}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.tabs button{flex:1 0 auto;border:1.5px solid var(--vien);background:#fff;border-radius:999px;padding:8px 14px;font:inherit;font-weight:700;color:var(--xam);white-space:nowrap}
+.tabs button.on{border-color:var(--ngoc);background:var(--ngoc);color:#fff}
 .goiy{max-height:220px;overflow:auto;border:1px solid var(--vien);border-radius:10px;display:none}
 .goiy div{padding:9px 12px;border-bottom:1px solid #eef3f2;cursor:pointer}
 .goiy div:hover{background:var(--ngoc2)}
-.dong{border:1px solid var(--vien);border-radius:12px;padding:10px;display:grid;grid-template-columns:56px minmax(0,1fr) 28px;gap:10px;align-items:start}
-.dong img{width:56px;height:70px;object-fit:contain}
-.dong .t{font-weight:700}
+.dong{border:1px solid var(--vien);border-radius:12px;padding:10px;display:grid;grid-template-columns:52px minmax(0,1fr) 26px;gap:10px;align-items:start}
+.dong img{width:52px;height:66px;object-fit:contain}
+.dong .t{font-weight:700}.dong .t small{font-weight:600;color:var(--ngoc);margin-left:6px}
 .dong .o{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.dong .o .rong{grid-column:1/-1}
 .dong .o input,.dong .o select{font-size:14px;padding:7px 8px}
+.pk{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) minmax(0,1.2fr) 26px;gap:6px;align-items:center}
+.pk input{font-size:14px;padding:7px 8px}
 .xoa{border:0;background:none;font-size:18px;color:var(--xam);cursor:pointer}
-.nut{border:0;border-radius:12px;padding:13px;font:inherit;font-weight:800;font-size:16px;background:var(--ngoc);color:#fff;cursor:pointer;text-align:center;text-decoration:none}
+.nut{border:0;border-radius:12px;padding:13px;font:inherit;font-weight:800;font-size:16px;background:var(--ngoc);color:#fff;cursor:pointer;text-align:center;text-decoration:none;display:block}
 .nut.phu{background:#fff;color:var(--ngoc);border:1.5px solid var(--ngoc);padding:10px}
-.khung{width:100%;max-width:560px;aspect-ratio:1080/1350;overflow:hidden;border-radius:10px;position:relative;background:#eee;margin:0 auto}
+.nut.zalo{background:#0068ff}
+.khung{width:100%;max-width:520px;aspect-ratio:1080/1350;overflow:hidden;border-radius:10px;position:relative;background:#eee;margin:0 auto}
 .khung>div{position:absolute;left:0;top:0;transform-origin:0 0}
-.link{display:flex;gap:6px}.link input{font-size:13px}
 .ghi{font-size:12px;color:var(--xam)}
 #cho{position:fixed;left:-99999px;top:0}
 .p{width:1080px;height:1350px;position:relative;overflow:hidden;background:linear-gradient(170deg,#0b3f7c 0,#06223f 60%);font-family:"Be Vietnam Pro",sans-serif;color:#fff}
 .p .dau{padding:50px 60px 24px;display:flex;justify-content:space-between;align-items:flex-end}
-.p .dau b{font-size:76px;font-weight:900;letter-spacing:-.02em;line-height:1}
+.p .dau b{font-size:72px;font-weight:900;letter-spacing:-.02em;line-height:1}
 .p .dau span{font-size:26px;opacity:.85}
 .p .luoi{position:absolute;left:50px;right:50px;top:200px;bottom:170px;display:grid;gap:18px}
 .p .c{background:#fff;color:#10201e;border-radius:24px;padding:16px;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;min-height:0}
@@ -48,32 +51,44 @@ input,select{font:inherit;font-size:16px;padding:9px 11px;border:1px solid var(-
 .p .c .tag{position:absolute;top:12px;left:12px;background:#ffd23f;color:#3a2a00;font-weight:900;border-radius:10px;padding:4px 10px}
 .p .chan{position:absolute;left:0;right:0;bottom:0;height:150px;background:#ffd23f;color:#06223f;display:flex;justify-content:space-between;align-items:center;padding:0 60px;font-size:26px}
 .p .chan b{font-size:36px;display:block}.p .chan .dt{font-size:46px;font-weight:900}
-.xem{max-width:560px;margin:0 auto;padding:0 0 90px}
-.xem .top{background:linear-gradient(170deg,#0b3f7c,#06223f);color:#fff;padding:22px 16px 26px}
-.xem .top b{font-size:24px;display:block}.xem .top small{opacity:.85}
+.xem{max-width:620px;margin:0 auto;padding:0 0 96px;background:var(--nen);min-height:100vh}
+.xem .top{background:linear-gradient(170deg,#0b3f7c,#06223f);color:#fff;padding:20px 16px 18px}
+.xem .top b{font-size:22px;display:block}.xem .top small{opacity:.85}
+.xem .tabs{position:sticky;top:0;z-index:3;background:var(--nen);padding:10px 16px;border-bottom:1px solid var(--vien)}
 .xem .ds{padding:12px 16px;display:flex;flex-direction:column;gap:10px}
-.xem .sp{background:#fff;border:1px solid var(--vien);border-radius:14px;padding:10px;display:grid;grid-template-columns:84px minmax(0,1fr);gap:12px;align-items:center}
-.xem .sp img{width:84px;height:100px;object-fit:contain}
+.xem .sp{background:#fff;border:1px solid var(--vien);border-radius:14px;padding:10px;display:grid;grid-template-columns:86px minmax(0,1fr);gap:12px;align-items:center}
+.xem .sp.het{opacity:.5}
+.xem .sp img{width:86px;height:104px;object-fit:contain}
 .xem .sp .n{font-weight:800}.xem .sp .dl{font-size:13px;color:var(--xam)}
 .xem .sp .g{font-size:20px;font-weight:900;color:var(--do)}
 .xem .sp .cu{text-decoration:line-through;color:#8a9a97;font-size:13px;margin-right:6px}
-.xem .sp .tag{display:inline-block;background:#ffd23f;color:#3a2a00;font-weight:800;border-radius:8px;padding:1px 8px;font-size:12px}
-.xem .goi{position:fixed;left:0;right:0;bottom:0;padding:12px 16px;background:#fff;border-top:1px solid var(--vien);display:flex;gap:10px;max-width:560px;margin:0 auto}
-.xem .goi a{flex:1}
+.xem .sp .tag{display:inline-block;background:var(--vang);color:#3a2a00;font-weight:800;border-radius:8px;padding:1px 8px;font-size:12px}
+.xem .sp .km{font-size:13px;color:#9a3412;background:#fff7ed;border-radius:8px;padding:4px 8px;margin-top:6px}
+.xem .sp .sl{font-size:12px;font-weight:700;color:var(--ngoc);margin-top:4px}
+.xem table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--vien);border-radius:14px;overflow:hidden;font-size:14px}
+.xem th,.xem td{padding:10px;border-bottom:1px solid #eef3f2;text-align:left;vertical-align:top}
+.xem th{background:var(--ngoc2);color:var(--ngoc);font-size:12px;text-transform:uppercase}
+.xem td.g{font-weight:800;color:var(--do);white-space:nowrap}
+.xem .goi{position:fixed;left:0;right:0;bottom:0;padding:10px 16px;background:#fff;border-top:1px solid var(--vien);display:flex;gap:8px;max-width:620px;margin:0 auto}
+.xem .goi a,.xem .goi button{flex:1;padding:12px 6px;font-size:15px}
 .xem .cuoi{text-align:center;font-size:12px;color:var(--xam);padding:6px}
 </style></head><body>
 <div id="sua">
-<header><b>🏷 Bảng giá online</b><small id="capnhat">Bản demo · bản thật lấy từ tồn kho</small></header>
+<header><b>🏷 Bảng giá online</b><small>Bản demo · bản thật tự lấy từ tồn kho</small></header>
 <div class="bao">
 <section style="display:flex;flex-direction:column;gap:14px">
- <div class="the"><h3>1 · Thêm máy vào bảng giá</h3>
-  <div class="hang" id="hang"></div>
+ <div class="the"><h3>1 · Điện thoại theo hãng</h3>
+  <div class="tabs" id="hang"></div>
   <input id="tim" placeholder="Gõ tên máy rồi bấm để thêm…" autocomplete="off">
   <div class="goiy" id="goiy"></div>
   <div id="ds" style="display:flex;flex-direction:column;gap:8px"></div>
-  <div class="ghi">Tối đa 9 máy trên poster. Gõ giá niêm yết + giá bán, chênh lệch tự hiện nhãn giảm.</div>
  </div>
- <div class="the"><h3>2 · Thông tin shop</h3>
+ <div class="the"><h3>2 · Phụ kiện &amp; linh kiện (1 bảng chung)</h3>
+  <div class="pk ghi"><span>Tên</span><span>Giá bán</span><span>Khuyến mãi</span><span></span></div>
+  <div id="pkds" style="display:flex;flex-direction:column;gap:6px"></div>
+  <button class="nut phu" id="thempk">＋ Thêm dòng phụ kiện</button>
+ </div>
+ <div class="the"><h3>3 · Thông tin shop</h3>
   <label>Tiêu đề<input id="tieude" value="BẢNG GIÁ HÔM NAY"></label>
   <label>Tên shop<input id="shop" placeholder="Minh Phát Mobile"></label>
   <label>Địa chỉ<input id="dc" placeholder="123 Ấp Bắc, TP. Mỹ Tho"></label>
@@ -81,14 +96,17 @@ input,select{font:inherit;font-size:16px;padding:9px 11px;border:1px solid var(-
  </div>
 </section>
 <section style="display:flex;flex-direction:column;gap:14px;min-width:0">
- <div class="the"><h3>Poster đăng Facebook / Zalo</h3>
-  <div class="khung" id="khung"><div id="pv"></div></div>
-  <button class="nut" id="tai">⬇ Tải poster bảng giá</button>
- </div>
- <div class="the"><h3>Link báo giá online</h3>
-  <div class="ghi">Gửi link này cho khách qua Zalo / Messenger, hoặc gắn lên trang Facebook của shop.</div>
-  <div class="link"><input id="lk" readonly><button class="nut phu" id="copy">Copy</button></div>
+ <div class="the"><h3>Gửi khách</h3>
+  <div class="ghi" id="tomtat">Chưa có sản phẩm.</div>
+  <button class="nut zalo" id="copy">📋 Copy link gửi Zalo khách</button>
+  <button class="nut phu" id="chiase" hidden>📤 Chia sẻ (Zalo, Messenger…)</button>
   <a class="nut phu" id="mo" target="_blank">👁 Xem thử như khách</a>
+ </div>
+ <div class="the"><h3>Poster đăng Facebook / Zalo</h3>
+  <div class="tabs" id="phang"></div>
+  <div class="khung" id="khung"><div id="pv"></div></div>
+  <button class="nut" id="tai">⬇ Tải poster</button>
+  <div class="ghi">Poster lấy tối đa 9 máy còn hàng của hãng đang chọn.</div>
  </div>
 </section>
 </div>
@@ -96,43 +114,88 @@ input,select{font:inherit;font-size:16px;padding:9px 11px;border:1px solid var(-
 <div id="xem" hidden></div>
 <div id="cho"></div>
 <script>
-var KHO = null, HANG = 'OPPO', DS = [];
+var KHO = null, HANG = 'OPPO', PH = 'OPPO', DS = [], PK = [];
+var TEN = { OPPO: 'OPPO', Samsung: 'Samsung', Apple: 'iPhone', Xiaomi: 'Xiaomi' };
 var $ = function (id) { return document.getElementById(id); };
 var so = function (s) { return +String(s || '').replace(/[^\d]/g, '') || 0; };
 var vnd = function (n) { return (n || 0).toLocaleString('vi-VN') + 'đ'; };
 var gon = function (n) { return n >= 1e6 ? (Math.round(n / 1e5) / 10 + '').replace('.', ',') + 'tr' : Math.round(n / 1000) + 'k'; };
 var esc = function (s) { return String(s || '').replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
 var anhCua = function (m) { return m ? (m.file ? '/' + m.file : (m.anh || '')) : ''; };
-function b64e(o) { return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
-function b64d(s) { s = s.replace(/-/g, '+').replace(/_/g, '/'); return JSON.parse(decodeURIComponent(escape(atob(s)))); }
+var anhId = function (i) { var r = /^\/kho\/anh\/(.+)\.webp$/.exec(i || ''); return r ? r[1] : i; };
+var anhUrl = function (i) { return !i ? '' : /^(https?:|\/)/.test(i) ? i : '/kho/anh/' + i + '.webp'; };
+function giaSP(x) { var ny = x.ny || x.gb, gb = x.gb || x.ny; return { ny: ny, gb: gb, giam: Math.max(0, ny - gb) }; }
+function u8b64(u) { var s = ''; for (var i = 0; i < u.length; i++) s += String.fromCharCode(u[i]); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
+function b64u8(s) { s = s.replace(/-/g, '+').replace(/_/g, '/'); var b = atob(s), u = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; }
+function nen(o) {
+  var raw = new TextEncoder().encode(JSON.stringify(o));
+  if (!window.CompressionStream) return Promise.resolve('0' + u8b64(raw));
+  return new Response(new Blob([raw]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer().then(function (b) { return '1' + u8b64(new Uint8Array(b)); });
+}
+function giaiNen(s) {
+  var u = b64u8(s.slice(1));
+  if (s[0] === '0') return Promise.resolve(JSON.parse(new TextDecoder().decode(u)));
+  return new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).text().then(JSON.parse);
+}
 
 var q = new URLSearchParams(location.search).get('d');
-if (q) { try { veXem(b64d(q)); } catch (e) { document.body.innerHTML = '<p style="padding:20px">Link bảng giá bị lỗi.</p>'; } }
+if (q) giaiNen(q).then(veXem).catch(function () { document.body.innerHTML = '<p style="padding:20px">Link bảng giá bị lỗi — nhờ shop gửi lại nhé.</p>'; });
 else batDau();
 
-function giaSP(x) { var ny = x.ny || x.gb, gb = x.gb || x.ny; return { ny: ny, gb: gb, giam: Math.max(0, ny - gb) }; }
 function veXem(d) {
   $('sua').hidden = true; var x = $('xem'); x.hidden = false; document.title = (d.s || 'Shop') + ' · Bảng giá';
-  x.innerHTML = '<div class="xem"><div class="top"><b>' + esc(d.t || 'Bảng giá hôm nay') + '</b><small>' + esc(d.s || '') + (d.a ? ' · ' + esc(d.a) : '') + '</small><div style="font-size:12px;opacity:.7;margin-top:6px">Cập nhật ' + esc(d.n || '') + '</div></div><div class="ds">' +
-    d.m.map(function (m) { var g = giaSP(m); return '<div class="sp"><img src="' + esc(m.i) + '" alt=""><div><div class="n">' + esc(m.t) + '</div><div class="dl">' + esc([m.d, m.c].filter(Boolean).join(' · ')) + '</div><div style="margin-top:4px">' + (g.giam ? '<span class="cu">' + vnd(g.ny) + '</span><span class="tag">−' + gon(g.giam) + '</span>' : '') + '</div><div class="g">' + (g.gb ? vnd(g.gb) : 'Liên hệ') + '</div></div></div>'; }).join('') +
-    '</div><div class="cuoi">Giá có thể thay đổi · Bảng giá tạo bằng Shop Gọn</div>' +
-    (d.p ? '<div class="goi"><a class="nut" href="tel:' + esc(d.p.replace(/\s/g, '')) + '">📞 Gọi ' + esc(d.p) + '</a><a class="nut phu" href="https://zalo.me/' + esc(d.p.replace(/\D/g, '')) + '" target="_blank">💬 Zalo</a></div>' : '') + '</div>';
+  var nhom = ['OPPO', 'Samsung', 'Apple', 'Xiaomi'].filter(function (h) { return d.m.some(function (m) { return m.h === h; }); });
+  if ((d.k || []).length) nhom.push('PK');
+  var tab = nhom[0];
+  function ve() {
+    var ds = x.querySelector('.ds');
+    if (tab === 'PK') {
+      ds.innerHTML = '<table><tr><th>Sản phẩm</th><th>Giá</th><th>Khuyến mãi</th></tr>' + d.k.map(function (r) { return '<tr><td>' + esc(r.t) + '</td><td class="g">' + (r.g ? vnd(r.g) : 'Liên hệ') + '</td><td>' + esc(r.k || '') + '</td></tr>'; }).join('') + '</table>';
+    } else {
+      var L = d.m.filter(function (m) { return m.h === tab; }).sort(function (a, b) { return (b.q > 0) - (a.q > 0); });
+      ds.innerHTML = L.map(function (m) {
+        var g = giaSP(m), het = m.q === 0;
+        return '<div class="sp' + (het ? ' het' : '') + '"><img src="' + esc(anhUrl(m.i)) + '" alt="" loading="lazy"><div><div class="n">' + esc(m.t) + '</div><div class="dl">' + esc([m.d, m.c].filter(Boolean).join(' · ')) + '</div>' +
+          '<div style="margin-top:4px">' + (g.giam ? '<span class="cu">' + vnd(g.ny) + '</span><span class="tag">−' + gon(g.giam) + '</span>' : '') + '</div><div class="g">' + (g.gb ? vnd(g.gb) : 'Liên hệ') + '</div>' +
+          (m.k ? '<div class="km">🎁 ' + esc(m.k) + '</div>' : '') +
+          '<div class="sl">' + (het ? 'Tạm hết hàng' : m.q > 0 ? '✓ Còn ' + m.q + ' máy' : '') + '</div></div></div>';
+      }).join('');
+    }
+    [].forEach.call(x.querySelectorAll('.tabs button'), function (b) { b.classList.toggle('on', b.dataset.t === tab); });
+  }
+  x.innerHTML = '<div class="xem"><div class="top"><b>' + esc(d.t || 'Bảng giá hôm nay') + '</b><small>' + esc(d.s || '') + (d.a ? ' · ' + esc(d.a) : '') + '</small><div style="font-size:12px;opacity:.7;margin-top:6px">Cập nhật ' + esc(d.n || '') + '</div></div>' +
+    '<div class="tabs">' + nhom.map(function (h) { return '<button data-t="' + h + '">' + (h === 'PK' ? 'Phụ kiện' : TEN[h]) + '</button>'; }).join('') + '</div>' +
+    '<div class="ds"></div><div class="cuoi">Giá có thể thay đổi theo ngày · Bảng giá tạo bằng Shop Gọn</div>' +
+    (d.p ? '<div class="goi"><a class="nut" href="tel:' + esc(d.p.replace(/\s/g, '')) + '">📞 Gọi</a><a class="nut zalo" href="https://zalo.me/' + esc(d.p.replace(/\D/g, '')) + '" target="_blank">💬 Zalo</a><button class="nut phu" id="xcopy">🔗 Gửi bạn</button></div>' : '') + '</div>';
+  [].forEach.call(x.querySelectorAll('.tabs button'), function (b) { b.onclick = function () { tab = b.dataset.t; ve(); window.scrollTo(0, 0); }; });
+  var xc = $('xcopy'); if (xc) xc.onclick = function () { copyLink(location.href, xc); };
+  ve();
+}
+function copyLink(t, b) {
+  var cu = b.textContent;
+  (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function () { b.textContent = '✓ Đã copy link'; setTimeout(function () { b.textContent = cu; }, 1800); })
+    .catch(function () { window.prompt('Copy link này:', t); });
 }
 
 function batDau() {
-  try { var o = JSON.parse(localStorage.getItem('sg_bg') || '{}'); ['shop', 'dc', 'dt', 'tieude'].forEach(function (k) { if (o[k]) $(k).value = o[k]; }); DS = o.ds || []; } catch (e) { }
+  try { var o = JSON.parse(localStorage.getItem('sg_bg2') || '{}'); ['shop', 'dc', 'dt', 'tieude'].forEach(function (k) { if (o[k]) $(k).value = o[k]; }); DS = o.ds || []; PK = o.pk || []; } catch (e) { }
+  if (!PK.length) PK = [{ t: 'Ốp lưng + cường lực', g: 150000, k: 'Tặng khi mua máy' }, { t: 'Củ sạc nhanh 45W', g: 350000, k: '' }, { t: 'Thay pin (công)', g: 300000, k: 'Bảo hành 6 tháng' }];
   ['shop', 'dc', 'dt', 'tieude'].forEach(function (k) { $(k).oninput = capNhat; });
-  fetch('/kho/kho-may.json?v=' + Date.now()).then(function (r) { return r.json(); }).then(function (j) { KHO = j; veHang(); veDS(); }).catch(function () { veDS(); });
+  fetch('/kho/kho-may.json?v=' + Date.now()).then(function (r) { return r.json(); }).then(function (j) { KHO = j; veHang(); veDS(); }).catch(function () { veHang(); veDS(); });
+  veHang(); vePK();
   $('tim').oninput = goiY; $('tim').onfocus = goiY;
   document.addEventListener('click', function (e) { if (!e.target.closest('#goiy') && e.target.id !== 'tim') $('goiy').style.display = 'none'; });
+  $('thempk').onclick = function () { PK.push({ t: '', g: 0, k: '' }); vePK(); };
   $('tai').onclick = taiPoster;
-  $('copy').onclick = function () { var t = $('lk').value; (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function () { $('copy').textContent = '✓'; setTimeout(function () { $('copy').textContent = 'Copy'; }, 1500); }).catch(function () { $('lk').select(); document.execCommand('copy'); }); };
+  $('copy').onclick = function () { if (!LINK) return; copyLink(LINK, $('copy')); };
+  if (navigator.share) { $('chiase').hidden = false; $('chiase').onclick = function () { if (LINK) navigator.share({ title: $('tieude').value, text: 'Bảng giá ' + ($('shop').value || ''), url: LINK }).catch(function () { }); }; }
   window.addEventListener('resize', coGian);
 }
 function veHang() {
-  var ten = { OPPO: 'OPPO', Samsung: 'Samsung', Xiaomi: 'Xiaomi', Apple: 'iPhone' };
-  $('hang').innerHTML = Object.keys(ten).map(function (h) { return '<button data-h="' + h + '" class="' + (h === HANG ? 'on' : '') + '">' + ten[h] + '</button>'; }).join('');
-  [].forEach.call($('hang').children, function (b) { b.onclick = function () { HANG = b.dataset.h; veHang(); goiY(); }; });
+  $('hang').innerHTML = Object.keys(TEN).map(function (h) { var n = DS.filter(function (x) { return x.h === h; }).length; return '<button data-h="' + h + '" class="' + (h === HANG ? 'on' : '') + '">' + TEN[h] + (n ? ' · ' + n : '') + '</button>'; }).join('');
+  [].forEach.call($('hang').children, function (b) { b.onclick = function () { HANG = b.dataset.h; veHang(); veDS(); goiY(); }; });
+  $('phang').innerHTML = Object.keys(TEN).map(function (h) { return '<button data-h="' + h + '" class="' + (h === PH ? 'on' : '') + '">' + TEN[h] + '</button>'; }).join('');
+  [].forEach.call($('phang').children, function (b) { b.onclick = function () { PH = b.dataset.h; veHang(); capNhat(); }; });
 }
 function goiY() {
   var qq = $('tim').value.toLowerCase().replace(/\s/g, ''), ds = (KHO && KHO.hang[HANG]) || [];
@@ -142,59 +205,82 @@ function goiY() {
   [].forEach.call($('goiy').querySelectorAll('[data-i]'), function (d) { d.onclick = function () { them(ds[+d.dataset.i]); }; });
 }
 function them(s) {
-  if (DS.length >= 9) { alert('Poster tối đa 9 máy'); return; }
   var m = (s.mau || [])[0] || {}, b = (s.bienThe || [])[0] || {};
-  DS.push({ h: s.hang, t: s.ten, d: b.dl || '', c: m.ten || '', i: anhCua(m), ny: 0, gb: 0 });
-  $('tim').value = ''; $('goiy').style.display = 'none'; veDS();
+  DS.push({ h: s.hang, t: s.ten, d: b.dl || '', c: m.ten || '', i: anhCua(m), ny: 0, gb: 0, q: 1, k: '' });
+  $('tim').value = ''; $('goiy').style.display = 'none'; veHang(); veDS();
 }
 function tim(x) { var ds = (KHO && KHO.hang[x.h]) || []; return ds.find(function (s) { return s.ten === x.t; }); }
 function veDS() {
-  $('ds').innerHTML = DS.length ? DS.map(function (x, i) {
-    var s = tim(x) || { bienThe: [], mau: [] };
+  var L = DS.map(function (x, i) { return [x, i]; }).filter(function (a) { return a[0].h === HANG; });
+  $('ds').innerHTML = L.length ? L.map(function (a) {
+    var x = a[0], i = a[1], s = tim(x) || { bienThe: [], mau: [] };
     var dl = (s.bienThe || []).map(function (b) { return '<option' + (b.dl === x.d ? ' selected' : '') + '>' + esc(b.dl || 'Tiêu chuẩn') + '</option>'; }).join('');
     var mau = (s.mau || []).map(function (m, k) { return '<option value="' + k + '"' + (m.ten === x.c ? ' selected' : '') + '>' + esc(m.ten || 'Màu ' + (k + 1)) + '</option>'; }).join('');
     return '<div class="dong"><img src="' + esc(x.i) + '" alt=""><div><div class="t">' + esc(x.t) + '</div><div class="o">' +
       '<select data-i="' + i + '" data-k="d">' + (dl || '<option>Tiêu chuẩn</option>') + '</select><select data-i="' + i + '" data-k="c">' + (mau || '<option>—</option>') + '</select>' +
       '<input data-i="' + i + '" data-k="ny" inputmode="numeric" placeholder="Giá niêm yết" value="' + (x.ny ? x.ny.toLocaleString('vi-VN') : '') + '">' +
       '<input data-i="' + i + '" data-k="gb" inputmode="numeric" placeholder="Giá bán" value="' + (x.gb ? x.gb.toLocaleString('vi-VN') : '') + '">' +
+      '<input data-i="' + i + '" data-k="q" inputmode="numeric" placeholder="Số lượng tồn" value="' + (x.q || x.q === 0 ? x.q : '') + '">' +
+      '<input data-i="' + i + '" data-k="k" placeholder="Khuyến mãi (VD: tặng ốp + cường lực)" value="' + esc(x.k) + '" class="rong" style="grid-column:auto">' +
       '</div></div><button class="xoa" data-x="' + i + '" title="Bỏ">✕</button></div>';
-  }).join('') : '<div class="ghi">Chưa có máy nào — gõ tên máy ở trên để thêm (ví dụ A7 Pro, S26, iPhone 17).</div>';
+  }).join('') : '<div class="ghi">Chưa có máy ' + TEN[HANG] + ' — gõ tên máy ở trên để thêm.</div>';
   [].forEach.call($('ds').querySelectorAll('[data-k]'), function (el) {
     el.oninput = el.onchange = function () {
       var x = DS[+el.dataset.i], k = el.dataset.k;
       if (k === 'ny' || k === 'gb') { x[k] = so(el.value); el.value = x[k] ? x[k].toLocaleString('vi-VN') : ''; }
+      else if (k === 'q') { x.q = el.value === '' ? null : so(el.value); }
+      else if (k === 'k') x.k = el.value;
       else if (k === 'd') x.d = el.value;
       else { var s = tim(x), m = s && s.mau[+el.value]; if (m) { x.c = m.ten; x.i = anhCua(m); el.closest('.dong').querySelector('img').src = x.i; } }
       capNhat();
     };
   });
-  [].forEach.call($('ds').querySelectorAll('[data-x]'), function (b) { b.onclick = function () { DS.splice(+b.dataset.x, 1); veDS(); }; });
+  [].forEach.call($('ds').querySelectorAll('[data-x]'), function (b) { b.onclick = function () { DS.splice(+b.dataset.x, 1); veHang(); veDS(); }; });
+  capNhat();
+}
+function vePK() {
+  $('pkds').innerHTML = PK.map(function (r, i) {
+    return '<div class="pk"><input data-p="' + i + '" data-k="t" placeholder="Tên phụ kiện / linh kiện" value="' + esc(r.t) + '"><input data-p="' + i + '" data-k="g" inputmode="numeric" placeholder="Giá" value="' + (r.g ? r.g.toLocaleString('vi-VN') : '') + '"><input data-p="' + i + '" data-k="k" placeholder="KM" value="' + esc(r.k) + '"><button class="xoa" data-px="' + i + '">✕</button></div>';
+  }).join('');
+  [].forEach.call($('pkds').querySelectorAll('[data-p]'), function (el) {
+    el.oninput = function () { var r = PK[+el.dataset.p], k = el.dataset.k; if (k === 'g') { r.g = so(el.value); el.value = r.g ? r.g.toLocaleString('vi-VN') : ''; } else r[k] = el.value; capNhat(); };
+  });
+  [].forEach.call($('pkds').querySelectorAll('[data-px]'), function (b) { b.onclick = function () { PK.splice(+b.dataset.px, 1); vePK(); }; });
   capNhat();
 }
 function thongTin() { return { t: $('tieude').value || 'BẢNG GIÁ HÔM NAY', s: $('shop').value || 'Tên shop', a: $('dc').value || '', p: $('dt').value || '' }; }
+var LINK = '', HEN = 0;
 function capNhat() {
   var tt = thongTin();
-  try { localStorage.setItem('sg_bg', JSON.stringify({ shop: $('shop').value, dc: $('dc').value, dt: $('dt').value, tieude: $('tieude').value, ds: DS })); } catch (e) { }
+  try { localStorage.setItem('sg_bg2', JSON.stringify({ shop: $('shop').value, dc: $('dc').value, dt: $('dt').value, tieude: $('tieude').value, ds: DS, pk: PK })); } catch (e) { }
   $('pv').innerHTML = poster(tt); coGian();
-  var d = { t: tt.t, s: tt.s, a: tt.a, p: tt.p, n: new Date().toLocaleDateString('vi-VN'), m: DS.map(function (x) { return { t: x.t, d: x.d, c: x.c, i: x.i, ny: x.ny, gb: x.gb }; }) };
-  var url = location.origin + location.pathname + '?d=' + b64e(d);
-  $('lk').value = DS.length ? url : ''; $('mo').href = DS.length ? url : '#';
+  var pk = PK.filter(function (r) { return r.t; });
+  var dem = Object.keys(TEN).map(function (h) { var n = DS.filter(function (x) { return x.h === h; }).length; return n ? TEN[h] + ' ' + n : ''; }).filter(Boolean);
+  if (pk.length) dem.push('Phụ kiện ' + pk.length);
+  $('tomtat').textContent = dem.length ? 'Bảng giá gồm: ' + dem.join(' · ') + '. Khách mở link sẽ thấy từng tab theo hãng.' : 'Chưa có sản phẩm.';
+  clearTimeout(HEN);
+  HEN = setTimeout(function () {
+    var d = { t: tt.t, s: tt.s, a: tt.a, p: tt.p, n: new Date().toLocaleDateString('vi-VN'),
+      m: DS.map(function (x) { var o = { h: x.h, t: x.t, d: x.d, c: x.c, i: anhId(x.i), ny: x.ny, gb: x.gb }; if (x.q !== null && x.q !== undefined) o.q = x.q; if (x.k) o.k = x.k; return o; }),
+      k: pk.map(function (r) { var o = { t: r.t, g: r.g }; if (r.k) o.k = r.k; return o; }) };
+    nen(d).then(function (z) { LINK = (DS.length || pk.length) ? location.origin + location.pathname + '?d=' + z : ''; $('mo').href = LINK || '#'; });
+  }, 250);
 }
 function coGian() { var k = $('khung'); $('pv').style.transform = 'scale(' + (k.clientWidth / 1080) + ')'; }
 function poster(tt) {
-  var n = DS.length || 1, cot = n <= 1 ? 1 : n <= 4 ? 2 : 3, hang = Math.ceil(n / cot);
+  var L = DS.filter(function (x) { return x.h === PH && x.q !== 0; }).slice(0, 9);
+  var n = L.length || 1, cot = n <= 1 ? 1 : n <= 4 ? 2 : 3, hang = Math.ceil(n / cot);
   var co = { 1: [60, 40, 90], 2: [36, 26, 54], 3: [26, 20, 40] }[cot];
-  return '<div class="p"><div class="dau"><div><span>' + esc(tt.s) + '</span><br><b>' + esc(tt.t) + '</b></div><span>' + new Date().toLocaleDateString('vi-VN') + '</span></div>' +
+  return '<div class="p"><div class="dau"><div><span>' + esc(tt.s) + ' · ' + TEN[PH] + '</span><br><b>' + esc(tt.t) + '</b></div><span>' + new Date().toLocaleDateString('vi-VN') + '</span></div>' +
     '<div class="luoi" style="grid-template-columns:repeat(' + cot + ',1fr);grid-template-rows:repeat(' + hang + ',1fr)">' +
-    (DS.length ? DS.map(function (x) { var g = giaSP(x); return '<div class="c">' + (g.giam ? '<div class="tag" style="font-size:' + co[1] + 'px">−' + gon(g.giam) + '</div>' : '') + '<img src="' + esc(x.i) + '"><div class="n" style="font-size:' + co[0] + 'px">' + esc(x.t) + '</div><div class="dl" style="font-size:' + co[1] + 'px">' + esc(x.d) + '</div>' + (g.giam ? '<div class="cu" style="font-size:' + co[1] + 'px">' + vnd(g.ny) + '</div>' : '') + '<div class="g" style="font-size:' + co[2] + 'px">' + (g.gb ? vnd(g.gb) : 'Liên hệ') + '</div></div>'; }).join('')
-      : '<div class="c" style="justify-content:center;font-size:36px;color:#5d6f6c">Thêm máy để xem poster</div>') +
+    (L.length ? L.map(function (x) { var g = giaSP(x); return '<div class="c">' + (g.giam ? '<div class="tag" style="font-size:' + co[1] + 'px">−' + gon(g.giam) + '</div>' : '') + '<img src="' + esc(x.i) + '"><div class="n" style="font-size:' + co[0] + 'px">' + esc(x.t) + '</div><div class="dl" style="font-size:' + co[1] + 'px">' + esc(x.d) + '</div>' + (g.giam ? '<div class="cu" style="font-size:' + co[1] + 'px">' + vnd(g.ny) + '</div>' : '') + '<div class="g" style="font-size:' + co[2] + 'px">' + (g.gb ? vnd(g.gb) : 'Liên hệ') + '</div></div>'; }).join('')
+      : '<div class="c" style="justify-content:center;font-size:34px;color:#5d6f6c">Thêm máy ' + TEN[PH] + ' để xem poster</div>') +
     '</div><div class="chan"><div><b>' + esc(tt.s) + '</b>' + esc(tt.a) + '</div><div style="text-align:right"><span style="font-size:22px">Gọi / Zalo</span><div class="dt">' + esc(tt.p) + '</div></div></div></div>';
 }
 function taiPoster() {
-  if (!DS.length) { alert('Thêm ít nhất 1 máy'); return; }
   $('cho').innerHTML = poster(thongTin()); var b = $('tai'), cu = b.textContent; b.textContent = 'Đang xuất…';
   htmlToImage.toPng($('cho').firstChild, { width: 1080, height: 1350, pixelRatio: 1 }).then(function (u) {
-    var a = document.createElement('a'); a.href = u; a.download = 'Bang_gia_' + new Date().toISOString().slice(0, 10) + '.png'; a.click(); b.textContent = cu;
+    var a = document.createElement('a'); a.href = u; a.download = 'Bang_gia_' + TEN[PH] + '_' + new Date().toISOString().slice(0, 10) + '.png'; a.click(); b.textContent = cu;
   }).catch(function (e) { b.textContent = cu; alert('Chưa xuất được: ' + (e && e.message || e)); });
 }
 </script>
