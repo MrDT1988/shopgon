@@ -63,6 +63,7 @@ input,select,textarea{font:inherit;font-size:16px;padding:10px 12px;border:1px s
   <div class="hang" id="hang"></div>
   <label>Tên máy<input id="tim" placeholder="Gõ tên máy, ví dụ A7 Pro, S26, iPhone 17…" autocomplete="off"></label>
   <div class="goiy" id="goiy"></div>
+  <label style="flex-direction:row;align-items:center;gap:8px;font-size:14px;cursor:pointer;color:var(--xam)">📷 <span><b style="color:inherit;text-decoration:underline">Máy không có trong kho? Tải hình của shop lên</b><br><small>Gõ tên máy ở ô trên trước, rồi chọn hình trong điện thoại</small></span><input type="file" id="anhShop" accept="image/*" hidden></label>
   <div id="chon" hidden>
    <div style="display:flex;flex-direction:column;gap:10px">
     <label>Dung lượng<select id="dl"></select></label>
@@ -137,6 +138,16 @@ function chonSP(s) {
   MAU = ms[0];
   [].forEach.call($('mau').children, function (b) { b.onclick = function () { [].forEach.call($('mau').children, function (x) { x.classList.remove('on'); }); b.classList.add('on'); MAU = ms[+b.dataset.i]; }; });
 }
+$('anhShop').onchange = function () {
+  var f = this.files && this.files[0]; if (!f) return; var r = new FileReader();
+  r.onload = function () { var im = new Image(); im.onload = function () {
+    var k = Math.min(1, 900 / Math.max(im.width, im.height)), c = document.createElement('canvas'); c.width = Math.round(im.width * k); c.height = Math.round(im.height * k);
+    c.getContext('2d').drawImage(im, 0, 0, c.width, c.height);
+    var ten = $('tim').value.trim() || 'Máy của shop';
+    chonSP({ hang: HANG, ten: ten, bienThe: [], mau: [{ ten: 'Hình của shop', anh: c.toDataURL('image/png') }] });
+  }; im.src = r.result; };
+  r.readAsDataURL(f); this.value = '';
+};
 function anhCua(m) { return m.file ? '../' + m.file : (m.anh || ''); }
 ['ny', 'gb', 'gop', 'tro'].forEach(function (k) { $(k).addEventListener('input', function () { var v = so(this.value); this.value = v ? v.toLocaleString('vi-VN') : ''; tinh(); }); });
 function giaTinh() {
