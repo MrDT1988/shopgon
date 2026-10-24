@@ -242,7 +242,7 @@ function batDau() {
   if (TU_APP) { var va = $('veapp'); va.hidden = false; va.href = '/app/' + (/[?&]demo=1/.test(location.search) ? '?demo=1' : ''); }
   $('thempk').onclick = function () { PK.push({ t: '', g: 0, k: '' }); vePK(); };
   $('tai').onclick = taiPoster;
-  $('xemnhanh').onclick = function () { $('mo').click(); if (LINK) location.href = LINK; };
+  $('xemnhanh').onclick = function () { if (LINK) location.href = LINK; else $('mo').click(); };
   $('copynhanh').onclick = function () { if (LINK) copyLink(LINK, $('copynhanh')); };
   $('mo').onclick = function (e) { if (LINK) return; e.preventDefault(); capNhat(); setTimeout(function () { if (LINK_HUA) LINK_HUA.then(function (L) { if (L) location.href = L; }); }, 300); };
   $('copy').onclick = function () { if (!LINK) return; copyLink(LINK, $('copy')); };
