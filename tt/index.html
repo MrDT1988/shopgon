@@ -73,7 +73,7 @@ input,select,textarea{font:inherit;font-size:16px;padding:10px 12px;border:1px s
  <div class="the"><h3>2 · Giá &amp; khuyến mãi</h3>
   <div class="hai"><label>Giá niêm yết (đ)<input id="ny" inputmode="numeric" placeholder="VD: 13.490.000"></label>
   <label>Giá shop bán (đ)<input id="gb" inputmode="numeric" placeholder="VD: 11.990.000"></label></div>
-  <div style="font-size:12px;color:var(--xam);margin-top:-4px">Giá niêm yết tự điền theo web hãng (nếu có) — sửa được. Phần chênh lệch = khuyến mãi, tự hiện trên hình.</div>
+  <div style="font-size:12px;color:var(--xam);margin-top:-4px">Shop tự điền 2 giá. Phần chênh lệch = khuyến mãi, tự hiện trên hình (giá niêm yết gạch ngang + nhãn Giảm).</div>
   <div class="tinh" id="tinh"></div><div class="canh" id="canh"></div>
   <label>Quà tặng (mỗi dòng 1 món)<textarea id="qua" rows="3" placeholder="Ốp lưng + cường lực&#10;Củ sạc nhanh"></textarea></label>
   <div class="hai"><label>Trả góp/tháng (đ)<input id="gop" inputmode="numeric" placeholder="để trống nếu không"></label>
@@ -120,7 +120,7 @@ function goiY() {
   var q = $('tim').value.toLowerCase().trim(), ds = (KHO && KHO.hang[HANG]) || [];
   var kq = ds.filter(function (s) { return !q || s.ten.toLowerCase().indexOf(q) >= 0 || s.ten.toLowerCase().replace(/\s/g, '').indexOf(q.replace(/\s/g, '')) >= 0; }).slice(0, 30);
   $('goiy').style.display = 'block';
-  $('goiy').innerHTML = kq.length ? kq.map(function (s, i) { var g = (s.bienThe || []).map(function (b) { return b.niemyet; }).filter(Boolean); return '<div data-i="' + ds.indexOf(s) + '"><span>' + esc(s.ten) + '</span><small>' + (g.length ? 'từ ' + vnd(Math.min.apply(0, g)) : 'chưa có giá') + '</small></div>'; }).join('')
+  $('goiy').innerHTML = kq.length ? kq.map(function (s, i) { var g = (s.bienThe || []).map(function (b) { return b.niemyet; }).filter(Boolean); return '<div data-i="' + ds.indexOf(s) + '"><span>' + esc(s.ten) + '</span><small>' + (s.mau && s.mau.length > 1 ? s.mau.length + ' màu' : '') + '</small></div>'; }).join('')
     : '<div style="cursor:default">Không có trong kho — <a target="_blank" href="https://www.google.com/search?tbm=isch&q=' + encodeURIComponent(HANG + ' ' + $('tim').value) + '">tìm trên Google</a></div>';
   [].forEach.call($('goiy').querySelectorAll('[data-i]'), function (d) { d.onclick = function () { chonSP(ds[+d.dataset.i]); }; });
 }
@@ -128,8 +128,8 @@ $('tim').oninput = goiY; $('tim').onfocus = goiY;
 function chonSP(s) {
   SP = s; $('tim').value = s.ten; $('goiy').style.display = 'none'; $('chon').hidden = false;
   var bt = (s.bienThe && s.bienThe.length) ? s.bienThe : [{ dl: '', niemyet: 0, giaHang: 0 }];
-  $('dl').innerHTML = bt.map(function (b, i) { return '<option value="' + i + '">' + (b.dl || 'Bản tiêu chuẩn') + (b.niemyet ? ' — ' + vnd(b.niemyet) : '') + '</option>'; }).join('');
-  $('dl').onchange = function () { BT = bt[+$('dl').value]; $('ny').value = BT.niemyet ? BT.niemyet.toLocaleString('vi-VN') : ''; $('gb').value = ''; $('gb').placeholder = BT.giaHang && BT.giaHang < BT.niemyet ? 'Web hãng đang bán ' + BT.giaHang.toLocaleString('vi-VN') : 'VD: ' + (BT.niemyet ? Math.round(BT.niemyet * 0.93 / 10000) * 10000 : 11990000).toLocaleString('vi-VN'); tinh(); $('gb').focus(); };
+  $('dl').innerHTML = bt.map(function (b, i) { return '<option value="' + i + '">' + (b.dl || 'Bản tiêu chuẩn') + '</option>'; }).join('');
+  $('dl').onchange = function () { BT = bt[+$('dl').value]; tinh(); };
   $('dl').onchange();
   var ms = (s.mau && s.mau.length) ? s.mau : [{ ten: '', anh: '' }];
   $('mau').innerHTML = ms.map(function (m, i) { return '<button data-i="' + i + '" class="' + (i ? '' : 'on') + '"><img src="' + esc(anhCua(m)) + '" alt="">' + esc(m.ten || ('Màu ' + (i + 1))) + '</button>'; }).join('');
