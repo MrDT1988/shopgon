@@ -1,0 +1,39 @@
+name: Kho may (gia niem yet + anh chinh hang)
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: '17 20 * * 0'   # 03:17 sáng thứ Hai giờ VN, mỗi tuần
+
+permissions:
+  contents: write
+
+concurrency:
+  group: kho-may
+  cancel-in-progress: false
+
+jobs:
+  lay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Cai trinh duyet robot
+        run: |
+          npm init -y >/dev/null
+          npm i playwright@1.48.2
+          npx playwright install --with-deps chromium
+      - name: Lay kho may 4 hang
+        run: node kho/lay-kho.mjs
+      - name: Luu ket qua
+        run: |
+          git config user.name "robot-kho-may"
+          git config user.email "robot@shopgon.vn"
+          git add kho/kho-may.json
+          git diff --cached --quiet && echo "Khong doi" && exit 0
+          git commit -m "Kho may: cap nhat $(date -u +%F)"
+          git pull --rebase origin main
+          git push origin HEAD:main
