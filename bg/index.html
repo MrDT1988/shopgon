@@ -171,7 +171,7 @@ function giaiNen(s) {
 }
 
 var q = new URLSearchParams(location.search).get('d');
-if (q) giaiNen(q).then(veXem).catch(function () { document.body.innerHTML = '<p style="padding:20px">Link bảng giá bị lỗi — nhờ shop gửi lại nhé.</p>'; });
+if (q) giaiNen(q).then(function (d) { return fetch('/kho/kho-may.json?v=' + Date.now()).then(function (r) { return r.json(); }).then(function (j) { KHO = j; vaAnh(d.m); }).catch(function () { }).then(function () { veXem(d); }); }).catch(function () { document.body.innerHTML = '<p style="padding:20px">Link bảng giá bị lỗi — nhờ shop gửi lại nhé.</p>'; });
 else batDau();
 
 function veXem(d) {
@@ -233,7 +233,7 @@ function batDau() {
   Promise.all([
     fetch('/kho/kho-may.json?v=' + Date.now()).then(function (r) { return r.json(); }).then(function (j) { KHO = j; }).catch(function () { }),
     fetch('/kho/demo-ton.json?v=' + Date.now()).then(function (r) { return r.json(); }).then(function (j) { DEMO_TON = j; }).catch(function () { })
-  ]).then(function () { veHang(); veDS(); if (tuDongLay && KHO) layTon(true); else if (XEM_NGAY) capNhat(); });
+  ]).then(function () { vaAnh(DS); veHang(); veDS(); if (tuDongLay && KHO) layTon(true); else if (XEM_NGAY) capNhat(); });
   veHang(); vePK();
   $('tim').oninput = goiY; $('tim').onfocus = goiY;
   document.addEventListener('click', function (e) { if (!e.target.closest('#goiy') && e.target.id !== 'tim') $('goiy').style.display = 'none'; });
@@ -318,6 +318,7 @@ function docDb() {
 }
 function hangCua(m) { var s = (m.hang || '') + ' ' + m.ten; return /iphone|apple/i.test(s) ? 'Apple' : /samsung|galaxy/i.test(s) ? 'Samsung' : /xiaomi|redmi|poco/i.test(s) ? 'Xiaomi' : /oppo/i.test(s) ? 'OPPO' : 'Khac'; }
 var BO_HIEU = /oppo|samsung|galaxy|xiaomi|apple|vivo|realme|honor|motorola|moto|nubia|nothing|masstel|mobell|tecno|infinix|itel|nokia|\s|-/g;
+function vaAnh(L) { if (!KHO) return; (L || []).forEach(function (x) { if (x.i) return; var s = khopKho(x.h, x.t).sp, m = s && s.mau && s.mau[0]; if (m) x.i = anhCua(m); }); }
 function chuan(s) { return String(s || '').toLowerCase().replace(/5g/g, '').replace(BO_HIEU, ''); }
 function chuan5g(s) { return String(s || '').toLowerCase().replace(BO_HIEU, ''); }
 function dsKho(h) { if (!KHO) return []; if (h !== 'Khac') return KHO.hang[h] || []; return Object.keys(KHO.hang).filter(function (k) { return ['OPPO', 'Samsung', 'Xiaomi', 'Apple'].indexOf(k) < 0; }).reduce(function (a, k) { return a.concat(KHO.hang[k]); }, []); }
