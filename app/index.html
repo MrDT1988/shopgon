@@ -316,8 +316,10 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
   token:null,email:'',sheetId:'',tc:null,timer:null,busy:false,
   ready(){return !!this.CLIENT_ID},
   load(){return window.google&&google.accounts?Promise.resolve():new Promise((ok,bad)=>{const sc=document.createElement('script');sc.src='https://accounts.google.com/gsi/client';sc.onload=ok;sc.onerror=bad;document.head.appendChild(sc)})},
-  async login(silent){await this.load();return new Promise((ok,bad)=>{this.tc=google.accounts.oauth2.initTokenClient({client_id:this.CLIENT_ID,scope:this.SCOPES,callback:r=>r.error?bad(r):ok(r)});this.tc.requestAccessToken({prompt:silent?'':'select_account'})}).then(async r=>{this.token=r.access_token;
-    const u=await this.api('https://www.googleapis.com/oauth2/v3/userinfo');this.email=u.email;try{localStorage.setItem('shopgon_gg',JSON.stringify({email:this.email}))}catch(e){}})},
+  /* 24/10: gọi requestAccessToken ngay trong lúc bấm (thư viện đã nạp sẵn) để trình duyệt không chặn cửa sổ đăng nhập; lưu token 55 phút để mở lại app không phải đăng nhập lại */
+  login(silent){const run=()=>new Promise((ok,bad)=>{this.tc=google.accounts.oauth2.initTokenClient({client_id:this.CLIENT_ID,scope:this.SCOPES,login_hint:this.email||undefined,callback:r=>r.error?bad(r):ok(r),error_callback:e=>bad(e)});this.tc.requestAccessToken({prompt:silent?'':'select_account'})});
+    return (window.google&&google.accounts?run():this.load().then(run)).then(async r=>{this.token=r.access_token;
+    const u=await this.api('https://www.googleapis.com/oauth2/v3/userinfo');this.email=u.email;try{localStorage.setItem('shopgon_gg',JSON.stringify({email:this.email}));localStorage.setItem('shopgon_tk',JSON.stringify({t:this.token,e:this.email,x:Date.now()+(Math.min(+r.expires_in||3600,3600)-300)*1000}))}catch(e){}})},
   async api(url,opt={}){const r=await fetch(url,{...opt,headers:{Authorization:'Bearer '+this.token,'Content-Type':'application/json',...(opt.headers||{})}});if(!r.ok)throw new Error(r.status+' '+(await r.text()).slice(0,200));return r.status===204?{}:r.json()},
   async findOrCreate(){const q=encodeURIComponent("appProperties has { key='shopgon' and value='1' } and trashed=false");
     const f=await this.api('https://www.googleapis.com/drive/v3/files?q='+q+'&fields=files(id,name)');if(f.files&&f.files.length){this.sheetId=f.files[0].id;return false}
@@ -367,24 +369,31 @@ async function afterLogin(){welcomeMsg('Đang kiểm tra kích hoạt…');const
   else await GG.pull();
   try{localStorage.setItem('shopgon_gg',JSON.stringify({email:GG.email,sheetId:GG.sheetId}))}catch(e){}
   closeWelcome();render();toast('Đã kết nối '+GG.email);return true}
+/* 24/10: Zalo/Facebook/TikTok mở link trong trình duyệt riêng, Google không cho đăng nhập ở đó (báo lỗi 400) → hướng dẫn mở bằng Chrome/Safari */
+const INAPP=/Zalo|FBAN|FBAV|FB_IAB|FBIOS|Instagram|Messenger|Line\/|musical_ly|TikTok|Bytedance|; wv\)/i.test(navigator.userAgent);
+const IOS=/iPhone|iPad|iPod/i.test(navigator.userAgent);
+function openOut(){const u=location.href.split('#')[0];if(!IOS){location.href='intent://'+u.replace(/^https?:\/\//,'')+'#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url='+encodeURIComponent(u)+';end';return}
+  try{navigator.clipboard.writeText(u);welcomeMsg('Đã chép link. Mở Safari, dán link vào ô địa chỉ rồi đăng nhập.')}catch(e){welcomeMsg('Bấm dấu ··· góc trên, chọn "Mở bằng Safari".')}}
+function ggErr(e){const t=e&&e.type;return t==='popup_failed_to_open'?'Trình duyệt chặn cửa sổ đăng nhập. Mở shopgon.vn/app bằng Chrome hoặc Safari rồi bấm lại.':t==='popup_closed'?'Cửa sổ đăng nhập đã đóng. Bấm "Đăng nhập bằng Google" lại nhé.':'Chưa đăng nhập được. Thử lại nhé.'}
 function ggStatus(t){const el=document.getElementById('ggState');if(el)el.textContent=t}
 async function ggConnect(){
   if(!GG.ready()){toast('Đăng nhập Google sẽ mở khi app chạy chính thức trên shopgon.vn');return}
-  try{welcomeMsg('Đang mở đăng nhập Google…');await GG.login(false);await afterLogin()}catch(e){welcomeMsg('Chưa đăng nhập được. Thử lại nhé.')}
+  if(INAPP){openOut();return}
+  try{welcomeMsg('Đang mở đăng nhập Google…');await GG.login(false);await afterLogin()}catch(e){welcomeMsg(ggErr(e))}
 }
-function ggLogout(){if(GG.ready()){lockApp();showWelcome()}try{google.accounts.oauth2.revoke(GG.token,()=>{})}catch(e){}GG.token=null;GG.email='';GG.sheetId='';try{localStorage.removeItem('shopgon_gg')}catch(e){}render();toast('Đã đăng xuất Google')}
+function ggLogout(){if(GG.ready()){lockApp();showWelcome()}try{google.accounts.oauth2.revoke(GG.token,()=>{})}catch(e){}GG.token=null;GG.email='';GG.sheetId='';try{localStorage.removeItem('shopgon_gg');localStorage.removeItem('shopgon_tk')}catch(e){}render();toast('Đã đăng xuất Google')}
 /* Màn hình chào: 1 bước đăng nhập */
 function showWelcome(){if(GG.ready())lockApp();const w=document.getElementById('welcome');w.hidden=false;w.innerHTML=`<div class="wc">
   <div class="wlogo"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M9 7h6M9 11h6M9 15h3"/></svg></div>
   <h1>Chào mừng đến Shop Gọn</h1><p>Quản lý bán hàng, kho máy, lời lỗ ngay trên điện thoại.</p>
-  <button class="gbtn" data-gg="login"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.5 13.6 17.8 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.6 5.9c4.4-4.1 7-10.1 7-17.6z"/><path fill="#FBBC05" d="M10.6 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.6-5.9c-2.1 1.4-4.9 2.3-8.3 2.3-6.2 0-11.5-4.1-13.4-9.9l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg>Đăng nhập bằng Google</button>
-  <small id="wMsg">Chọn Gmail của shop, nhập mật khẩu trên trang của Google. App tự tạo sổ dữ liệu trong Google Drive của shop.</small>
+  ${INAPP?`<button class="gbtn" data-gg="out">${IOS?'Chép link để mở bằng Safari':'Mở bằng Chrome để đăng nhập'}</button>`:`<button class="gbtn" data-gg="login"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.5 13.6 17.8 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.6 5.9c4.4-4.1 7-10.1 7-17.6z"/><path fill="#FBBC05" d="M10.6 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.6-5.9c-2.1 1.4-4.9 2.3-8.3 2.3-6.2 0-11.5-4.1-13.4-9.9l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg>Đăng nhập bằng Google</button>`}
+  <small id="wMsg">${INAPP?'Bạn đang mở trong Zalo/Facebook. Google không cho đăng nhập ở đây, cần mở bằng '+(IOS?'Safari':'Chrome')+'.':'Chọn Gmail của shop, nhập mật khẩu trên trang của Google. App tự tạo sổ dữ liệu trong Google Drive của shop.'}</small>
   ${GG.ready()?'':'<button class="wlink" data-gg="demo">Đóng (bản xem trước)</button>'}</div>`}
 function welcomeMsg(t){const m=document.getElementById('wMsg');if(m)m.textContent=t;else toast(t)}
 function lockApp(){document.body.classList.add('locked')}
 function unlockApp(){document.body.classList.remove('locked')}
 function closeWelcome(){unlockApp();document.getElementById('welcome').hidden=true;try{localStorage.setItem('shopgon_seen','1')}catch(e){}}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-gg]');if(!b)return;const k=b.dataset.gg;if(k==='login')ggConnect();else if(k==='demo'){closeWelcome();Store.save(db)}else if(k==='logout')ggLogout();else if(k==='request')sendRequest();else if(k==='recheck')afterLogin().catch(()=>welcomeMsg('Chưa kiểm tra được, thử lại.'));else if(k==='other'){GG.token=null;GG.email='';try{localStorage.removeItem('shopgon_gg')}catch(e){}showWelcome()}else if(k==='open')showWelcome()});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-gg]');if(!b)return;const k=b.dataset.gg;if(k==='login')ggConnect();else if(k==='demo'){closeWelcome();Store.save(db)}else if(k==='logout')ggLogout();else if(k==='request')sendRequest();else if(k==='recheck')afterLogin().catch(()=>welcomeMsg('Chưa kiểm tra được, thử lại.'));else if(k==='out')openOut();else if(k==='other'){GG.token=null;GG.email='';try{localStorage.removeItem('shopgon_gg');localStorage.removeItem('shopgon_tk')}catch(e){}showWelcome()}else if(k==='open')showWelcome()});
 
 
 /* ===== Tính toán ===== */
@@ -948,8 +957,13 @@ render();
   if(DEMO){demoBar();return}
   if(GG.ready()){ /* bản chính thức: chưa đăng nhập + chưa kích hoạt thì không vào được app */
     lockApp();if(db.sample){db=emptyDb();Store.save(db)}
-    if(gs&&gs.sheetId){GG.email=gs.email;GG.sheetId=gs.sheetId;welcomeMsg('');showWelcome();welcomeMsg('Đang đăng nhập lại…');
+    if(!INAPP)GG.load().catch(()=>{});
+    let tk=null;try{tk=JSON.parse(localStorage.getItem('shopgon_tk')||'null')}catch(e){}
+    if(gs&&gs.sheetId&&tk&&tk.x>Date.now()&&tk.e===gs.email){GG.email=gs.email;GG.sheetId=gs.sheetId;GG.token=tk.t;showWelcome();welcomeMsg('Đang mở sổ dữ liệu…');
+      afterLogin().catch(()=>{GG.token=null;showWelcome()})}
+    else if(gs&&gs.sheetId&&!INAPP&&!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){GG.email=gs.email;GG.sheetId=gs.sheetId;welcomeMsg('');showWelcome();welcomeMsg('Đang đăng nhập lại…');
       GG.login(true).then(()=>afterLogin()).catch(()=>{showWelcome()})}
+    else if(gs&&gs.sheetId){GG.email=gs.email;GG.sheetId=gs.sheetId;showWelcome();if(!INAPP)welcomeMsg('Bấm "Đăng nhập bằng Google" để vào lại '+gs.email+'.')}
     else showWelcome();
     setInterval(()=>{if(GG.email)license(GG.email).then(l=>{if(l.status!=='active'){Store.save(db);showPending(l)}}).catch(()=>{})},6*3600*1000);
   } else if(firstOpen&&!seen)showWelcome();})();
