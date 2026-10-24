@@ -1172,5 +1172,603 @@
     "anh": "https://www.oppo.com/content/dam/oppo_com/common/mkt/v2-2/find-x10-series-en/list-page/find-x10/480-600-blue.png"
    }
   ]
+ },
+ {
+  "hang": "Motorola",
+  "ten": "Motorola Moto G37 5G",
+  "link": "",
+  "bienThe": [
+   {
+    "dl": "4+64GB",
+    "niemyet": 5190000,
+    "giaHang": 4190000
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Xanh dương",
+    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/motorola-g37-xanh-duong-thumbn094946.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "TECNO",
+  "ten": "TECNO Spark 50",
+  "link": "",
+  "bienThe": [
+   {
+    "dl": "4+128GB",
+    "niemyet": 4990000,
+    "giaHang": 4490000
+   }
+  ],
+  "mau": [
+   {
+    "ten": "",
+    "anh": "https://cdn.tgdd.vn/Products/Images/42/367204/tecno-spark-50-4gb-128gb-den-thumb.png"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Nubia",
+  "ten": "Nubia Air 5G",
+  "link": "",
+  "bienThe": [
+   {
+    "dl": "8+256GB",
+    "niemyet": 5490000,
+    "giaHang": 5490000
+   }
+  ],
+  "mau": [
+   {
+    "ten": "",
+    "anh": "https://cdn.tgdd.vn/Products/Images/42/366919/nubia-air-5g-8gb-256gb-den-thumb.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Motorola",
+  "ten": "Motorola Edge 70 Fusion",
+  "link": "",
+  "bienThe": [
+   {
+    "dl": "8+128GB",
+    "niemyet": 11990000,
+    "giaHang": 10990000
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Xanh bạc hà",
+    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/motorola-edge-70-fusion-xanh-bac-ha-thumbnew100007.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Nubia",
+  "ten": "Nubia V80 Max",
+  "link": "",
+  "bienThe": [
+   {
+    "dl": "6+128GB",
+    "niemyet": 3890000,
+    "giaHang": 3890000
+   }
+  ],
+  "mau": [
+   {
+    "ten": "",
+    "anh": "https://cdn.tgdd.vn/Products/Images/42/367811/nubia-v80-max-6gb-128gb-den-thumb.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "TECNO",
+  "ten": "TECNO Spark Go 3",
+  "link": "",
+  "bienThe": [
+   {
+    "dl": "4+64GB",
+    "niemyet": 3690000,
+    "giaHang": 3490000
+   }
+  ],
+  "mau": [
+   {
+    "ten": "",
+    "anh": "https://cdn.tgdd.vn/Products/Images/42/364632/tecno-spark-go-3-den-thumb.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Motorola",
+  "ten": "Motorola G57 Power 5G",
+  "link": "",
+  "bienThe": [
+   {
+    "dl": "8+128GB",
+    "niemyet": 6990000,
+    "giaHang": 6290000
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Xanh dương",
+    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/motorola-g57-power-xanh-duong-thumbn095748.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Nubia",
+  "ten": "Nubia V80 Design",
+  "link": "",
+  "bienThe": [
+   {
+    "dl": "4+128GB",
+    "niemyet": 3690000,
+    "giaHang": 3690000
+   }
+  ],
+  "mau": [
+   {
+    "ten": "",
+    "anh": "https://cdn.tgdd.vn/Products/Images/42/366923/nubia-v80-design-4gb-128gb-vang-thumb.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Motorola",
+  "ten": "Motorola Edge 70",
+  "link": "",
+  "bienThe": [
+   {
+    "dl": "8+256GB",
+    "niemyet": 13990000,
+    "giaHang": 12990000
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Xám",
+    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/motorola-edge-70-xam-thumbnew095513.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Motorola",
+  "ten": "Motorola Signature",
+  "link": "",
+  "bienThe": [
+   {
+    "dl": "12+256GB",
+    "niemyet": 22990000,
+    "giaHang": 20990000
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Ghi đen",
+    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/motorola-signature-ghi-den-thumbnew102351.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Nubia",
+  "ten": "Nubia A56",
+  "link": "",
+  "bienThe": [
+   {
+    "dl": "4+128GB",
+    "niemyet": 3390000,
+    "giaHang": 3390000
+   }
+  ],
+  "mau": [
+   {
+    "ten": "",
+    "anh": "https://cdn.tgdd.vn/Products/Images/42/366662/nubia-a56-4gb-128gb-vang-thumb.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Motorola",
+  "ten": "Motorola G35 5G",
+  "link": "",
+  "bienThe": [
+   {
+    "dl": "4+128GB",
+    "niemyet": 4390000,
+    "giaHang": 4190000
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Đen",
+    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/motorola-g35-den-thumbn093727.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Nubia",
+  "ten": "Nubia A36",
+  "link": "",
+  "bienThe": [
+   {
+    "dl": "4+64GB",
+    "niemyet": 2990000,
+    "giaHang": 2990000
+   }
+  ],
+  "mau": [
+   {
+    "ten": "",
+    "anh": "https://cdn.tgdd.vn/Products/Images/42/361630/nubia-a36-4gb-64gb-vang-thumb.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Motorola",
+  "ten": "Motorola G86 POWER 5G",
+  "link": "",
+  "bienThe": [
+   {
+    "dl": "8+128GB",
+    "niemyet": 7090000,
+    "giaHang": 6590000
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Xanh đen",
+    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/motorola-g86-power-xanh-den-thumbn100606.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Motorola",
+  "ten": "Motorola Edge 60 Fusion 5G",
+  "link": "",
+  "bienThe": [
+   {
+    "dl": "8+256GB",
+    "niemyet": 8990000,
+    "giaHang": 7390000
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Xám",
+    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/motorola-edge-60-fusion-xam-thumbnew094850.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Motorola",
+  "ten": "Motorola Razr 60 5G",
+  "link": "",
+  "bienThe": [
+   {
+    "dl": "8+256GB",
+    "niemyet": 19990000,
+    "giaHang": 17990000
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Xanh dương",
+    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/motorola-razr-60-xanh-duong-thumbnew101240.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Masstel",
+  "ten": "Masstel IZI 10S",
+  "link": "",
+  "bienThe": [],
+  "mau": [
+   {
+    "ten": "",
+    "anh": "https://cdn.tgdd.vn/Products/Images/42/370758/masstel-izi-10s-den-thumb.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Motorola",
+  "ten": "Motorola G06 POWER",
+  "link": "",
+  "bienThe": [
+   {
+    "dl": "4+64GB",
+    "niemyet": 3990000,
+    "giaHang": 3790000
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Xanh dương",
+    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/motorola-g06-power-xanh-thumbn092849.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Masstel",
+  "ten": "Masstel IZI 10 4G Type-C",
+  "link": "",
+  "bienThe": [],
+  "mau": [
+   {
+    "ten": "",
+    "anh": "https://cdn.tgdd.vn/Products/Images/42/342939/masstel-izi-10-xanh.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Xiaomi",
+  "ten": "REDMI 15 5G",
+  "link": "",
+  "bienThe": [
+   {
+    "dl": "4+128GB",
+    "niemyet": 5690000,
+    "giaHang": 4690000
+   }
+  ],
+  "mau": [
+   {
+    "ten": "",
+    "anh": "https://cdn.tgdd.vn/Products/Images/42/359776/xiaomi-redmi-15-5g-4gb-128gb-den-thumb.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Xiaomi",
+  "ten": "REDMI 15",
+  "link": "",
+  "bienThe": [
+   {
+    "dl": "8+128GB",
+    "niemyet": 5190000,
+    "giaHang": 3990000
+   }
+  ],
+  "mau": [
+   {
+    "ten": "",
+    "anh": "https://cdn.tgdd.vn/Products/Images/42/341274/xiaomi-redmi-15-vang-titan-thumbnew.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Xphone",
+  "ten": "Xphone Hera S9",
+  "link": "",
+  "bienThe": [],
+  "mau": [
+   {
+    "ten": "",
+    "anh": "https://cdn.tgdd.vn/Products/Images/42/370547/xphone-hera-s9-den-thumb.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Masstel",
+  "ten": "Masstel Fami 60S 4G",
+  "link": "",
+  "bienThe": [],
+  "mau": [
+   {
+    "ten": "",
+    "anh": "https://cdn.tgdd.vn/Products/Images/42/322876/masstel-fami-60s-black-thumb.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Mobell",
+  "ten": "Mobell Rock 7",
+  "link": "",
+  "bienThe": [],
+  "mau": [
+   {
+    "ten": "",
+    "anh": "https://cdn.tgdd.vn/Products/Images/42/338026/mobell-rock-7-black-thumb.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Xiaomi",
+  "ten": "POCO C95 Pro",
+  "link": "",
+  "bienThe": [
+   {
+    "dl": "6+128GB",
+    "niemyet": 6490000,
+    "giaHang": 5960000
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Đen",
+    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/xiaomi-poco-c95-pro-black-thumb155737.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Mobell",
+  "ten": "Mobell M179",
+  "link": "",
+  "bienThe": [],
+  "mau": [
+   {
+    "ten": "",
+    "anh": "https://cdn.tgdd.vn/Products/Images/42/354325/mobell-m179-den.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "TECNO",
+  "ten": "TECNO Pova Curve 2 5G",
+  "link": "",
+  "bienThe": [],
+  "mau": [
+   {
+    "ten": "",
+    "anh": "https://cdn.tgdd.vn/Products/Images/42/367617/tecno-pova-curve-2-5g-titan-thumb.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Masstel",
+  "ten": "Masstel IZI 10 4G",
+  "link": "",
+  "bienThe": [],
+  "mau": [
+   {
+    "ten": "",
+    "anh": "https://cdn.tgdd.vn/Products/Images/42/265311/masstel-izi-10-4g-thumb-1.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "TECNO",
+  "ten": "TECNO Spark 50 Pro",
+  "link": "",
+  "bienThe": [
+   {
+    "dl": "4+128GB",
+    "niemyet": 6990000,
+    "giaHang": 6190000
+   }
+  ],
+  "mau": [
+   {
+    "ten": "",
+    "anh": "https://cdn.tgdd.vn/Products/Images/42/368231/tecno-spark-50-pro-den-thumb.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Xiaomi",
+  "ten": "Xiaomi 18 Pro Max 5G",
+  "link": "",
+  "bienThe": [
+   {
+    "dl": "12+512GB",
+    "niemyet": 0,
+    "giaHang": 0
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Đen",
+    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/xiaomi-18-pro-5g-thumb171301.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Xiaomi",
+  "ten": "Xiaomi 18 Pro 5G",
+  "link": "",
+  "bienThe": [
+   {
+    "dl": "12+512GB",
+    "niemyet": 0,
+    "giaHang": 0
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Đen",
+    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/xiaomi-18-pro-5g-thumb115346.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "realme",
+  "ten": "realme C01",
+  "link": "",
+  "bienThe": [
+   {
+    "dl": "4+64GB",
+    "niemyet": 5990000,
+    "giaHang": 5790000
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Bạc",
+    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/realme-c01-bac-thumb174923.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Motorola",
+  "ten": "Motorola Razr Fold 5G",
+  "link": "",
+  "bienThe": [
+   {
+    "dl": "12+256GB",
+    "niemyet": 49990000,
+    "giaHang": 39990000
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Trắng",
+    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/motorola-razr-fold-trang-thumb101624.jpg"
+   }
+  ],
+  "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Xiaomi",
+  "ten": "POCO X8s 5G",
+  "link": "",
+  "bienThe": [
+   {
+    "dl": "12+512GB",
+    "niemyet": 15490000,
+    "giaHang": 15490000
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Trắng",
+    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/xiaomi-poco-x8s-trang-thumb110630.png"
+   }
+  ],
+  "nguonAnh": "tgdd"
  }
 ]
