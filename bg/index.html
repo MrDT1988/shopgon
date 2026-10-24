@@ -158,7 +158,7 @@ function veXem(d) {
       var L = d.m.filter(function (m) { return m.h === tab; }).sort(function (a, b) { return (b.q > 0) - (a.q > 0); });
       ds.innerHTML = L.map(function (m) {
         var g = giaSP(m), het = m.q === 0;
-        return '<div class="sp' + (het ? ' het' : '') + '">' + (m.i ? '<img src="' + esc(anhUrl(m.i)) + '" alt="" loading="lazy">' : '<div class="noimg">📱</div>')<div><div class="n">' + esc(m.t) + '</div><div class="dl">' + esc([m.d, m.c].filter(Boolean).join(' · ')) + '</div>' +
+        return '<div class="sp' + (het ? ' het' : '') + '">' + (m.i ? '<img src="' + esc(anhUrl(m.i)) + '" alt="" loading="lazy">' : '<div class="noimg">📱</div>') + '<div><div class="n">' + esc(m.t) + '</div><div class="dl">' + esc([m.d, m.c].filter(Boolean).join(' · ')) + '</div>' +
           '<div style="margin-top:4px">' + (g.giam ? '<span class="cu">' + vnd(g.ny) + '</span><span class="tag">−' + gon(g.giam) + '</span>' : '') + '</div><div class="g">' + (g.gb ? vnd(g.gb) : 'Liên hệ') + '</div>' +
           (m.k ? '<div class="km">🎁 ' + esc(m.k) + '</div>' : '') +
           '<div class="sl">' + (het ? 'Tạm hết hàng' : m.q > 0 ? '✓ Còn ' + m.q + ' máy' : '') + '</div></div></div>';
