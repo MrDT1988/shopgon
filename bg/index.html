@@ -186,7 +186,7 @@ function veXem(d) {
   function trongKhuc(m, k) { var g = giaSP(m).gb, r = KHUC.find(function (z) { return z[0] === k; }); return k === 'all' || (g >= r[2] && g < r[3]); }
   function the(m) {
     var g = giaSP(m), het = m.q === 0;
-    return '<div class="c' + (het ? ' het' : '') + '"><div class="anh">' + (g.giam ? '<span class="tag">−' + gon(g.giam) + '</span>' : '') + (m.f ? '<span class="sao">★ Chủ lực</span>' : '') +
+    return '<div class="c' + (het ? ' het' : '') + '"><div class="anh">' + (g.giam ? '<span class="tag">−' + gon(g.giam) + '</span>' : '') + (m.f ? '<span class="sao">🔥 Bán chạy</span>' : '') +
       (m.i ? '<img src="' + esc(anhUrl(m.i)) + '" alt="" loading="lazy">' : '<div class="noimg">📱</div>') + '</div>' +
       '<div class="hg">' + esc(TEN[m.h] || '') + '</div><div class="n">' + esc(m.t) + '</div><div class="dl">' + esc([m.d, m.c].filter(Boolean).join(' · ')) + '</div>' +
       '<div class="cu">' + (g.giam ? vnd(g.ny) : '&nbsp;') + '</div><div class="g">' + (g.gb ? vnd(g.gb) : 'Liên hệ') + '</div>' +
@@ -203,7 +203,7 @@ function veXem(d) {
     kh.innerHTML = KHUC.map(function (z) { var n = goc.filter(function (m) { return trongKhuc(m, z[0]); }).length; return (z[0] === 'all' || n) ? '<button data-k="' + z[0] + '" class="' + (z[0] === khuc ? 'on' : '') + '">' + z[1] + ' <small>' + n + '</small></button>' : ''; }).join('');
     [].forEach.call(kh.querySelectorAll('button'), function (b) { b.onclick = function () { khuc = b.dataset.k; ve(); }; });
     var L = goc.filter(function (m) { return trongKhuc(m, khuc); }).sort(function (a, b) { return ((b.q !== 0) - (a.q !== 0)) || (giaSP(a).gb - giaSP(b).gb); });
-    var tieu = q ? 'Kết quả cho “' + esc(tu.trim()) + '”' : tab === 'NB' ? '⭐ Sản phẩm chủ lực của shop' : 'Điện thoại ' + esc(TEN[tab]);
+    var tieu = q ? 'Kết quả cho “' + esc(tu.trim()) + '”' : tab === 'NB' ? '🔥 Máy bán chạy của shop' : 'Điện thoại ' + esc(TEN[tab]);
     var pk = q ? (d.k || []).filter(function (r) { return r.t.toLowerCase().indexOf(q) >= 0; }) : [];
     ds.innerHTML = '<div class="tieu">' + tieu + ' <small>' + L.length + ' mẫu</small></div>' +
       (L.length ? '<div class="luoi">' + L.map(the).join('') + '</div>' : '<div class="trong">Chưa có máy trong mức giá này.</div>') + (pk.length ? bangPK(pk) : '');
@@ -211,7 +211,7 @@ function veXem(d) {
   x.innerHTML = '<div class="xem"><div class="top"><small class="nho">' + esc(d.t || 'Bảng giá hôm nay') + ' · cập nhật ' + esc(d.n || '') + '</small><b>' + esc(d.s || '') + '</b><small>' + esc(d.a || '') + '</small>' +
     '<div class="so"><span><b>' + tongMay + '</b> máy sẵn hàng</span><span><b>' + conHang.length + '</b> mẫu</span><span><b>' + HANGS.length + '</b> hãng</span></div>' +
     '<input class="timx" placeholder="🔍 Tìm máy: Reno, A17, iPhone 17…" autocomplete="off"></div>' +
-    '<div class="tabs">' + tabs.map(function (h) { return '<button data-t="' + h + '">' + (h === 'PK' ? 'Phụ kiện' : h === 'NB' ? '⭐ Nổi bật' : TEN[h]) + '</button>'; }).join('') + '</div>' +
+    '<div class="tabs">' + tabs.map(function (h) { return '<button data-t="' + h + '">' + (h === 'PK' ? 'Phụ kiện' : h === 'NB' ? '🔥 Bán chạy' : TEN[h]) + '</button>'; }).join('') + '</div>' +
     '<div class="khuc"></div><div class="ds"></div><div class="cuoi">Giá có thể thay đổi theo ngày · Bảng giá tạo bằng Shop Gọn</div>' +
     (d.p ? '<div class="goi"><a class="nut" href="tel:' + esc(d.p.replace(/\s/g, '')) + '">📞 Gọi</a><a class="nut zalo" href="https://zalo.me/' + esc(d.p.replace(/\D/g, '')) + '" target="_blank">💬 Zalo</a><button class="nut phu" id="xcopy">🔗 Gửi bạn</button></div>' : '') + '</div>';
   [].forEach.call(x.querySelectorAll('.tabs button'), function (b) { b.onclick = function () { tab = b.dataset.t; khuc = 'all'; tu = ''; x.querySelector('.timx').value = ''; ve(); window.scrollTo(0, x.querySelector('.tabs').offsetTop - 1 > window.scrollY ? window.scrollY : x.querySelector('.tabs').offsetTop); }; });
@@ -280,7 +280,7 @@ function veDS() {
       '<input data-i="' + i + '" data-k="gb" inputmode="numeric" placeholder="Giá bán" value="' + (x.gb ? x.gb.toLocaleString('vi-VN') : '') + '">' +
       '<input data-i="' + i + '" data-k="q" inputmode="numeric" placeholder="Số lượng tồn" value="' + (x.q || x.q === 0 ? x.q : '') + '">' +
       '<input data-i="' + i + '" data-k="k" placeholder="Khuyến mãi (VD: tặng ốp + cường lực)" value="' + esc(x.k) + '" class="rong" style="grid-column:auto">' +
-      '</div></div><div style="display:flex;flex-direction:column;gap:8px"><button class="xoa" data-x="' + i + '" title="Bỏ">✕</button><button class="xoa sao' + (x.f ? ' on' : '') + '" data-f="' + i + '" title="Sản phẩm chủ lực (hiện ở tab Nổi bật)">★</button></div></div>';
+      '</div></div><div style="display:flex;flex-direction:column;gap:8px"><button class="xoa" data-x="' + i + '" title="Bỏ">✕</button><button class="xoa sao' + (x.f ? ' on' : '') + '" data-f="' + i + '" title="Máy bán chạy (hiện ở tab Bán chạy)">★</button></div></div>';
   }).join('') : '<div class="ghi">Chưa có máy ' + TEN[HANG] + ' — gõ tên máy ở trên để thêm.</div>';
   [].forEach.call($('ds').querySelectorAll('[data-k]'), function (el) {
     el.oninput = el.onchange = function () {
