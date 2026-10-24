@@ -92,34 +92,24 @@ async function samsung(ctx) {
 
 // ---------- Xiaomi ----------
 async function xiaomi(ctx) {
+  const p = await moTrang(ctx, 'https://www.mi.com/vn/product-list/phone/redmi/', 4000);
   const out = [];
   for (const nhom of ['xiaomi', 'redmi', 'poco']) {
-    const p = await moTrang(ctx, 'https://www.mi.com/vn/product-list/phone/' + nhom + '/', 5000);
-    for (let i = 0; i < 6; i++) { await p.mouse.wheel(0, 3000); await ngu(700); }
-    const r = await p.evaluate(async () => {
-      const ngu = ms => new Promise(r => setTimeout(r, ms)); const so = s => +String(s || '').replace(/[^\d]/g, '');
-      const ds = [];
-      for (const c of document.querySelectorAll('.product-card')) {
-        let ten = ''; try { ten = JSON.parse(c.dataset.otExpose).itemName; } catch (e) { }
-        if (!ten) { const h = c.querySelector('h2,h3,[class*=name],[class*=title]'); ten = h ? h.textContent : ''; }
-        const a = c.querySelector('a[href]'); const im = c.querySelector('img');
-        const gia = () => { const t = c.textContent.replace(/\s+/g, ' ');
-          const ban = (t.match(/([\d\.]{6,})\s?₫\s*Current Price/) || [])[1] || (t.match(/Current Price\s*₫?([\d]+)/) || [])[1];
-          const ny = (t.match(/Giá bán lẻ đề xuất\s*([\d\.]+)/) || [])[1];
-          return { giaHang: so(String(ban).replace(/\.00$/, '')), niemyet: so(ny) || so(String(ban).replace(/\.00$/, '')) }; };
-        const chips = [...c.querySelectorAll('*')].filter(e => e.children.length == 0 && /^\d+\s?GB\s?\+\s?\d+\s?(GB|TB)$/i.test(e.textContent.trim()));
-        const bt = []; for (const ch of chips) { ch.click(); await ngu(700); bt.push({ dl: ch.textContent.replace(/\s/g, ''), ...gia() }); }
-        if (!bt.length) bt.push({ dl: '', ...gia() });
-        let anh = im ? (im.currentSrc || im.src || '') : ''; anh = anh.split('?')[0];
-        ds.push({ ten: ten.trim(), link: a ? a.href : '', anh, bt });
-      }
-      return ds;
-    });
-    await p.close();
-    log('Xiaomi', nhom, r.length);
-    for (const d of r) if (d.ten && !out.find(x => x.ten === d.ten))
-      out.push({ hang: 'Xiaomi', ten: d.ten, link: d.link, mau: d.anh ? [{ ten: '', anh: d.anh }] : [], bienThe: d.bt.filter(b => b.niemyet) });
+    const ds = await p.evaluate(async nhom => {
+      const r = await fetch('https://go.buy.mi.com/vn/search/product-list?version=v4&cacheable=1&page_size=60&type=2&category_tag=' + nhom + '&page_index=0&from=laptop', { credentials: 'include' });
+      const j = await r.json();
+      return ((((j.data || {}).data_provider || {}).data || {}).product_list || []).map(x => x.product);
+    }, nhom);
+    log('Xiaomi', nhom, ds.length);
+    for (const x of ds) {
+      if (!x || !x.name || out.find(o => o.ten === x.name)) continue;
+      const ny = tron(x.market_price_min_num || x.price_min_num), gh = tron(x.price_min_num || ny);
+      const dls = String(x.comb_sec_spec || '').split('|').map(t => t.replace(/\s/g, '')).filter(Boolean);
+      const bt = dls.length ? dls.map((dl, i) => ({ dl, niemyet: i ? 0 : ny, giaHang: i ? 0 : gh })) : [{ dl: '', niemyet: ny, giaHang: gh }];
+      out.push({ hang: 'Xiaomi', ten: x.name.trim(), link: x.item_link || '', mau: x.image ? [{ ten: '', anh: x.image }] : [], bienThe: bt });
+    }
   }
+  await p.close();
   return out;
 }
 
@@ -183,6 +173,28 @@ for (const [ten, fn] of [['OPPO', oppo], ['Samsung', samsung], ['Xiaomi', xiaomi
   }
 }
 await browser.close();
+
+// ---------- lưu ảnh về repo (cùng tên miền shopgon.vn → app xuất hình PNG được) ----------
+import crypto from 'crypto';
+let sharp = null; try { sharp = (await import('sharp')).default; } catch (e) { log('Không có sharp, bỏ qua lưu ảnh'); }
+const THU_MUC = new URL('./anh/', import.meta.url); fs.mkdirSync(THU_MUC, { recursive: true });
+let moiTai = 0;
+if (sharp) for (const ds of Object.values(moi.hang)) for (const sp of ds) for (const m of sp.mau || []) {
+  if (!m.anh) continue;
+  const id = crypto.createHash('md5').update(m.anh).digest('hex').slice(0, 12);
+  const f = new URL(id + '.webp', THU_MUC);
+  if (!fs.existsSync(f)) {
+    try {
+      const r = await fetch(m.anh, { headers: { 'User-Agent': 'Mozilla/5.0', 'Referer': sp.link || '' } });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const buf = Buffer.from(await r.arrayBuffer());
+      await sharp(buf).resize({ width: 700, height: 900, fit: 'inside', withoutEnlargement: true }).webp({ quality: 82 }).toFile(f.pathname);
+      moiTai++;
+    } catch (e) { log('Ảnh lỗi', sp.ten, e.message); continue; }
+  }
+  m.file = 'kho/anh/' + id + '.webp';
+}
+log('Ảnh mới tải', moiTai);
 fs.writeFileSync(FILE, JSON.stringify(moi));
 const tong = Object.values(moi.hang).reduce((s, a) => s + a.length, 0);
 log('Tổng', tong, 'máy →', FILE.pathname);
