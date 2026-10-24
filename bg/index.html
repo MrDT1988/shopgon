@@ -256,7 +256,7 @@ function veHang() {
   [].forEach.call($('phang').children, function (b) { b.onclick = function () { PH = b.dataset.h; veHang(); capNhat(); }; });
 }
 function goiY() {
-  var qq = $('tim').value.toLowerCase().replace(/\s/g, ''), ds = (KHO && KHO.hang[HANG]) || [];
+  var qq = $('tim').value.toLowerCase().replace(/\s/g, ''), ds = dsKho(HANG);
   var kq = ds.filter(function (s) { return !qq || s.ten.toLowerCase().replace(/\s/g, '').indexOf(qq) >= 0; }).slice(0, 30);
   $('goiy').style.display = 'block';
   $('goiy').innerHTML = kq.map(function (s) { return '<div data-i="' + ds.indexOf(s) + '">＋ ' + esc(s.ten) + '</div>'; }).join('') || '<div>Không có trong kho</div>';
@@ -264,10 +264,10 @@ function goiY() {
 }
 function them(s) {
   var m = (s.mau || [])[0] || {}, b = (s.bienThe || [])[0] || {};
-  DS.push({ h: s.hang, t: s.ten, d: b.dl || '', c: m.ten || '', i: anhCua(m), ny: 0, gb: 0, q: 1, k: '' });
+  DS.push({ h: TEN[s.hang] ? s.hang : 'Khac', t: s.ten, d: b.dl || '', c: m.ten || '', i: anhCua(m), ny: 0, gb: 0, q: 1, k: '' });
   $('tim').value = ''; $('goiy').style.display = 'none'; veHang(); veDS();
 }
-function tim(x) { var ds = (KHO && KHO.hang[x.h]) || []; return ds.find(function (s) { return s.ten === x.t; }); }
+function tim(x) { var ds = dsKho(x.h); return ds.find(function (s) { return s.ten === x.t; }); }
 function veDS() {
   var L = DS.map(function (x, i) { return [x, i]; }).filter(function (a) { return a[0].h === HANG; });
   $('ds').innerHTML = L.length ? L.map(function (a) {
@@ -317,11 +317,15 @@ function docDb() {
   return null;
 }
 function hangCua(m) { var s = (m.hang || '') + ' ' + m.ten; return /iphone|apple/i.test(s) ? 'Apple' : /samsung|galaxy/i.test(s) ? 'Samsung' : /xiaomi|redmi|poco/i.test(s) ? 'Xiaomi' : /oppo/i.test(s) ? 'OPPO' : 'Khac'; }
-function chuan(s) { return String(s || '').toLowerCase().replace(/5g|oppo|samsung|galaxy|xiaomi|apple|\s|-/g, ''); }
+var BO_HIEU = /oppo|samsung|galaxy|xiaomi|apple|vivo|realme|honor|motorola|moto|nubia|nothing|masstel|mobell|tecno|infinix|itel|nokia|\s|-/g;
+function chuan(s) { return String(s || '').toLowerCase().replace(/5g/g, '').replace(BO_HIEU, ''); }
+function chuan5g(s) { return String(s || '').toLowerCase().replace(BO_HIEU, ''); }
+function dsKho(h) { if (!KHO) return []; if (h !== 'Khac') return KHO.hang[h] || []; return Object.keys(KHO.hang).filter(function (k) { return ['OPPO', 'Samsung', 'Xiaomi', 'Apple'].indexOf(k) < 0; }).reduce(function (a, k) { return a.concat(KHO.hang[k]); }, []); }
 function khopKho(h, ten) {
   var goc = ten.replace(/\s+\d+\s*\/\s*\d+.*$/, '').replace(/\s+\d+\s*(gb|tb).*$/i, '');
-  var n = chuan(goc), ds = (KHO && KHO.hang[h]) || [], tot = null;
-  ds.forEach(function (s) { var k = chuan(s.ten); if (k === n) tot = s; });
+  var n = chuan(goc), n5 = chuan5g(goc), ds = dsKho(h), tot = null;
+  ds.forEach(function (s) { if (!tot && chuan5g(s.ten) === n5) tot = s; });
+  if (!tot) ds.forEach(function (s) { var k = chuan(s.ten); if (k === n) tot = s; });
   if (!tot) ds.forEach(function (s) { var k = chuan(s.ten); if (k.indexOf(n) === 0 && (!tot || Math.abs(chuan(tot.ten).length - n.length) > Math.abs(k.length - n.length))) tot = s; });
   var m = /(\d+)\s*\/\s*(\d+)/.exec(ten), g = /(\d+)\s*(GB|TB)/i.exec(ten);
   var dl = m ? m[1] + '+' + m[2] + 'GB' : g ? g[1] + g[2].toUpperCase() : '';

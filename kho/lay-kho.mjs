@@ -158,10 +158,12 @@ async function apple(ctx) {
 // ---------- chạy ----------
 const cu = fs.existsSync(FILE) ? JSON.parse(fs.readFileSync(FILE, 'utf8')) : { hang: {} };
 const moi = { capNhat: new Date().toISOString(), hang: {}, loi: {} };
-const browser = await chromium.launch();
-const ctx = await browser.newContext({ locale: 'vi-VN', viewport: { width: 1366, height: 900 },
+const CHI_BO_SUNG = !!process.env.CHI_BO_SUNG;   // chạy nhanh: chỉ nạp bo-sung.json + tải ảnh, không quét web hãng
+if (CHI_BO_SUNG) { moi.capNhat = cu.capNhat || moi.capNhat; log('Chế độ chỉ bổ sung'); }
+const browser = CHI_BO_SUNG ? null : await chromium.launch();
+const ctx = CHI_BO_SUNG ? null : await browser.newContext({ locale: 'vi-VN', viewport: { width: 1366, height: 900 },
   userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36' });
-for (const [ten, fn] of [['OPPO', oppo], ['Samsung', samsung], ['Xiaomi', xiaomi], ['Apple', apple]]) {
+if (!CHI_BO_SUNG) for (const [ten, fn] of [['OPPO', oppo], ['Samsung', samsung], ['Xiaomi', xiaomi], ['Apple', apple]]) {
   try {
     const ds = (await fn(ctx)).filter(x => x.ten);
     log(ten, 'xong', ds.length, 'máy');
@@ -169,32 +171,65 @@ for (const [ten, fn] of [['OPPO', oppo], ['Samsung', samsung], ['Xiaomi', xiaomi
   } catch (e) {
     log(ten, 'LỖI', e.message);
     moi.loi[ten] = e.message;
-    if (cu.hang && cu.hang[ten]) moi.hang[ten] = cu.hang[ten];
   }
 }
-await browser.close();
+if (browser) await browser.close();
+
+// ---------- cộng dồn: máy hãng gỡ khỏi web vẫn giữ lại (shop còn bán) ----------
+const khoa = s => String(s || '').toLowerCase().replace(/\s+/g, ' ').trim();
+const homNay = moi.capNhat.slice(0, 10);
+for (const [h, ds] of Object.entries(cu.hang || {})) {
+  if (!moi.hang[h]) { moi.hang[h] = ds; continue; }           // hãng quét lỗi / hãng bổ sung tay → giữ nguyên
+  const co = new Set(moi.hang[h].map(s => khoa(s.ten)));
+  let giu = 0;
+  for (const s of ds) if (!co.has(khoa(s.ten))) { co.add(khoa(s.ten)); moi.hang[h].push(s.nguon === 'bo-sung' ? s : { ...s, ngung: s.ngung || homNay }); giu++; }
+  if (giu) log(h, 'giữ lại', giu, 'máy không còn trên web hãng');
+}
+
+// ---------- bổ sung tay: kho/bo-sung.json (máy web hãng không có: hãng khác, đời cũ còn bán) ----------
+const BO_SUNG = new URL('./bo-sung.json', import.meta.url);
+if (fs.existsSync(BO_SUNG)) {
+  let them = 0, va = 0;
+  for (const sp of JSON.parse(fs.readFileSync(BO_SUNG, 'utf8'))) {
+    if (!sp.hang || !sp.ten) continue;
+    const ds = (moi.hang[sp.hang] = moi.hang[sp.hang] || []);
+    const cu2 = ds.find(s => khoa(s.ten) === khoa(sp.ten));
+    if (!cu2) { ds.push({ ...sp, nguon: 'bo-sung' }); them++; continue; }
+    if (cu2.nguon === 'bo-sung') { const giuFile = new Map((cu2.mau || []).map(m => [m.anh, m.file])); Object.assign(cu2, sp, { mau: (sp.mau || []).map(m => ({ ...m, file: giuFile.get(m.anh) })) }); continue; }
+    if (!(cu2.mau || []).some(m => m.anh)) { cu2.mau = sp.mau; va++; }   // máy web hãng thiếu ảnh → vá bằng ảnh bổ sung
+  }
+  log('Bổ sung tay: thêm', them, 'máy, vá ảnh', va, 'máy');
+}
 
 // ---------- lưu ảnh về repo (cùng tên miền shopgon.vn → app xuất hình PNG được) ----------
 import crypto from 'crypto';
 let sharp = null; try { sharp = (await import('sharp')).default; } catch (e) { log('Không có sharp, bỏ qua lưu ảnh'); }
 const THU_MUC = new URL('./anh/', import.meta.url); fs.mkdirSync(THU_MUC, { recursive: true });
-let moiTai = 0;
+let moiTai = 0; moi.anhLoi = [];
+const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36';
+async function taiAnh(url, ref) {
+  let loi;
+  for (const h of [{ 'User-Agent': UA, 'Referer': ref || '' }, { 'User-Agent': UA }, { 'User-Agent': 'Mozilla/5.0' }]) {
+    try { const r = await fetch(url, { headers: h }); if (r.ok) return Buffer.from(await r.arrayBuffer()); loi = 'HTTP ' + r.status; } catch (e) { loi = e.message; }
+  }
+  throw new Error(loi);
+}
 if (sharp) for (const ds of Object.values(moi.hang)) for (const sp of ds) for (const m of sp.mau || []) {
   if (!m.anh) continue;
   const id = crypto.createHash('md5').update(m.anh).digest('hex').slice(0, 12);
   const f = new URL(id + 't.webp', THU_MUC);
   if (!fs.existsSync(f)) {
     try {
-      const r = await fetch(m.anh, { headers: { 'User-Agent': 'Mozilla/5.0', 'Referer': sp.link || '' } });
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      const buf = Buffer.from(await r.arrayBuffer());
+      const buf = await taiAnh(m.anh, sp.link);
+      const md = await sharp(buf).metadata();
+      if (Math.max(md.width || 0, md.height || 0) < 300) throw new Error('ảnh nhỏ ' + md.width + 'x' + md.height);
       await sharp(buf).trim({ threshold: 12 }).resize({ width: 700, height: 900, fit: 'inside', withoutEnlargement: true }).webp({ quality: 82 }).toFile(f.pathname);
       moiTai++;
-    } catch (e) { log('Ảnh lỗi', sp.ten, e.message); continue; }
+    } catch (e) { log('Ảnh lỗi', sp.ten, e.message); moi.anhLoi.push(sp.hang + ' | ' + sp.ten + ' | ' + e.message); delete m.file; continue; }
   }
   m.file = 'kho/anh/' + id + 't.webp';
 }
-log('Ảnh mới tải', moiTai);
+log('Ảnh mới tải', moiTai, '· ảnh lỗi', moi.anhLoi.length);
 fs.writeFileSync(FILE, JSON.stringify(moi));
 const tong = Object.values(moi.hang).reduce((s, a) => s + a.length, 0);
 log('Tổng', tong, 'máy →', FILE.pathname);

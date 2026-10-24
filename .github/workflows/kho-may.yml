@@ -1,9 +1,17 @@
 name: Kho may (gia niem yet + anh chinh hang)
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      chi_bo_sung:
+        description: 'Chi nap kho/bo-sung.json + tai anh (khong quet web hang)'
+        type: boolean
+        default: false
+  push:
+    branches: [main]
+    paths: ['kho/bo-sung.json']   # them may bo sung -> tu tai anh ngay
   schedule:
-    - cron: '17 20 * * 0'   # 03:17 sáng thứ Hai giờ VN, mỗi tuần
+    - cron: '17 20 1,16 * *'   # 03:17 sang ngay 2 va 17 hang thang (gio VN) ~ 15 ngay/lan
 
 permissions:
   contents: write
@@ -26,7 +34,9 @@ jobs:
           npm init -y >/dev/null
           npm i playwright@1.48.2 sharp@0.33.5
           npx playwright install --with-deps chromium
-      - name: Lay kho may 4 hang
+      - name: Lay kho may 4 hang + bo sung
+        env:
+          CHI_BO_SUNG: ${{ (github.event_name == 'push' || inputs.chi_bo_sung) && '1' || '' }}
         run: node kho/lay-kho.mjs
       - name: Luu ket qua
         run: |

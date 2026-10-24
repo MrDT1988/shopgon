@@ -113,6 +113,7 @@ fetch('../kho/kho-may.json?v=' + Date.now()).then(function (r) { return r.json()
 
 function veHang() {
   var ten = { OPPO: 'OPPO', Samsung: 'Samsung', Xiaomi: 'Xiaomi', Apple: 'iPhone' };
+  if (KHO) Object.keys(KHO.hang).forEach(function (h) { if (!ten[h]) ten[h] = h; });
   $('hang').innerHTML = Object.keys(ten).map(function (h) { var n = KHO && KHO.hang[h] ? KHO.hang[h].length : 0; return '<button data-h="' + h + '" class="' + (h === HANG ? 'on' : '') + '">' + ten[h] + ' <small style="opacity:.6">' + n + '</small></button>'; }).join('');
   [].forEach.call($('hang').children, function (b) { b.onclick = function () { HANG = b.dataset.h; veHang(); goiY(); $('tim').focus(); }; });
 }
