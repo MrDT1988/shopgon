@@ -1041,7 +1041,7 @@
  {
   "hang": "Xiaomi",
   "ten": "REDMI 15 5G",
-  "link": "https://www.mi.com/global/product/redmi-15-5g/",
+  "link": "",
   "bienThe": [
    {
     "dl": "4+128GB",
@@ -1049,20 +1049,7 @@
     "giaHang": 4690000
    }
   ],
-  "mau": [
-   {
-    "ten": "Đen (Midnight Black)",
-    "anh": "https://i02.appmifile.com/mi-com-product/fly-birds/redmi-15-5g/g-pc/black-notactive.png"
-   },
-   {
-    "ten": "Xanh Lá",
-    "anh": "https://i02.appmifile.com/mi-com-product/fly-birds/redmi-15-5g/g-pc/green-notactive.png"
-   },
-   {
-    "ten": "Xám Titan",
-    "anh": "https://i02.appmifile.com/mi-com-product/fly-birds/redmi-15-5g/g-pc/tai-notactive.png"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "Mobell",
@@ -1139,7 +1126,7 @@
  {
   "hang": "Xiaomi",
   "ten": "REDMI 15",
-  "link": "https://www.mi.com/global/product/redmi-15/",
+  "link": "",
   "bienThe": [
    {
     "dl": "8+128GB",
@@ -1147,20 +1134,7 @@
     "giaHang": 3990000
    }
   ],
-  "mau": [
-   {
-    "ten": "Tím (Sandy Purple)",
-    "anh": "https://i02.appmifile.com/mi-com-product/fly-birds/redmi-15/pc/purple-notacive.png"
-   },
-   {
-    "ten": "Xám Titan",
-    "anh": "https://i02.appmifile.com/mi-com-product/fly-birds/redmi-15/pc/tai-notactive.png"
-   },
-   {
-    "ten": "Đen",
-    "anh": "https://i02.appmifile.com/mi-com-product/fly-birds/redmi-15/pc/black-notive.png"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "HONOR",
@@ -1342,7 +1316,7 @@
  {
   "hang": "Xiaomi",
   "ten": "POCO C95 Pro",
-  "link": "https://www.mi.com/vn/product/poco-c95-pro/",
+  "link": "",
   "bienThe": [
    {
     "dl": "6+128GB",
@@ -1350,20 +1324,7 @@
     "giaHang": 5960000
    }
   ],
-  "mau": [
-   {
-    "ten": "Đen",
-    "anh": "https://i02.appmifile.com/mi-com-product/fly-birds/poco-c95-pro/pc/icon-screen04-slider-1-1-v2.jpg?q=100"
-   },
-   {
-    "ten": "Xanh Dương",
-    "anh": "https://i02.appmifile.com/mi-com-product/fly-birds/poco-c95-pro/pc/icon-screen04-slider-1-v2.jpg?q=100"
-   },
-   {
-    "ten": "Xanh Lá",
-    "anh": "https://i02.appmifile.com/mi-com-product/fly-birds/poco-c95-pro/pc/icon-screen04-slider-3.png"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "realme",
