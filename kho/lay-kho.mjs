@@ -182,17 +182,17 @@ let moiTai = 0;
 if (sharp) for (const ds of Object.values(moi.hang)) for (const sp of ds) for (const m of sp.mau || []) {
   if (!m.anh) continue;
   const id = crypto.createHash('md5').update(m.anh).digest('hex').slice(0, 12);
-  const f = new URL(id + '.webp', THU_MUC);
+  const f = new URL(id + 't.webp', THU_MUC);
   if (!fs.existsSync(f)) {
     try {
       const r = await fetch(m.anh, { headers: { 'User-Agent': 'Mozilla/5.0', 'Referer': sp.link || '' } });
       if (!r.ok) throw new Error('HTTP ' + r.status);
       const buf = Buffer.from(await r.arrayBuffer());
-      await sharp(buf).resize({ width: 700, height: 900, fit: 'inside', withoutEnlargement: true }).webp({ quality: 82 }).toFile(f.pathname);
+      await sharp(buf).trim({ threshold: 12 }).resize({ width: 700, height: 900, fit: 'inside', withoutEnlargement: true }).webp({ quality: 82 }).toFile(f.pathname);
       moiTai++;
     } catch (e) { log('Ảnh lỗi', sp.ten, e.message); continue; }
   }
-  m.file = 'kho/anh/' + id + '.webp';
+  m.file = 'kho/anh/' + id + 't.webp';
 }
 log('Ảnh mới tải', moiTai);
 fs.writeFileSync(FILE, JSON.stringify(moi));
