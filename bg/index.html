@@ -144,6 +144,7 @@ input,select{font:inherit;font-size:16px;padding:9px 11px;border:1px solid var(-
 <div id="xem" hidden></div>
 <div id="cho"></div>
 <script>
+var LINK = '', HEN = 0, LINK_HUA = null, DEMO = /[?&]demo=1/.test(location.search), XEM_NGAY = /[?&]xem=1/.test(location.search), DEMO_TON = null;
 var KHO = null, HANG = 'OPPO', PH = 'OPPO', DS = [], PK = [];
 var TEN = { OPPO: 'OPPO', Samsung: 'Samsung', Apple: 'iPhone', Xiaomi: 'Xiaomi', Khac: 'Hãng khác' };
 var $ = function (id) { return document.getElementById(id); };
@@ -342,7 +343,7 @@ function layTon(tuDong) {
   HANG = (DS[0] && DS[0].h) || 'OPPO'; veHang(); veDS(); vePK();
 }
 function thongTin() { return { t: $('tieude').value || 'BẢNG GIÁ HÔM NAY', s: $('shop').value || 'Tên shop', a: $('dc').value || '', p: $('dt').value || '' }; }
-var LINK = '', HEN = 0, LINK_HUA = null, DEMO = /[?&]demo=1/.test(location.search), XEM_NGAY = /[?&]xem=1/.test(location.search), DEMO_TON = null;
+
 function capNhat() {
   var tt = thongTin();
   try { localStorage.setItem('sg_bg2', JSON.stringify({ shop: $('shop').value, dc: $('dc').value, dt: $('dt').value, tieude: $('tieude').value, ds: DS, pk: PK })); } catch (e) { }
