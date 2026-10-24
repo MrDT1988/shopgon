@@ -238,7 +238,7 @@ nav.tabs button[aria-selected="true"]{color:var(--pen);background:var(--pen-soft
    Bản thật sẽ thay bằng GoogleSheetsStore với cùng 2 hàm load()/save(), dữ liệu nằm trong Google Drive của shop. */
 /* 23/10 anh Thái: ?demo=1 = bản demo cho Sale/CTV mang xuống shop — dữ liệu mẫu, sổ riêng trên máy, không cần Google */
 const DEMO=/[?&]demo=1/.test(location.search);
-const KEY=DEMO?'shopgon_demo':'shopgon_v1';
+const KEY=DEMO?'shopgon_demo2':'shopgon_v1';
 let memory=null;
 const LocalStore={
   load(){try{const s=localStorage.getItem(KEY);return s?JSON.parse(s):null}catch(e){return memory}},
@@ -284,8 +284,9 @@ function makeImei(seed){let s='35'+String(seed).padStart(12,'0').slice(-12);let 
 function sampleDb(){
   const models=[['OPPO A6c 4/64',2550000,2890000],['OPPO A7 Pro 6/256',5900000,6490000],['OPPO Reno16 F 8/256',7800000,8490000],['Samsung Galaxy A26 8/128',5650000,6190000],['Samsung Galaxy A06 4/64',2600000,2890000],['iPhone 16 128GB',17900000,18990000],['iPhone 15 128GB',14800000,15790000],['Xiaomi Redmi 15C 4/128',2800000,3190000],['vivo Y29 8/128',4700000,5190000],['realme C75 8/128',4300000,4790000]];
   const may=[],don=[];let n=1;
-  const ages=[2,5,9,12,16,21,26,33,38,41,48,52,61,7,14,19,24,36,44,58,3,11,29,47,8];
-  ages.forEach((a,i)=>{const [ten,gn,gb]=models[i%models.length];may.push({imei:makeImei(1000+n++),ten,hang:guessBrand(ten),giaNhap:gn,giaBan:gb,ngayNhap:iso(Date.now()-a*DAY),ncc:i%3?'NPP Mekong':'Đại lý cấp 1',tt:'ton'})});
+  /* 24/10 anh Thái: tồn kho mẫu ~107 máy — phần OPPO theo sức bán T9/2026 của 1 shop IND Tiền Giang (Huỳnh Mai, 186 máy) × 0,4; Samsung/iPhone/Xiaomi giả định */
+  const TON=[['OPPO A6c 4/64',4310000,4690000,32],['OPPO A6c 4/128',5230000,5690000,22],['OPPO A6t 4/64',4590000,4990000,8],['OPPO A6t 4/128',6520000,7090000,3],['OPPO A6t 6/256',8270000,8990000,1],['OPPO Reno15 F 8/256',11030000,11990000,4],['OPPO Reno16 F 8/256',14710000,15990000,5],['Samsung Galaxy A18 4/128',6060000,6590000,6],['Samsung Galaxy A07s 4/64',3850000,4190000,6],['iPhone 17 256GB',26680000,28999000,4],['iPhone 16 128GB',18390000,19990000,4],['Xiaomi Redmi Note 17 6/128',6430000,6990000,6],['Xiaomi Redmi 15C 4/128',2930000,3190000,6]];
+  let k=0;TON.forEach(([ten,gn,gb,sl])=>{for(let j=0;j<sl;j++){const a=1+((k*7)%60);may.push({imei:makeImei(1000+n++),ten,hang:guessBrand(ten),giaNhap:gn,giaBan:gb,ngayNhap:iso(Date.now()-a*DAY),ncc:k%3?'NPP Mekong':'Đại lý cấp 1',tt:'ton'});k++;}});
   const sold=[[0,'OPPO A7 Pro 6/256',5900000,6390000,'Tiền mặt'],[0,'iPhone 15 128GB',14800000,15690000,'Chuyển khoản'],[0,'Samsung Galaxy A06 4/64',2600000,2850000,'Chuyển khoản'],[1,'OPPO Reno16 F 8/256',7800000,8390000,'Chuyển khoản'],[1,'Xiaomi Redmi 15C 4/128',2800000,3150000,'Tiền mặt'],[2,'vivo Y29 8/128',4700000,5150000,'Tiền mặt'],[2,'OPPO A6c 4/64',2550000,2850000,'Tiền mặt'],[3,'iPhone 16 128GB',17900000,18890000,'Chuyển khoản'],[3,'realme C75 8/128',4300000,4690000,'Chuyển khoản'],[4,'Samsung Galaxy A26 8/128',5650000,6090000,'Tiền mặt'],[5,'OPPO A7 Pro 6/256',5900000,6450000,'Tiền mặt'],[5,'OPPO A6c 4/64',2550000,2890000,'Tiền mặt'],[6,'iPhone 15 128GB',14800000,15590000,'Chuyển khoản']];
   const names=['Anh Tuấn','Chị Hoa','Anh Bảy','Cô Lan','Anh Phúc','Chị My','Anh Hải','Chị Trang','Anh Lộc','Chị Ngân','Anh Khang','Chị Thảo','Anh Đức'];
   sold.forEach(([d,ten,gn,gb,tt],i)=>{const imei=makeImei(5000+i);const ngay=iso(Date.now()-d*DAY);may.push({imei,ten,hang:guessBrand(ten),giaNhap:gn,giaBan:gb,ngayNhap:iso(Date.now()-(d+8+i)*DAY),ncc:'NPP Mekong',tt:'ban'});
