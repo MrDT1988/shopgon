@@ -252,7 +252,7 @@ function vePK() {
   capNhat();
 }
 function docDb() {
-  var ks = ['shopgon_v1', 'shopgon_demo2', 'shopgon_demo'];
+  var ks = /[?&]demo=1/.test(location.search) ? ['shopgon_demo2', 'shopgon_demo'] : ['shopgon_v1', 'shopgon_demo2', 'shopgon_demo'];
   for (var i = 0; i < ks.length; i++) { try { var o = JSON.parse(localStorage.getItem(ks[i]) || 'null'); if (o && o.may && o.may.some(function (m) { return m.tt === 'ton'; })) return { db: o, key: ks[i] }; } catch (e) { } }
   return null;
 }
