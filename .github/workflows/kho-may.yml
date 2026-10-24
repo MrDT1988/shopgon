@@ -24,7 +24,7 @@ jobs:
       - name: Cai trinh duyet robot
         run: |
           npm init -y >/dev/null
-          npm i playwright@1.48.2
+          npm i playwright@1.48.2 sharp@0.33.5
           npx playwright install --with-deps chromium
       - name: Lay kho may 4 hang
         run: node kho/lay-kho.mjs
@@ -32,7 +32,7 @@ jobs:
         run: |
           git config user.name "robot-kho-may"
           git config user.email "robot@shopgon.vn"
-          git add kho/kho-may.json
+          git add kho/kho-may.json kho/anh
           git diff --cached --quiet && echo "Khong doi" && exit 0
           git commit -m "Kho may: cap nhat $(date -u +%F)"
           git pull --rebase origin main
