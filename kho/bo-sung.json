@@ -2,7 +2,7 @@
  {
   "hang": "realme",
   "ten": "realme C100x",
-  "link": "https://www.thegioididong.com/dtdd/realme-c100x-4gb-128gb",
+  "link": "https://www.realme.com/vn/realme-c100x",
   "bienThe": [
    {
     "dl": "4+128GB",
@@ -12,15 +12,15 @@
   ],
   "mau": [
    {
-    "ten": "Vàng",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/realme-c100x-vang-thumb233708.jpg"
+    "ten": "Mặc định",
+    "anh": "https://image01.realme.net/general/20260701/1782877963888aa369c25cece49c581421a12d10c25f1.webp"
    }
   ]
  },
  {
   "hang": "Motorola",
   "ten": "Motorola Moto G37 5G",
-  "link": "https://www.thegioididong.com/dtdd/motorola-g37-4gb-64gb",
+  "link": "",
   "bienThe": [
    {
     "dl": "4+64GB",
@@ -28,17 +28,12 @@
     "giaHang": 4190000
    }
   ],
-  "mau": [
-   {
-    "ten": "Xanh dương",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/motorola-g37-xanh-duong-thumbn094946.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "Apple",
   "ten": "iPhone 17 Pro Max",
-  "link": "https://www.thegioididong.com/dtdd/iphone-17-pro-max",
+  "link": "https://www.apple.com/newsroom/2025/09/apple-unveils-iphone-17-pro-and-iphone-17-pro-max/",
   "bienThe": [
    {
     "dl": "256GB",
@@ -48,15 +43,19 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/342679/iphone-17-pro-max-xanh-duong-thumb.jpg"
+    "ten": "Cam Vũ Trụ (Cosmic Orange)",
+    "anh": "https://www.apple.com/newsroom/images/2025/09/apple-unveils-iphone-17-pro-and-iphone-17-pro-max/article/Apple-iPhone-17-Pro-cosmic-orange-250909_inline.jpg.large.jpg"
+   },
+   {
+    "ten": "Bộ 3 màu (Xanh Đậm, Cam, Bạc)",
+    "anh": "https://www.apple.com/newsroom/images/2025/09/apple-unveils-iphone-17-pro-and-iphone-17-pro-max/article/Apple-iPhone-17-Pro-color-lineup-250909_inline.jpg.large.jpg"
    }
   ]
  },
  {
   "hang": "vivo",
   "ten": "vivo X300 Ultra",
-  "link": "https://www.thegioididong.com/dtdd/vivo-x300-ultra",
+  "link": "https://www.vivo.com/vn/products/x300-ultra",
   "bienThe": [
    {
     "dl": "16+512GB",
@@ -66,15 +65,19 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/363408/vivo-x300-ultra-xanh-thumb-1.jpg"
+    "ten": "Đen Huyền Tích",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1778146522348/9cf9e654c7da90ee7202f1bdb82c1eb2.png"
+   },
+   {
+    "ten": "Xanh Thảo Nguyên",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1778146526893/83a6e7b72cddaae2b0e1ddae6cd409aa.png"
    }
   ]
  },
  {
   "hang": "realme",
   "ten": "realme 16T 5G",
-  "link": "https://www.thegioididong.com/dtdd/realme-16t-5g-8gb-128gb",
+  "link": "https://www.realme.com/vn/realme-16t-5g",
   "bienThe": [
    {
     "dl": "8+128GB",
@@ -84,15 +87,15 @@
   ],
   "mau": [
    {
-    "ten": "Đen",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/realme-16t-xam-thumb102023.jpg"
+    "ten": "Mặc định",
+    "anh": "https://image01.realme.net/general/20260605/17806566493319f68e5b7df8d4249b7fe2914718ccdcc.webp"
    }
   ]
  },
  {
   "hang": "HONOR",
   "ten": "HONOR 600 Lite",
-  "link": "https://www.thegioididong.com/dtdd/honor-600-lite-8gb-256gb",
+  "link": "https://www.honor.com/vn/phones/honor-600-lite/",
   "bienThe": [
    {
     "dl": "8+256GB",
@@ -102,15 +105,15 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/367011/honor-600-lite-xanh-la-thumb.jpg"
+    "ten": "Vàng Sa Mạc",
+    "anh": "https://www.honor.com/content/dam/honor/common/product-list/product-series/honor-600-lite/honor-600-lite-gold.png"
    }
   ]
  },
  {
   "hang": "Apple",
   "ten": "iPhone 17 Pro",
-  "link": "https://www.thegioididong.com/dtdd/iphone-17-pro",
+  "link": "https://www.apple.com/newsroom/2025/09/apple-unveils-iphone-17-pro-and-iphone-17-pro-max/",
   "bienThe": [
    {
     "dl": "256GB",
@@ -120,15 +123,19 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/342676/iphone-17-pro-xanh-duong-thumb.jpg"
+    "ten": "Cam Vũ Trụ (Cosmic Orange)",
+    "anh": "https://www.apple.com/newsroom/images/2025/09/apple-unveils-iphone-17-pro-and-iphone-17-pro-max/article/Apple-iPhone-17-Pro-cosmic-orange-250909_inline.jpg.large.jpg"
+   },
+   {
+    "ten": "Bộ 3 màu (Xanh Đậm, Cam, Bạc)",
+    "anh": "https://www.apple.com/newsroom/images/2025/09/apple-unveils-iphone-17-pro-and-iphone-17-pro-max/article/Apple-iPhone-17-Pro-color-lineup-250909_inline.jpg.large.jpg"
    }
   ]
  },
  {
   "hang": "vivo",
   "ten": "vivo V70 FE 5G",
-  "link": "https://www.thegioididong.com/dtdd/vivo-v70-fe-8gb-256gb",
+  "link": "https://www.vivo.com/vn/products/v70-fe",
   "bienThe": [
    {
     "dl": "8+256GB",
@@ -138,15 +145,23 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/363466/vivo-v70-fe-8gb-256gb-tim-thumb-1.jpg"
+    "ten": "Muse Purple",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1774346666440/55e263a3d3ac9e0171fd490429c07a76.png"
+   },
+   {
+    "ten": "Bạc Ánh Lam",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1774346668879/d64c123d2b88f5a7672096e74d5e7e87.png"
+   },
+   {
+    "ten": "Xanh Đại Dương",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1774346671516/2877c0e769a07ab6955781d834e9e8fb.png"
    }
   ]
  },
  {
   "hang": "realme",
   "ten": "realme C100i",
-  "link": "https://www.thegioididong.com/dtdd/realme-c100i-4gb-64gb",
+  "link": "https://www.realme.com/vn/realme-c100i",
   "bienThe": [
    {
     "dl": "4+64GB",
@@ -156,15 +171,15 @@
   ],
   "mau": [
    {
-    "ten": "Xám",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/realme-c100i-xam-thumb231845.jpg"
+    "ten": "Mặc định",
+    "anh": "https://image01.realme.net/general/20260509/17783238970567e343cf4dee5482e82714d3157c49e9b.webp"
    }
   ]
  },
  {
   "hang": "HONOR",
   "ten": "HONOR X9d 5G",
-  "link": "https://www.thegioididong.com/dtdd/honor-x9d-5g-12gb-256gb",
+  "link": "https://www.honor.com/vn/phones/honor-x9d/",
   "bienThe": [
    {
     "dl": "12+256GB",
@@ -174,15 +189,15 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/358683/honor-x9d-5g-12gb-512gb-thumb.png"
+    "ten": "Đỏ Đôn Hoàng",
+    "anh": "https://www.honor.com/content/dam/honor/common/product-list/product-series/honor-x9d/honor-x9d-red-list.png"
    }
   ]
  },
  {
   "hang": "TECNO",
   "ten": "TECNO Spark 50",
-  "link": "https://www.thegioididong.com/dtdd/tecno-spark-50-4gb-128gb",
+  "link": "",
   "bienThe": [
    {
     "dl": "4+128GB",
@@ -190,17 +205,12 @@
     "giaHang": 4490000
    }
   ],
-  "mau": [
-   {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/367204/tecno-spark-50-4gb-128gb-den-thumb.png"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "Nubia",
   "ten": "Nubia Air 5G",
-  "link": "https://www.thegioididong.com/dtdd/nubia-air-5g-8gb-256gb",
+  "link": "",
   "bienThe": [
    {
     "dl": "8+256GB",
@@ -208,17 +218,12 @@
     "giaHang": 5490000
    }
   ],
-  "mau": [
-   {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/366919/nubia-air-5g-8gb-256gb-den-thumb.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "Motorola",
   "ten": "Motorola Edge 70 Fusion",
-  "link": "https://www.thegioididong.com/dtdd/motorola-edge-70-fusion-8gb-128gb",
+  "link": "",
   "bienThe": [
    {
     "dl": "8+128GB",
@@ -226,17 +231,12 @@
     "giaHang": 10990000
    }
   ],
-  "mau": [
-   {
-    "ten": "Xanh bạc hà",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/motorola-edge-70-fusion-xanh-bac-ha-thumbnew100007.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "Apple",
   "ten": "iPhone 15",
-  "link": "https://www.thegioididong.com/dtdd/iphone-15",
+  "link": "https://www.apple.com/newsroom/2023/09/apple-debuts-iphone-15-and-iphone-15-plus/",
   "bienThe": [
    {
     "dl": "128GB",
@@ -246,15 +246,19 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/281570/iphone-15-xanh-thumb.jpg"
+    "ten": "Xanh Dương",
+    "anh": "https://www.apple.com/newsroom/images/2023/09/apple-debuts-iphone-15-and-iphone-15-plus/article/Apple-iPhone-15-lineup-design-230912_big.jpg.large.jpg"
+   },
+   {
+    "ten": "Bộ 5 màu (Đen, Xanh Dương, Xanh Lá, Vàng, Hồng)",
+    "anh": "https://www.apple.com/newsroom/images/2023/09/apple-debuts-iphone-15-and-iphone-15-plus/article/Apple-iPhone-15-lineup-color-lineup-230912_big.jpg.large.jpg"
    }
   ]
  },
  {
   "hang": "vivo",
   "ten": "vivo V60 Lite 5G",
-  "link": "https://www.thegioididong.com/dtdd/vivo-v60-lite-8gb-256gb",
+  "link": "https://www.vivo.com/vn/products/v60-lite-5g",
   "bienThe": [
    {
     "dl": "8+256GB",
@@ -264,15 +268,23 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/357576/vivo-v60-lite-pink-thumbai.jpg"
+    "ten": "Hồng Candy",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1760004480143/ea9b11bde45276930d9100bceabb5e8f.png"
+   },
+   {
+    "ten": "Xanh Titan",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1760004483672/a270736fb4d54359ea0ec87727aa431a.png"
+   },
+   {
+    "ten": "Đen Phantom",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1760004487116/d7abde7f4ba10097a5eb5a987efe56b9.png"
    }
   ]
  },
  {
   "hang": "realme",
   "ten": "realme C100 4G",
-  "link": "https://www.thegioididong.com/dtdd/realme-c100-4g-8gb-128gb",
+  "link": "https://www.realme.com/vn/realme-c100",
   "bienThe": [
    {
     "dl": "8+128GB",
@@ -282,15 +294,15 @@
   ],
   "mau": [
    {
-    "ten": "Nâu",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/realme-c100-nau-thumb224538.jpg"
+    "ten": "Mặc định",
+    "anh": "https://image01.realme.net/general/20260409/1775697495423c43381b06f024ffcb82e5acc7bb6b49a.png"
    }
   ]
  },
  {
   "hang": "HONOR",
   "ten": "HONOR X7d 5G",
-  "link": "https://www.thegioididong.com/dtdd/honor-x7d-5g-8gb-256gb",
+  "link": "https://www.honor.com/vn/phones/honor-x7d-5g/",
   "bienThe": [
    {
     "dl": "8+256GB",
@@ -300,15 +312,15 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/358026/honor-x7d-5g-bac-thumb.jpg"
+    "ten": "Vàng Sa Mạc",
+    "anh": "https://www.honor.com/content/dam/honor/common/product-list/product-series/honor-400-smart-5g/honor-400-smart-5g-gold-list.png"
    }
   ]
  },
  {
   "hang": "Nubia",
   "ten": "Nubia V80 Max",
-  "link": "https://www.thegioididong.com/dtdd/nubia-v80-max-6gb-128gb",
+  "link": "",
   "bienThe": [
    {
     "dl": "6+128GB",
@@ -316,17 +328,12 @@
     "giaHang": 3890000
    }
   ],
-  "mau": [
-   {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/367811/nubia-v80-max-6gb-128gb-den-thumb.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "TECNO",
   "ten": "TECNO Spark Go 3",
-  "link": "https://www.thegioididong.com/dtdd/tecno-spark-go-3-4gb-64gb",
+  "link": "",
   "bienThe": [
    {
     "dl": "4+64GB",
@@ -334,17 +341,12 @@
     "giaHang": 3490000
    }
   ],
-  "mau": [
-   {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/364632/tecno-spark-go-3-den-thumb.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "Motorola",
   "ten": "Motorola G57 Power 5G",
-  "link": "https://www.thegioididong.com/dtdd/motorola-g57-power-5g-8gb-128gb",
+  "link": "",
   "bienThe": [
    {
     "dl": "8+128GB",
@@ -352,17 +354,12 @@
     "giaHang": 6290000
    }
   ],
-  "mau": [
-   {
-    "ten": "Xanh dương",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/motorola-g57-power-xanh-duong-thumbn095748.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "vivo",
   "ten": "vivo X300 Pro 5G",
-  "link": "https://www.thegioididong.com/dtdd/vivo-x300-pro",
+  "link": "https://www.vivo.com/vn/products/x300-pro",
   "bienThe": [
    {
     "dl": "16+512GB",
@@ -372,15 +369,19 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/357862/vivo-x300-pro-nau-thumb.jpg"
+    "ten": "Nâu Sa Mạc",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1763365358190/a35798ff7eb59d1a122580e77bbafced.png"
+   },
+   {
+    "ten": "Đen Phantom",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1763365361919/6caacdddd53cf00897ecb50a865f2daa.png"
    }
   ]
  },
  {
   "hang": "realme",
   "ten": "realme 16 5G",
-  "link": "https://www.thegioididong.com/dtdd/realme-16-5g-8gb-256gb",
+  "link": "https://www.realme.com/vn/realme-16-5g",
   "bienThe": [
    {
     "dl": "8+256GB",
@@ -390,15 +391,15 @@
   ],
   "mau": [
    {
-    "ten": "Đen",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/relame-16-den-thumb094354.jpg"
+    "ten": "Mặc định",
+    "anh": "https://image01.realme.net/general/20260129/1769684364997c0b2fba97090433e8546aef0df4aaa96.png"
    }
   ]
  },
  {
   "hang": "realme",
   "ten": "realme P4 Power 5G",
-  "link": "https://www.thegioididong.com/dtdd/realme-p4-power-5g-12gb-256gb",
+  "link": "https://www.realme.com/vn/realme-p4-power-5g",
   "bienThe": [
    {
     "dl": "12+256GB",
@@ -408,15 +409,15 @@
   ],
   "mau": [
    {
-    "ten": "Bạc",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/realme-p4-power-bac-thumb235514.jpg"
+    "ten": "Mặc định",
+    "anh": "https://image01.realme.net/general/20260401/1775039535309c8a11b6a63364726920c9373457d4691.webp"
    }
   ]
  },
  {
   "hang": "Nubia",
   "ten": "Nubia V80 Design",
-  "link": "https://www.thegioididong.com/dtdd/nubia-v80-design-4gb-128gb",
+  "link": "",
   "bienThe": [
    {
     "dl": "4+128GB",
@@ -424,17 +425,12 @@
     "giaHang": 3690000
    }
   ],
-  "mau": [
-   {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/366923/nubia-v80-design-4gb-128gb-vang-thumb.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "Motorola",
   "ten": "Motorola Edge 70",
-  "link": "https://www.thegioididong.com/dtdd/motorola-edge-70-8gb-256gb",
+  "link": "",
   "bienThe": [
    {
     "dl": "8+256GB",
@@ -442,17 +438,12 @@
     "giaHang": 12990000
    }
   ],
-  "mau": [
-   {
-    "ten": "Xám",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/motorola-edge-70-xam-thumbnew095513.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "Apple",
   "ten": "iPhone 16e",
-  "link": "https://www.thegioididong.com/dtdd/iphone-16e",
+  "link": "https://www.apple.com/newsroom/2025/02/apple-debuts-iphone-16e-a-powerful-new-member-of-the-iphone-16-family/",
   "bienThe": [
    {
     "dl": "128GB",
@@ -462,15 +453,19 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/334864/iphone-16e-den-thumb.jpg"
+    "ten": "Trắng",
+    "anh": "https://www.apple.com/newsroom/images/2025/02/apple-debuts-iphone-16e-a-powerful-new-member-of-the-iphone-16-family/article/Apple-iPhone-16e-hero-250219_inline.jpg.large.jpg"
+   },
+   {
+    "ten": "Trắng và Đen",
+    "anh": "https://www.apple.com/newsroom/images/2025/02/apple-debuts-iphone-16e-a-powerful-new-member-of-the-iphone-16-family/article/Apple-iPhone-16e-color-lineup-back-250219_inline.jpg.large.jpg"
    }
   ]
  },
  {
   "hang": "Apple",
   "ten": "iPhone 16 Plus",
-  "link": "https://www.thegioididong.com/dtdd/iphone-16-plus",
+  "link": "https://www.apple.com/newsroom/2024/09/apple-introduces-iphone-16-and-iphone-16-plus/",
   "bienThe": [
    {
     "dl": "128GB",
@@ -480,15 +475,19 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/329138/iphone-16-plus-den-thumb.jpg"
+    "ten": "Xanh Lưu Ly (Ultramarine)",
+    "anh": "https://www.apple.com/newsroom/images/2024/09/apple-introduces-iphone-16-and-iphone-16-plus/article/Apple-iPhone-16-hero-240909_inline.jpg.large.jpg"
+   },
+   {
+    "ten": "Bộ 5 màu (Đen, Trắng, Hồng, Xanh Mòng Két, Xanh Lưu Ly)",
+    "anh": "https://www.apple.com/newsroom/images/2024/09/apple-introduces-iphone-16-and-iphone-16-plus/article/Apple-iPhone-16-finish-lineup-240909_big.jpg.large.jpg"
    }
   ]
  },
  {
   "hang": "vivo",
   "ten": "vivo Y39 5G",
-  "link": "https://www.thegioididong.com/dtdd/vivo-y39-5g",
+  "link": "https://www.vivo.com/vn/products/y39-5g",
   "bienThe": [
    {
     "dl": "8+128GB",
@@ -498,15 +497,19 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/339180/vivo-y39-5g-xanh-thumb.jpg"
+    "ten": "Xanh Hải Lam",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1750133013850/79c3975c863d0725ad778c5ff798a7b6.png"
+   },
+   {
+    "ten": "Tím Ngân Hà",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1750133019248/c557f394cfbc030c68df2cddfa6362a6.png"
    }
   ]
  },
  {
   "hang": "realme",
   "ten": "realme C85",
-  "link": "https://www.thegioididong.com/dtdd/realme-c85-8gb-128gb",
+  "link": "https://www.realme.com/vn/realme-c85",
   "bienThe": [
    {
     "dl": "8+128GB",
@@ -516,15 +519,15 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/360344/realme-c85-8gb-128gb-den-thumb.jpg"
+    "ten": "Mặc định",
+    "anh": "https://image01.realme.net/general/20251231/1767172990717084495c9c2b14a70a3789fdd4e9d02c6.webp"
    }
   ]
  },
  {
   "hang": "HONOR",
   "ten": "HONOR 400 5G",
-  "link": "https://www.thegioididong.com/dtdd/honor-400-5g-12gb-256gb-den",
+  "link": "https://www.honor.com/vn/phones/honor-400/",
   "bienThe": [
    {
     "dl": "12+256GB",
@@ -534,15 +537,15 @@
   ],
   "mau": [
    {
-    "ten": "Đen",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/339638/honor-400-5g-12gb-256gb-den-thumb.jpg"
+    "ten": "Vàng Sa Mạc",
+    "anh": "https://www.honor.com/content/dam/honor/common/product-list/product-series/honor-400/honor-400-gold-list.png"
    }
   ]
  },
  {
   "hang": "Motorola",
   "ten": "Motorola Signature",
-  "link": "https://www.thegioididong.com/dtdd/motorola-signature-12gb-256gb",
+  "link": "",
   "bienThe": [
    {
     "dl": "12+256GB",
@@ -550,17 +553,12 @@
     "giaHang": 20990000
    }
   ],
-  "mau": [
-   {
-    "ten": "Ghi đen",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/motorola-signature-ghi-den-thumbnew102351.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "vivo",
   "ten": "vivo Y21d",
-  "link": "https://www.thegioididong.com/dtdd/vivo-y21d-6gb-128gb",
+  "link": "https://www.vivo.com/vn/products/param/y21d",
   "bienThe": [
    {
     "dl": "6+128GB",
@@ -570,15 +568,19 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/358669/vivo-y21d-black-thumb.jpg"
+    "ten": "Tím Ban Mai",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1762764435192/96553f828736dd8bb739203878d11c86.png"
+   },
+   {
+    "ten": "Đen Huyền Quang",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1762764441923/aaa4991ec54dbe0543d81dbcec0268e4.png"
    }
   ]
  },
  {
   "hang": "realme",
   "ten": "realme C85 Pro",
-  "link": "https://www.thegioididong.com/dtdd/realme-c85-pro-8gb-128gb",
+  "link": "https://www.realme.com/vn/realme-c85-pro",
   "bienThe": [
    {
     "dl": "8+128GB",
@@ -588,15 +590,15 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/357832/realme-c85-pro-tim-thumb.jpg"
+    "ten": "Mặc định",
+    "anh": "https://image01.realme.net/general/20251031/1761904329571d87634e2907b4a6ea6849f7ddb1be4c7.webp"
    }
   ]
  },
  {
   "hang": "Nubia",
   "ten": "Nubia A56",
-  "link": "https://www.thegioididong.com/dtdd/nubia-a56-4gb-128gb",
+  "link": "",
   "bienThe": [
    {
     "dl": "4+128GB",
@@ -604,17 +606,12 @@
     "giaHang": 3390000
    }
   ],
-  "mau": [
-   {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/366662/nubia-a56-4gb-128gb-vang-thumb.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "Motorola",
   "ten": "Motorola G35 5G",
-  "link": "https://www.thegioididong.com/dtdd/motorola-moto-g35-5g-4gb-128gb",
+  "link": "",
   "bienThe": [
    {
     "dl": "4+128GB",
@@ -622,17 +619,12 @@
     "giaHang": 4190000
    }
   ],
-  "mau": [
-   {
-    "ten": "Đen",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/motorola-g35-den-thumbn093727.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "realme",
   "ten": "realme 15 Pro 5G",
-  "link": "https://www.thegioididong.com/dtdd/realme-15-pro-5g-12gb-256gb",
+  "link": "https://www.realme.com/vn/realme-15-pro-5g",
   "bienThe": [
    {
     "dl": "12+256GB",
@@ -642,15 +634,15 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202609/realme-15-pro-bac-thumb144031.jpg"
+    "ten": "Mặc định",
+    "anh": "https://image01.realme.net/general/20250915/1757904455786127627c64b2d4d16a521548d65e3472e.png"
    }
   ]
  },
  {
   "hang": "Nubia",
   "ten": "Nubia A36",
-  "link": "https://www.thegioididong.com/dtdd/nubia-a36-4gb-64gb",
+  "link": "",
   "bienThe": [
    {
     "dl": "4+64GB",
@@ -658,17 +650,12 @@
     "giaHang": 2990000
    }
   ],
-  "mau": [
-   {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/361630/nubia-a36-4gb-64gb-vang-thumb.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "Motorola",
   "ten": "Motorola G86 POWER 5G",
-  "link": "https://www.thegioididong.com/dtdd/motorola-moto-g86-5g-8gb-128gb",
+  "link": "",
   "bienThe": [
    {
     "dl": "8+128GB",
@@ -676,17 +663,12 @@
     "giaHang": 6590000
    }
   ],
-  "mau": [
-   {
-    "ten": "Xanh đen",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/motorola-g86-power-xanh-den-thumbn100606.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "vivo",
   "ten": "vivo V60 5G",
-  "link": "https://www.thegioididong.com/dtdd/vivo-v60-12gb-256gb",
+  "link": "https://www.vivo.com/vn/products/v60",
   "bienThe": [
    {
     "dl": "12+256GB",
@@ -696,15 +678,19 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/341625/vivo-v60-5g-tim-thumb.jpg"
+    "ten": "Midnight Berry",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1755601554347/41f85b2e1608dfa16ae2ec756bc87b05.png"
+   },
+   {
+    "ten": "Mist Gray",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1755601561552/2c78485e0ee6432493de95656ed5237e.png"
    }
   ]
  },
  {
   "hang": "Motorola",
   "ten": "Motorola Edge 60 Fusion 5G",
-  "link": "https://www.thegioididong.com/dtdd/motorola-edge-60-fusion-8gb-256gb",
+  "link": "",
   "bienThe": [
    {
     "dl": "8+256GB",
@@ -712,17 +698,12 @@
     "giaHang": 7390000
    }
   ],
-  "mau": [
-   {
-    "ten": "Xám",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/motorola-edge-60-fusion-xam-thumbnew094850.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "Motorola",
   "ten": "Motorola Razr 60 5G",
-  "link": "https://www.thegioididong.com/dtdd/motorola-razr-60-8gb-256gb",
+  "link": "",
   "bienThe": [
    {
     "dl": "8+256GB",
@@ -730,17 +711,12 @@
     "giaHang": 17990000
    }
   ],
-  "mau": [
-   {
-    "ten": "Xanh dương",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/motorola-razr-60-xanh-duong-thumbnew101240.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "Nothing",
   "ten": "Nothing Phone (4b) 5G",
-  "link": "https://www.thegioididong.com/dtdd/nothing-phone-4b-8gb-128gb",
+  "link": "https://nothing.tech/products/phone-4b",
   "bienThe": [
    {
     "dl": "8+128GB",
@@ -750,15 +726,15 @@
   ],
   "mau": [
    {
-    "ten": "Xanh dương",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/nothing-phone-4b-xanh-thumbm102959.jpg"
+    "ten": "White",
+    "anh": "https://cdn.shopify.com/s/files/1/0376/5420/0459/files/product-thumbnail-white.webp?v=1782912554"
    }
   ]
  },
  {
   "hang": "Nothing",
   "ten": "Nothing Phone (4a)",
-  "link": "https://www.thegioididong.com/dtdd/nothing-phone-4-a-8gb-128gb",
+  "link": "https://nothing.tech/products/phone-4a",
   "bienThe": [
    {
     "dl": "8+128GB",
@@ -768,15 +744,15 @@
   ],
   "mau": [
    {
-    "ten": "Đen",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/nothing-phone-4a-den-thumbm103721.jpg"
+    "ten": "White",
+    "anh": "https://cdn.shopify.com/s/files/1/0376/5420/0459/files/Phone-4a-White.png?v=1771948069"
    }
   ]
  },
  {
   "hang": "vivo",
   "ten": "vivo Y05",
-  "link": "https://www.thegioididong.com/dtdd/vivo-y05-4gb-64gb",
+  "link": "https://www.vivo.com/vn/products/param/y05",
   "bienThe": [
    {
     "dl": "4+64GB",
@@ -786,15 +762,19 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/365875/vivo-y05-xanh-den-thumb.jpg"
+    "ten": "Xanh Chân Trời",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1775822978297/b9fbbef29981b6edfb22aa751999d894.png"
+   },
+   {
+    "ten": "Đen Viễn Du",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1775822983656/af26b12ac977f718acfcad2b54e8e320.png"
    }
   ]
  },
  {
   "hang": "vivo",
   "ten": "vivo Y31d",
-  "link": "https://www.thegioididong.com/dtdd/vivo-y31d-4gb-128gb",
+  "link": "https://www.vivo.com/vn/products/y31d",
   "bienThe": [
    {
     "dl": "4+128GB",
@@ -804,15 +784,19 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/368233/vivo-31d-den-thumb.jpg"
+    "ten": "Trắng",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1766996452564/ab1a4e2b91b51ef0458041516fad11d4.png"
+   },
+   {
+    "ten": "Xám Đen",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1766996456235/db5d72ea548963018732d19f7e51f77d.png"
    }
   ]
  },
  {
   "hang": "vivo",
   "ten": "vivo V80 Lite 5G",
-  "link": "https://www.thegioididong.com/dtdd/vivo-v80-lite-5g-6gb-128gb",
+  "link": "https://www.vivo.com/vn/products/v80-lite-5g",
   "bienThe": [
    {
     "dl": "6+128GB",
@@ -822,15 +806,23 @@
   ],
   "mau": [
    {
-    "ten": "Đen",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/371119/vivo-v80-lite-black-thumbn.jpg"
+    "ten": "Xanh Quyền Năng",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1789976549812/2558b4abdf3e15877dd4d3441a0a7116.png"
+   },
+   {
+    "ten": "Hồng Thời Thượng",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1789976552760/d63c17d383de6b5babc048a16d490957.png"
+   },
+   {
+    "ten": "Đen Bản Lĩnh",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1789976558460/8052211aa29ec796b610d23573057690.png"
    }
   ]
  },
  {
   "hang": "Xiaomi",
   "ten": "POCO C71",
-  "link": "https://www.thegioididong.com/dtdd/xiaomi-poco-c71-4gb-64gb",
+  "link": "https://www.mi.com/vn/product/poco-c71/",
   "bienThe": [
    {
     "dl": "4+64GB",
@@ -840,39 +832,43 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/365289/xiaomi-poco-c71-4gb-64gb-den-thumb.jpg"
+    "ten": "Ảnh chính (og:image)",
+    "anh": "https://i02.appmifile.com/833_item_vn/21/04/2025/46fb52ed74d2b9b146b41cb677910a0f.png"
    }
   ]
  },
  {
   "hang": "Masstel",
   "ten": "Masstel IZI T6 T127",
-  "link": "https://www.thegioididong.com/dtdd/masstel-izi-t6-t127",
+  "link": "https://masstel.vn/shop/dien-thoai-pho-thong/fp-4g/masstel-izi-t6/",
   "bienThe": [],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/367977/masstel-izi-t6-t127-den-thumb.jpg"
+    "ten": "Mặc định",
+    "anh": "https://masstel.vn/wp-content/uploads/2024/11/FAMI-50-IZI-T6-01-scaled.jpg"
    }
   ]
  },
  {
   "hang": "Nokia",
   "ten": "Nokia 105 4G Pro",
-  "link": "https://www.thegioididong.com/dtdd/nokia-105-4g-pro",
+  "link": "https://www.hmd.com/vi_vn/nokia-105-4g",
   "bienThe": [],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/311033/nokia-105-4g-den-thumb.jpg"
+    "ten": "Xanh Đại Dương",
+    "anh": "https://images.ctfassets.net/wcfotm6rrl7u/2KWphLkzNKNgK14PSmC9e6/0ce1e786f35b17dc9fda10489915ea6d/nokia-105_4G-ocean_blue-front-int.png?h=1000&fm=png&fl=png8"
+   },
+   {
+    "ten": "Xanh thiên Hà",
+    "anh": "https://images.ctfassets.net/wcfotm6rrl7u/3OuA7XFgR74A0DQXhnGaIk/4a9d071238ab10abaab16fe2346aa253/nokia-105_4G-blue-front-int.png?h=1000&fm=png&fl=png8"
    }
   ]
  },
  {
   "hang": "realme",
   "ten": "realme Note 80",
-  "link": "https://www.thegioididong.com/dtdd/realme-note-80-4gb-64gb",
+  "link": "https://www.realme.com/vn/realme-note80",
   "bienThe": [
    {
     "dl": "4+64GB",
@@ -882,27 +878,22 @@
   ],
   "mau": [
    {
-    "ten": "Xanh dương",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/realme-note-80-xanh-thumb000620.jpg"
+    "ten": "Mặc định",
+    "anh": "https://image01.realme.net/general/20260320/177399467351354e5179ee77143eba9f59ca58a269df8.webp"
    }
   ]
  },
  {
   "hang": "Masstel",
   "ten": "Masstel IZI 10S",
-  "link": "https://www.thegioididong.com/dtdd/masstel-izi-10s",
+  "link": "",
   "bienThe": [],
-  "mau": [
-   {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/370758/masstel-izi-10s-den-thumb.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "HONOR",
   "ten": "HONOR Play 10",
-  "link": "https://www.thegioididong.com/dtdd/honor-play-10-3gb-64gb",
+  "link": "https://www.honor.com/vn/phones/honor-play10/",
   "bienThe": [
    {
     "dl": "3+64GB",
@@ -912,39 +903,39 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/358698/honor-play-10-3gb-64gb-den-thumb.jpg"
+    "ten": "Xanh Đại Dương",
+    "anh": "https://www.honor.com/content/dam/honor/common/product-list/product-series/honor-play10/list/honor-play10-green-list.png"
    }
   ]
  },
  {
   "hang": "Masstel",
   "ten": "Masstel Fami 50 4G",
-  "link": "https://www.thegioididong.com/dtdd/masstel-fami-50",
+  "link": "https://masstel.vn/shop/dien-thoai-pho-thong/fp-4g/masstel-fami-50/",
   "bienThe": [],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/323546/fami-50-black-thumb.jpg"
+    "ten": "Mặc định",
+    "anh": "https://masstel.vn/wp-content/uploads/2024/11/FAMI-50-IZI-T6-02-scaled.jpg"
    }
   ]
  },
  {
   "hang": "Nokia",
   "ten": "Nokia HMD 105 4G",
-  "link": "https://www.thegioididong.com/dtdd/nokia-hmd-105-4g",
+  "link": "https://www.hmd.com/vi_vn/hmd-105-4g",
   "bienThe": [],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/329676/nokia-hmd-105-4g-black-thumb.jpg"
+    "ten": "Đen",
+    "anh": "https://images.ctfassets.net/wcfotm6rrl7u/2tQ2EdIZ0xCYtPSjTExAId/6ad67d583e2641003ee0463333e4e65f/HMD_105_4G-Black-Front-Int.png?h=1000&fm=png&fl=png8"
    }
   ]
  },
  {
   "hang": "vivo",
   "ten": "vivo Y05e",
-  "link": "https://www.thegioididong.com/dtdd/vivo-y05e-4gb-64gb",
+  "link": "https://www.vivo.com/vn/products/y05e",
   "bienThe": [
    {
     "dl": "4+64GB",
@@ -954,15 +945,19 @@
   ],
   "mau": [
    {
-    "ten": "Đen",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/370492/vivo-y05e-den-thumb.jpg"
+    "ten": "Xanh Băng",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1786675073733/9af92222054724ccd7bed0437f9d6d79.png"
+   },
+   {
+    "ten": "Đen Huyền Thạch",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1786675076034/17b89cf21eabf6ad726b44bc54055ca2.png"
    }
   ]
  },
  {
   "hang": "Motorola",
   "ten": "Motorola G06 POWER",
-  "link": "https://www.thegioididong.com/dtdd/motorola-g06-power-4gb-64gb",
+  "link": "",
   "bienThe": [
    {
     "dl": "4+64GB",
@@ -970,29 +965,19 @@
     "giaHang": 3790000
    }
   ],
-  "mau": [
-   {
-    "ten": "Xanh dương",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/motorola-g06-power-xanh-thumbn092849.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "Masstel",
   "ten": "Masstel IZI 10 4G Type-C",
-  "link": "https://www.thegioididong.com/dtdd/masstel-izi-10-type-c",
+  "link": "",
   "bienThe": [],
-  "mau": [
-   {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/342939/masstel-izi-10-xanh.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "vivo",
   "ten": "vivo Y11d",
-  "link": "https://www.thegioididong.com/dtdd/vivo-y11d-4gb-128gb",
+  "link": "https://www.vivo.com/vn/products/param/y11d",
   "bienThe": [
    {
     "dl": "4+128GB",
@@ -1002,39 +987,43 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/365878/vivo-y11d-den-thumb.jpg"
+    "ten": "Trắng Tinh Vân",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1775823430162/4ae211d132f48b874e5925a704e34443.png"
+   },
+   {
+    "ten": "Đen Viễn Du",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1775823435518/6998d9d7bd951acfa09ff88aee36cd8c.png"
    }
   ]
  },
  {
   "hang": "Nokia",
   "ten": "Nokia 220 4G",
-  "link": "https://www.thegioididong.com/dtdd/nokia-220-4g",
+  "link": "https://www.hmd.com/en_int/nokia-220-4g-2024/specs",
   "bienThe": [],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/207956/nokia-220-4g-cam-thumb.jpg"
+    "ten": "Đen",
+    "anh": "https://images.ctfassets.net/wcfotm6rrl7u/465zUlXkr5ptwxWN1Q3lqH/6fb6da608be570bf2989c759a10abe42/Nokia-215_4G-2024-Black-Front_Back-Int.png?w=1200&h=630&fit=pad&bg=rgb:343434"
    }
   ]
  },
  {
   "hang": "Nokia",
   "ten": "Nokia 110 4G Pro",
-  "link": "https://www.thegioididong.com/dtdd/nokia-110-4g-pro",
+  "link": "https://www.hmd.com/vi_vn/nokia-110-4g",
   "bienThe": [],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/311034/nokia-110-4g-xanh-thumb.jpg"
+    "ten": "Tím Bắc Cực",
+    "anh": "https://images.ctfassets.net/wcfotm6rrl7u/23yx3y6FW87E9T98MdUGqO/bdb22c96ad45bef40a3537ca8cdff0d4/nokia-110_4G-arctic_purple-front-int.png?h=1000&fm=png&fl=png8"
    }
   ]
  },
  {
   "hang": "HONOR",
   "ten": "HONOR X5c Plus",
-  "link": "https://www.thegioididong.com/dtdd/honor-x5c-plus-4gb-64gb",
+  "link": "https://www.honor.com/vn/phones/honor-x5c-plus/",
   "bienThe": [
    {
     "dl": "4+64GB",
@@ -1044,15 +1033,15 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/358691/honor-x5c-plus-4gb-64gb-den-thumb.jpg"
+    "ten": "Xanh Đại Dương",
+    "anh": "https://www.honor.com/content/dam/honor/common/product-list/product-series/honor-x5c/honor-x5c-cyan-list.png"
    }
   ]
  },
  {
   "hang": "Xiaomi",
   "ten": "REDMI 15 5G",
-  "link": "https://www.thegioididong.com/dtdd/xiaomi-redmi-15-5g-4gb-128gb",
+  "link": "https://www.mi.com/global/product/redmi-15-5g/",
   "bienThe": [
    {
     "dl": "4+128GB",
@@ -1062,39 +1051,47 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/359776/xiaomi-redmi-15-5g-4gb-128gb-den-thumb.jpg"
+    "ten": "Đen (Midnight Black)",
+    "anh": "https://i02.appmifile.com/mi-com-product/fly-birds/redmi-15-5g/g-pc/black-notactive.png"
+   },
+   {
+    "ten": "Xanh Lá",
+    "anh": "https://i02.appmifile.com/mi-com-product/fly-birds/redmi-15-5g/g-pc/green-notactive.png"
+   },
+   {
+    "ten": "Xám Titan",
+    "anh": "https://i02.appmifile.com/mi-com-product/fly-birds/redmi-15-5g/g-pc/tai-notactive.png"
    }
   ]
  },
  {
   "hang": "Mobell",
   "ten": "Mobell M239 4G",
-  "link": "https://www.thegioididong.com/dtdd/mobell-m239",
+  "link": "https://mobell.vn/products/m239",
   "bienThe": [],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/284122/mobell-m239-thumb-den.jpg"
+    "ten": "Mặc định",
+    "anh": "https://product.hstatic.net/1000312916/product/shoppe_dien_thoai_m239-01_9ba4a8f1ee8f4d36833690a7a330dfd7_large.jpg"
    }
   ]
  },
  {
   "hang": "Mobell",
   "ten": "Mobell F309 4G",
-  "link": "https://www.thegioididong.com/dtdd/mobell-f309",
+  "link": "https://mobell.vn/products/mobell-f309",
   "bienThe": [],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/304608/mobell-f309-trang-thumb.jpg"
+    "ten": "Mặc định",
+    "anh": "https://product.hstatic.net/1000312916/product/id_dien_thoai_pho_thong-08_6e7231c2f8064ddb86b57231f2525bf9_large.jpg"
    }
   ]
  },
  {
   "hang": "HONOR",
   "ten": "HONOR X8d",
-  "link": "https://www.thegioididong.com/dtdd/honor-x8d-8gb-128gb",
+  "link": "https://www.honor.com/vn/phones/honor-x8d/",
   "bienThe": [
    {
     "dl": "8+128GB",
@@ -1104,15 +1101,15 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/362919/honor-x8d-8gb-128gb-bac-thumb.jpg"
+    "ten": "Xanh Thiên Vân",
+    "anh": "https://www.honor.com/content/dam/honor/common/product-list/product-series/honor-x8d/honor-x8d-blue-liat.png"
    }
   ]
  },
  {
   "hang": "HONOR",
   "ten": "HONOR X7d",
-  "link": "https://www.thegioididong.com/dtdd/honor-x7d-8gb-128gb",
+  "link": "https://www.honor.com/vn/phones/honor-x7d/",
   "bienThe": [
    {
     "dl": "8+128GB",
@@ -1122,27 +1119,27 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/362971/honor-x7d-8gb-128gb-den-thumb.jpg"
+    "ten": "Vàng Sa Mạc",
+    "anh": "https://www.honor.com/content/dam/honor/common/product-list/product-series/honor-x7d/honor-x7d-gold-list.png"
    }
   ]
  },
  {
   "hang": "Mobell",
   "ten": "Mobell F209",
-  "link": "https://www.thegioididong.com/dtdd/mobell-f209",
+  "link": "https://mobell.vn/products/mobell-f209",
   "bienThe": [],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/299998/mobell-f209-den-thumb.jpg"
+    "ten": "Mặc định",
+    "anh": "https://product.hstatic.net/1000312916/product/f209-05_24e0729628cd4c2eae21cce78ee3b1d6_large.jpg"
    }
   ]
  },
  {
   "hang": "Xiaomi",
   "ten": "REDMI 15",
-  "link": "https://www.thegioididong.com/dtdd/xiaomi-redmi-15-8gb-128gb",
+  "link": "https://www.mi.com/global/product/redmi-15/",
   "bienThe": [
    {
     "dl": "8+128GB",
@@ -1152,15 +1149,23 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/341274/xiaomi-redmi-15-vang-titan-thumbnew.jpg"
+    "ten": "Tím (Sandy Purple)",
+    "anh": "https://i02.appmifile.com/mi-com-product/fly-birds/redmi-15/pc/purple-notacive.png"
+   },
+   {
+    "ten": "Xám Titan",
+    "anh": "https://i02.appmifile.com/mi-com-product/fly-birds/redmi-15/pc/tai-notactive.png"
+   },
+   {
+    "ten": "Đen",
+    "anh": "https://i02.appmifile.com/mi-com-product/fly-birds/redmi-15/pc/black-notive.png"
    }
   ]
  },
  {
   "hang": "HONOR",
   "ten": "HONOR X6c",
-  "link": "https://www.thegioididong.com/dtdd/honor-x6c-6gb-128gb",
+  "link": "https://www.honor.com/vn/phones/honor-x6c/",
   "bienThe": [
    {
     "dl": "6+128GB",
@@ -1170,15 +1175,15 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/340220/honor-x6c-6gb-128gb-den-thumb.jpg"
+    "ten": "Xanh Đại Dương",
+    "anh": "https://www.honor.com/content/dam/honor/common/product-list/product-series/honor-x6c/honor-x6c-g-list.png"
    }
   ]
  },
  {
   "hang": "realme",
   "ten": "realme C85 5G",
-  "link": "https://www.thegioididong.com/dtdd/realme-c85-5g-8gb-256gb",
+  "link": "https://www.realme.com/vn/realme-c85-5g",
   "bienThe": [
    {
     "dl": "8+256GB",
@@ -1188,63 +1193,48 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/357831/realme-c85-tim-thumb.jpg"
+    "ten": "Mặc định",
+    "anh": "https://image01.realme.net/general/20251031/1761904335459cb65b3f9e0a54fcf963858e431930a3c.webp"
    }
   ]
  },
  {
   "hang": "Xphone",
   "ten": "Xphone Hera S9",
-  "link": "https://www.thegioididong.com/dtdd/xphone-hera-s9",
+  "link": "",
   "bienThe": [],
-  "mau": [
-   {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/370547/xphone-hera-s9-den-thumb.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "Masstel",
   "ten": "Masstel IZI T6 4G",
-  "link": "https://www.thegioididong.com/dtdd/masstel-izi-t6",
+  "link": "https://masstel.vn/shop/dien-thoai-pho-thong/fp-4g/masstel-izi-t6/",
   "bienThe": [],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/322877/masstel-izi-t6-black-thumb.jpg"
+    "ten": "Mặc định",
+    "anh": "https://masstel.vn/wp-content/uploads/2024/11/FAMI-50-IZI-T6-01-scaled.jpg"
    }
   ]
  },
  {
   "hang": "Masstel",
   "ten": "Masstel Fami 60S 4G",
-  "link": "https://www.thegioididong.com/dtdd/masstel-fami-60s",
+  "link": "",
   "bienThe": [],
-  "mau": [
-   {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/322876/masstel-fami-60s-black-thumb.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "Mobell",
   "ten": "Mobell Rock 7",
-  "link": "https://www.thegioididong.com/dtdd/mobell-rock-7",
+  "link": "",
   "bienThe": [],
-  "mau": [
-   {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/338026/mobell-rock-7-black-thumb.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "vivo",
   "ten": "vivo V70 5G",
-  "link": "https://www.thegioididong.com/dtdd/vivo-v70-8gb-256gb",
+  "link": "https://www.vivo.com/vn/products/v70",
   "bienThe": [
    {
     "dl": "8+256GB",
@@ -1254,15 +1244,23 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/363464/vivo-v70-8gb-256gb-xam-thumb.jpg"
+    "ten": "Golden Hour",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1774345285325/9ef2ce0a706643539828cbfd61531400.png"
+   },
+   {
+    "ten": "Xám Ánh Kim",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1774350163698/5f6c8e4b457f1c793adb67cd2e2e2d64.png"
+   },
+   {
+    "ten": "Đen Huyền Quang",
+    "anh": "https://asia-exstatic-vivofs.vivo.com/PSee2l50xoirPK7y/1774350168560/b137704c9f2f9c72310dc44f4171d1eb.png"
    }
   ]
  },
  {
   "hang": "HONOR",
   "ten": "HONOR 600s 5G",
-  "link": "https://www.thegioididong.com/dtdd/honor-600s-5g-6gb-128gb",
+  "link": "https://www.honor.com/vn/phones/honor-600s-5g/",
   "bienThe": [
    {
     "dl": "6+128GB",
@@ -1272,39 +1270,39 @@
   ],
   "mau": [
    {
-    "ten": "Đen",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/honor-600s-den-thumb140851.jpg"
+    "ten": "Mặc định",
+    "anh": "https://www.honor.com/content/dam/honor/common/products/smartphone/honor-600s-5g/share.jpg"
    }
   ]
  },
  {
   "hang": "Mobell",
   "ten": "Mobell M539",
-  "link": "https://www.thegioididong.com/dtdd/mobell-m539",
+  "link": "https://mobell.vn/products/mobell-m539",
   "bienThe": [],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/288630/mobell-m539-vang-thumb.jpg"
+    "ten": "Mặc định",
+    "anh": "https://product.hstatic.net/1000312916/product/shoppe_dien_thoai_m539-03_6fc7b3f9b4f34b2b8aa88a8a5f8cbb1e_large.jpg"
    }
   ]
  },
  {
   "hang": "Mobell",
   "ten": "Mobell M331 4G",
-  "link": "https://www.thegioididong.com/dtdd/mobell-m331",
+  "link": "https://mobell.vn/products/mobell-m331",
   "bienThe": [],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/314697/mobell-m331-thumb-do.jpg"
+    "ten": "Mặc định",
+    "anh": "https://product.hstatic.net/1000312916/product/m336-15_be374077e1144b87b8e14c86375c158a_large.jpg"
    }
   ]
  },
  {
   "hang": "HONOR",
   "ten": "HONOR 600",
-  "link": "https://www.thegioididong.com/dtdd/honor-600-8gb-256gb",
+  "link": "https://www.honor.com/vn/phones/honor-600/",
   "bienThe": [
    {
     "dl": "8+256GB",
@@ -1314,15 +1312,15 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/367010/honor-600-trang-thumb.jpg"
+    "ten": "Cam Hoàng Kim",
+    "anh": "https://www.honor.com/content/dam/honor/common/product-list/product-series/honor-600/honor-600-list-orange.png"
    }
   ]
  },
  {
   "hang": "OPPO",
   "ten": "OPPO Reno13 5G",
-  "link": "https://www.thegioididong.com/dtdd/oppo-reno13-5g",
+  "link": "https://www.oppo.com/vn/smartphones/series-reno/reno13/",
   "bienThe": [
    {
     "dl": "12+256GB",
@@ -1332,15 +1330,19 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/332934/oppo-reno13-blue-thumbnew.jpg"
+    "ten": "Trắng Thanh Lịch",
+    "anh": "https://www.oppo.com/content/dam/oppo/common/mkt/v2-2/reno13-series/list-page/reno13-5g/white.png"
+   },
+   {
+    "ten": "Xanh Phá Cách",
+    "anh": "https://www.oppo.com/content/dam/oppo/common/mkt/v2-2/reno13-series/list-page/reno13-5g/blue.png"
    }
   ]
  },
  {
   "hang": "Xiaomi",
   "ten": "POCO C95 Pro",
-  "link": "https://www.thegioididong.com/dtdd/xiaomi-poco-c95-pro-6gb-128gb",
+  "link": "https://www.mi.com/vn/product/poco-c95-pro/",
   "bienThe": [
    {
     "dl": "6+128GB",
@@ -1351,14 +1353,22 @@
   "mau": [
    {
     "ten": "Đen",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/xiaomi-poco-c95-pro-black-thumb155737.jpg"
+    "anh": "https://i02.appmifile.com/mi-com-product/fly-birds/poco-c95-pro/pc/icon-screen04-slider-1-1-v2.jpg?q=100"
+   },
+   {
+    "ten": "Xanh Dương",
+    "anh": "https://i02.appmifile.com/mi-com-product/fly-birds/poco-c95-pro/pc/icon-screen04-slider-1-v2.jpg?q=100"
+   },
+   {
+    "ten": "Xanh Lá",
+    "anh": "https://i02.appmifile.com/mi-com-product/fly-birds/poco-c95-pro/pc/icon-screen04-slider-3.png"
    }
   ]
  },
  {
   "hang": "realme",
   "ten": "realme 16 Pro 5G",
-  "link": "https://www.thegioididong.com/dtdd/realme-16-pro-5g-12gb-256gb",
+  "link": "https://www.realme.com/vn/realme-16-pro-5g",
   "bienThe": [
    {
     "dl": "12+256GB",
@@ -1368,15 +1378,15 @@
   ],
   "mau": [
    {
-    "ten": "Tím",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/realme-16-pro-tim-thumb094952.jpg"
+    "ten": "Mặc định",
+    "anh": "https://image01.realme.net/general/20260129/1769687348619ae9fe5867ed344f8923e008a84cdf971.webp"
    }
   ]
  },
  {
   "hang": "Nothing",
   "ten": "Nothing Phone (4a) Pro",
-  "link": "https://www.thegioididong.com/dtdd/nothing-phone-4-a-pro-12gb-256gb",
+  "link": "https://nothing.tech/products/phone-4a-pro",
   "bienThe": [
    {
     "dl": "12+256GB",
@@ -1386,27 +1396,22 @@
   ],
   "mau": [
    {
-    "ten": "Bạc",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/nothing-phone-4a-pro-trang-thumbm104244.jpg"
+    "ten": "Silver",
+    "anh": "https://cdn.shopify.com/s/files/1/0376/5420/0459/files/Phone-4a-Pro-White.png?v=1771948315"
    }
   ]
  },
  {
   "hang": "Mobell",
   "ten": "Mobell M179",
-  "link": "https://www.thegioididong.com/dtdd/mobell-m179",
+  "link": "",
   "bienThe": [],
-  "mau": [
-   {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/354325/mobell-m179-den.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "HONOR",
   "ten": "HONOR 600 Pro",
-  "link": "https://www.thegioididong.com/dtdd/honor-600-pro-12gb-256gb",
+  "link": "https://www.honor.com/vn/phones/honor-600-pro/",
   "bienThe": [
    {
     "dl": "12+256GB",
@@ -1416,39 +1421,29 @@
   ],
   "mau": [
    {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/367007/honor-600-pro-cam-thumbn.jpg"
+    "ten": "Cam Hoàng Kim",
+    "anh": "https://www.honor.com/content/dam/honor/common/product-list/product-series/honor-600-pro/honor-600-pro-list-orange.png"
    }
   ]
  },
  {
   "hang": "TECNO",
   "ten": "TECNO Pova Curve 2 5G",
-  "link": "https://www.thegioididong.com/dtdd/tecno-pova-curve-2-5g-8gb-128gb",
+  "link": "",
   "bienThe": [],
-  "mau": [
-   {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/367617/tecno-pova-curve-2-5g-titan-thumb.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "Masstel",
   "ten": "Masstel IZI 10 4G",
-  "link": "https://www.thegioididong.com/dtdd/masstel-izi-10",
+  "link": "",
   "bienThe": [],
-  "mau": [
-   {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/265311/masstel-izi-10-4g-thumb-1.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "HONOR",
   "ten": "HONOR 600 Pro Molly",
-  "link": "https://www.thegioididong.com/dtdd/honor-600-pro-molly-12gb-512gb",
+  "link": "",
   "bienThe": [
    {
     "dl": "12+512GB",
@@ -1456,17 +1451,12 @@
     "giaHang": 23990000
    }
   ],
-  "mau": [
-   {
-    "ten": "Vàng Trắng",
-    "anh": "https://cdnv2.tgdd.vn/mwg-static/tgdd/Products/Images/42/368098/honor-600-pro-molly-12gb-512gb-thumb-639165315982574935-600x600.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "TECNO",
   "ten": "TECNO Spark 50 Pro",
-  "link": "https://www.thegioididong.com/dtdd/tecno-spark-50-pro-4gb-128gb",
+  "link": "",
   "bienThe": [
    {
     "dl": "4+128GB",
@@ -1474,17 +1464,12 @@
     "giaHang": 6190000
    }
   ],
-  "mau": [
-   {
-    "ten": "",
-    "anh": "https://cdn.tgdd.vn/Products/Images/42/368231/tecno-spark-50-pro-den-thumb.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "Xiaomi",
   "ten": "Xiaomi 18 Pro Max 5G",
-  "link": "https://www.thegioididong.com/dtdd/xiaomi-18-pro-max-12gb-512gb",
+  "link": "",
   "bienThe": [
    {
     "dl": "12+512GB",
@@ -1492,17 +1477,12 @@
     "giaHang": 0
    }
   ],
-  "mau": [
-   {
-    "ten": "Đen",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/xiaomi-18-pro-5g-thumb171301.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "Xiaomi",
   "ten": "Xiaomi 18 Pro 5G",
-  "link": "https://www.thegioididong.com/dtdd/xiaomi-18-pro-12gb-512gb",
+  "link": "",
   "bienThe": [
    {
     "dl": "12+512GB",
@@ -1510,17 +1490,12 @@
     "giaHang": 0
    }
   ],
-  "mau": [
-   {
-    "ten": "Đen",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/xiaomi-18-pro-5g-thumb115346.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "vivo",
   "ten": "vivo X500 Pro Max 5G",
-  "link": "https://www.thegioididong.com/dtdd/vivo-x500-pro-max-12gb-512gb",
+  "link": "https://www.vivo.com.cn/vivo/x500promax/",
   "bienThe": [
    {
     "dl": "12+512GB",
@@ -1530,15 +1505,23 @@
   ],
   "mau": [
    {
-    "ten": "Cam",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/vivo-x500-pro-max-cam-thumbn093853.jpg"
+    "ten": "Earth Echo (大地回声)",
+    "anh": "https://cn-exstatic-vivofs.iqoo.com/Br81IMbjh1IEtVmx/1789033078171/4a5902fdc8c2e55e7ad3e95592dc024d.png"
+   },
+   {
+    "ten": "Sunny (晴天)",
+    "anh": "https://cn-exstatic-vivofs.iqoo.com/Br81IMbjh1IEtVmx/1789033182443/69087b7bc67e992296fab5e3cb584e3a.png"
+   },
+   {
+    "ten": "Night (摄夜)",
+    "anh": "https://cn-exstatic-vivofs.iqoo.com/Br81IMbjh1IEtVmx/1789033228280/4e5cd955260bf77de6078e3cad157e12.png"
    }
   ]
  },
  {
   "hang": "vivo",
   "ten": "vivo X500 5G",
-  "link": "https://www.thegioididong.com/dtdd/vivo-x500-12gb-256gb",
+  "link": "https://www.vivo.com.cn/vivo/x500/",
   "bienThe": [
    {
     "dl": "12+256GB",
@@ -1548,15 +1531,23 @@
   ],
   "mau": [
    {
-    "ten": "Trắng",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/vivo-x500-trang-thumbn093758.jpg"
+    "ten": "Sunny (晴天)",
+    "anh": "https://cn-exstatic-vivofs.iqoo.com/Br81IMbjh1IEtVmx/1789119259767/fe27f7eb57e85cee047ce0a8a28cdbe8.png"
+   },
+   {
+    "ten": "Dawn (晨曦)",
+    "anh": "https://cn-exstatic-vivofs.iqoo.com/Br81IMbjh1IEtVmx/1789119274101/bea39beb00d8c35f44ddbe01c03671b8.png"
+   },
+   {
+    "ten": "Night (摄夜)",
+    "anh": "https://cn-exstatic-vivofs.iqoo.com/Br81IMbjh1IEtVmx/1789119308401/44cd7aaa01aa6918839869df273433a1.png"
    }
   ]
  },
  {
   "hang": "OPPO",
   "ten": "OPPO Find X10 Pro Max 5G",
-  "link": "https://www.thegioididong.com/dtdd/oppo-find-x10-pro-max-16gb-512gb",
+  "link": "https://www.oppo.com/en/smartphones/series-find-x/find-x10-pro-max/",
   "bienThe": [
    {
     "dl": "16+512GB",
@@ -1566,15 +1557,15 @@
   ],
   "mau": [
    {
-    "ten": "Trắng",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/oppo-find-x10-pro-max-trang-thumb163800.jpg"
+    "ten": "Trắng (Luna White)",
+    "anh": "https://www.oppo.com/content/dam/oppo_com/common/mkt/v2-2/find-x10-series-en/list-page/find-x10-pro-max/480-600-white.png"
    }
   ]
  },
  {
   "hang": "OPPO",
   "ten": "OPPO Find X10 5G",
-  "link": "https://www.thegioididong.com/dtdd/oppo-find-x10-12gb-512gb",
+  "link": "https://www.oppo.com/my/smartphones/series-find-x/find-x10/",
   "bienThe": [
    {
     "dl": "12+512GB",
@@ -1584,15 +1575,15 @@
   ],
   "mau": [
    {
-    "ten": "Titan",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/oppo-find-x10-xam-thumb163413.jpg"
+    "ten": "Xanh (Glacier Blue)",
+    "anh": "https://www.oppo.com/content/dam/oppo_com/common/mkt/v2-2/find-x10-series-en/list-page/find-x10/480-600-blue.png"
    }
   ]
  },
  {
   "hang": "realme",
   "ten": "realme C01",
-  "link": "https://www.thegioididong.com/dtdd/realme-c01-4gb-64gb",
+  "link": "",
   "bienThe": [
    {
     "dl": "4+64GB",
@@ -1600,17 +1591,12 @@
     "giaHang": 5790000
    }
   ],
-  "mau": [
-   {
-    "ten": "Bạc",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/realme-c01-bac-thumb174923.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "Motorola",
   "ten": "Motorola Razr Fold 5G",
-  "link": "https://www.thegioididong.com/dtdd/motorola-razr-fold-12gb-256gb",
+  "link": "",
   "bienThe": [
    {
     "dl": "12+256GB",
@@ -1618,17 +1604,12 @@
     "giaHang": 39990000
    }
   ],
-  "mau": [
-   {
-    "ten": "Trắng",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/motorola-razr-fold-trang-thumb101624.jpg"
-   }
-  ]
+  "mau": []
  },
  {
   "hang": "Xiaomi",
   "ten": "POCO X8s 5G",
-  "link": "https://www.thegioididong.com/dtdd/xiaomi-poco-x8s-12gb-512gb",
+  "link": "",
   "bienThe": [
    {
     "dl": "12+512GB",
@@ -1636,11 +1617,6 @@
     "giaHang": 15490000
    }
   ],
-  "mau": [
-   {
-    "ten": "Trắng",
-    "anh": "https://cdnv2.tgdd.vn/pim/cdn/images/202610/xiaomi-poco-x8s-trang-thumb110630.png"
-   }
-  ]
+  "mau": []
  }
 ]
