@@ -100,6 +100,10 @@ input,select{font:inherit;font-size:16px;padding:9px 11px;border:1px solid var(-
 .xem .trong{color:var(--xam);padding:20px 0;text-align:center}
 .dong .sao{color:#c9d6d3}.dong .sao.on{color:#e0a400}
 .xem .cuoi{text-align:center;font-size:12px;color:var(--xam);padding:6px}
+.xem .c .hoi{margin-top:7px;border:1.5px solid #0068ff;background:#fff;color:#0068ff;border-radius:10px;padding:8px 6px;font:700 13px/1.2 inherit;cursor:pointer}
+.xem .c.het .hoi{border-color:var(--vien);color:var(--xam)}
+.xem .toast{position:fixed;left:50%;bottom:84px;transform:translate(-50%,20px);background:#14171b;color:#fff;font-size:14px;font-weight:600;padding:10px 16px;border-radius:12px;opacity:0;transition:.2s;pointer-events:none;z-index:60;max-width:92vw;text-align:center}
+.xem .toast.on{opacity:1;transform:translate(-50%,0)}
 </style></head><body>
 <div id="sua">
 <header><a id="veapp" hidden style="color:inherit;font-size:13px;text-decoration:none;opacity:.85">‹ Về app</a><b>🏷 Bảng giá online</b><small>Bản demo · bản thật tự lấy từ tồn kho · ảnh máy cập nhật ngày 10, ngày 20 và ngày cuối tháng</small></header>
@@ -191,7 +195,8 @@ function veXem(d) {
       '<div class="hg">' + esc(TEN[m.h] || '') + '</div><div class="n">' + esc(m.t) + '</div><div class="dl">' + esc([m.d, m.c].filter(Boolean).join(' · ')) + '</div>' +
       '<div class="cu">' + (g.giam ? vnd(g.ny) : '&nbsp;') + '</div><div class="g">' + (g.gb ? vnd(g.gb) : 'Liên hệ') + '</div>' +
       (m.k ? '<div class="km">🎁 ' + esc(m.k) + '</div>' : '') +
-      '<div class="sl">' + (het ? 'Tạm hết hàng' : m.q > 0 ? '✓ Còn ' + m.q + ' máy' : '') + '</div></div>';
+      '<div class="sl">' + (het ? 'Tạm hết hàng' : m.q > 0 ? '✓ Còn hàng' : '') + '</div>' +
+      (d.p ? '<button type="button" class="hoi" data-hoi="' + d.m.indexOf(m) + '">💬 Hỏi máy này</button>' : '') + '</div>';
   }
   function bangPK(L) { return '<table><tr><th>Phụ kiện · linh kiện</th><th>Giá</th><th>Khuyến mãi</th></tr>' + L.map(function (r) { return '<tr><td>' + esc(r.t) + '</td><td class="g">' + (r.g ? vnd(r.g) : 'Liên hệ') + '</td><td>' + esc(r.k || '') + '</td></tr>'; }).join('') + '</table>'; }
   function ve() {
@@ -209,7 +214,7 @@ function veXem(d) {
       (L.length ? '<div class="luoi">' + L.map(the).join('') + '</div>' : '<div class="trong">Chưa có máy trong mức giá này.</div>') + (pk.length ? bangPK(pk) : '');
   }
   x.innerHTML = '<div class="xem"><div class="top"><small class="nho">' + esc(d.t || 'Bảng giá hôm nay') + ' · cập nhật ' + esc(d.n || '') + '</small><b>' + esc(d.s || '') + '</b><small>' + esc(d.a || '') + '</small>' +
-    '<div class="so"><span><b>' + tongMay + '</b> máy sẵn hàng</span><span><b>' + conHang.length + '</b> mẫu</span><span><b>' + HANGS.length + '</b> hãng</span></div>' +
+    '<div class="so"><span><b>' + conHang.length + '</b> mẫu còn hàng</span><span><b>' + HANGS.length + '</b> hãng</span></div>' +
     '<input class="timx" placeholder="🔍 Tìm máy: Reno, A17, iPhone 17…" autocomplete="off"></div>' +
     '<div class="tabs">' + tabs.map(function (h) { return '<button data-t="' + h + '">' + (h === 'PK' ? 'Phụ kiện' : h === 'NB' ? '🔥 Bán chạy' : TEN[h]) + '</button>'; }).join('') + '</div>' +
     '<div class="khuc"></div><div class="ds"></div><div class="cuoi">Giá có thể thay đổi theo ngày · Bảng giá tạo bằng Shop Gọn</div>' +
@@ -217,6 +222,15 @@ function veXem(d) {
   [].forEach.call(x.querySelectorAll('.tabs button'), function (b) { b.onclick = function () { tab = b.dataset.t; khuc = 'all'; tu = ''; x.querySelector('.timx').value = ''; ve(); window.scrollTo(0, x.querySelector('.tabs').offsetTop - 1 > window.scrollY ? window.scrollY : x.querySelector('.tabs').offsetTop); }; });
   x.querySelector('.timx').oninput = function (e) { tu = e.target.value; khuc = 'all'; ve(); };
   var xc = $('xcopy'); if (xc) xc.onclick = function () { copyLink(LINK || location.href, xc); };
+  x.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('[data-hoi]'); if (!b || !d.p) return;
+    var m = d.m[+b.dataset.hoi]; if (!m) return; var g = giaSP(m);
+    var cau = 'Shop ơi, em hỏi máy ' + [m.t, m.d, m.c].filter(Boolean).join(' ') + (g.gb ? ', giá ' + vnd(g.gb) : '') + ' trên bảng giá của shop. Máy còn không ạ?';
+    try { if (navigator.clipboard) navigator.clipboard.writeText(cau); } catch (z) { }
+    window.open('https://zalo.me/' + d.p.replace(/\D/g, ''), '_blank');
+    var t = x.querySelector('.toast'); if (!t) { t = document.createElement('div'); t.className = 'toast'; x.appendChild(t); }
+    t.textContent = '✓ Đã chép câu hỏi — dán vào Zalo là gửi được'; t.classList.add('on'); clearTimeout(t._h); t._h = setTimeout(function () { t.classList.remove('on'); }, 3500);
+  });
   ve();
 }
 function copyLink(t, b) {
@@ -363,7 +377,7 @@ function capNhat() {
   clearTimeout(HEN);
   HEN = setTimeout(function () {
     var d = { t: tt.t, s: tt.s, a: tt.a, p: tt.p, n: new Date().toLocaleDateString('vi-VN'),
-      m: DS.map(function (x) { var o = { h: x.h, t: x.t, d: x.d, c: x.c, i: anhId(x.i), ny: x.ny, gb: x.gb }; if (x.q !== null && x.q !== undefined) o.q = x.q; if (x.k) o.k = x.k; if (x.f) o.f = 1; return o; }),
+      m: DS.map(function (x) { var o = { h: x.h, t: x.t, d: x.d, c: x.c, i: anhId(x.i), ny: x.ny, gb: x.gb }; if (x.q !== null && x.q !== undefined) o.q = x.q > 0 ? 1 : 0; /* khach chi biet con/het, khong lo so ton */ if (x.k) o.k = x.k; if (x.f) o.f = 1; return o; }),
       k: pk.map(function (r) { var o = { t: r.t, g: r.g }; if (r.k) o.k = r.k; return o; }) };
     LINK_HUA = nen(d).then(function (z) { LINK = (DS.length || pk.length) ? location.origin + location.pathname + '?d=' + z : ''; $('mo').href = LINK || '#'; if (XEM_NGAY && DS.length) { XEM_NGAY = false; veXem(d); } return LINK; });
   }, 250);
