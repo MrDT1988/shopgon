@@ -107,7 +107,7 @@ try { var o = JSON.parse(localStorage.getItem('sg_tt_shop') || '{}'); ['shop', '
 ['shop', 'dc', 'dt'].forEach(function (k) { $(k).oninput = luu; });
 
 fetch('../kho/kho-may.json?v=' + Date.now()).then(function (r) { return r.json(); }).then(function (j) {
-  KHO = j; var d = new Date(j.capNhat); $('capnhat').textContent = 'Kho máy cập nhật ' + d.toLocaleDateString('vi-VN');
+  KHO = j; var d = new Date(j.capNhat); $('capnhat').textContent = 'Kho máy cập nhật ' + d.toLocaleDateString('vi-VN') + ' · lịch cập nhật: ngày 10, ngày 20 và ngày cuối tháng';
   veHang();
 }).catch(function () { $('capnhat').textContent = 'Chưa tải được kho máy'; });
 

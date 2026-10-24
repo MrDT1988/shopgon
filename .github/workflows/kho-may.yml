@@ -11,7 +11,9 @@ on:
     branches: [main]
     paths: ['kho/bo-sung.json']   # them may bo sung -> tu tai anh ngay
   schedule:
-    - cron: '17 20 1,16 * *'   # 03:17 sang ngay 2 va 17 hang thang (gio VN) ~ 15 ngay/lan
+    # Quet 3 lan/thang luc 03:17 sang gio VN: ngay 10, ngay 20 va ngay cuoi thang.
+    # (cron chay theo gio UTC = ngay hom truoc; buoc "Kiem tra lich" loc dung 3 ngay tren)
+    - cron: '17 20 9,19,27,28,29,30 * *'
 
 permissions:
   contents: write
@@ -25,20 +27,30 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
+      - name: Kiem tra lich (ngay 10, 20, cuoi thang - gio VN)
+        id: lich
+        run: |
+          D=$(TZ=Asia/Ho_Chi_Minh date +%d); MAI=$(TZ=Asia/Ho_Chi_Minh date -d tomorrow +%d)
+          if [ "${{ github.event_name }}" != "schedule" ] || [ "$D" = "10" ] || [ "$D" = "20" ] || [ "$MAI" = "01" ]; then echo "chay=1" >> $GITHUB_OUTPUT; else echo "Hom nay ngay $D (gio VN) - khong phai lich quet"; fi
       - uses: actions/checkout@v4
+        if: steps.lich.outputs.chay == '1'
       - uses: actions/setup-node@v4
+        if: steps.lich.outputs.chay == '1'
         with:
           node-version: '22'
       - name: Cai trinh duyet robot
+        if: steps.lich.outputs.chay == '1'
         run: |
           npm init -y >/dev/null
           npm i playwright@1.48.2 sharp@0.33.5
           npx playwright install --with-deps chromium
       - name: Lay kho may 4 hang + bo sung
+        if: steps.lich.outputs.chay == '1'
         env:
           CHI_BO_SUNG: ${{ (github.event_name == 'push' || inputs.chi_bo_sung) && '1' || '' }}
         run: node kho/lay-kho.mjs
       - name: Luu ket qua
+        if: steps.lich.outputs.chay == '1'
         run: |
           git config user.name "robot-kho-may"
           git config user.email "robot@shopgon.vn"
