@@ -149,7 +149,7 @@ const days=(a,b)=>Math.round((pD(a)-pD(b))/864e5);
 const monday=s=>{const x=pD(s);const k=(x.getDay()+6)%7;x.setDate(x.getDate()-k);return fD(x)};
 const goiTen=m=>m%12===0?(m/12)+' năm':m+' tháng';
 const fmtSdt=s=>s?s.replace(/^(\d{4})(\d{3})(\d+)$/,'$1 $2 $3'):'';
-let uncImg=null, D=null, TAB='dt', KY='thang', CTV_KY='nay', CH_LOC='cho', Q='', pick={}, ask=null, openCtv=null, editShopCtv=null, addCtv=false;
+let uncImg=null, D=null, TAB='dt', KY='thang', CTV_KY='nay', CH_LOC='cho', Q='', pick={}, ask=null, ghOpen=null, openCtv=null, editShopCtv=null, addCtv=false;
 
 /* ===== dữ liệu ===== */
 function sample(){const t=fD(new Date());const ago=n=>addD(t,-n);
@@ -265,14 +265,14 @@ function shopCard(k){const s=trangThai(k),e=esc(k.email),tam=tamOf(k);const p=pi
   const ctvRow=editShopCtv===k.email?`<div class="act"><input id="sc" inputmode="tel" placeholder="SĐT CTV (bỏ trống = gỡ)" value="${esc(k.ctv)}" style="width:190px"><button class="ghost" data-setsc="${e}">Lưu</button><button class="ghost" data-editsc="">Thôi</button></div>`
     :`<div><button class="ctvtag" data-editsc="${e}">${k.ctv?'👤 CTV: '+ctvLbl(k.ctv):'＋ Gắn CTV'}</button></div>`;
   const duyet=s==='khoa'?`<div class="act"><button class="ghost" data-st="${e}" data-v="Đã duyệt">Mở lại</button></div>`
-    :(s!=='cho'&&!k.unc)?''
+    :(s!=='cho'&&!k.unc&&ghOpen!==k.email)?`<div class="act"><button class="ghost" data-gh="${e}">＋ Gia hạn (shop đã chuyển tiền)</button></div>`
     :`<div class="act"><div class="chips" style="overflow:visible;flex-wrap:wrap">${D.goi.map(g=>`<button class="chip" data-pick="${e}" data-m="${g.m}" aria-pressed="${p.m===g.m}">${g.ten}</button>`).join('')}</div>
       <input inputmode="numeric" class="num" data-tien="${e}" value="${p.gia.toLocaleString('vi-VN')}" aria-label="Số tiền đã nhận"></div>
       ${k.ctv?`<small style="color:var(--muted)">${hhTxt(k.ctv)}: <b class="num" id="hh-${e}" data-p="${pctOf(k.ctv)}">${money(p.gia*pctOf(k.ctv)/100)}</b></small>`:''}
       ${tam?`<small style="color:#0b5e57;font-weight:700">⚡ AI đã đọc ủy nhiệm chi đúng ${money(tam.tien)} — shop đang dùng tạm tới ${dmy(k.han)}. Tiền về thì Xác nhận; không có tiền thì Hủy.</small>`:/^AI chưa tự duyệt/.test(String(k.note||''))?`<small style="color:var(--amber)">🤖 ${esc(k.note)}</small>`:''}
       ${ask===k.email?`<div class="act"><b style="color:var(--red)">${tam?'Hủy kích hoạt tạm? Shop bị khóa lại.':s==='cho'?'Từ chối shop này?':'Khóa shop này? Shop bị đẩy ra khỏi app.'}</b><button class="ghost red" data-st="${e}" data-v="${s==='cho'?'Từ chối':'Khóa'}">Xác nhận</button><button class="ghost" data-ask="">Thôi</button></div>`
         :`<div class="act"><button class="btn" data-ok="${e}" style="flex:1">${tam?'Xác nhận đã nhận tiền':s==='cho'?'Duyệt':'Gia hạn'}</button><button class="ghost red" data-ask="${e}">${tam?'Hủy':s==='cho'?'Từ chối':'Khóa'}</button></div>`}`;
-  return `<div class="shop"><div class="top"><div class="n"><b>${esc(k.shop||'(chưa ghi tên)')}</b><small>${e}</small><small class="num">${k.sdt?`<a href="tel:${esc(k.sdt.replace(/\s/g,''))}" style="color:var(--pen)">${esc(k.sdt)}</a> · `:''}${s==='cho'?'Gửi '+dmy(k.yeuCau):k.han?'Hạn '+dmy(k.han):''}</small></div>${s==='cho'?(k.unc?`<button class="pill p-g" data-unc="${e}" style="border:0;cursor:pointer">${tam?'⚡ Tạm kích hoạt':'🧾 Đã chuyển tiền'} · ${dm(k.unc)}</button>`:'<span class="pill p-a">Chưa gửi UNC</span>'):k.unc&&s!=='khoa'?`<button class="pill p-g" data-unc="${e}" style="border:0;cursor:pointer">🧾 Chuyển tiền gia hạn · ${dm(k.unc)}</button>`:pillOf(k)}</div>${ctvRow}${uncImg===k.email?'<div id="uncBox" class="ex" style="padding:8px;text-align:center">Đang tải ảnh…</div>':''}${duyet}</div>`}
+  return `<div class="shop"><div class="top"><div class="n"><b>${esc(k.shop||'(chưa ghi tên)')}</b><small>${e}</small><small class="num">${k.sdt?`<a href="tel:${esc(k.sdt.replace(/\s/g,''))}" style="color:var(--pen)">${esc(k.sdt)}</a> · `:''}${s==='cho'?'Gửi '+dmy(k.yeuCau):k.han?'Hạn '+dmy(k.han):''}</small></div>${s==='cho'?(k.unc?`<button class="pill p-g" data-unc="${e}" style="border:0;cursor:pointer">${tam?'⚡ Tạm kích hoạt':'🧾 Đã chuyển tiền'} · ${dm(k.unc)}</button>`:'<span class="pill p-a">Chờ tiền</span>'):k.unc&&s!=='khoa'?`<button class="pill p-g" data-unc="${e}" style="border:0;cursor:pointer">🧾 Chuyển tiền gia hạn · ${dm(k.unc)}</button>`:pillOf(k)}</div>${ctvRow}${uncImg===k.email?'<div id="uncBox" class="ex" style="padding:8px;text-align:center">Đang tải ảnh…</div>':''}${duyet}</div>`}
 
 /* ===== vẽ ===== */
 function render(){if(!D)return;
@@ -302,6 +302,7 @@ document.addEventListener('click',e=>{const a=e.target.closest('[data-goch]');if
   if('editsc' in d){editShopCtv=d.editsc||null;render();if(editShopCtv)setTimeout(()=>$('sc')&&$('sc').focus(),0);return}
   if(d.setsc){b.disabled=true;call('adminSetShopCtv',d.setsc,$('sc').value).then(x=>{D=x;editShopCtv=null;render();toast('Đã cập nhật CTV')}).catch(er=>{b.disabled=false;toast(er.message)});return}
   if(d.pick){pick[d.pick]=D.goi.find(g=>g.m===+d.m);render();return}
+  if('gh' in d){ghOpen=d.gh||null;render();return}
   if('ask' in d){ask=d.ask||null;render();return}
   if(d.ok){const email=d.ok,g=pick[email]||D.goi[0];const inp=[...document.querySelectorAll('[data-tien]')].find(x=>x.dataset.tien===email);const tien=+String(inp.value).replace(/\D/g,'')||0;
     if(!tien){toast('Nhập số tiền đã nhận');return}
