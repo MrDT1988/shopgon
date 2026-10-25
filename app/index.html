@@ -357,17 +357,49 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
   cols:{May:['imei','ten','hang','giaNhap','giaBan','ngayNhap','ncc','tt','pn'],Don:['id','bill','ngay','gio','loai','imei','hangId','ten','hang','sl','giaBan','giaVon','soTien','tt','khach','sdt','bh','note','uocTinh','huy','no','tra','doi','nv','nvTen'],Hang:['id','ten','nhom','loai','sl','min','giaNhap','giaBan','ngayNhap'],Phieu:['id','ngay','gio','ncc','tong','nMay','dong'],Chi:['id','ngay','gio','loai','tien','note']},
   /* 25/10: sổ cũ chưa có bảng Phieu thì tự thêm */
   async ensure(){if(this._ens===this.sheetId)return;const r=await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${this.sheetId}?fields=sheets.properties.title`);const have=(r.sheets||[]).map(x=>x.properties.title);const need=['May','Don','Hang','CaiDat','Phieu','Chi'].filter(t=>!have.includes(t));if(need.length)await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${this.sheetId}:batchUpdate`,{method:'POST',body:JSON.stringify({requests:need.map(t=>({addSheet:{properties:{title:t}}}))})});this._ens=this.sheetId},
-  async push(){if(this.busy){this.queue();return}this.busy=true;try{await this.ensure();const data=[];
-      for(const [t,c] of Object.entries(this.cols)){const rows=(t==='May'?db.may:t==='Don'?db.don:t==='Hang'?db.hang:t==='Chi'?(db.chi||[]):(db.pn||[]).map(x=>({...x,dong:JSON.stringify(x.dong||[])}))).map(o=>c.map(k=>o[k]??''));data.push({range:t+'!A1',values:[c,...rows]})}
-      data.push({range:'CaiDat!A1',values:[['shop'],[JSON.stringify(db.shop)]]});
-      await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${this.sheetId}/values:batchClear`,{method:'POST',body:JSON.stringify({ranges:['May','Don','Hang','CaiDat','Phieu','Chi']})});
-      await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${this.sheetId}/values:batchUpdate`,{method:'POST',body:JSON.stringify({valueInputOption:'RAW',data})});
-      ggStatus('Đã lưu lên Google Drive');}catch(e){ggStatus('Chưa lưu được lên Drive, sẽ thử lại');this.queue(15000)}finally{this.busy=false}},
-  queue(ms=2500){clearTimeout(this.timer);this.timer=setTimeout(()=>this.push(),ms)},
-  async pull(){await this.ensure();const r=await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${this.sheetId}/values:batchGet?ranges=May&ranges=Don&ranges=Hang&ranges=CaiDat&ranges=Phieu&ranges=Chi`);
+  /* 25/10 anh Thái — sửa lỗi 2 máy: trước khi ghi, đọc lại sổ trên Drive rồi GỘP 3 chiều (bản gốc lần đồng bộ trước · máy này · sổ trên Drive)
+     theo từng dòng (máy theo IMEI, đơn/hàng/phiếu/chi theo id). Phụ kiện 2 máy cùng bán thì cộng dồn chênh lệch số lượng. */
+  T:{May:['may','imei'],Don:['don','id'],Hang:['hang','id'],Phieu:['pn','id'],Chi:['chi','id']},
+  baseKey(){return 'shopgon_base_'+this.sheetId},
+  getBase(){try{return JSON.parse(localStorage.getItem(this.baseKey())||'null')}catch(_){return null}},
+  setBase(d){try{localStorage.setItem(this.baseKey(),JSON.stringify({shop:d.shop,may:d.may,don:d.don,hang:d.hang,pn:d.pn||[],chi:d.chi||[]}))}catch(_){}},
+  rowOf(t,o){const x=t==='Phieu'?{...o,dong:JSON.stringify(o.dong||[])}:o;return this.cols[t].map(k=>{const v=x[k];return v===null||v===undefined?'':String(v)}).join('\u0001')},
+  async readRemote(){await this.ensure();const r=await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${this.sheetId}/values:batchGet?ranges=May&ranges=Don&ranges=Hang&ranges=CaiDat&ranges=Phieu&ranges=Chi`);
     const [M,D,H,C,P,CH]=r.valueRanges.map(v=>v.values||[]);const num=new Set(['giaNhap','giaBan','giaVon','soTien','sl','min','bh','no','tong','nMay','tien']);
     const toObjs=V=>{if(!V.length)return [];const [h,...rows]=V;return rows.map(x=>{const o={};h.forEach((k,i)=>{let v=x[i]??'';if(num.has(k))v=v===''?0:+v;if(k==='huy'&&v==='')v=null;if(k==='uocTinh')v=v==='TRUE'||v===true;o[k]=v});return o})};
-    const shop=C[1]&&C[1][0]?JSON.parse(C[1][0]):db.shop;db={v:1,sample:false,shop,may:toObjs(M),don:toObjs(D),hang:toObjs(H),pn:toObjs(P||[]).map(x=>{try{x.dong=JSON.parse(x.dong||'[]')}catch(_){x.dong=[]}return x}),chi:toObjs(CH||[])};Store.save(db)}
+    let shop=null;try{shop=C[1]&&C[1][0]?JSON.parse(C[1][0]):null}catch(_){}
+    return {shop,may:toObjs(M),don:toObjs(D),hang:toObjs(H),pn:toObjs(P||[]).map(x=>{try{x.dong=JSON.parse(x.dong||'[]')}catch(_){x.dong=[]}return x}),chi:toObjs(CH||[]),empty:!M.length&&!D.length&&!H.length&&!C.length}},
+  merge(base,loc,rem){const out={v:1,sample:false};
+    for(const [t,[f,key]] of Object.entries(this.T)){const B=new Map(((base&&base[f])||[]).map(o=>[String(o[key]),o])),L=new Map((loc[f]||[]).map(o=>[String(o[key]),o])),R=new Map((rem[f]||[]).map(o=>[String(o[key]),o]));
+      const res=[],seen=new Set(),same=(a,b)=>a&&b&&this.rowOf(t,a)===this.rowOf(t,b);
+      const pick=k=>{const b=B.get(k),l=L.get(k),r=R.get(k);
+        if(l&&r){if(same(l,r)||same(r,b))return l;if(same(l,b))return r;
+          if(t==='Hang'&&b){return {...l,sl:(+r.sl||0)+(+l.sl||0)-(+b.sl||0)}}return l}
+        if(l&&!r)return b&&same(l,b)?null:l;        // Drive đã xóa, máy này không sửa → xóa theo
+        if(r&&!l)return b&&same(r,b)?null:r;        // máy này đã xóa, Drive không sửa → xóa
+        return null};
+      [...L.keys(),...R.keys()].forEach(k=>{if(seen.has(k))return;seen.add(k);const v=pick(k);if(v)res.push(v)});out[f]=res}
+    const bs=(base&&base.shop)||{},ls=loc.shop||{},rs=rem.shop||ls;const sh={};
+    new Set([...Object.keys(ls),...Object.keys(rs)]).forEach(k=>{const J=x=>JSON.stringify(x===undefined?null:x);sh[k]=J(ls[k])!==J(bs[k])?ls[k]:rs[k]});
+    Object.keys(sh).forEach(k=>{if(sh[k]===undefined)delete sh[k]});out.shop=sh;return out},
+  async push(){if(this.busy){this.queue();return}this.busy=true;try{const rem=await this.readRemote();const base=this.getBase();
+      const m=rem.empty?{...db,pn:db.pn||[],chi:db.chi||[]}:this.merge(base,db,rem);
+      const changedLocal=JSON.stringify([m.may.length,m.don.length,m.hang.length,(m.pn||[]).length,(m.chi||[]).length])!==JSON.stringify([db.may.length,db.don.length,db.hang.length,(db.pn||[]).length,(db.chi||[]).length])||m.hang.some((h,i)=>{const o=db.hang.find(x=>x.id===h.id);return !o||o.sl!==h.sl});
+      const tbl={May:m.may,Don:m.don,Hang:m.hang,Phieu:m.pn||[],Chi:m.chi||[]};
+      const diff=rem.empty||Object.entries(tbl).some(([t,L])=>{const R=rem[this.T[t][0]]||[];return L.length!==R.length||L.some((o,i)=>this.rowOf(t,o)!==this.rowOf(t,R[i]))})||JSON.stringify(m.shop)!==JSON.stringify(rem.shop);
+      if(diff){const data=[];
+        for(const [t,c] of Object.entries(this.cols)){const rows=tbl[t].map(o=>{const x=t==='Phieu'?{...o,dong:JSON.stringify(o.dong||[])}:o;return c.map(k=>x[k]??'')});data.push({range:t+'!A1',values:[c,...rows]})}
+        data.push({range:'CaiDat!A1',values:[['shop'],[JSON.stringify(m.shop)]]});
+        await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${this.sheetId}/values:batchClear`,{method:'POST',body:JSON.stringify({ranges:['May','Don','Hang','CaiDat','Phieu','Chi']})});
+        await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${this.sheetId}/values:batchUpdate`,{method:'POST',body:JSON.stringify({valueInputOption:'RAW',data})})}
+      const keep={sample:db.sample};db=Object.assign(m,{v:1,sample:false});this.setBase(db);Store.save(db);
+      if(changedLocal&&typeof render==='function'&&!document.querySelector('input:focus,textarea:focus'))render();
+      ggStatus('Đã lưu lên Google Drive');}catch(e){ggStatus('Chưa lưu được lên Drive, sẽ thử lại');this.queue(15000)}finally{this.busy=false}},
+  queue(ms=2500){clearTimeout(this.timer);this.timer=setTimeout(()=>this.push(),ms)},
+  /* mở app: có bản gốc thì gộp (giữ đơn bán lúc mất mạng), chưa có thì lấy sổ trên Drive */
+  async pull(){const rem=await this.readRemote();const base=this.getBase();
+    if(base&&!db.sample&&(db.don.length||db.may.length)){db=this.merge(base,db,rem);this.setBase(rem);Store.save(db);this.queue(500);return}
+    db={v:1,sample:false,shop:rem.shop||db.shop,may:rem.may,don:rem.don,hang:rem.hang,pn:rem.pn,chi:rem.chi};this.setBase(db);Store.save(db)}
 };
 async function license(email){if(!GG.LICENSE_URL)return {status:'active'};const r=await fetch(GG.LICENSE_URL+'?email='+encodeURIComponent(email));return r.json()}
 function refSale(){let r='';try{const q=new URLSearchParams(location.search).get('ctv')||new URLSearchParams(location.search).get('sale');if(q){localStorage.setItem('shopgon_ref',q);r=q}else r=localStorage.getItem('shopgon_ref')||''}catch(e){}return String(r).toUpperCase().slice(0,20)}
@@ -506,6 +538,8 @@ async function nvSync(){if(nvBusy||NV||XEM||!GG.token||db.sample)return;nvBusy=t
     else if(view==='more'&&more==='nvch')render()}
   catch(e){nvLastMsg='Chưa đồng bộ được, kiểm tra mạng'}finally{nvBusy=false}}
 setInterval(()=>{if(!NV&&!XEM&&GG.token&&((db.shop.nv||[]).length||db.shop.nvCo))nvSync()},60000);
+setInterval(()=>{if(!NV&&!XEM&&GG.token&&GG.sheetId&&!db.sample&&document.visibilityState==='visible'&&!GG.busy)GG.push()},90000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&!NV&&!XEM&&GG.token&&GG.sheetId&&!db.sample)GG.queue(800)});
 /* --- phía nhân viên --- */
 function nvDb(r){const sh=Object.assign({},emptyDb().shop,r.shop||{});
   return {v:1,sample:false,shop:sh,may:(r.may||[]).map(m=>({imei:m.imei,ten:m.ten,hang:m.hang,giaNhap:0,giaBan:+m.giaBan||0,ngayNhap:todayIso(),ncc:'',tt:'ton'})),hang:(r.hang||[]).map(h=>({id:h.id,ten:h.ten,nhom:h.nhom,loai:h.loai,sl:+h.sl||0,min:+h.min||0,giaNhap:0,giaBan:+h.giaBan||0,ngayNhap:todayIso()})),don:[],pn:[],chi:[]}}
