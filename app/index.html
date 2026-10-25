@@ -975,6 +975,7 @@ function xemMode(){XEM=true;db=sampleDb();unlockApp();render()}
 function xemBar(msg){const b=$('xbar');if(!b)return;if(!XEM){b.hidden=true;return}b.hidden=false;b.className='';const st=XLIC&&XLIC.status;
   b.innerHTML=msg?`<span class="t">${esc(msg)}</span>`:!GG.email?`<span class="t">👀 <b>Đang xem thử</b> với dữ liệu mẫu. Đăng nhập Gmail của shop để kích hoạt. <a href="/setup/" style="color:#0b5e57;font-weight:800">📘 Hướng dẫn</a></span><button data-gg="login">Đăng nhập</button>`
   :st==='expired'?`<span class="t">⌛ Gói của <b>${esc(GG.email)}</b> đã hết hạn. Gia hạn để mở lại sổ của shop.</span><button data-gg="kh">Gia hạn</button>`
+  :st==='active'?`<span class="t">✅ <b>${esc(GG.email)}</b> đã kích hoạt. Bấm để mở sổ của shop.</span><button data-gg="login">Mở sổ</button>`
   :st&&st!=='none'&&st!=='pending'?`<span class="t">🔒 Tài khoản <b>${esc(GG.email)}</b> đang tạm khóa. Liên hệ Shop Gọn.</span>`
   :st==='pending'?`<span class="t">⏳ <b>${esc(GG.email)}</b> đã gửi đề nghị. Shop Gọn bật tính năng xong, app tự mở khóa.</span><button data-gg="kh">Xem</button>`
   :`<span class="t">🔒 <b>${esc(GG.email)}</b> chưa kích hoạt. Vẫn xem thử được.</span><button data-gg="kh">Kích hoạt</button>`}
