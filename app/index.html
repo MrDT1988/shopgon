@@ -22,8 +22,8 @@ button{cursor:pointer}
 :focus-visible{outline:3px solid var(--pen);outline-offset:2px}
 header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--pen);color:var(--on-pen);padding-block:12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .hw{max-width:620px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand{font-weight:800;font-size:22px;letter-spacing:-.01em;line-height:1.2;overflow-wrap:anywhere}
-.shopname{font-size:13px;opacity:.9}
+.brand{font-weight:800;font-size:18px;letter-spacing:-.01em;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.shopname{display:none}
 .mode{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border:1px solid currentColor;border-radius:999px;padding:3px 9px;white-space:nowrap}
 main{max-width:620px;margin:0 auto;padding-block:16px 120px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .view{display:flex;flex-direction:column;gap:14px}
@@ -156,7 +156,7 @@ body.locked main,body.locked nav.tabs,body.locked header{visibility:hidden}
 .hb .t i{display:block;height:100%;background:var(--pen)}
 form{display:flex;flex-direction:column;gap:12px}
 label{display:flex;flex-direction:column;gap:5px;font-size:14px;font-weight:600}
-label small{font-weight:400;color:var(--muted)}
+label small{font-weight:500;font-size:14px;color:#46506b}
 input,select,textarea{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);font-size:16px}
 textarea{min-height:92px;resize:vertical;font-variant-numeric:tabular-nums}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -205,6 +205,9 @@ nav.tabs button[aria-selected="true"]{color:var(--pen);background:var(--pen-soft
 /* 23/10: khối lời theo hãng gọn lại */
 .seg button[aria-pressed=true] small{color:inherit;opacity:.9}
 /* 25/10: tab trên cùng của Nhập máy khác màu tab con cho nổi */
+.more{border:1px dashed var(--line);border-radius:12px;padding:4px 12px;margin:2px 0 4px}.more summary{cursor:pointer;font-weight:700;color:var(--pen);padding:10px 0;list-style:none}.more summary::-webkit-details-marker{display:none}.more summary small{font-weight:500;color:#46506b;font-size:13px;margin-left:4px}.more[open]{padding-bottom:10px}
+.bigscan{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;font-size:20px;padding:22px 12px;border-radius:16px}
+.or{text-align:center;color:#46506b;font-size:14px;margin:12px 0 6px}
 .seg.top{background:#0b5e57;border:0;box-shadow:0 4px 12px rgba(11,94,87,.28);padding:6px;border-radius:18px;margin-bottom:12px}
 .seg.top button{white-space:nowrap;color:#cdeee8;font-size:19px;font-weight:800;padding:22px 6px;border-radius:13px;min-height:72px}
 /* 25/10: tab con (lọc, chọn cách nhập…) nhỏ gọn lại để tab chính nổi bật */
@@ -237,7 +240,7 @@ nav.tabs button[aria-selected="true"]{color:var(--pen);background:var(--pen-soft
 <nav class="tabs"><div class="in" role="tablist">
   <button role="tab" data-v="home" aria-selected="true"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Hôm nay</button>
   <button role="tab" data-v="sell" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M3 4h2l2.4 11.2a1 1 0 0 0 1 .8h9.2a1 1 0 0 0 1-.8L20 8H6"/><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/></svg>Bán</button>
-  <button role="tab" data-v="add" aria-selected="false"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M12 8v6M9 11h6"/></svg>Nhập máy</button>
+  <button role="tab" data-v="add" aria-selected="false"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M12 8v6M9 11h6"/></svg>Nhập hàng</button>
   <button role="tab" data-v="stock" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M3 8l9-5 9 5v9l-9 5-9-5z"/><path d="M3 8l9 5 9-5M12 13v9"/></svg>Kho<span class="dot" id="dotStock" hidden></span></button>
   <button role="tab" data-v="more" aria-selected="false"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg>Thêm</button>
 </div></nav>
@@ -509,7 +512,8 @@ function renderSell(){
   <div class="seg top" role="group"><button data-sm="may" aria-pressed="${sellMode==='may'}">Điện thoại</button><button data-sm="pk" aria-pressed="${sellMode==='pk'}">${on('pk')||on('sim')?'Phụ kiện, DV':'Dịch vụ'}</button></div>
   ${sellMode==='may'?`
   <div class="panel"><form id="fSell" autocomplete="off">
-    <label>IMEI hoặc tên máy<small>Quét mã vạch, gõ IMEI, hoặc gõ vài chữ của tên máy để tìm</small>
+    ${!m?`<button type="button" class="btn bigscan" data-scan="sImei"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 8v8M10 8v8M13 8v8M17 8v8"/></svg>Quét IMEI để bán</button><div class="or">hoặc gõ IMEI / tên máy</div>`:''}
+    <label${m?'':' style="margin-top:0"'}>${m?'IMEI':'<span class="sr" style="position:absolute;left:-9999px">IMEI hoặc tên máy</span>'}
       <span class="inrow"><input id="sImei" inputmode="search" value="${esc(sellImei)}" placeholder="VD: 3512… hoặc A7 Pro"><button type="button" class="icon" data-scan="sImei" aria-label="Quét IMEI"><svg viewBox="0 0 24 24"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 8v8M10 8v8M13 8v8M17 8v8"/></svg></button></span></label>
     ${cand.length?`<div class="list">${cand.map(x=>`<div class="row"><div class="n"><b>${esc(x.ten)}</b><small class="num">IMEI …${x.imei.slice(-6)} · ${ageDays(x)} ngày</small></div><button type="button" class="ghost" data-pick="${x.imei}">Chọn</button></div>`).join('')}</div>`:''}
     ${soldM?`<div class="err">Máy này đã bán rồi. Tra lịch sử ở Thêm → Tra IMEI.</div>`:''}
@@ -520,7 +524,8 @@ function renderSell(){
     ${on('baohanh')?`<label>Bảo hành (tháng)<input id="sBh" inputmode="numeric" value="${db.shop.bh}"></label>`:''}
     <div class="err" id="sErr"></div>
     <button class="btn" type="submit">Thêm vào đơn</button>`:''}
-  </form></div>`:renderPkForm()}`;
+  </form></div>
+  ${!m&&!sellImei&&!cart.length?(()=>{const L=stock().slice().sort((a,b)=>ageDays(b)-ageDays(a)).slice(0,5);return L.length?`<div class="panel"><h2>Máy tồn lâu — ưu tiên bán</h2><div class="list">${L.map(x=>{const [k]=ageClass(ageDays(x));return `<div class="row"><div class="n"><b>${esc(x.ten)}</b><small class="num">IMEI …${x.imei.slice(-6)} · <span class="pill ${k}">${ageDays(x)} ngày</span></small></div><button type="button" class="ghost" data-pick="${x.imei}">Bán</button></div>`}).join('')}</div></div>`:''})():''}`:renderPkForm()}`;
   if(m)updSellProfit();
   if(sellMode==='pk')updPkProfit();
 }
@@ -559,6 +564,8 @@ function updPkProfit(){const el=$('pLoi');if(!el)return;const it=pkPick&&db.hang
 
 /* ===== NHẬP ===== */
 let addMode='may', addPre='';
+/* 25/10: đoán hãng theo tên máy để form nhập chỉ còn 3 ô */
+function guessBrand2(t){t=' '+String(t||'').toLowerCase()+' ';const R=[['iPhone',/iphone|\bip\s?\d/],['Samsung',/samsung|galaxy|\bss\b/],['OPPO',/oppo|reno|\bfind\b/],['Xiaomi',/xiaomi|redmi|poco|\bmi\s?\d/],['vivo',/vivo/],['realme',/realme/],['Honor',/honor/],['Nokia',/nokia/],['Tecno',/tecno/],['Infinix',/infinix/],['itel',/itel/],['Masstel',/masstel/],['Benco',/benco/],['ZTE',/zte/],['Huawei',/huawei/],['Pixel',/pixel/]];const f=R.find(([,r])=>r.test(t));return f?f[0]:''}
 function renderAdd0(){
   const hOn=khoOn().length>0;if(!hOn&&addMode==='hang')addMode='may';
   const hLbl=khoOn().length>1?'hàng khác':khoName[khoOn()[0]?.k]||'';
@@ -575,12 +582,14 @@ function renderAdd0(){
     <button class="btn" type="submit">Nhập vào kho</button></form></div>`;addPre='';return}
   const names=[...new Set(db.may.map(m=>m.ten))].sort();
   $('v-add').innerHTML=seg+`<div class="panel"><h2>Nhập điện thoại vào kho</h2><form id="fAdd" autocomplete="off">
-    <label>Tên máy<small>Gõ tên mới nếu là máy mới ra, hoặc chọn từ gợi ý</small><input id="aTen" list="dlTen" placeholder="VD: OPPO Reno17 F 8/256"><small class="hint" id="aHint"></small><datalist id="dlTen">${names.map(n=>`<option value="${esc(n)}">`).join('')}</datalist></label>
-    <label>Hãng<select id="aHang">${brandsOn().map(b=>`<option>${b}</option>`).join('')}</select></label>
-    <label>IMEI<small>Mỗi dòng 1 máy. Nhập cả lô cùng model một lần.</small>
+    <label>Tên máy<input id="aTen" list="dlTen" placeholder="VD: OPPO Reno17 F 8/256"><small class="hint" id="aHint"></small><datalist id="dlTen">${names.map(n=>`<option value="${esc(n)}">`).join('')}</datalist></label>
+    <label>IMEI<small>Mỗi dòng 1 máy — quét liên tục cả lô</small>
       <span class="inrow" style="align-items:stretch"><textarea id="aImei" inputmode="numeric" placeholder="Quét hoặc gõ IMEI, mỗi máy 1 dòng"></textarea><button type="button" class="icon" data-scan="aImei" aria-label="Quét IMEI"><svg viewBox="0 0 24 24"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 8v8M10 8v8M13 8v8M17 8v8"/></svg></button></span></label>
-    <div class="two"><label>Giá nhập / máy<input id="aGN" inputmode="numeric" class="num"></label><label>Giá bán dự kiến<input id="aGB" inputmode="numeric" class="num"></label></div>
-    <div class="two"><label>Nhà cung cấp<input id="aNcc" placeholder="Không bắt buộc"></label><label>Ngày nhập<input id="aNgay" type="date" value="${todayIso()}"></label></div>
+    <label>Giá nhập / máy<input id="aGN" inputmode="numeric" class="num"></label>
+    <details class="more"><summary>＋ Thêm chi tiết <small>hãng, giá bán, nhà cung cấp, ngày nhập</small></summary>
+    <label>Hãng<small>Tự chọn theo tên máy, sửa nếu sai</small><select id="aHang">${brandsOn().map(b=>`<option>${b}</option>`).join('')}</select></label>
+    <div class="two"><label>Giá bán dự kiến<input id="aGB" inputmode="numeric" class="num"></label><label>Ngày nhập<input id="aNgay" type="date" value="${todayIso()}"></label></div>
+    <label>Nhà cung cấp<input id="aNcc" placeholder="Không bắt buộc"></label></details>
     <div class="err" id="aErr"></div>
     <button class="btn" type="submit">Nhập vào kho</button>
   </form></div>`;
@@ -614,7 +623,7 @@ function renderStock(){
   if(stockBrand==='Tất cả'&&!stockQ.trim()){const B=BRANDS.map(b=>{const ms=st.filter(m=>m.hang===b);return{b,n:ms.length,von:ms.reduce((s2,m)=>s2+m.giaNhap,0),old:ms.filter(m=>ageDays(m)>45).length,md:new Set(ms.map(m=>m.ten)).size}}).filter(x=>x.n).sort((x,y)=>y.n-x.n);
     $('v-stock').innerHTML+=`<div class="kpis"><div class="kpi"><div class="eyebrow">Tổng máy</div><div class="v num">${st.length}</div><div class="d">Vốn ${short(st.reduce((s2,m)=>s2+m.giaNhap,0))}</div></div><div class="kpi"><div class="eyebrow">Tồn trên 45 ngày</div><div class="v num${c.r?' neg':''}">${c.r}</div><div class="d">${c.a} máy 31–45 ngày</div></div></div>
     <button class="ghost" data-more="bg" style="width:100%;margin:2px 0 10px">🏷 Tạo bảng giá gửi khách từ tồn kho</button>
-    <div class="panel"><h2>Theo hãng</h2><div class="list">${B.length?B.map(x=>`<div class="mg"><button class="mrow" data-brand="${esc(x.b)}"><span class="n"><b>${esc(x.b)}</b><small class="num">${x.md} mẫu · vốn ${short(x.von)}${x.old?` · <span class="neg">${x.old} tồn lâu</span>`:''}</small></span><span class="cnt num">${x.n} máy</span><span class="chev">›</span></button></div>`).join(''):'<div class="empty">Kho chưa có máy. Vào tab Nhập máy để thêm.</div>'}</div></div>`;return}
+    <div class="panel"><h2>Theo hãng</h2><div class="list">${B.length?B.map(x=>`<div class="mg"><button class="mrow" data-brand="${esc(x.b)}"><span class="n"><b>${esc(x.b)}</b><small class="num">${x.md} mẫu · vốn ${short(x.von)}${x.old?` · <span class="neg">${x.old} tồn lâu</span>`:''}</small></span><span class="cnt num">${x.n} máy</span><span class="chev">›</span></button></div>`).join(''):'<div class="empty">Kho chưa có máy. Vào tab Nhập hàng để thêm.</div>'}</div></div>`;return}
   const G={};L.forEach(m=>{(G[m.ten]=G[m.ten]||[]).push(m)});
   const groups=Object.entries(G).map(([ten,ms])=>({ten,ms,old:Math.max(...ms.map(ageDays))})).sort((x,y)=>y.old-x.old);
   const imeiHit=/^\d{4,}$/.test(stockQ.trim());
@@ -787,7 +796,7 @@ document.addEventListener('input',e=>{
   if(t.id==='hTen'){const v=t.value.trim();const h=$('hHint');if(h){const ex2=v&&db.hang.find(x=>x.ten===v);h.className='hint '+(ex2?'old':'new');h.textContent=!v?'':ex2?'Đã có trong kho (còn '+ex2.sl+'), số nhập sẽ cộng thêm':'Hàng mới, sẽ tạo món mới trong kho'}const ex=db.hang.find(h=>h.ten===t.value.trim());if(ex){$('hNhom').value=ex.nhom+'|'+loaiOf(ex);$('hMin').value=ex.min;if(!$('hGN').value)$('hGN').value=ex.giaNhap.toLocaleString('vi-VN');if(!$('hGB').value&&ex.giaBan)$('hGB').value=ex.giaBan.toLocaleString('vi-VN')}return}
   if(t.id==='kQ'){stockQ=t.value;renderStock();const i=$('kQ');i.focus();i.setSelectionRange(i.value.length,i.value.length);return}
   if(t.id==='lQ'){lookQ=t.value.replace(/\D/g,'');renderMore();return}
-  if(t.id==='aTen'){const v=t.value.trim();const h=$('aHint');if(h){const ex2=v&&db.may.some(m=>m.ten===v);h.className='hint '+(ex2?'old':'new');h.textContent=!v?'':ex2?'Đã có máy này, giá lần trước được điền sẵn':'Máy mới, sẽ tạo mẫu máy mới khi nhập'}const g=guessBrand(t.value);if(g)$('aHang').value=g;const ex=db.may.filter(m=>m.ten===t.value.trim()).pop();if(ex){if(!$('aGN').value)$('aGN').value=ex.giaNhap.toLocaleString('vi-VN');if(!$('aGB').value&&ex.giaBan)$('aGB').value=ex.giaBan.toLocaleString('vi-VN')}return}
+  if(t.id==='aTen'){const v=t.value.trim();const h=$('aHint');if(h){const ex2=v&&db.may.some(m=>m.ten===v);h.className='hint '+(ex2?'old':'new');h.textContent=!v?'':ex2?'Đã có máy này, giá lần trước được điền sẵn':'Máy mới, sẽ tạo mẫu máy mới khi nhập'}let g=guessBrand(t.value);if(!g||g==='Khác')g=guessBrand2(t.value)||g;const sel=$('aHang');if(g&&sel){if(![...sel.options].some(o=>o.value===g))sel.add(new Option(g,g));sel.value=g}const ex=db.may.filter(m=>m.ten===t.value.trim()).pop();if(ex){if(!$('aGN').value)$('aGN').value=ex.giaNhap.toLocaleString('vi-VN');if(!$('aGB').value&&ex.giaBan)$('aGB').value=ex.giaBan.toLocaleString('vi-VN')}return}
 });
 document.addEventListener('change',e=>{if(e.target.id==='rMonth'){rptMonth=e.target.value;rptSel=null;render();return}if(e.target.id==='sTT'){sellTT=e.target.value;const keep={g:$('sGia').value,k:$('sKhach').value,s:$('sSdt').value};renderSell();$('sGia').value=keep.g;$('sKhach').value=keep.k;$('sSdt').value=keep.s;updSellProfit()}});
 document.addEventListener('focusout',e=>{const t=e.target;if(['sGia','aGN','aGB','pGia','pVon','sTraTruoc','hGN','hGB'].includes(t.id)&&t.value){const n=parseMoney(t.value);t.value=n?n.toLocaleString('vi-VN'):''}});
