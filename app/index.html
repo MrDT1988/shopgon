@@ -946,7 +946,7 @@ let ocrItems=null, ocrBusy=false;
 const norm=s=>noMark(String(s||'')).toLowerCase().replace(/\s+/g,' ').trim();
 function ocrBtn(){return `<label class="btn" style="display:flex;flex-direction:row;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-size:17px">${ocrBusy?'⏳ Đang đọc hóa đơn…':'📷 Nhập từ ảnh hóa đơn'}<input type="file" accept="image/*" id="ocrIn" hidden ${ocrBusy?'disabled':''}></label><small style="color:var(--muted);text-align:center;margin-top:-6px">Chụp phiếu nhập: món trùng tên tự cộng dồn, món mới tự tạo — xem lại trước khi lưu</small>`}
 /* 25/10 anh Thái: Nhập máy chia 2 tab — "Nhập hôm nay" (như cũ) và "Đã nhập" (sửa từng lô / xóa toàn bộ để nhập lại) */
-let addTab='moi', edLo=null, edH=null, daAsk=false, daKy='thang', daRef=todayIso();
+let addTab='moi', edLo=null, edH=null, daAsk=false, delAsk=null, daKy='thang', daRef=todayIso();
 const isoOf=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 function daRange(){const [y,m,dd]=daRef.split('-').map(Number);const r=new Date(y,m-1,dd);
   if(daKy==='ngay')return [daRef,daRef,(daRef===todayIso()?'Hôm nay · ':'')+dmy(daRef)];
@@ -974,22 +974,27 @@ function renderDaNhap(){const v=$('v-add');
     <div class="err" id="ehErr"></div><div class="inrow"><button class="btn" type="submit" style="flex:1">Lưu thay đổi</button><button class="ghost red" type="button" data-delh="${esc(h.id)}">Xóa món</button></div></form></div>`;return}
   const L={},add=(d,x)=>(L[d]=L[d]||[]).push(x);
   const lo={};db.may.forEach(m=>{const k=loKey(m);(lo[k]=lo[k]||[]).push(m)});
-  Object.entries(lo).forEach(([k,ms])=>add(ms[0].ngayNhap,{k,t:'may',ten:ms[0].ten,sub:`${ms.length} máy${ms.some(m=>m.tt!=='ton')?' · '+ms.filter(m=>m.tt!=='ton').length+' đã bán':''} · ${money(ms[0].giaNhap)}/máy${ms[0].ncc?' · '+ms[0].ncc:''}`}));
+  Object.entries(lo).forEach(([k,ms])=>add(ms[0].ngayNhap,{k,t:'may',ten:ms[0].ten,nTon:ms.filter(m=>m.tt==='ton').length,nBan:ms.filter(m=>m.tt!=='ton').length,sub:`${ms.length} máy${ms.some(m=>m.tt!=='ton')?' · '+ms.filter(m=>m.tt!=='ton').length+' đã bán':''} · ${money(ms[0].giaNhap)}/máy${ms[0].ncc?' · '+ms[0].ncc:''}`}));
   db.hang.forEach(h=>add(h.ngayNhap||todayIso(),{k:h.id,t:'hang',ten:h.ten,sub:`tồn ${h.sl} · nhập ${money(h.giaNhap)}`}));
   const [d1,d2,lbl]=daRange(),days=Object.keys(L).filter(d=>d>=d1&&d<=d2).sort().reverse(),nTon=db.may.filter(m=>m.tt==='ton').length;
   const inR=x=>x>=d1&&x<=d2,mR=db.may.filter(m=>inR(m.ngayNhap)),hR=db.hang.filter(h=>inR(h.ngayNhap||todayIso()));
   const kyBar=`<div class="chips" role="group">${[['ngay','Theo ngày'],['tuan','Theo tuần'],['thang','Theo tháng']].map(([k,t])=>`<button class="chip" data-daky="${k}" aria-pressed="${daKy===k}">${t}</button>`).join('')}</div>
   <div class="kyNav"><button class="ghost" data-dastep="-1" aria-label="Trước">‹</button><b>${lbl}</b><button class="ghost" data-dastep="1" aria-label="Sau" ${d2>=todayIso()?'disabled':''}>›</button></div>
   <div class="kpis"><div class="kpi"><div class="eyebrow">Điện thoại nhập</div><div class="v num">${mR.length}</div><div class="d">Vốn ${short(mR.reduce((t,m)=>t+m.giaNhap,0))}</div></div><div class="kpi"><div class="eyebrow">Món hàng khác</div><div class="v num">${hR.length}</div><div class="d">${d2>=todayIso()&&d1<=todayIso()?'Kỳ hiện tại':'Kỳ đã qua'}</div></div></div>`;
-  v.innerHTML=addTabs()+kyBar+(days.length?days.map(d=>`<div class="panel"><h2>${d===todayIso()?'Hôm nay · ':''}${dmy(d)}</h2><div class="list">${L[d].map(x=>`<div class="row"><div class="n"><b>${x.t==='may'?'📱 ':'📦 '}${esc(x.ten)}</b><small class="num">${esc(x.sub)}</small></div><div class="right"><button class="ghost" ${x.t==='may'?'data-elo':'data-eh'}="${esc(x.k)}">Sửa</button></div></div>`).join('')}</div></div>`).join('')
+  v.innerHTML=addTabs()+kyBar+(days.length?days.map(d=>`<div class="panel"><h2>${d===todayIso()?'Hôm nay · ':''}${dmy(d)}</h2><div class="list">${L[d].map(x=>`<div class="row"><div class="n"><b>${x.t==='may'?'📱 ':'📦 '}${esc(x.ten)}</b><small class="num">${esc(x.sub)}</small></div><div class="right" style="display:flex;gap:6px">${delAsk===x.t+'|'+x.k?`<button class="ghost red" data-delok="${esc(x.t+'|'+x.k)}">Xóa${x.t==='may'&&x.nTon?' '+x.nTon+' máy':''}</button><button class="ghost" data-delno="1">Thôi</button>`:`<button class="ghost" ${x.t==='may'?'data-elo':'data-eh'}="${esc(x.k)}">Sửa</button><button class="ghost red" data-delask="${esc(x.t+'|'+x.k)}">Xóa</button>`}</div></div>${delAsk===x.t+'|'+x.k?`<small style="display:block;color:var(--red);margin:-4px 0 8px">${x.t==='may'?(x.nTon?'Xóa '+x.nTon+' máy còn trong kho của lô này để nhập lại.':'Lô này đã bán hết, không còn máy để xóa.')+(x.nBan?' Máy đã bán giữ nguyên.':''):'Xóa món này khỏi kho để nhập lại.'}</small>`:''}`).join('')}</div></div>`).join('')
     +`<div class="panel">${daAsk?`<div class="confirm"><b style="color:var(--red)">Xóa ${nTon} máy còn trong kho và ${db.hang.length} món hàng để nhập lại từ đầu? Đơn đã bán vẫn giữ nguyên.</b><span class="inrow"><button class="ghost red" data-dareset="ok">Xóa hết</button><button class="ghost" data-dareset="no">Thôi</button></span></div>`
       :`<button class="ghost red" style="width:100%" data-dareset="ask">🗑 Xóa toàn bộ hàng đã nhập, nhập lại từ đầu</button>`}</div>`
     :'<div class="empty">Không có hàng nhập trong '+lbl.toLowerCase()+'. Bấm ‹ để xem kỳ trước.</div>')}
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
-  if(d.at){addTab=d.at;edLo=edH=null;daAsk=false;render();window.scrollTo(0,0);return}
+  if(d.at){addTab=d.at;edLo=edH=null;daAsk=false;delAsk=null;render();window.scrollTo(0,0);return}
   if(d.elo){edLo=d.elo;edH=null;render();window.scrollTo(0,0);return}
   if(d.eh){edH=d.eh;edLo=null;render();window.scrollTo(0,0);return}
   if(d.edx){edLo=edH=null;render();return}
+  if(d.delask){delAsk=d.delask;render();return}
+  if(d.delno){delAsk=null;render();return}
+  if(d.delok){const [t,k]=d.delok.split(/\|(.*)/s);delAsk=null;
+    if(t==='hang'){const h=db.hang.find(x=>x.id===k);db.hang=db.hang.filter(x=>x.id!==k);save();render();toast('Đã xóa '+(h?h.ten:'món')+' — nhập lại ở tab Nhập hôm nay');return}
+    const n=db.may.filter(m=>loKey(m)===k&&m.tt==='ton').length;db.may=db.may.filter(m=>!(loKey(m)===k&&m.tt==='ton'));save();render();toast(n?'Đã xóa '+n+' máy — nhập lại ở tab Nhập hôm nay':'Lô đã bán hết, không có máy để xóa');return}
   if(d.daky){daKy=d.daky;daRef=todayIso();render();return}
   if(d.dastep){daStep(+d.dastep);render();return}
   if(d.delh){if(!confirm('Xóa món này khỏi kho?'))return;db.hang=db.hang.filter(h=>h.id!==d.delh);edH=null;save();render();toast('Đã xóa món');return}
