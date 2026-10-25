@@ -205,6 +205,11 @@ nav.tabs button[aria-selected="true"]{color:var(--pen);background:var(--pen-soft
 /* 23/10: khối lời theo hãng gọn lại */
 .seg button[aria-pressed=true] small{color:inherit;opacity:.9}
 .hb{gap:4px}.hb .l{font-size:13px}.hb .t{height:5px}.grp{gap:6px}.grp+.grp{margin-top:10px;padding-top:10px}.gh{font-size:14px}
+#xbar{position:relative;margin:10px 12px 0;background:#fff7e0;border:1px solid #f1d58a;color:#5b4310;border-radius:14px;padding:10px 12px;display:flex;align-items:center;gap:10px;font-size:13.5px;line-height:1.35;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+#xbar b{font-weight:800}#xbar .t{flex:1;min-width:0}#xbar button{flex:none;border:0;border-radius:999px;background:var(--pen);color:#fff;font-weight:800;font-size:13.5px;padding:9px 13px;white-space:nowrap}
+#xbar.ok{background:#e6f6f2;border-color:#a8dccf;color:#0b5e57}
+.menu [data-more=kichhoat]{border:2px solid var(--pen);background:#e6f6f2}
+.xnote{font-size:12.5px;color:#6b5a2a;background:#fff7e0;border-radius:10px;padding:8px 10px;width:100%;text-align:left}
 </style>
 
 <header><div class="hw">
@@ -212,6 +217,7 @@ nav.tabs button[aria-selected="true"]{color:var(--pen);background:var(--pen-soft
   <span class="mode" id="mode">Dùng thử</span>
 </div></header>
 
+<div id="xbar" hidden></div>
 <main>
   <section class="view" id="v-home"></section>
   <section class="view" id="v-sell" hidden></section>
@@ -240,9 +246,11 @@ nav.tabs button[aria-selected="true"]{color:var(--pen);background:var(--pen-soft
 const DEMO=/[?&]demo=1/.test(location.search);
 const KEY=DEMO?'shopgon_demo3':'shopgon_v1';
 let memory=null;
+/* 25/10 anh Thái: bản chính thức cho vào XEM THỬ ngay (dữ liệu mẫu, không lưu), đăng nhập Gmail lúc nào cũng được; anh duyệt (nhận tiền) mới mở tính năng thật */
+let XEM=false,XLIC=null,xTimer=null;
 const LocalStore={
   load(){try{const s=localStorage.getItem(KEY);return s?JSON.parse(s):null}catch(e){return memory}},
-  save(db){memory=db;try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}}
+  save(db){if(XEM)return;memory=db;try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}}
 };
 const Store=LocalStore;
 
@@ -307,7 +315,7 @@ const firstOpen=!Store.load();
 let db=Store.load()||sampleDb();
 if(DEMO&&firstOpen)Store.save(db);   /* 24/10: lưu ngay để trang Bảng giá (shopgon.vn/bg) đọc được tồn kho mẫu */
 if(!db.hang)db.hang=db.sample?sampleDb().hang:[];
-const save=()=>{Store.save(db);if(GG.token&&GG.sheetId&&!db.sample)GG.queue()};
+const save=()=>{if(XEM)return;Store.save(db);if(GG.token&&GG.sheetId&&!db.sample)GG.queue()};
 
 /* ===== Google: đăng nhập 1 bước + lưu vào Google Sheet trong Drive của shop =====
    Chỉ xin quyền drive.file: app chỉ thấy đúng file do chính nó tạo, không đụng file khác.
@@ -344,44 +352,48 @@ refSale();
 async function sendRequest(){const shop=(document.getElementById('rqShop')||{}).value||'',sdt=(document.getElementById('rqSdt')||{}).value||'',sale=(document.getElementById('rqSale')||{}).value||'';
   if(!shop.trim()){welcomeMsg('Nhập tên shop trước khi gửi.');return}
   try{await fetch(GG.LICENSE_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({email:GG.email,shop:shop.trim(),sdt:sdt.trim(),ctv:sale.trim()})});db.shop.ten=shop.trim();Store.save(db);
-    try{localStorage.setItem('shopgon_sdt',sdt.trim())}catch(_){}license(GG.email).then(l=>showPending(l,true)).catch(()=>showPending({status:'pending'},true))}catch(e){welcomeMsg('Chưa gửi được, kiểm tra mạng rồi thử lại.')}}
-function showPending(lic,justSent){lockApp();const w=document.getElementById('welcome');w.hidden=false;
+    try{localStorage.setItem('shopgon_sdt',sdt.trim())}catch(_){}license(GG.email).then(l=>{XLIC=l;xemBar();xemPoll();showPending(l,true)}).catch(()=>{XLIC={status:'pending'};xemBar();showPending(XLIC,true)})}catch(e){welcomeMsg('Chưa gửi được, kiểm tra mạng rồi thử lại.')}}
+function showPending(lic,justSent){if(!XEM)lockApp();const w=document.getElementById('welcome');w.hidden=false;
   const st=lic.status;
   w.innerHTML=`<div class="wc"><div class="wlogo"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
-  ${st==='none'?`<h1>Kích hoạt Shop Gọn</h1><p>Gmail <b>${esc(GG.email)}</b> chưa được kích hoạt. Gửi yêu cầu, Shop Gọn kích hoạt ngay sau khi xác nhận thanh toán.</p>
+  ${st==='none'?`<h1>Đề nghị kích hoạt</h1><p>Gmail <b>${esc(GG.email)}</b> đã đăng nhập. Điền tên shop, gửi đề nghị — Shop Gọn nhận thanh toán và bật tính năng, app tự mở khóa.</p>
     <label style="width:100%;text-align:left">Tên shop<input id="rqShop" placeholder="VD: Điện thoại Minh Phát" value="${esc(db.sample?'':db.shop.ten)}"></label>
     <label style="width:100%;text-align:left">SĐT liên hệ<input id="rqSdt" inputmode="tel"></label>
-    <label style="width:100%;text-align:left">SĐT cộng tác viên (nếu có)<input id="rqSale" value="${esc(refSale())}" placeholder="Người cài app cho shop" inputmode="tel"></label>
-    <button class="btn" style="width:100%" data-gg="request">Gửi yêu cầu kích hoạt</button>`
-  :st==='pending'?`<h1>Đang chờ kích hoạt</h1><p>${justSent?'Đã gửi yêu cầu. ':''}Gmail <b>${esc(GG.email)}</b> sẽ được kích hoạt sau khi Shop Gọn xác nhận thanh toán. Kích hoạt xong, bấm "Kiểm tra lại".</p>
+    <label style="width:100%;text-align:left">SĐT Sale / cộng tác viên giới thiệu<input id="rqSale" value="${esc(refSale())}" placeholder="Số của người cài app cho shop" inputmode="tel"><small style="display:block;font-weight:500;color:var(--muted,#667);margin-top:4px">Ghi nhận hoa hồng cho người giới thiệu ngay khi kích hoạt — không cần nhập lại.</small></label>
+    <button class="btn" style="width:100%" data-gg="request">Gửi đề nghị kích hoạt</button>`
+  :st==='pending'?`<h1>Đang chờ kích hoạt</h1><p>${justSent?'Đã gửi yêu cầu. ':''}Gmail <b>${esc(GG.email)}</b> sẽ được kích hoạt sau khi Shop Gọn xác nhận thanh toán. ${XEM?'Kích hoạt xong app tự mở khóa (hoặc bấm "Kiểm tra lại").':'Kích hoạt xong, bấm "Kiểm tra lại".'}</p>
     ${payBlock(lic)}
     <button class="btn" style="width:100%" data-gg="recheck">Kiểm tra lại</button>`
   :st==='expired'?`<h1>Hết hạn sử dụng</h1><p>Gói của <b>${esc(GG.email)}</b> hết hạn ngày ${esc(lic.han||'')}. Dữ liệu vẫn còn nguyên trong Google Drive của shop. Liên hệ Shop Gọn để gia hạn.</p>
     ${payBlock(lic)}
     <button class="btn" style="width:100%" data-gg="recheck">Kiểm tra lại</button>`
   :`<h1>Tài khoản tạm khóa</h1><p>Liên hệ Shop Gọn để được hỗ trợ.</p>`}
-  <small id="wMsg"></small><button class="wlink" data-gg="other">Đăng nhập Gmail khác</button></div>`;drawPay(lic)}
-async function afterLogin(){welcomeMsg('Đang kiểm tra kích hoạt…');const lic=await license(GG.email);GG.ctv=lic.ctv||'';
-  if(lic.status!=='active'){showPending(lic);return false}
+  <small id="wMsg"></small>${XEM?'<button class="wlink" data-gg="xem">Xem thử tiếp</button>':''}<button class="wlink" data-gg="other">Đăng nhập Gmail khác</button></div>`;drawPay(lic)}
+async function afterLogin(){welcomeMsg('Đang kiểm tra kích hoạt…');let lic;try{lic=await license(GG.email)}catch(e){throw {where:'may'}}GG.ctv=lic.ctv||'';XLIC=lic;
+  if(lic.status==='none'||lic.status==='pending'){xemMode();closeWelcome();xemBar();xemPoll();return false}
+  if(lic.status!=='active'){if(XEM)xemBar();showPending(lic);return false}
+  const wasXem=XEM;let created;
+  if(XEM){clearInterval(xTimer);xemBar('Shop Gọn đã kích hoạt — đang tạo sổ dữ liệu trong Google Drive…')}
   welcomeMsg('Đang chuẩn bị sổ dữ liệu trong Drive…');
-  const created=await GG.findOrCreate();
+  if(wasXem){const nd=emptyDb();nd.shop.ten=String(lic.shop||'').trim();const keep=db;db=nd;try{created=await GG.findOrCreate()}catch(e){db=keep;xemBar();throw {where:'drive'}}XEM=false}
+  else{try{created=await GG.findOrCreate()}catch(e){throw {where:'drive'}}}
   if(created){if(db.sample){const shop=db.shop;db=emptyDb();db.shop={...emptyDb().shop,ten:shop.ten&&!shop.ten.includes('(mẫu)')?shop.ten:''}}await GG.push()}
   else await GG.pull();
   try{localStorage.setItem('shopgon_gg',JSON.stringify({email:GG.email,sheetId:GG.sheetId}))}catch(e){}
-  closeWelcome();render();toast('Đã kết nối '+GG.email);return true}
+  closeWelcome();xemBar();render();toast(wasXem?'Shop Gọn đã kích hoạt — bắt đầu nhập tồn và bán hàng':'Đã kết nối '+GG.email);return true}
 /* 24/10: Zalo/Facebook/TikTok mở link trong trình duyệt riêng, Google không cho đăng nhập ở đó (báo lỗi 400) → hướng dẫn mở bằng Chrome/Safari */
 const INAPP=/Zalo|FBAN|FBAV|FB_IAB|FBIOS|Instagram|Messenger|Line\/|musical_ly|TikTok|Bytedance|; wv\)/i.test(navigator.userAgent);
 const IOS=/iPhone|iPad|iPod/i.test(navigator.userAgent);
 function openOut(){const u=location.href.split('#')[0];if(!IOS){location.href='intent://'+u.replace(/^https?:\/\//,'')+'#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url='+encodeURIComponent(u)+';end';return}
   try{navigator.clipboard.writeText(u);welcomeMsg('Đã chép link. Mở Safari, dán link vào ô địa chỉ rồi đăng nhập.')}catch(e){welcomeMsg('Bấm dấu ··· góc trên, chọn "Mở bằng Safari".')}}
-function ggErr(e){const t=e&&e.type;return t==='popup_failed_to_open'?'Trình duyệt chặn cửa sổ đăng nhập. Mở shopgon.vn/app bằng Chrome hoặc Safari rồi bấm lại.':t==='popup_closed'?'Cửa sổ đăng nhập đã đóng. Bấm "Đăng nhập bằng Google" lại nhé.':'Chưa đăng nhập được. Thử lại nhé.'}
+function ggErr(e){const t=e&&e.type,c=e&&e.error;if(c==='access_denied')return 'Bạn đã bấm Hủy hoặc chưa cho phép ở trang Google. Bấm "Đăng nhập bằng Google" lại, chọn Gmail rồi bấm Tiếp tục đến cuối.';if(e&&e.where==='drive')return 'Chưa tạo được sổ dữ liệu trong Google Drive. Bấm "Đăng nhập bằng Google" lại và đánh dấu cho phép Shop Gọn dùng Google Drive.';if(e&&e.where==='may')return 'Đã đăng nhập Google nhưng chưa kết nối được máy chủ Shop Gọn. Kiểm tra mạng rồi bấm lại.';if(c)return 'Google báo lỗi: '+c+'. Chụp màn hình này gửi người cài app.';return t==='popup_failed_to_open'?'Trình duyệt chặn cửa sổ đăng nhập. Mở shopgon.vn/app bằng Chrome hoặc Safari rồi bấm lại.':t==='popup_closed'?'Cửa sổ đăng nhập đã đóng. Bấm "Đăng nhập bằng Google" lại nhé.':'Chưa đăng nhập được. Thử lại nhé.'}
 function ggStatus(t){const el=document.getElementById('ggState');if(el)el.textContent=t}
 async function ggConnect(){
   if(!GG.ready()){toast('Đăng nhập Google sẽ mở khi app chạy chính thức trên shopgon.vn');return}
   if(INAPP){openOut();return}
   try{welcomeMsg('Đang mở đăng nhập Google…');await GG.login(false);await afterLogin()}catch(e){welcomeMsg(ggErr(e))}
 }
-function ggLogout(){if(GG.ready()){lockApp();showWelcome()}try{google.accounts.oauth2.revoke(GG.token,()=>{})}catch(e){}GG.token=null;GG.email='';GG.sheetId='';try{localStorage.removeItem('shopgon_gg');localStorage.removeItem('shopgon_tk')}catch(e){}render();toast('Đã đăng xuất Google')}
+function ggLogout(){if(GG.ready()){XLIC=null;clearInterval(xTimer)}try{google.accounts.oauth2.revoke(GG.token,()=>{})}catch(e){}GG.token=null;GG.email='';GG.sheetId='';try{localStorage.removeItem('shopgon_gg');localStorage.removeItem('shopgon_tk')}catch(e){}if(GG.ready()){xemMode();xemBar()}else render();toast('Đã đăng xuất Google')}
 /* Màn hình chào: 1 bước đăng nhập */
 function showWelcome(){if(GG.ready())lockApp();const w=document.getElementById('welcome');w.hidden=false;w.innerHTML=`<div class="wc">
   <div class="wlogo"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M9 7h6M9 11h6M9 15h3"/></svg></div>
@@ -389,11 +401,11 @@ function showWelcome(){if(GG.ready())lockApp();const w=document.getElementById('
   ${INAPP?`<button class="gbtn" data-gg="out">${IOS?'Chép link để mở bằng Safari':'Mở bằng Chrome để đăng nhập'}</button>`:`<button class="gbtn" data-gg="login"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.5 13.6 17.8 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.6 5.9c4.4-4.1 7-10.1 7-17.6z"/><path fill="#FBBC05" d="M10.6 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.6-5.9c-2.1 1.4-4.9 2.3-8.3 2.3-6.2 0-11.5-4.1-13.4-9.9l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg>Đăng nhập bằng Google</button>`}
   <small id="wMsg">${INAPP?'Bạn đang mở trong Zalo/Facebook. Google không cho đăng nhập ở đây, cần mở bằng '+(IOS?'Safari':'Chrome')+'.':'Chọn Gmail của shop, nhập mật khẩu trên trang của Google. App tự tạo sổ dữ liệu trong Google Drive của shop.'}</small>
   ${GG.ready()?'':'<button class="wlink" data-gg="demo">Đóng (bản xem trước)</button>'}</div>`}
-function welcomeMsg(t){const m=document.getElementById('wMsg');if(m)m.textContent=t;else toast(t)}
+function welcomeMsg(t){const w=document.getElementById('welcome');const m=document.getElementById('wMsg');if(m&&!w.hidden)m.textContent=t;else if(XEM&&t)xemBar(t);else if(t)toast(t)}
 function lockApp(){document.body.classList.add('locked')}
 function unlockApp(){document.body.classList.remove('locked')}
 function closeWelcome(){unlockApp();document.getElementById('welcome').hidden=true;try{localStorage.setItem('shopgon_seen','1')}catch(e){}}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-gg]');if(!b)return;const k=b.dataset.gg;if(k==='login')ggConnect();else if(k==='demo'){closeWelcome();Store.save(db)}else if(k==='logout')ggLogout();else if(k==='request')sendRequest();else if(k==='recheck')afterLogin().catch(()=>welcomeMsg('Chưa kiểm tra được, thử lại.'));else if(k==='out')openOut();else if(k==='other'){GG.token=null;GG.email='';try{localStorage.removeItem('shopgon_gg');localStorage.removeItem('shopgon_tk')}catch(e){}showWelcome()}else if(k==='open')showWelcome()});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-gg]');if(!b)return;const k=b.dataset.gg;if(k==='login')ggConnect();else if(k==='demo'){closeWelcome();Store.save(db)}else if(k==='logout')ggLogout();else if(k==='request')sendRequest();else if(k==='recheck')afterLogin().catch(()=>welcomeMsg('Chưa kiểm tra được, thử lại.'));else if(k==='out')openOut();else if(k==='other'){GG.token=null;GG.email='';XLIC=null;try{localStorage.removeItem('shopgon_gg');localStorage.removeItem('shopgon_tk')}catch(e){}if(GG.ready()){if(!XEM)xemMode();closeWelcome();xemBar()}else showWelcome()}else if(k==='open')showWelcome();else if(k==='kh')showKh();else if(k==='xem'){closeWelcome();xemBar()}});
 
 
 /* ===== Tính toán ===== */
@@ -447,7 +459,7 @@ function renderHome(){
   const tdDon=live().filter(d=>d.ngay===t).sort((a,b)=>b.gio.localeCompare(a.gio,undefined,{numeric:true}));
   const diff=yd.dt?Math.round((td.dt/yd.dt-1)*100):null;
   $('v-home').innerHTML=`
-  ${db.sample?`<div class="alert amber"><b>Đang xem dữ liệu mẫu.</b><span>Bấm thử thoải mái. Khi dùng thật, vào Thêm → Cài đặt → Bắt đầu dữ liệu thật.</span></div>`:''}
+  ${db.sample&&!XEM?`<div class="alert amber"><b>Đang xem dữ liệu mẫu.</b><span>Bấm thử thoải mái. Khi dùng thật, vào Thêm → Cài đặt → Bắt đầu dữ liệu thật.</span></div>`:''}
   <div class="kpis">
     <button class="kpi hero" data-toggle="todayList" aria-expanded="${showToday}"><div class="eyebrow">Doanh thu hôm nay</div><div class="v num">${money(td.dt)}</div>
       <div class="d">${td.may} máy · ${td.n-td.may} đơn phụ kiện, dịch vụ${diff!==null?` · ${diff>=0?'▲':'▼'} ${Math.abs(diff)}% so với hôm qua`:''}</div>
@@ -605,8 +617,8 @@ let lookQ='', cancelId=null, resetAsk=false, histDays=1;
 function renderMore(){
   const el=$('v-more');
   if(more==='menu'){el.innerHTML=`<div class="menu">
-    ${[['bg','Bảng giá online','Lấy theo tồn kho, gửi khách qua Zalo','M3 7l9-4 9 4-9 4zM3 12l9 4 9-4M3 17l9 4 9-4'],['tt','Thiết kế hình','Ảnh đăng Facebook, Zalo cho từng máy','M4 4h16v16H4zM4 16l5-5 4 4 3-3 4 4M15 9h0'],['tien','Tiện ích','Bật, tắt chức năng cho gọn app','M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0M14 4v4M8 10v4M16 16v4'],['look','Tra IMEI · Bảo hành','Máy bán cho ai, còn bảo hành không','M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-5-5'],['tg','Trả góp',tgPending().length+' hồ sơ chưa giải ngân','M3 6h18v12H3zM3 10h18M7 15h4'],['hist','Đơn đã bán','Xem đơn, ghi chú, khách nợ','M12 8v4l3 2M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5'],['giahan','Gia hạn','Chuyển khoản gia hạn, gửi ủy nhiệm chi','M3 6h18v12H3zM3 10h18M7 15h4'],['ctv','Cộng tác viên','Người cài app cho shop','M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM2 21c.8-4 3.6-6 7-6s6.2 2 7 6M17 11l2 2 4-4'],['set','Cài đặt','Tên shop, % lời, dữ liệu','M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z']].filter(x=>(x[0]!=='giahan'||(GG.email&&!DEMO))&&(x[0]!=='tg'||on('tragop'))&&(x[0]!=='look'||on('baohanh')||true)).map(([k,t,s,p])=>`<button data-more="${k}"><svg viewBox="0 0 24 24"><path d="${p}"/></svg><b>${t}</b><small>${s}</small></button>`).join('')}
-  </div><p class="foot">Ứng dụng Shop Gọn · shopgon.vn<br>Bản dùng thử, dữ liệu đang lưu trên điện thoại này.</p>`;return}
+    ${[...(XEM&&GG.ready()?[['kichhoat','Kích hoạt Shop Gọn',!GG.email?'Đăng nhập Gmail, gửi đề nghị kích hoạt':XLIC&&XLIC.status==='expired'?'Gói đã hết hạn · chuyển khoản gia hạn':XLIC&&XLIC.status==='pending'?'Đã gửi đề nghị · xem trạng thái':'Gửi đề nghị, chuyển khoản, gửi ủy nhiệm chi','M5 11h14v10H5zM8 11V8a4 4 0 0 1 8 0v3']]:[]),['bg','Bảng giá online','Lấy theo tồn kho, gửi khách qua Zalo','M3 7l9-4 9 4-9 4zM3 12l9 4 9-4M3 17l9 4 9-4'],['tt','Thiết kế hình','Ảnh đăng Facebook, Zalo cho từng máy','M4 4h16v16H4zM4 16l5-5 4 4 3-3 4 4M15 9h0'],['tien','Tiện ích','Bật, tắt chức năng cho gọn app','M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0M14 4v4M8 10v4M16 16v4'],['look','Tra IMEI · Bảo hành','Máy bán cho ai, còn bảo hành không','M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-5-5'],['tg','Trả góp',tgPending().length+' hồ sơ chưa giải ngân','M3 6h18v12H3zM3 10h18M7 15h4'],['hist','Đơn đã bán','Xem đơn, ghi chú, khách nợ','M12 8v4l3 2M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5'],['giahan','Gia hạn','Chuyển khoản gia hạn, gửi ủy nhiệm chi','M3 6h18v12H3zM3 10h18M7 15h4'],['ctv','Cộng tác viên','Người cài app cho shop','M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM2 21c.8-4 3.6-6 7-6s6.2 2 7 6M17 11l2 2 4-4'],['set','Cài đặt','Tên shop, % lời, dữ liệu','M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z']].filter(x=>(x[0]!=='giahan'||(GG.email&&!DEMO&&!XEM))&&(x[0]!=='ctv'||!XEM)&&(x[0]!=='tg'||on('tragop'))&&(x[0]!=='look'||on('baohanh')||true)).map(([k,t,s,p])=>`<button data-more="${k}"><svg viewBox="0 0 24 24"><path d="${p}"/></svg><b>${t}</b><small>${s}</small></button>`).join('')}
+  </div><p class="foot">Ứng dụng Shop Gọn · shopgon.vn<br>${XEM?'Đang xem thử với dữ liệu mẫu — kích hoạt để dùng thật.':GG.email?'Đã kích hoạt · dữ liệu lưu trong Google Drive của shop.':'Bản dùng thử, dữ liệu đang lưu trên điện thoại này.'}</p>`;return}
   const back=`<button class="back" data-more="menu">‹ Quay lại</button>`;
   if(more==='look'){
     const q=lookQ.trim();const hits=q.length>=4?db.may.filter(m=>m.imei.includes(q)):[];
@@ -700,7 +712,7 @@ function renderMore(){
 function render(){
   $('shopName').textContent=db.shop.ten||'Chưa đặt tên shop';
   $('today').textContent=['Chủ nhật','Thứ hai','Thứ ba','Thứ tư','Thứ năm','Thứ sáu','Thứ bảy'][new Date().getDay()]+', '+dmy(todayIso());
-  $('mode').textContent=DEMO?'Bản demo':db.sample?'Dữ liệu mẫu':'Dùng thử';
+  $('mode').textContent=DEMO?'Bản demo':XEM?'Xem thử':db.sample?'Dữ liệu mẫu':GG.email?'Đã kích hoạt':'Trên máy này';
   const old=stock().filter(m=>ageDays(m)>45).length;$('dotStock').textContent=old;$('dotStock').hidden=!old;
   ({home:renderHome,sell:renderSell,add:renderAdd,stock:renderStock,more:renderMore})[view]();
 }
@@ -952,20 +964,40 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||
   else{renderAdd();toast(`Đã nhập: ${nH} món cộng dồn, ${nNew} món mới`)}});
 /* 23/10: bản demo — nút QR đăng ký nằm trên thanh tên shop, bấm là hiện QR */
 function demoBar(){const m=$('mode');if(!m)return;m.hidden=true;const b=document.createElement('button');b.id='demoQr';b.textContent='📱 QR đăng ký';b.style.cssText='background:#fff;color:#0b5e57;border:0;border-radius:999px;padding:8px 14px;font-weight:800;font-size:14px;white-space:nowrap;flex:none;box-shadow:0 2px 6px rgba(0,0,0,.18)';m.after(b)}
+const GLOGO=`<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.5 13.6 17.8 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.6 5.9c4.4-4.1 7-10.1 7-17.6z"/><path fill="#FBBC05" d="M10.6 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.6-5.9c-2.1 1.4-4.9 2.3-8.3 2.3-6.2 0-11.5-4.1-13.4-9.9l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg>`;
+function xemMode(){XEM=true;db=sampleDb();unlockApp();render()}
+function xemBar(msg){const b=$('xbar');if(!b)return;if(!XEM){b.hidden=true;return}b.hidden=false;b.className='';const st=XLIC&&XLIC.status;
+  b.innerHTML=msg?`<span class="t">${esc(msg)}</span>`:!GG.email?`<span class="t">👀 <b>Đang xem thử</b> với dữ liệu mẫu. Đăng nhập Gmail của shop để kích hoạt.</span><button data-gg="login">Đăng nhập</button>`
+  :st==='expired'?`<span class="t">⌛ Gói của <b>${esc(GG.email)}</b> đã hết hạn. Gia hạn để mở lại sổ của shop.</span><button data-gg="kh">Gia hạn</button>`
+  :st&&st!=='none'&&st!=='pending'?`<span class="t">🔒 Tài khoản <b>${esc(GG.email)}</b> đang tạm khóa. Liên hệ Shop Gọn.</span>`
+  :st==='pending'?`<span class="t">⏳ <b>${esc(GG.email)}</b> đã gửi đề nghị. Shop Gọn bật tính năng xong, app tự mở khóa.</span><button data-gg="kh">Xem</button>`
+  :`<span class="t">🔒 <b>${esc(GG.email)}</b> chưa kích hoạt. Vẫn xem thử được.</span><button data-gg="kh">Kích hoạt</button>`}
+function xemPoll(){clearInterval(xTimer);if(!XLIC||XLIC.status!=='pending')return;xTimer=setInterval(()=>{if(!XEM||!GG.email){clearInterval(xTimer);return}
+  license(GG.email).then(l=>{XLIC=l;if(l.status==='active'){clearInterval(xTimer);afterLogin().catch(e=>{xemBar(ggErr(e))})}}).catch(()=>{})},45000)}
+/* Bảng kích hoạt: bấm tính năng bị khóa hoặc nút Kích hoạt */
+function showKh(){const w=$('welcome');w.hidden=false;const st=XLIC&&XLIC.status;
+  if(!GG.email){w.innerHTML=`<div class="wc"><div class="wlogo"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div>
+    <h1>Kích hoạt để dùng thật</h1><p>Bạn đang xem thử với dữ liệu mẫu. Đăng nhập Gmail của shop, gửi đề nghị kích hoạt — Shop Gọn bật xong là nhập tồn, bán hàng được ngay.</p>
+    ${INAPP?`<button class="gbtn" data-gg="out">${IOS?'Chép link để mở bằng Safari':'Mở bằng Chrome để đăng nhập'}</button>`:`<button class="gbtn" data-gg="login">${GLOGO}Đăng nhập bằng Google</button>`}
+    <small id="wMsg">${INAPP?'Đang mở trong Zalo/Facebook: Google không cho đăng nhập ở đây, cần mở bằng '+(IOS?'Safari':'Chrome')+'.':''}</small><button class="wlink" data-gg="xem">Xem thử tiếp</button></div>`;return}
+  if(st&&st!=='none'){showPending(XLIC);return}
+  showPending({status:'none'})}
+document.addEventListener('click',e=>{if(e.target.closest('[data-more="kichhoat"]')){e.preventDefault();e.stopImmediatePropagation();showKh()}},true);
+document.addEventListener('submit',e=>{if(!XEM)return;e.preventDefault();e.stopImmediatePropagation();showKh()},true);
+document.addEventListener('click',e=>{if(!XEM)return;const b=e.target.closest('form button[type=submit],form button:not([type]),[data-rcpay],[data-rcdone],[data-rcprint],[data-cancelok],[data-reset],[data-more="bg"],[data-more="tt"],[data-more="giahan"],[data-more="ctv"]');if(!b)return;e.preventDefault();e.stopImmediatePropagation();showKh()},true);
 render();
 (function boot(){let gs=null,seen=null;try{gs=JSON.parse(localStorage.getItem('shopgon_gg')||'null');seen=localStorage.getItem('shopgon_seen')}catch(e){}
   if(DEMO){demoBar();return}
   if(GG.ready()){ /* bản chính thức: chưa đăng nhập + chưa kích hoạt thì không vào được app */
-    lockApp();if(db.sample){db=emptyDb();Store.save(db)}
+    xemMode();
     if(!INAPP)GG.load().catch(()=>{});
     let tk=null;try{tk=JSON.parse(localStorage.getItem('shopgon_tk')||'null')}catch(e){}
-    if(gs&&gs.sheetId&&tk&&tk.x>Date.now()&&tk.e===gs.email){GG.email=gs.email;GG.sheetId=gs.sheetId;GG.token=tk.t;showWelcome();welcomeMsg('Đang mở sổ dữ liệu…');
-      afterLogin().catch(()=>{GG.token=null;showWelcome()})}
-    else if(gs&&gs.sheetId&&!INAPP&&!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){GG.email=gs.email;GG.sheetId=gs.sheetId;welcomeMsg('');showWelcome();welcomeMsg('Đang đăng nhập lại…');
-      GG.login(true).then(()=>afterLogin()).catch(()=>{showWelcome()})}
-    else if(gs&&gs.sheetId){GG.email=gs.email;GG.sheetId=gs.sheetId;showWelcome();if(!INAPP)welcomeMsg('Bấm "Đăng nhập bằng Google" để vào lại '+gs.email+'.')}
-    else showWelcome();
-    setInterval(()=>{if(GG.email)license(GG.email).then(l=>{if(l.status!=='active'){Store.save(db);showPending(l)}}).catch(()=>{})},6*3600*1000);
+    if(gs&&tk&&tk.x>Date.now()&&tk.e===gs.email){GG.email=gs.email;GG.sheetId=gs.sheetId||'';GG.token=tk.t;xemBar('Đang mở sổ dữ liệu…');
+      afterLogin().catch(()=>{GG.token=null;xemBar()})}
+    else if(gs&&gs.email&&!INAPP&&!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){GG.email=gs.email;GG.sheetId=gs.sheetId||'';xemBar('Đang đăng nhập lại…');
+      GG.login(true).then(()=>afterLogin()).catch(()=>{GG.email='';xemBar()})}
+    else xemBar();
+    setInterval(()=>{if(GG.email&&!XEM)license(GG.email).then(l=>{if(l.status!=='active'){Store.save(db);showPending(l)}}).catch(()=>{})},6*3600*1000);
   } else if(firstOpen&&!seen)showWelcome();})();
 </script>
 

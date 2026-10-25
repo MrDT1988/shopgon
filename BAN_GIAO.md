@@ -63,3 +63,14 @@ App quản lý bán hàng cho shop điện thoại (shopgon.vn), chạy trên đ
 - Web Motorola/TECNO/Nubia render ảnh bằng JS → WebFetch không thấy ảnh; ảnh REDMI trên mi.com là ô màu 30×30 → robot từ chối.
 - Bảng giá trên trình duyệt có thể còn bản lưu cũ (localStorage `sg_bg2`) → bấm "Lấy tồn kho" để làm mới.
 - Push file workflow cần quyền workflow (đã có trong phiên có add_repo access push).
+
+## 10. Luồng kích hoạt mới (25/10 — anh Thái chốt): XEM THỬ trước, kích hoạt sau
+- Mở `app/` là vào **xem thử** ngay (dữ liệu mẫu `sampleDb()`, biến `XEM=true`, `save()`/`Store.save` không lưu). Không còn màn khóa bắt đăng nhập.
+- Đăng nhập Gmail lúc nào cũng được (thanh vàng `#xbar`, ô **Kích hoạt Shop Gọn** đầu tab Thêm, hoặc bấm tính năng bị khóa).
+- Chặn khi XEM: mọi submit form + nút bán/in/hủy/reset + Thêm › Bảng giá, Thiết kế hình, Gia hạn, CTV → `showKh()`.
+- Đề nghị kích hoạt = tên shop + SĐT + **SĐT Sale/CTV** (gửi 1 lần, hoa hồng ghi luôn); mục Thêm › Cộng tác viên ẩn khi chưa kích hoạt.
+- Chờ duyệt: app tự kiểm `license()` mỗi 45 giây → active thì tạo sổ Drive, `XEM=false`, nhãn "Đã kích hoạt". Lỗi Drive → vẫn xem thử + báo cho phép Drive.
+- Hết hạn: báo gia hạn, cho "Xem thử tiếp" (sổ thật khóa). Đăng xuất → về xem thử. `?demo=1` của Sale không đổi.
+- `ggErr()` báo rõ: bấm Hủy (access_denied), lỗi máy chủ, lỗi Drive, mã lỗi khác.
+- Trang hướng dẫn cho Sale/shop: `setup/` (shopgon.vn/setup) — nút mở app, QR, 5 bước, 5 tính năng, lỗi thường gặp; `?ctv=SĐT` gắn số Sale vào nút + QR.
+- Bộ test luồng (Playwright, máy chủ giả): 20 tình huống A–H đều đạt trước khi đẩy.
