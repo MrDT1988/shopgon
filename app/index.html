@@ -557,9 +557,11 @@ function updPkProfit(){const el=$('pLoi');if(!el)return;const it=pkPick&&db.hang
 /* ===== NHẬP ===== */
 let addMode='may', addPre='';
 function renderAdd0(){
-  const hOn=khoOn().length>0;if(!hOn)addMode='may';
+  const hOn=khoOn().length>0;if(!hOn&&addMode==='hang')addMode='may';
   const hLbl=khoOn().length>1?'hàng khác':khoName[khoOn()[0]?.k]||'';
-  const seg=hOn?`<div class="seg" role="group"><button data-am="may" aria-pressed="${addMode==='may'}">Nhập điện thoại</button><button data-am="hang" aria-pressed="${addMode==='hang'}">Nhập ${hLbl}</button></div>`:'';
+  /* 25/10 anh Thái: 3 cách nhập chung 1 hàng — Điện thoại · Hàng khác · Ảnh hóa đơn */
+  const seg=`<div class="seg" role="group"><button data-am="may" aria-pressed="${addMode==='may'}">Điện thoại</button>${hOn?`<button data-am="hang" aria-pressed="${addMode==='hang'}">${hLbl.charAt(0).toUpperCase()+hLbl.slice(1)}</button>`:''}<button data-am="ocr" aria-pressed="${addMode==='ocr'}">Ảnh hóa đơn</button></div>`;
+  if(addMode==='ocr'){$('v-add').innerHTML=seg+`<div class="panel" style="display:flex;flex-direction:column;gap:10px">${ocrBtn()}</div>`;return}
   if(addMode==='hang'){const names=[...new Set(db.hang.map(h=>h.ten))].sort();const pre=addPre&&db.hang.find(h=>h.id===addPre);
     $('v-add').innerHTML=seg+`<div class="panel"><h2>Nhập ${khoOn().map(g=>g.t.toLowerCase()).join(', ')}</h2><form id="fAddH" autocomplete="off">
     <label>Tên món<small>Gõ tên mới nếu là hàng mới, hoặc chọn từ gợi ý</small><input id="hTen" list="dlH" placeholder="VD: Cường lực iPhone 15, Sim 0868 123 789, Pin iPhone 11" value="${pre?esc(pre.ten):''}"><small class="hint" id="hHint"></small><datalist id="dlH">${names.map(n=>`<option value="${esc(n)}">`).join('')}</datalist></label>
@@ -955,7 +957,7 @@ function daRange(){const [y,m,dd]=daRef.split('-').map(Number);const r=new Date(
 function daStep(k){const [y,m,dd]=daRef.split('-').map(Number);const r=new Date(y,m-1,dd);if(daKy==='ngay')r.setDate(dd+k);else if(daKy==='tuan')r.setDate(dd+7*k);else r.setMonth(m-1+k,1);daRef=isoOf(r)}
 const addTabs=()=>`<div class="seg top" role="group" style="margin-bottom:12px"><button data-at="moi" aria-pressed="${addTab==='moi'}">Nhập hôm nay</button><button data-at="da" aria-pressed="${addTab==='da'}">Đã nhập</button></div>`;
 const loKey=m=>[m.ngayNhap,m.ten,m.giaNhap,m.ncc||''].join('|');
-function renderAdd(){if(addTab==='da'){renderDaNhap();return}if(ocrItems){renderOcr();$('v-add').insertAdjacentHTML('afterbegin',addTabs());return}renderAdd0();$('v-add').insertAdjacentHTML('afterbegin',ocrBtn());$('v-add').insertAdjacentHTML('afterbegin',addTabs())}
+function renderAdd(){if(addTab==='da'){renderDaNhap();return}if(ocrItems){renderOcr();$('v-add').insertAdjacentHTML('afterbegin',addTabs());return}renderAdd0();$('v-add').insertAdjacentHTML('afterbegin',addTabs())}
 function renderDaNhap(){const v=$('v-add');
   if(edLo){const ms=db.may.filter(m=>loKey(m)===edLo);if(!ms.length){edLo=null;return renderDaNhap()}const m0=ms[0],ton=ms.filter(m=>m.tt==='ton'),ban=ms.filter(m=>m.tt!=='ton');
     v.innerHTML=addTabs()+`<div class="panel"><button class="back" data-edx="1">‹ Danh sách đã nhập</button><h2>Sửa lô ${esc(m0.ten)}</h2><form id="fEdLo" autocomplete="off">
