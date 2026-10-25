@@ -367,7 +367,9 @@ function showPending(lic,justSent){if(!XEM)lockApp();const w=document.getElement
   :st==='expired'?`<h1>Hết hạn sử dụng</h1><p>Gói của <b>${esc(GG.email)}</b> hết hạn ngày ${esc(lic.han||'')}. Dữ liệu vẫn còn nguyên trong Google Drive của shop. Liên hệ Shop Gọn để gia hạn.</p>
     ${payBlock(lic)}
     <button class="btn" style="width:100%" data-gg="recheck">Kiểm tra lại</button>`
-  :`<h1>Tài khoản tạm khóa</h1><p>Liên hệ Shop Gọn để được hỗ trợ.</p>`}
+  :st==='locked'?`<h1>Tài khoản tạm khóa</h1><p>Liên hệ Shop Gọn để được hỗ trợ.</p>`
+  :`<h1>Chưa kiểm tra được kích hoạt</h1><p>Máy chủ Shop Gọn chưa trả lời đúng. Dữ liệu của shop vẫn nguyên trong Google Drive. Bấm "Kiểm tra lại" sau vài giây.</p>
+    <button class="btn" style="width:100%" data-gg="recheck">Kiểm tra lại</button>`}
   <small id="wMsg"></small>${XEM?'<button class="wlink" data-gg="xem">Xem thử tiếp</button>':''}<button class="wlink" data-gg="other">Đăng nhập Gmail khác</button></div>`;drawPay(lic)}
 async function afterLogin(){welcomeMsg('Đang kiểm tra kích hoạt…');let lic;try{lic=await license(GG.email)}catch(e){throw {where:'may'}}GG.ctv=lic.ctv||'';XLIC=lic;
   if(lic.status==='none'||lic.status==='pending'){xemMode();closeWelcome();xemBar();xemPoll();return false}
@@ -976,7 +978,7 @@ function xemBar(msg){const b=$('xbar');if(!b)return;if(!XEM){b.hidden=true;retur
   b.innerHTML=msg?`<span class="t">${esc(msg)}</span>`:!GG.email?`<span class="t">👀 <b>Đang xem thử</b> với dữ liệu mẫu. Đăng nhập Gmail của shop để kích hoạt. <a href="/setup/" style="color:#0b5e57;font-weight:800">📘 Hướng dẫn</a></span><button data-gg="login">Đăng nhập</button>`
   :st==='expired'?`<span class="t">⌛ Gói của <b>${esc(GG.email)}</b> đã hết hạn. Gia hạn để mở lại sổ của shop.</span><button data-gg="kh">Gia hạn</button>`
   :st==='active'?`<span class="t">✅ <b>${esc(GG.email)}</b> đã kích hoạt. Bấm để mở sổ của shop.</span><button data-gg="login">Mở sổ</button>`
-  :st&&st!=='none'&&st!=='pending'?`<span class="t">🔒 Tài khoản <b>${esc(GG.email)}</b> đang tạm khóa. Liên hệ Shop Gọn.</span>`
+  :st==='locked'?`<span class="t">🔒 Tài khoản <b>${esc(GG.email)}</b> đang tạm khóa. Liên hệ Shop Gọn.</span>`
   :st==='pending'?`<span class="t">⏳ <b>${esc(GG.email)}</b> đã gửi đề nghị. Shop Gọn bật tính năng xong, app tự mở khóa.</span><button data-gg="kh">Xem</button>`
   :`<span class="t">🔒 <b>${esc(GG.email)}</b> chưa kích hoạt. Vẫn xem thử được.</span><button data-gg="kh">Kích hoạt</button>`}
 function xemPoll(){clearInterval(xTimer);if(!XLIC||XLIC.status!=='pending')return;xTimer=setInterval(()=>{if(!XEM||!GG.email){clearInterval(xTimer);return}
@@ -1004,7 +1006,7 @@ render();
     else if(gs&&gs.email&&!INAPP&&!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){GG.email=gs.email;GG.sheetId=gs.sheetId||'';xemBar('Đang đăng nhập lại…');
       GG.login(true).then(()=>afterLogin()).catch(()=>{GG.email='';xemBar()})}
     else xemBar();
-    setInterval(()=>{if(GG.email&&!XEM)license(GG.email).then(l=>{if(l.status!=='active'){Store.save(db);showPending(l)}}).catch(()=>{})},6*3600*1000);
+    setInterval(()=>{if(GG.email&&!XEM)license(GG.email).then(l=>{if(l.status==='locked'||l.status==='expired'){Store.save(db);showPending(l)}}).catch(()=>{})},6*3600*1000);
   } else if(firstOpen&&!seen)showWelcome();})();
 </script>
 
