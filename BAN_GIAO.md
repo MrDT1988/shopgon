@@ -80,5 +80,6 @@ App quản lý bán hàng cho shop điện thoại (shopgon.vn), chạy trên đ
 - `doGet`: "Tạm duyệt" còn hạn = active (`tam:true`); quá 3 ngày → về chờ (tự khóa). `adminApprove` với Tạm duyệt tính hạn từ ngày kích hoạt tạm. Gia hạn không tự duyệt.
 - quantri: shop tạm duyệt nằm nhóm Chờ duyệt, pill "⚡ Tạm kích hoạt", gói chọn sẵn, nút **Xác nhận đã nhận tiền / Hủy**; shop AI chưa khớp hiện lý do 🤖.
 - app: gửi UNC trả `tam:true` → mở khóa ngay.
+- Ưu đãi 100 shop đầu: gói 1 năm 990.000đ — máy chủ `goiNay_()` đếm shop "Kích hoạt" trong ThanhToan, còn suất thì trả giá ưu đãi + giaGoc + conLai (app hiện 🎁).
 - Giá 25/10: chỉ 2 gói — 1 năm 1.190.000đ · 3 năm 2.490.000đ (bỏ 2 năm). Quyền lợi: app đủ tính năng, website mini, thiết kế hình, 12/36 bài truyền thông, Sale nhập tồn lần đầu ≤50 mã (>50 mã thương lượng gói full shop). Hiện ở màn thanh toán app (qlBlock), setup/, so-sanh.html.
 - Cần tab **CauHinh** có số tài khoản nhận tiền (bank_), thiếu thì không tự duyệt.
