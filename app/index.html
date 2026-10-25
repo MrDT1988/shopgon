@@ -940,7 +940,60 @@ function printRawbt(){const R=rcData();if(!R)return;const W=(+(db.shop.kho||80))
 let ocrItems=null, ocrBusy=false;
 const norm=s=>noMark(String(s||'')).toLowerCase().replace(/\s+/g,' ').trim();
 function ocrBtn(){return `<label class="btn" style="display:flex;flex-direction:row;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-size:17px">${ocrBusy?'⏳ Đang đọc hóa đơn…':'📷 Nhập từ ảnh hóa đơn'}<input type="file" accept="image/*" id="ocrIn" hidden ${ocrBusy?'disabled':''}></label><small style="color:var(--muted);text-align:center;margin-top:-6px">Chụp phiếu nhập: món trùng tên tự cộng dồn, món mới tự tạo — xem lại trước khi lưu</small>`}
-function renderAdd(){if(ocrItems){renderOcr();return}renderAdd0();$('v-add').insertAdjacentHTML('afterbegin',ocrBtn())}
+/* 25/10 anh Thái: Nhập máy chia 2 tab — "Nhập hôm nay" (như cũ) và "Đã nhập" (sửa từng lô / xóa toàn bộ để nhập lại) */
+let addTab='moi', edLo=null, edH=null, daAsk=false, daAll=false;
+const addTabs=()=>`<div class="seg" role="group" style="margin-bottom:10px"><button data-at="moi" aria-pressed="${addTab==='moi'}">Nhập hôm nay</button><button data-at="da" aria-pressed="${addTab==='da'}">Đã nhập</button></div>`;
+const loKey=m=>[m.ngayNhap,m.ten,m.giaNhap,m.ncc||''].join('|');
+function renderAdd(){if(addTab==='da'){renderDaNhap();return}if(ocrItems){renderOcr();$('v-add').insertAdjacentHTML('afterbegin',addTabs());return}renderAdd0();$('v-add').insertAdjacentHTML('afterbegin',ocrBtn());$('v-add').insertAdjacentHTML('afterbegin',addTabs())}
+function renderDaNhap(){const v=$('v-add');
+  if(edLo){const ms=db.may.filter(m=>loKey(m)===edLo);if(!ms.length){edLo=null;return renderDaNhap()}const m0=ms[0],ton=ms.filter(m=>m.tt==='ton'),ban=ms.filter(m=>m.tt!=='ton');
+    v.innerHTML=addTabs()+`<div class="panel"><button class="back" data-edx="1">‹ Danh sách đã nhập</button><h2>Sửa lô ${esc(m0.ten)}</h2><form id="fEdLo" autocomplete="off">
+    <label>Tên máy<input id="eTen" value="${esc(m0.ten)}"></label>
+    <label>Hãng<select id="eHang">${[...new Set([m0.hang,...brandsOn()])].map(b=>`<option ${b===m0.hang?'selected':''}>${esc(b)}</option>`).join('')}</select></label>
+    <label>IMEI còn trong kho<small>Mỗi dòng 1 máy. Xóa dòng = bỏ máy nhập nhầm, thêm dòng = nhập thêm máy vào lô.</small><textarea id="eImei" inputmode="numeric" style="min-height:${Math.min(260,60+ton.length*24)}px">${ton.map(m=>m.imei).join('\n')}</textarea></label>
+    ${ban.length?`<small style="color:var(--muted)">${ban.length} máy của lô đã bán (giữ nguyên, không sửa): <span class="num">${ban.map(m=>m.imei).join(', ')}</span></small>`:''}
+    <div class="two"><label>Giá nhập / máy<input id="eGN" inputmode="numeric" class="num" value="${m0.giaNhap.toLocaleString('vi-VN')}"></label><label>Giá bán dự kiến<input id="eGB" inputmode="numeric" class="num" value="${m0.giaBan?m0.giaBan.toLocaleString('vi-VN'):''}"></label></div>
+    <div class="two"><label>Nhà cung cấp<input id="eNcc" value="${esc(m0.ncc||'')}"></label><label>Ngày nhập<input id="eNgay" type="date" value="${esc(m0.ngayNhap)}"></label></div>
+    <div class="err" id="eErr"></div><button class="btn" type="submit">Lưu thay đổi</button></form></div>`;return}
+  if(edH){const h=db.hang.find(x=>x.id===edH);if(!h){edH=null;return renderDaNhap()}
+    v.innerHTML=addTabs()+`<div class="panel"><button class="back" data-edx="1">‹ Danh sách đã nhập</button><h2>Sửa ${esc(h.ten)}</h2><form id="fEdH" autocomplete="off">
+    <label>Tên món<input id="ehTen" value="${esc(h.ten)}"></label>
+    <div class="two"><label>Số lượng tồn<input id="ehSl" inputmode="numeric" value="${h.sl}"></label><label>Báo sắp hết khi còn<input id="ehMin" inputmode="numeric" value="${h.min||0}"></label></div>
+    <div class="two"><label>Giá nhập / cái<input id="ehGN" inputmode="numeric" class="num" value="${h.giaNhap.toLocaleString('vi-VN')}"></label><label>Giá bán / cái<input id="ehGB" inputmode="numeric" class="num" value="${h.giaBan?h.giaBan.toLocaleString('vi-VN'):''}"></label></div>
+    <div class="err" id="ehErr"></div><div class="inrow"><button class="btn" type="submit" style="flex:1">Lưu thay đổi</button><button class="ghost red" type="button" data-delh="${esc(h.id)}">Xóa món</button></div></form></div>`;return}
+  const L={},add=(d,x)=>(L[d]=L[d]||[]).push(x);
+  const lo={};db.may.forEach(m=>{const k=loKey(m);(lo[k]=lo[k]||[]).push(m)});
+  Object.entries(lo).forEach(([k,ms])=>add(ms[0].ngayNhap,{k,t:'may',ten:ms[0].ten,sub:`${ms.length} máy${ms.some(m=>m.tt!=='ton')?' · '+ms.filter(m=>m.tt!=='ton').length+' đã bán':''} · ${money(ms[0].giaNhap)}/máy${ms[0].ncc?' · '+ms[0].ncc:''}`}));
+  db.hang.forEach(h=>add(h.ngayNhap||todayIso(),{k:h.id,t:'hang',ten:h.ten,sub:`tồn ${h.sl} · nhập ${money(h.giaNhap)}`}));
+  const days=Object.keys(L).sort().reverse(),nTon=db.may.filter(m=>m.tt==='ton').length;
+  v.innerHTML=addTabs()+(days.length?days.slice(0,daAll?999:7).map(d=>`<div class="panel"><h2>${d===todayIso()?'Hôm nay · ':''}${dmy(d)}</h2><div class="list">${L[d].map(x=>`<div class="row"><div class="n"><b>${x.t==='may'?'📱 ':'📦 '}${esc(x.ten)}</b><small class="num">${esc(x.sub)}</small></div><div class="right"><button class="ghost" ${x.t==='may'?'data-elo':'data-eh'}="${esc(x.k)}">Sửa</button></div></div>`).join('')}</div></div>`).join('')+(days.length>7&&!daAll?`<button class="ghost" style="width:100%;margin-bottom:10px" data-daall="1">Xem các ngày cũ hơn (${days.length-7} ngày)</button>`:'')
+    +`<div class="panel">${daAsk?`<div class="confirm"><b style="color:var(--red)">Xóa ${nTon} máy còn trong kho và ${db.hang.length} món hàng để nhập lại từ đầu? Đơn đã bán vẫn giữ nguyên.</b><span class="inrow"><button class="ghost red" data-dareset="ok">Xóa hết</button><button class="ghost" data-dareset="no">Thôi</button></span></div>`
+      :`<button class="ghost red" style="width:100%" data-dareset="ask">🗑 Xóa toàn bộ hàng đã nhập, nhập lại từ đầu</button>`}</div>`
+    :'<div class="empty">Chưa nhập máy hay hàng nào.</div>')}
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+  if(d.at){addTab=d.at;edLo=edH=null;daAsk=false;render();window.scrollTo(0,0);return}
+  if(d.elo){edLo=d.elo;edH=null;render();window.scrollTo(0,0);return}
+  if(d.eh){edH=d.eh;edLo=null;render();window.scrollTo(0,0);return}
+  if(d.edx){edLo=edH=null;render();return}
+  if(d.daall){daAll=true;render();return}
+  if(d.delh){if(!confirm('Xóa món này khỏi kho?'))return;db.hang=db.hang.filter(h=>h.id!==d.delh);edH=null;save();render();toast('Đã xóa món');return}
+  if(d.dareset){if(d.dareset==='ask'){daAsk=true;render();return}if(d.dareset==='no'){daAsk=false;render();return}
+    const n=db.may.filter(m=>m.tt==='ton').length,nh=db.hang.length;db.may=db.may.filter(m=>m.tt!=='ton');db.hang=[];daAsk=false;save();addTab='moi';render();toast(`Đã xóa ${n} máy, ${nh} món — nhập lại từ đầu`);return}});
+document.addEventListener('submit',e=>{const f=e.target;if(f.id!=='fEdLo'&&f.id!=='fEdH')return;e.preventDefault();
+  if(f.id==='fEdH'){const h=db.hang.find(x=>x.id===edH),err=$('ehErr');if(!h)return;const ten=$('ehTen').value.trim(),gn=parseMoney($('ehGN').value);
+    if(!ten){err.textContent='Nhập tên món.';return}if(!gn){err.textContent='Nhập giá nhập.';return}
+    Object.assign(h,{ten,sl:parseMoney($('ehSl').value),min:parseMoney($('ehMin').value),giaNhap:gn,giaBan:parseMoney($('ehGB').value)});edH=null;save();render();toast('Đã lưu '+ten);return}
+  const ms=db.may.filter(m=>loKey(m)===edLo),err=$('eErr');if(!ms.length)return;const ten=$('eTen').value.trim(),gn=parseMoney($('eGN').value);
+  const lines=[...new Set($('eImei').value.split(/[\s,;]+/).map(x=>x.replace(/\D/g,'')).filter(Boolean))];
+  if(!ten){err.textContent='Nhập tên máy.';return}if(!gn){err.textContent='Nhập giá nhập.';return}
+  const bad=lines.filter(x=>x.length!==15);if(bad.length){err.textContent='IMEI phải đủ 15 số: '+bad.join(', ');return}
+  const mine=new Set(ms.map(m=>m.imei)),dup=lines.filter(x=>!mine.has(x)&&db.may.some(m=>m.imei===x));if(dup.length){err.textContent='IMEI đã có ở lô khác: '+dup.join(', ');return}
+  const ton=ms.filter(m=>m.tt==='ton'),keep=new Set(lines),go2={ten,hang:$('eHang').value,giaNhap:gn,giaBan:parseMoney($('eGB').value),ncc:$('eNcc').value.trim(),ngayNhap:$('eNgay').value||ms[0].ngayNhap};
+  const del=ton.filter(m=>!keep.has(m.imei)).length,moi=lines.filter(x=>!mine.has(x));
+  db.may=db.may.filter(m=>!(m.tt==='ton'&&mine.has(m.imei)&&!keep.has(m.imei)));
+  db.may.forEach(m=>{if(mine.has(m.imei)&&m.tt==='ton')Object.assign(m,go2)});
+  moi.forEach(imei=>db.may.push(Object.assign({imei,tt:'ton'},go2)));
+  edLo=null;save();render();toast(`Đã lưu lô ${ten}`+(del?` · bỏ ${del} máy`:'')+(moi.length?` · thêm ${moi.length} máy`:''))});
 function prepOcr(x){const k=norm(x.khop),k2=norm(x.ten);
   if(x.loai==='may'){const t=[...new Set(db.may.map(m=>m.ten))].find(t=>norm(t)===k||norm(t)===k2);return Object.assign({},x,{ok:true,match:t||'',ten:t||x.ten})}
   const h=(k&&db.hang.find(h=>norm(h.ten)===k))||db.hang.find(h=>norm(h.ten)===k2);return Object.assign({},x,{ok:true,match:h?h.id:'',ten:h?h.ten:x.ten,nhom:h?h.nhom:x.nhom})}
