@@ -180,7 +180,7 @@ const ciOf=s=>{const c=(D.ctv||[]).find(x=>x.sdt===s)||{};return{role:c.role||''
 const pctOf=s=>{const c=ciOf(s);return c.role==='Leader'?D.hhPct:(D.hhSale||40)+(c.leader?(D.hhLeader||10):0)};
 const hhTxt=s=>{const c=ciOf(s);return c.role==='Leader'?'Leader tự bán nhận '+D.hhPct+'%':c.leader?'Sale '+(D.hhSale||40)+'% + Leader '+(D.hhLeader||10)+'%':'Sale nhận '+(D.hhSale||40)+'% (chưa có leader)'};
 const ctvLbl=s=>s?(tenOf(s)?esc(tenOf(s))+' · ':'')+fmtSdt(s):'';
-const trangThai=k=>k.tt==='Đã duyệt'?(k.han&&k.han<D.today?'het':'dung'):k.tt==='Chờ duyệt'?'cho':'khoa';
+const trangThai=k=>k.tt==='Tạm duyệt'?'cho':k.tt==='Đã duyệt'?(k.han&&k.han<D.today?'het':'dung'):k.tt==='Chờ duyệt'?'cho':'khoa';
 
 /* ===== khoảng thời gian ===== */
 function ky(kind,t){ // trả {tu,den,ten,truoc:{tu,den}}
@@ -260,7 +260,8 @@ function vCuaHang(){const nhom={cho:[],dung:[],het:[],khoa:[]};D.kh.forEach(k=>n
   <div class="chips">${[['cho','Chờ duyệt',nhom.cho.length],['dung','Đang dùng',nhom.dung.length],['het','Hết hạn',nhom.het.length],['khoa','Đã khóa',nhom.khoa.length],['tat','Tất cả',D.kh.length]].map(([k,l,n])=>`<button class="chip" data-loc="${k}" aria-pressed="${CH_LOC===k}">${l} (${n})</button>`).join('')}</div>
   <div class="card">${L.length?L.map(shopCard).join(''):'<div class="empty">Không có cửa hàng nào.</div>'}</div>
   <p class="note">Duyệt khi đã nhận đủ tiền — shop bấm "Kiểm tra lại" là vào được app ngay.</p>`}
-function shopCard(k){const s=trangThai(k),e=esc(k.email);const p=pick[k.email]||D.goi[0];
+const tamOf=k=>{const m=String(k.note||'').match(/^AI-TAM\|(\d+)\|(\d+)\|/);return k.tt==='Tạm duyệt'&&m?{m:+m[1],tien:+m[2]}:null};
+function shopCard(k){const s=trangThai(k),e=esc(k.email),tam=tamOf(k);const p=pick[k.email]||(tam&&D.goi.find(g=>g.m===tam.m))||D.goi[0];
   const ctvRow=editShopCtv===k.email?`<div class="act"><input id="sc" inputmode="tel" placeholder="SĐT CTV (bỏ trống = gỡ)" value="${esc(k.ctv)}" style="width:190px"><button class="ghost" data-setsc="${e}">Lưu</button><button class="ghost" data-editsc="">Thôi</button></div>`
     :`<div><button class="ctvtag" data-editsc="${e}">${k.ctv?'👤 CTV: '+ctvLbl(k.ctv):'＋ Gắn CTV'}</button></div>`;
   const duyet=s==='khoa'?`<div class="act"><button class="ghost" data-st="${e}" data-v="Đã duyệt">Mở lại</button></div>`
@@ -268,9 +269,10 @@ function shopCard(k){const s=trangThai(k),e=esc(k.email);const p=pick[k.email]||
     :`<div class="act"><div class="chips" style="overflow:visible;flex-wrap:wrap">${D.goi.map(g=>`<button class="chip" data-pick="${e}" data-m="${g.m}" aria-pressed="${p.m===g.m}">${g.ten}</button>`).join('')}</div>
       <input inputmode="numeric" class="num" data-tien="${e}" value="${p.gia.toLocaleString('vi-VN')}" aria-label="Số tiền đã nhận"></div>
       ${k.ctv?`<small style="color:var(--muted)">${hhTxt(k.ctv)}: <b class="num" id="hh-${e}" data-p="${pctOf(k.ctv)}">${money(p.gia*pctOf(k.ctv)/100)}</b></small>`:''}
-      ${ask===k.email?`<div class="act"><b style="color:var(--red)">${s==='cho'?'Từ chối shop này?':'Khóa shop này? Shop bị đẩy ra khỏi app.'}</b><button class="ghost red" data-st="${e}" data-v="${s==='cho'?'Từ chối':'Khóa'}">Xác nhận</button><button class="ghost" data-ask="">Thôi</button></div>`
-        :`<div class="act"><button class="btn" data-ok="${e}" style="flex:1">${s==='cho'?'Duyệt':'Gia hạn'}</button><button class="ghost red" data-ask="${e}">${s==='cho'?'Từ chối':'Khóa'}</button></div>`}`;
-  return `<div class="shop"><div class="top"><div class="n"><b>${esc(k.shop||'(chưa ghi tên)')}</b><small>${e}</small><small class="num">${k.sdt?`<a href="tel:${esc(k.sdt.replace(/\s/g,''))}" style="color:var(--pen)">${esc(k.sdt)}</a> · `:''}${s==='cho'?'Gửi '+dmy(k.yeuCau):k.han?'Hạn '+dmy(k.han):''}</small></div>${s==='cho'?(k.unc?`<button class="pill p-g" data-unc="${e}" style="border:0;cursor:pointer">🧾 Đã chuyển tiền · ${dm(k.unc)}</button>`:'<span class="pill p-a">Chưa gửi UNC</span>'):k.unc&&s!=='khoa'?`<button class="pill p-g" data-unc="${e}" style="border:0;cursor:pointer">🧾 Chuyển tiền gia hạn · ${dm(k.unc)}</button>`:pillOf(k)}</div>${ctvRow}${uncImg===k.email?'<div id="uncBox" class="ex" style="padding:8px;text-align:center">Đang tải ảnh…</div>':''}${duyet}</div>`}
+      ${tam?`<small style="color:#0b5e57;font-weight:700">⚡ AI đã đọc ủy nhiệm chi đúng ${money(tam.tien)} — shop đang dùng tạm tới ${dmy(k.han)}. Tiền về thì Xác nhận; không có tiền thì Hủy.</small>`:/^AI chưa tự duyệt/.test(String(k.note||''))?`<small style="color:var(--amber)">🤖 ${esc(k.note)}</small>`:''}
+      ${ask===k.email?`<div class="act"><b style="color:var(--red)">${tam?'Hủy kích hoạt tạm? Shop bị khóa lại.':s==='cho'?'Từ chối shop này?':'Khóa shop này? Shop bị đẩy ra khỏi app.'}</b><button class="ghost red" data-st="${e}" data-v="${s==='cho'?'Từ chối':'Khóa'}">Xác nhận</button><button class="ghost" data-ask="">Thôi</button></div>`
+        :`<div class="act"><button class="btn" data-ok="${e}" style="flex:1">${tam?'Xác nhận đã nhận tiền':s==='cho'?'Duyệt':'Gia hạn'}</button><button class="ghost red" data-ask="${e}">${tam?'Hủy':s==='cho'?'Từ chối':'Khóa'}</button></div>`}`;
+  return `<div class="shop"><div class="top"><div class="n"><b>${esc(k.shop||'(chưa ghi tên)')}</b><small>${e}</small><small class="num">${k.sdt?`<a href="tel:${esc(k.sdt.replace(/\s/g,''))}" style="color:var(--pen)">${esc(k.sdt)}</a> · `:''}${s==='cho'?'Gửi '+dmy(k.yeuCau):k.han?'Hạn '+dmy(k.han):''}</small></div>${s==='cho'?(k.unc?`<button class="pill p-g" data-unc="${e}" style="border:0;cursor:pointer">${tam?'⚡ Tạm kích hoạt':'🧾 Đã chuyển tiền'} · ${dm(k.unc)}</button>`:'<span class="pill p-a">Chưa gửi UNC</span>'):k.unc&&s!=='khoa'?`<button class="pill p-g" data-unc="${e}" style="border:0;cursor:pointer">🧾 Chuyển tiền gia hạn · ${dm(k.unc)}</button>`:pillOf(k)}</div>${ctvRow}${uncImg===k.email?'<div id="uncBox" class="ex" style="padding:8px;text-align:center">Đang tải ảnh…</div>':''}${duyet}</div>`}
 
 /* ===== vẽ ===== */
 function render(){if(!D)return;

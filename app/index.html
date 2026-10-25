@@ -890,7 +890,9 @@ const uncBox=lic=>`<label class="ghost" style="display:block;text-align:center;c
 function shrink(file){return new Promise((ok,bad)=>{const u=URL.createObjectURL(file);const im=new Image();im.onload=()=>{const k=Math.min(1,1100/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);let q=.75,d=c.toDataURL('image/jpeg',q);while(d.length>550000&&q>.3){q-=.15;d=c.toDataURL('image/jpeg',q)}ok(d)};im.onerror=bad;im.src=u})}
 document.addEventListener('change',async e=>{if(e.target.id!=='uncIn'||!e.target.files[0])return;const msg=$('uncMsg');msg.textContent='Đang gửi ảnh…';
   try{const img=await shrink(e.target.files[0]);const r=await fetch(GG.LICENSE_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({act:'unc',email:GG.email,img})}).then(x=>x.json());
-    if(!r.ok){msg.textContent=r.msg||'Chưa gửi được.';return}if(payLic)payLic.unc=todayIso();msg.textContent='Đã gửi. Shop Gọn thấy tiền về sẽ kích hoạt — vài phút sau bấm "Kiểm tra lại".'}
+    if(!r.ok){msg.textContent=r.msg||'Chưa gửi được.';return}if(payLic)payLic.unc=todayIso();
+    if(r.tam){msg.textContent='✅ Đã kiểm ủy nhiệm chi: đúng tiền gói '+(r.goi||'')+'. Đang mở app…';afterLogin().catch(er=>welcomeMsg(ggErr(er)));return}
+    msg.textContent=XEM?'Đã gửi.'+(r.ly?' Ảnh chưa tự khớp ('+r.ly+') — ':' ')+'Shop Gọn kiểm và kích hoạt sớm, app tự mở khóa.':'Đã gửi. Shop Gọn thấy tiền về sẽ gia hạn — vài phút sau bấm "Kiểm tra lại".'}
   catch(_){msg.textContent='Chưa gửi được, kiểm tra mạng rồi thử lại.'}});
 /* 23/10: Đơn đã bán — xem theo hóa đơn, ghi chú, sổ khách nợ */
 let histQ='', histOpen=null;

@@ -74,3 +74,10 @@ App quản lý bán hàng cho shop điện thoại (shopgon.vn), chạy trên đ
 - `ggErr()` báo rõ: bấm Hủy (access_denied), lỗi máy chủ, lỗi Drive, mã lỗi khác.
 - Trang hướng dẫn cho Sale/shop: `setup/` (shopgon.vn/setup) — nút mở app, QR, 5 bước, 5 tính năng, lỗi thường gặp; `?ctv=SĐT` gắn số Sale vào nút + QR.
 - Bộ test luồng (Playwright, máy chủ giả): 20 tình huống A–H đều đạt trước khi đẩy.
+
+## 11. Tự duyệt bằng ủy nhiệm chi (25/10 — cách A anh chốt)
+- Máy chủ Apps Script "Shop Gọn - Máy chủ bản quyền" thêm `tuDuyetUnc_` (v12): shop gửi UNC → Gemini (GEMINI_KEY) đọc → đủ 5 điều kiện (thành công · số tiền = đúng 1 gói · nội dung có SĐT shop · TK nhận khớp 4 số cuối hoặc tên chủ TK · ngày ≤3 ngày) → trạng thái **"Tạm duyệt"**, hạn +3 ngày, ghi chú `AI-TAM|tháng|tiền|ngày`, email báo anh. Sai → ghi lý do vào cột Ghi chú, anh duyệt tay.
+- `doGet`: "Tạm duyệt" còn hạn = active (`tam:true`); quá 3 ngày → về chờ (tự khóa). `adminApprove` với Tạm duyệt tính hạn từ ngày kích hoạt tạm. Gia hạn không tự duyệt.
+- quantri: shop tạm duyệt nằm nhóm Chờ duyệt, pill "⚡ Tạm kích hoạt", gói chọn sẵn, nút **Xác nhận đã nhận tiền / Hủy**; shop AI chưa khớp hiện lý do 🤖.
+- app: gửi UNC trả `tam:true` → mở khóa ngay.
+- Cần tab **CauHinh** có số tài khoản nhận tiền (bank_), thiếu thì không tự duyệt.
