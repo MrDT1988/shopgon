@@ -205,8 +205,11 @@ nav.tabs button[aria-selected="true"]{color:var(--pen);background:var(--pen-soft
 /* 23/10: khối lời theo hãng gọn lại */
 .seg button[aria-pressed=true] small{color:inherit;opacity:.9}
 /* 25/10: tab trên cùng của Nhập máy khác màu tab con cho nổi */
-.seg.top{background:#0b5e57;border:0;box-shadow:0 4px 12px rgba(11,94,87,.28);padding:5px}
-.seg.top button{color:#cdeee8;font-size:16px;padding:12px 6px}
+.seg.top{background:#0b5e57;border:0;box-shadow:0 4px 12px rgba(11,94,87,.28);padding:6px;border-radius:18px;margin-bottom:12px}
+.seg.top button{white-space:nowrap;color:#cdeee8;font-size:19px;font-weight:800;padding:22px 6px;border-radius:13px;min-height:72px}
+/* 25/10: tab con (lọc, chọn cách nhập…) nhỏ gọn lại để tab chính nổi bật */
+.seg:not(.top):not(.rcseg){padding:3px;border-radius:12px}
+.seg:not(.top):not(.rcseg) button{padding:7px 6px;font-size:14px}
 .seg.top button[aria-pressed="true"]{background:#fff;color:#0b5e57;box-shadow:0 3px 8px rgba(0,0,0,.18)}
 .kyNav{display:flex;align-items:center;gap:8px;margin:8px 0 10px}.kyNav b{flex:1;text-align:center;font-size:16px}.kyNav button{min-width:44px}
 .hb{gap:4px}.hb .l{font-size:13px}.hb .t{height:5px}.grp{gap:6px}.grp+.grp{margin-top:10px;padding-top:10px}.gh{font-size:14px}
@@ -503,7 +506,7 @@ function renderSell(){
   const cand=!m0&&sellImei.length>=4&&sellImei.length<15?stock().filter(x=>!inCart(x.imei)&&(x.imei.includes(sellImei)||x.ten.toLowerCase().includes(sellImei.toLowerCase()))).slice(0,5):[];
   $('v-sell').innerHTML=`
   ${renderCart()}
-  <div class="seg" role="group"><button data-sm="may" aria-pressed="${sellMode==='may'}">Điện thoại</button><button data-sm="pk" aria-pressed="${sellMode==='pk'}">${on('pk')||on('sim')?'Phụ kiện · Dịch vụ':'Dịch vụ khác'}</button></div>
+  <div class="seg top" role="group"><button data-sm="may" aria-pressed="${sellMode==='may'}">Điện thoại</button><button data-sm="pk" aria-pressed="${sellMode==='pk'}">${on('pk')||on('sim')?'Phụ kiện, DV':'Dịch vụ'}</button></div>
   ${sellMode==='may'?`
   <div class="panel"><form id="fSell" autocomplete="off">
     <label>IMEI hoặc tên máy<small>Quét mã vạch, gõ IMEI, hoặc gõ vài chữ của tên máy để tìm</small>
@@ -589,7 +592,7 @@ let stockMode='may', stockBrand='Tất cả', stockQ='', stockOld=false, hangNho
 const hangLow=h=>h.sl<=0||(h.min>0&&h.sl<=h.min);
 function renderStock(){
   const hOn=khoOn().length>0;if(!hOn)stockMode='may';if(hangNhom!=='all'&&!on(hangNhom))hangNhom='all';
-  const seg=hOn?`<div class="seg" role="group"><button data-km="may" aria-pressed="${stockMode==='may'}">Điện thoại</button><button data-km="hang" aria-pressed="${stockMode==='hang'}">${khoOn().length>1?'Hàng khác':khoName[khoOn()[0]?.k]||''}</button></div>`:'';
+  const seg=hOn?`<div class="seg top" role="group"><button data-km="may" aria-pressed="${stockMode==='may'}">Điện thoại</button><button data-km="hang" aria-pressed="${stockMode==='hang'}">${khoOn().length>1?'Hàng khác':khoName[khoOn()[0]?.k]||''}</button></div>`:'';
   if(stockMode==='hang'){
     const all=hangOn();const lowN=all.filter(hangLow).length;
     let L=all.filter(h=>(hangNhom==='all'||h.nhom===hangNhom)&&(!hangQ||(h.ten+' '+loaiOf(h)).toLowerCase().includes(hangQ.toLowerCase())));
