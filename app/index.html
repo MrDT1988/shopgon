@@ -211,6 +211,7 @@ body.nv .own,body.nv #sLoi,body.nv #pLoi{display:none!important}
 .ketcard{background:linear-gradient(180deg,#fffaf0,#fff);border:2px solid #f0d08a}
 .ketrow{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed var(--line);font-size:15px}.ketrow:last-child{border:0}.ketbig{display:flex;justify-content:space-between;align-items:baseline;margin-top:8px;padding-top:10px;border-top:2px solid var(--ink)}.ketbig b{font-size:26px}
 body.nvmode nav.tabs button[data-v=add],body.nvmode nav.tabs button[data-v=stock]{display:none}
+.nbg{display:grid;grid-template-columns:1.1fr 1fr 1.2fr;gap:6px;align-items:start;padding:8px 0;border-bottom:1px solid var(--line)}.nbg:last-child{border:0}.nbg>span{display:flex;flex-direction:column;text-align:right}.nbg>span b{font-size:16px}.nbg small{color:#46506b;font-size:12.5px}.nbg i{font-style:normal}.nbh{padding:0 0 4px;font-size:12.5px;font-weight:700;color:#46506b;text-transform:uppercase}.nbbar{grid-column:1/-1;height:6px;background:#e4ecee;border-radius:4px}.nbbar i{display:block;height:100%;border-radius:4px}
 .pnhint{background:#f0faf7;border:1px dashed #9fd4c8;border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.45;margin-bottom:12px}
 .pncard{border:2px solid #0f766e}
 .pnbar{width:100%;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px;background:#fff4dc;color:#5c3b00;border:1px solid #f0d08a;border-radius:12px;padding:10px 12px;font-size:14.5px;margin-bottom:10px;text-align:left}.pnbar span{font-weight:800;color:#0b5e57}
@@ -583,6 +584,16 @@ function renderHome(){if(NV){renderNvHome();return}
     ${(()=>{const L=tdDon.filter(d=>isDv(d.loai));const tien=L.reduce((s2,d)=>s2+(d.soTien||0),0),phi=L.reduce((s2,d)=>s2+d.giaBan,0);return `<div class="kpi"><div class="eyebrow">Thu hộ hôm nay</div><div class="v num">${money(tien)}</div><div class="d">${L.length} giao dịch · phí ${short(phi)}</div></div>`})()}
   </div>
   ${on('chi')?(()=>{const k=ketNgay(todayIso()),m0=todayIso().slice(0,8)+'01',cm=chiOf(m0,todayIso()),lm=sumRange(m0,todayIso()).loi;return `<button class="panel ketcard" data-more="chi" style="width:100%;text-align:left;display:block;cursor:pointer"><div class="ketbig" style="margin:0;padding:0;border:0"><span><b style="font-size:15px">💵 Tiền mặt phải có trong két</b></span><b class="num">${money(k.ket)}</b></div><small style="color:#46506b">CK ${short(k.ck)} · đã chi ${short(k.chi)}<span class="own"> · Lời ròng tháng ${short(lm-cm)}</span> · Bấm để chốt két ›</small></button>`})():''}
+  ${(()=>{/* 25/10 anh Thái: doanh thu theo người bán (chủ shop + từng nhân viên) */
+    const t=todayIso(),m0=t.slice(0,8)+'01',L=live().filter(d=>d.ngay>=m0&&d.ngay<=t&&d.loai!=='thu');
+    const ds=db.shop.nv||[];if(!ds.length&&!L.some(d=>d.nv))return '';
+    const ng=[{k:'',ten:'Chủ shop'},...ds.map(x=>({k:x.sdt,ten:x.ten||x.sdt}))];L.forEach(d=>{if(d.nv&&!ng.some(g=>g.k===d.nv))ng.push({k:d.nv,ten:d.nvTen||d.nv})});
+    const st=(k,a)=>{const x=L.filter(d=>(d.nv||'')===k&&d.ngay>=a);return {dt:x.reduce((s2,d)=>s2+d.giaBan,0),don:new Set(x.map(d=>d.bill||d.id)).size,may:x.filter(d=>d.loai==='may').length,loi:x.reduce((s2,d)=>s2+profitOf(d),0)}};
+    const R=ng.map(g=>({...g,h:st(g.k,t),m:st(g.k,m0)}));const mx=Math.max(1,...R.map(r=>r.m.dt));
+    return `<div class="panel"><h2>👥 Doanh thu theo người bán</h2>
+      <div class="nbg nbh"><span></span><span>Hôm nay</span><span>Tháng này</span></div>
+      ${R.map(r=>`<div class="nbg"><b>${r.k?'👤':'🏠'} ${esc(r.ten)}</b><span class="num"><b>${short(r.h.dt)}</b><small>${r.h.don} đơn · ${r.h.may} máy</small></span><span class="num"><b>${short(r.m.dt)}</b><small>${r.m.don} đơn · ${r.m.may} máy<i class="own"> · lời ${short(r.m.loi)}</i></small></span>
+        <div class="nbbar"><i style="width:${Math.max(0,r.m.dt)/mx*100}%;background:${r.k?'#14a293':'#0b5e57'}"></i></div></div>`).join('')}</div>`})()}
   ${reportPanel()}
   <div class="panel own"><h2>Lời tháng ${rm===t.slice(0,7)?'này':rm.slice(5)+'/'+rm.slice(0,4)}</h2>${phone.length||pkRows.length?`
     ${phone.length?`<div class="grp"><div class="gh"><span class="sw sp"></span>Điện thoại<b class="num">${money(sumP)}</b></div><div class="hb">${hbRows(phone,'cp')}</div></div>`:''}
