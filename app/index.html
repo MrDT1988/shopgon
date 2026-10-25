@@ -448,7 +448,8 @@ function ggStatus(t){const el=document.getElementById('ggState');if(el)el.textCo
 async function ggConnect(){
   if(!GG.ready()){toast('Đăng nhập Google sẽ mở khi app chạy chính thức trên shopgon.vn');return}
   if(INAPP){openOut();return}
-  try{welcomeMsg('Đang mở đăng nhập Google…');await GG.login(false);await afterLogin()}catch(e){welcomeMsg(ggErr(e))}
+  /* 25/10 anh Thái: đã chọn Gmail 1 lần thì lần sau không bắt chọn lại — đăng nhập im lặng theo Gmail đã lưu */
+  const quen=!!GG.email;try{welcomeMsg('Đang mở đăng nhập Google…');await GG.login(quen);await afterLogin()}catch(e){if(quen&&!(e&&e.where)){GG.email='';welcomeMsg('Bấm lại để chọn Gmail của shop.');xemBar('Bấm lại "Đăng nhập" để chọn Gmail của shop.');return}welcomeMsg(ggErr(e))}
 }
 function ggLogout(){if(GG.ready()){XLIC=null;clearInterval(xTimer)}try{google.accounts.oauth2.revoke(GG.token,()=>{})}catch(e){}GG.token=null;GG.email='';GG.sheetId='';try{localStorage.removeItem('shopgon_gg');localStorage.removeItem('shopgon_tk')}catch(e){}if(GG.ready()){xemMode();xemBar()}else render();toast('Đã đăng xuất Google')}
 /* Màn hình chào: 1 bước đăng nhập */
@@ -1381,6 +1382,7 @@ render();
       afterLogin().catch(()=>{GG.token=null;xemBar()})}
     else if(gs&&gs.email&&!INAPP&&!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){GG.email=gs.email;GG.sheetId=gs.sheetId||'';xemBar('Đang đăng nhập lại…');
       GG.login(true).then(()=>afterLogin()).catch(()=>{GG.email='';xemBar()})}
+    else if(gs&&gs.email&&!INAPP){GG.email=gs.email;GG.sheetId=gs.sheetId||'';xemBar('Đang kiểm tra kích hoạt…');license(GG.email).then(l=>{XLIC=l;xemBar()}).catch(()=>xemBar())}
     else xemBar();
     setInterval(()=>{if(GG.email&&!XEM)license(GG.email).then(l=>{if(l.status==='locked'||l.status==='expired'){Store.save(db);showPending(l)}}).catch(()=>{})},6*3600*1000);
   } else if(firstOpen&&!seen)showWelcome();})();
