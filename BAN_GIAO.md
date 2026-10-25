@@ -83,3 +83,12 @@ App quản lý bán hàng cho shop điện thoại (shopgon.vn), chạy trên đ
 - Ưu đãi 100 shop đầu: gói 1 năm 990.000đ — máy chủ `goiNay_()` đếm shop "Kích hoạt" trong ThanhToan, còn suất thì trả giá ưu đãi + giaGoc + conLai (app hiện 🎁).
 - Giá 25/10: chỉ 2 gói — 1 năm 1.190.000đ · 3 năm 2.490.000đ (bỏ 2 năm). Quyền lợi: app đủ tính năng, website mini, thiết kế hình, 12/36 bài truyền thông, Sale nhập tồn lần đầu ≤50 mã (>50 mã thương lượng gói full shop). Hiện ở màn thanh toán app (qlBlock), setup/, so-sanh.html.
 - Cần tab **CauHinh** có số tài khoản nhận tiền (bank_), thiếu thì không tự duyệt.
+
+## 11. Phiên 25/10 tối (đọc thêm bản đủ trong Project: `claude/BAN_GIAO_PHIEN_25-10_SHOP_GON_NHAN_VIEN_PHIEU_NHAP_DONG_BO_2_MAY.md`)
+- Dự án Google Cloud Shop Gọn đã **bật Drive API + Sheets API** (thiếu là mọi shop không mở được sổ, lỗi 403).
+- Bỏ gửi ảnh UNC trong app: shop gửi biên lai Zalo cho Sale, admin duyệt tay (quản trị có nút "＋ Gia hạn").
+- Nhập hàng: 2 tab Nhập hôm nay / Đã nhập · **phiếu nhập** (bảng `Phieu`) · thu cũ đổi mới · sổ chi + chốt két (bảng `Chi`) · đổi máy / trả hàng.
+- **Nhân viên cửa hàng đăng nhập SĐT**: máy chủ v14 `nvApi_` (nvSync/nvLogin/nvBan); chủ shop xác minh bằng token Google; NV chỉ Bán + tổng kết ngày; đơn NV về sổ khi app chủ mở. `localStorage shopgon_nv` có → app vào chế độ NV.
+- **Đồng bộ gộp 3 chiều** (`GG.merge`, base `shopgon_base_<sheetId>`): 2 máy chủ shop không đè đơn nhau; phụ kiện cộng dồn chênh lệch.
+- Sổ tay chào hàng & bảng giá (`/setup/`) KHÔNG còn link trong app chủ shop / trang chủ — chỉ ở App Sale (thẻ Shop Gọn).
+- Việc tiếp: anh bán thử 1 ngày thật với Hồng Nhi → đóng băng tính năng.
