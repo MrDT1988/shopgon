@@ -3,65 +3,81 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Cài Shop Gọn — Hướng dẫn đăng nhập &amp; sử dụng</title>
-<meta name="description" content="Hướng dẫn cài Shop Gọn trên điện thoại: mở app, đăng nhập Gmail, kích hoạt và cách dùng từng tính năng.">
+<title>Sổ tay Shop Gọn — cài đặt, kích hoạt, bảng giá</title>
+<meta name="description" content="Sổ tay Shop Gọn cho Sale và chủ shop: mở app, đăng nhập Gmail, kích hoạt, chuyển khoản, cách dùng, bảng giá và so sánh với KiotViet, Sapo.">
 <link rel="icon" href="img/logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{color-scheme:light;--pen:#0f766e;--pen2:#0b5e57;--ink:#10302c;--mut:#4f6b67;--bg:#f3f7f6;--card:#fff;--line:#dbe7e4;--amber:#fff4dc;--amberb:#e9a21b}
+:root{color-scheme:light;--pen:#0f766e;--pen2:#0b5e57;--ink:#10302c;--mut:#4f6b67;--bg:#f3f7f6;--card:#fff;--line:#dbe7e4;--amber:#fff4dc;--amberb:#e9a21b;--red:#c2410c}
 *{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 'Be Vietnam Pro',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;-webkit-text-size-adjust:100%}
 a{color:var(--pen)}
-.wrap{max-width:760px;margin:0 auto;padding:0 16px}
-header.top{background:linear-gradient(135deg,#13998b,#0b5e57);color:#fff;padding:18px 0 26px}
+.wrap{max-width:780px;margin:0 auto;padding:0 16px}
+header.top{background:linear-gradient(135deg,#13998b,#0b5e57);color:#fff;padding:18px 0 28px}
 .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px}
 .brand img{width:40px;height:40px;border-radius:11px;background:#fff}
 .brand small{display:block;font-weight:500;font-size:12px;opacity:.9}
 h1{font-size:26px;line-height:1.25;margin:18px 0 6px;font-weight:800}
 .lead{margin:0;opacity:.95}
-.hero{display:grid;grid-template-columns:1fr;gap:14px;margin-top:-16px}
+nav.toc{position:sticky;top:0;z-index:5;background:rgba(243,247,246,.96);backdrop-filter:blur(6px);display:flex;gap:8px;overflow-x:auto;padding:10px 16px;margin:0 -16px;scrollbar-width:none;border-bottom:1px solid var(--line)}
+nav.toc::-webkit-scrollbar{display:none}
+nav.toc a{flex:none;background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 13px;font-weight:700;font-size:13.5px;text-decoration:none;color:var(--pen2)}
 .box{background:var(--card);border-radius:20px;padding:18px;box-shadow:0 6px 18px rgba(15,60,55,.08)}
+.hero{display:grid;grid-template-columns:1fr;gap:14px;margin-top:-16px;position:relative;z-index:1}
 .go{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--pen);color:#fff;text-decoration:none;font-weight:800;font-size:18px;padding:16px;border-radius:16px;box-shadow:0 6px 14px rgba(15,118,110,.3)}
-.go:active{transform:translateY(1px)}
+.go.alt{background:#fff;color:var(--pen2);border:2px solid var(--pen);box-shadow:none;font-size:16px;padding:12px;margin-top:10px}
 .url{text-align:center;font-weight:700;color:var(--pen2);margin:10px 0 0;font-size:15px;word-break:break-all}
 .qr{display:flex;gap:16px;align-items:center}
 .qr img{width:150px;height:150px;flex:none;border-radius:12px;border:1px solid var(--line);background:#fff}
 #qrJs{width:150px;height:150px;flex:none;display:none;place-items:center}
-.qr p{margin:0;font-size:14px;color:var(--mut)}
-.qr b{color:var(--ink)}
+.qr p{margin:0;font-size:14px;color:var(--mut)}.qr b{color:var(--ink)}
 .warn{background:var(--amber);border-left:4px solid var(--amberb);border-radius:10px;padding:10px 12px;font-size:14px;color:#5b4310;margin-top:12px}
-nav.toc{display:flex;gap:8px;overflow-x:auto;padding:14px 0 4px;scrollbar-width:none}
-nav.toc a{flex:none;background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-weight:700;font-size:14px;text-decoration:none;color:var(--pen2)}
-h2{font-size:21px;margin:30px 0 4px;font-weight:800}
+h2{font-size:22px;margin:34px 0 4px;font-weight:800}
+h2 .k{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:9px;background:var(--pen);color:#fff;font-size:15px;margin-right:6px;vertical-align:3px}
 .sub{margin:0 0 12px;color:var(--mut);font-size:14px}
+h3.part{font-size:16px;margin:22px 0 6px;color:var(--pen2);font-weight:800}
 .step{background:var(--card);border-radius:20px;padding:16px;margin:12px 0;box-shadow:0 4px 14px rgba(15,60,55,.07);display:grid;grid-template-columns:1fr;gap:12px}
 .step .h{display:flex;gap:10px;align-items:flex-start}
-.n{flex:none;width:32px;height:32px;border-radius:50%;background:var(--pen);color:#fff;font-weight:800;display:grid;place-items:center;font-size:15px}
+.n{flex:none;min-width:32px;height:32px;border-radius:50%;background:var(--pen);color:#fff;font-weight:800;display:grid;place-items:center;font-size:15px;padding:0 6px}
 .step h3{margin:3px 0 2px;font-size:17px;font-weight:800}
-.step ul{margin:6px 0 0;padding-left:18px}
-.step li{margin:3px 0}
-.shot{display:block;width:100%;max-width:270px;margin:0 auto;border-radius:22px;border:6px solid #14211f;box-shadow:0 8px 22px rgba(15,60,55,.2);background:#fff}
+.step ul,.step ol{margin:6px 0 0;padding-left:20px}.step li{margin:4px 0}
+.shot{display:block;width:100%;max-width:260px;margin:0 auto;border-radius:22px;border:6px solid #14211f;box-shadow:0 8px 22px rgba(15,60,55,.2);background:#fff}
 .tip{font-size:13.5px;color:#5b4310;background:var(--amber);border-radius:10px;padding:8px 10px;margin-top:8px}
-.goi2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}.goi2 .box{padding:14px}.goi2 .gg{font-size:22px;font-weight:800;color:var(--pen2);margin:4px 0}.goi2 small{color:var(--mut);font-size:12.5px;line-height:1.35;display:block}.goi2 .chon{border:2px solid var(--pen)}
-.feat{display:grid;grid-template-columns:1fr;gap:12px}
+.ok{font-size:13.5px;color:#0b5e57;background:#e6f6f2;border-radius:10px;padding:8px 10px;margin-top:8px}
+.goi2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0}
+.goi2 .box{padding:14px}.goi2 .gg{font-size:23px;font-weight:800;color:var(--pen2);margin:4px 0}
+.goi2 small{color:var(--mut);font-size:12.5px;line-height:1.4;display:block}.goi2 .chon{border:2px solid var(--pen)}
+.promo{background:linear-gradient(135deg,#fff4dc,#ffe7b8);border-radius:16px;padding:12px 14px;font-weight:700;color:#7a4d00;margin:10px 0}
+.bars{display:flex;flex-direction:column;gap:10px}
+.bar .t{display:flex;justify-content:space-between;gap:8px;font-size:14px}.bar .t b{font-weight:800}
+.bar .t small{display:block;color:var(--mut);font-weight:500;font-size:12px}
+.bar .r{height:10px;background:#e7efed;border-radius:999px;overflow:hidden;margin-top:5px}.bar .r i{display:block;height:100%;background:#94a3a0;border-radius:999px}
+.bar.sg .t b{color:var(--pen2)}.bar.sg .r i{background:var(--pen)}
+.ss{overflow-x:auto;margin:10px 0}
+table{border-collapse:collapse;width:100%;min-width:480px;background:#fff;border-radius:14px;overflow:hidden;font-size:13.5px}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:#eef5f3;font-weight:800}th small{display:block;font-weight:500;color:var(--mut)}
+td.sg,th.sg{background:#e6f6f2;font-weight:700;color:var(--pen2)}td.ko{color:var(--red)}
+.ly{display:grid;grid-template-columns:1fr;gap:10px}
+.ly div{background:#fff;border-radius:16px;padding:12px 14px;box-shadow:0 2px 8px rgba(15,60,55,.06);font-size:14px;color:var(--mut)}
+.ly b{display:block;color:var(--ink);font-size:15px;margin-bottom:2px}
+.pitch{background:#10302c;color:#e6f6f2;border-radius:18px;padding:16px}
+.pitch b{color:#fff}.pitch ol{margin:6px 0 0;padding-left:20px}.pitch li{margin:6px 0}
 .faq details{background:#fff;border-radius:14px;padding:12px 14px;margin:8px 0;box-shadow:0 2px 8px rgba(15,60,55,.06)}
-.faq summary{font-weight:700;cursor:pointer}
-.faq p{margin:8px 0 0;color:var(--mut);font-size:14px}
+.faq summary{font-weight:700;cursor:pointer}.faq p{margin:8px 0 0;color:var(--mut);font-size:14px}
+.src{font-size:12px;color:var(--mut);margin-top:8px}
 footer{text-align:center;color:var(--mut);font-size:13px;padding:30px 0 40px}
-@media(min-width:640px){
-  .hero{grid-template-columns:1.1fr 1fr}
-  .step{grid-template-columns:1fr 240px;align-items:start}
-  .shot{max-width:240px}
-}
+@media(min-width:640px){.hero{grid-template-columns:1.1fr 1fr}.step.img{grid-template-columns:1fr 240px;align-items:start}.shot{max-width:240px}.ly{grid-template-columns:1fr 1fr}}
 @media print{nav.toc,.go{display:none}body{background:#fff}.step,.box{box-shadow:none;border:1px solid var(--line);break-inside:avoid}}
 </style>
 </head>
 <body>
 <header class="top"><div class="wrap">
-  <div class="brand"><img src="img/logo.jpg" alt=""><div>Shop Gọn<small>Hướng dẫn cài đặt &amp; sử dụng</small></div></div>
-  <h1>Cài Shop Gọn trong 2 phút</h1>
-  <p class="lead">Mở app là xem thử được ngay. Đăng nhập Gmail của shop, gửi đề nghị kích hoạt — Shop Gọn bật xong là nhập tồn, bán hàng được liền.</p>
+  <div class="brand"><img src="img/logo.jpg" alt=""><div>Shop Gọn<small>Sổ tay cài đặt · kích hoạt · bảng giá</small></div></div>
+  <h1>App bán hàng cho shop điện thoại — cài trong 5 phút</h1>
+  <p class="lead">Quản lý bán hàng + truyền thông online + website mini trong 1 gói. Mở app là xem thử ngay, kích hoạt xong là bán được liền.</p>
 </div></header>
 
 <div class="wrap">
@@ -69,109 +85,190 @@ footer{text-align:center;color:var(--mut);font-size:13px;padding:30px 0 40px}
     <div class="box">
       <a class="go" id="goApp" href="https://shopgon.vn/app/">📱 Mở Shop Gọn ngay</a>
       <p class="url" id="goUrl">shopgon.vn/app</p>
-      <div class="warn">Mở bằng <b>Chrome</b> (Android) hoặc <b>Safari</b> (iPhone). Đừng mở ngay trong Zalo / Facebook — Google không cho đăng nhập ở đó.</div>
+      <a class="go alt" id="goDemo" href="https://shopgon.vn/app/?demo=1">👀 Xem bản demo (Sale đưa shop xem)</a>
+      <div class="warn">Mở bằng <b>Chrome</b> (Android) hoặc <b>Safari</b> (iPhone). Không mở ngay trong Zalo / Facebook — Google không cho đăng nhập ở đó.</div>
     </div>
     <div class="box qr">
       <img id="qrImg" src="img/qr-app.svg" alt="Mã QR mở shopgon.vn/app"><div id="qrJs"></div>
-      <p><b>Quét bằng camera điện thoại của shop</b><br>Mã QR mở thẳng app Shop Gọn. Sale cho chủ shop quét ngay tại quầy.</p>
+      <p><b>Cách 2: quét mã QR</b><br>Chủ shop mở <b>camera</b> điện thoại của shop, đưa vào mã này, bấm vào đường link hiện ra là mở app.</p>
     </div>
   </div>
 
-  <nav class="toc"><a href="#goi">Bảng giá</a><a href="#dangnhap">① Đăng nhập &amp; kích hoạt</a><a href="#manhinh">② Đưa ra màn hình chính</a><a href="#tinhnang">③ Cách dùng</a><a href="#loi">④ Gặp lỗi</a></nav>
+  <nav class="toc"><a href="#chao">Chào hàng</a><a href="#gia">Bảng giá</a><a href="#ss">So sánh đối thủ</a><a href="#cai">Cài &amp; kích hoạt</a><a href="#mh">Màn hình chính</a><a href="#dung">Cách dùng</a><a href="#loi">Gặp lỗi</a></nav>
 
-  <h2 id="goi">Bảng giá &amp; quyền lợi</h2>
-  <div class="goi2"><div class="box"><b>Gói 1 năm</b><div class="gg">990.000đ</div><small>🎁 Ưu đãi 100 shop đầu (giá gốc <s>1.190.000đ</s>) · 12 bài truyền thông</small></div>
-  <div class="box chon"><b>Gói 3 năm</b><div class="gg">2.490.000đ</div><small>≈ 2.300đ/ngày · 36 bài truyền thông · tiết kiệm 1.080.000đ</small></div></div>
+  <!-- ===== 1. CHÀO HÀNG ===== -->
+  <h2 id="chao"><span class="k">1</span>Chào hàng trong 1 phút</h2>
+  <p class="sub">Sale nói 3 ý, rồi mở bản demo cho shop bấm thử.</p>
+  <div class="pitch"><ol>
+    <li><b>Quản lý bán hàng, tránh thất thoát:</b> máy theo IMEI, tồn kho, bảo hành, biết lời lỗ mỗi ngày ngay trên điện thoại.</li>
+    <li><b>Hỗ trợ truyền thông:</b> có sẵn ảnh máy chính hãng, ra hình kèm giá để đăng Zalo, Facebook; mỗi tháng Shop Gọn thiết kế thêm 1 bài cho shop.</li>
+    <li><b>Website nhỏ gọn riêng cho shop:</b> bảng giá online gửi link cho khách, khách bấm gọi / Zalo là chốt.</li>
+  </ol>
+  <p style="margin:10px 0 0">Giá chỉ <b>990.000đ năm đầu</b> (100 shop đầu tiên), rẻ hơn KiotViet gần 3 lần — và <b>Sale cài tận shop, nhập sẵn 50 mã hàng</b>.</p></div>
+  <div class="ly" style="margin-top:12px">
+    <div><b>Có người cài tận nơi</b>Sale xuống shop cài đặt, nhập tồn lần đầu, chỉ cách dùng.</div>
+    <div><b>Quản từng máy theo IMEI</b>Nhập máy theo lô, quét IMEI bằng camera, biết máy nào tồn lâu.</div>
+    <div><b>Bán nhanh, QR đúng số tiền</b>Giỏ nhiều món, in hóa đơn, mã QR chuyển khoản tự ra đúng tổng tiền.</div>
+    <div><b>Dữ liệu là của shop</b>Sổ bán hàng nằm trên Google Drive của chính chủ shop, Shop Gọn không giữ.</div>
+  </div>
+
+  <!-- ===== 2. BẢNG GIÁ ===== -->
+  <h2 id="gia"><span class="k">2</span>Bảng giá &amp; quyền lợi</h2>
+  <div class="promo">🎁 Ưu đãi 100 shop đầu tiên: gói 1 năm chỉ <b>990.000đ</b> <s style="font-weight:500">1.190.000đ</s></div>
+  <div class="goi2"><div class="box"><b>Gói 1 năm</b><div class="gg">990.000đ</div><small>Giá gốc <s>1.190.000đ</s> · ≈ 2.700đ/ngày · 12 bài truyền thông</small></div>
+  <div class="box chon"><b>Gói 3 năm</b><div class="gg">2.490.000đ</div><small>≈ 2.300đ/ngày · 36 bài truyền thông · tiết kiệm 1.080.000đ so với mua 3 lần gói 1 năm</small></div></div>
   <div class="step"><div><b>Gói nào cũng có</b><ul>
     <li>App quản lý bán hàng đủ tính năng: IMEI, kho, bảo hành, lời lỗ, hóa đơn QR.</li>
     <li>Website mini — bảng giá online gửi khách qua Zalo.</li>
-    <li>Thiết kế hình sản phẩm, kho ảnh máy chính hãng tự cập nhật.</li>
+    <li>Thiết kế hình sản phẩm, kho ảnh máy chính hãng tự cập nhật (ngày 10, 20 và cuối tháng).</li>
     <li>1 bài truyền thông/tháng do Shop Gọn thiết kế (1 năm 12 bài · 3 năm 36 bài).</li>
     <li>Sale cài app tận shop, <b>nhập tồn lần đầu tối đa 50 mã</b> hàng bán chạy, giá trị cao + hướng dẫn sử dụng.</li>
     <li>Dữ liệu nằm trong Google Drive của chính shop.</li></ul>
     <div class="tip">💡 Shop trên 50 mã hàng: thương lượng với Sale gói hỗ trợ nhập full shop.</div></div></div>
 
-  <h2 id="dangnhap">① Đăng nhập &amp; kích hoạt</h2>
-  <p class="sub">5 bước. Sale nên cầm máy làm cùng chủ shop.</p>
+  <!-- ===== 3. SO SÁNH ===== -->
+  <h2 id="ss"><span class="k">3</span>So sánh với đối thủ</h2>
+  <p class="sub">Giá 1 năm cho 1 cửa hàng, gói thấp nhất của mỗi bên.</p>
+  <div class="box bars">
+    <div class="bar"><div class="t"><span>KiotViet<small>Gói hỗ trợ 270.000đ/tháng</small></span><b>3.240.000đ</b></div><div class="r"><i style="width:100%"></i></div></div>
+    <div class="bar"><div class="t"><span>Sapo<small>Start Up 170.000đ/tháng</small></span><b>2.040.000đ</b></div><div class="r"><i style="width:63%"></i></div></div>
+    <div class="bar"><div class="t"><span>Nhanh.vn*<small>POS Basic 150.000đ/tháng</small></span><b>1.800.000đ</b></div><div class="r"><i style="width:56%"></i></div></div>
+    <div class="bar"><div class="t"><span>MISA eShop*<small>Cơ bản ~100.000đ/tháng</small></span><b>1.200.000đ</b></div><div class="r"><i style="width:37%"></i></div></div>
+    <div class="bar sg"><div class="t"><span><b>Shop Gọn</b><small>Gói 1 năm (100 shop đầu)</small></span><b>990.000đ</b></div><div class="r"><i style="width:31%"></i></div></div>
+  </div>
+  <div class="ss"><table>
+    <thead><tr><th></th><th class="sg">Shop Gọn<small>990.000đ năm đầu</small></th><th>KiotViet<small>Gói hỗ trợ</small></th><th>Sapo<small>Start Up</small></th></tr></thead>
+    <tbody>
+      <tr><td>Quản lý bán hàng, kho</td><td class="sg">✓</td><td>✓</td><td>✓</td></tr>
+      <tr><td>Website / bảng giá online</td><td class="sg">✓ Có sẵn</td><td class="ko">Phải lên gói 330.000đ/tháng</td><td class="ko">Phải lên gói 600.000đ/tháng</td></tr>
+      <tr><td>Thiết kế hình sản phẩm đăng Zalo, Facebook</td><td class="sg">✓ Có sẵn</td><td class="ko">Không có</td><td class="ko">Không có</td></tr>
+      <tr><td>Kho ảnh máy chính hãng, tự cập nhật</td><td class="sg">✓ 3 lần/tháng</td><td class="ko">Không có</td><td class="ko">Không có</td></tr>
+      <tr><td>Bài truyền thông thiết kế sẵn</td><td class="sg">✓ 1 bài/tháng</td><td class="ko">Không có</td><td class="ko">Không có</td></tr>
+    </tbody>
+  </table></div>
+  <div class="box bars">
+    <div style="font-weight:800">Muốn có cả website bán hàng, 1 năm tốn bao nhiêu?</div>
+    <div class="bar"><div class="t"><span>Sapo<small>Gói Advanced 600.000đ/tháng</small></span><b>7.200.000đ</b></div><div class="r"><i style="width:100%"></i></div></div>
+    <div class="bar"><div class="t"><span>KiotViet<small>Gói chuyên nghiệp 330.000đ/tháng</small></span><b>3.960.000đ</b></div><div class="r"><i style="width:55%"></i></div></div>
+    <div class="bar sg"><div class="t"><span><b>Shop Gọn</b><small>Đã gồm bảng giá online</small></span><b>990.000đ</b></div><div class="r"><i style="width:14%"></i></div></div>
+    <div class="ok">Dùng 3 năm: KiotViet 9.720.000đ · Shop Gọn 2.490.000đ → shop <b>tiết kiệm 7.230.000đ</b>.</div>
+  </div>
+  <p class="src">Giá KiotViet, Sapo theo bảng giá công bố ngày 24/10/2026 (<a href="https://www.kiotviet.vn/phi-dich-vu" target="_blank" rel="noopener">KiotViet</a>, <a href="https://sapo.vn/bang-gia.html" target="_blank" rel="noopener">Sapo</a>). "Không có" = bảng giá của gói đó không ghi tính năng này. * Nhanh.vn, MISA eShop chỉ so giá, chưa đối chiếu bảng tính năng. Chi tiết: <a href="/so-sanh.html">shopgon.vn/so-sanh.html</a></p>
 
-  <div class="step"><div><div class="h"><span class="n">1</span><div><h3>Mở app — xem thử ngay</h3>
-    <ul><li>Bấm nút <b>Mở Shop Gọn ngay</b> hoặc quét mã QR ở trên.</li><li>App mở ra với <b>dữ liệu mẫu</b>, không cần đăng nhập. Bấm thử từng màn cho shop xem.</li></ul></div></div></div>
-    <img class="shot" src="img/b1_xem.webp" alt="App đang xem thử" loading="lazy"></div>
+  <!-- ===== 4. CÀI & KÍCH HOẠT ===== -->
+  <h2 id="cai"><span class="k">4</span>Cài đặt &amp; kích hoạt từng bước</h2>
+  <p class="sub">Sale cầm máy của chủ shop làm cùng. Chuẩn bị: điện thoại của shop có mạng, <b>Gmail của shop</b> (nhớ mật khẩu), app ngân hàng để chuyển khoản.</p>
 
-  <div class="step"><div><div class="h"><span class="n">2</span><div><h3>Đăng nhập Gmail của shop</h3>
-    <ul><li>Bấm <b>Đăng nhập</b> trên thanh vàng (hoặc bấm vào tính năng bất kỳ).</li><li>Bấm <b>Đăng nhập bằng Google</b> → chọn <b>Gmail của shop</b> → bấm <b>Tiếp tục</b> đến cuối.</li></ul>
-    <div class="tip">💡 Dùng <b>1 Gmail cố định</b> của shop. Dữ liệu bán hàng lưu trong Google Drive của chính Gmail này.</div></div></div></div>
+  <h3 class="part">A. Mở app</h3>
+  <div class="step img"><div><div class="h"><span class="n">1</span><div><h3>Mở shopgon.vn/app</h3>
+    <ul><li><b>Cách 1:</b> trên điện thoại của shop, mở <b>Chrome</b> (Android) hoặc <b>Safari</b> (iPhone), gõ <b>shopgon.vn/app</b> rồi bấm Đi.</li>
+    <li><b>Cách 2:</b> mở <b>camera</b>, quét mã QR ở đầu trang này → bấm đường link hiện ra.</li>
+    <li>Link gửi qua Zalo: bấm <b>⋮</b> (hoặc ···) góc trên → <b>Mở bằng trình duyệt</b>.</li>
+    <li>App mở ra ở chế độ <b>Xem thử</b> với dữ liệu mẫu — chưa cần đăng nhập. Cho shop bấm thử Bán, Nhập máy, Kho.</li></ul></div></div></div>
+    <img class="shot" src="img/b1_xem.webp" alt="App xem thử" loading="lazy"></div>
+
+  <h3 class="part">B. Đăng nhập Gmail của shop</h3>
+  <div class="step img"><div><div class="h"><span class="n">2</span><div><h3>Bấm "Đăng nhập"</h3>
+    <ul><li>Bấm nút <b>Đăng nhập</b> trên thanh vàng ở đầu app (hoặc vào tab <b>Thêm → Kích hoạt Shop Gọn</b>).</li>
+    <li>Bảng hiện ra → bấm <b>Đăng nhập bằng Google</b>.</li></ul></div></div></div>
     <img class="shot" src="img/b2_dangnhap.webp" alt="Bảng đăng nhập Google" loading="lazy"></div>
+  <div class="step"><div><div class="h"><span class="n">3</span><div><h3>Chọn Gmail trên trang Google</h3>
+    <ol><li>Trang Google mở ra (tab mới hoặc cửa sổ nhỏ) → chọn <b>Gmail của shop</b>. Chưa có trong danh sách thì bấm <b>Sử dụng một tài khoản khác</b>, gõ Gmail + mật khẩu.</li>
+    <li>Google hỏi quyền cho <b>Shop Gọn</b> → bấm <b>Tiếp tục</b>. Nếu có ô <b>"Xem, chỉnh sửa, tạo các tệp Google Drive mà ứng dụng này dùng"</b> thì <b>đánh dấu chọn</b> rồi bấm Tiếp tục.</li>
+    <li>Trang Google tự đóng, quay về app. Thanh vàng đổi thành <b>"… chưa kích hoạt · Kích hoạt"</b> là đăng nhập xong.</li></ol>
+    <div class="tip">💡 Dùng <b>1 Gmail cố định</b> cho shop. Shop Gọn chỉ được đụng tới sổ do chính app tạo trong Drive, không xem được thư hay tệp khác. Mật khẩu chỉ nhập trên trang của Google, Sale không cần biết.</div></div></div></div>
 
-  <div class="step"><div><div class="h"><span class="n">3</span><div><h3>Gửi đề nghị kích hoạt</h3>
-    <ul><li>Bấm <b>Kích hoạt</b> trên thanh vàng.</li><li>Điền <b>Tên shop</b>, <b>SĐT liên hệ</b>. Ô <b>SĐT cộng tác viên</b>: số của Sale cài app.</li><li>Bấm <b>Gửi đề nghị kích hoạt</b>.</li></ul></div></div></div>
+  <h3 class="part">C. Gửi đề nghị kích hoạt</h3>
+  <div class="step img"><div><div class="h"><span class="n">4</span><div><h3>Điền thông tin shop</h3>
+    <ul><li>Bấm <b>Kích hoạt</b> trên thanh vàng.</li>
+    <li>Điền <b>Tên shop</b> (hiện to trên đầu app) và <b>SĐT liên hệ</b> của shop.</li>
+    <li>Ô <b>SĐT Sale / cộng tác viên giới thiệu</b>: số của Sale cài app — để ghi nhận hoa hồng. Mở app bằng link / QR của Sale thì ô này tự điền.</li>
+    <li>Bấm <b>Gửi đề nghị kích hoạt</b>.</li></ul></div></div></div>
     <img class="shot" src="img/b3_denghi.webp" alt="Màn đề nghị kích hoạt" loading="lazy"></div>
 
-  <div class="step"><div><div class="h"><span class="n">4</span><div><h3>Chuyển khoản &amp; gửi ảnh ủy nhiệm chi</h3>
-    <ul><li>Chọn gói <b>1 năm</b> hoặc <b>3 năm</b>, quét mã QR chuyển khoản trên màn này, <b>giữ nguyên nội dung</b> (SG + SĐT shop).</li><li>Chuyển xong bấm <b>📎 Gửi ảnh ủy nhiệm chi</b> → chọn ảnh chuyển khoản. Ảnh đúng thì app <b>mở khóa ngay</b>.</li><li>Bấm <b>Xem thử tiếp</b> — trong lúc chờ shop vẫn xem app bình thường.</li></ul></div></div></div>
-    <img class="shot" src="img/b4_unc.webp" alt="Màn gửi ủy nhiệm chi" loading="lazy"></div>
+  <h3 class="part">D. Chọn gói &amp; chuyển khoản</h3>
+  <div class="step img"><div><div class="h"><span class="n">5</span><div><h3>Chọn gói 1 năm hoặc 3 năm</h3>
+    <ul><li>Màn <b>Đang chờ kích hoạt</b> hiện ra, phần <b>Thanh toán để kích hoạt</b> ở dưới.</li>
+    <li>Bấm chọn <b>1 năm</b> hoặc <b>3 năm</b> — bên dưới hiện quyền lợi gói đó và ưu đãi đang chạy.</li></ul></div></div></div>
+    <img class="shot" src="img/b4_goi.webp" alt="Chọn gói" loading="lazy"></div>
+  <div class="step img"><div><div class="h"><span class="n">6</span><div><h3>Quét QR chuyển khoản</h3>
+    <ol><li>Mở <b>app ngân hàng</b> → <b>Quét QR</b> → quét mã trên màn hình (dùng máy khác để quét, hoặc chụp màn hình rồi chọn ảnh QR trong app ngân hàng).</li>
+    <li>Số tiền và nội dung <b>đã điền sẵn</b> (nội dung dạng <b>SG + SĐT shop</b>). <b>Giữ nguyên, không sửa.</b></li>
+    <li>Xác nhận chuyển → app ngân hàng báo <b>thành công</b> → <b>chụp màn hình</b> biên lai đó.</li></ol>
+    <div class="tip">💡 Chuyển tay không quét QR thì phải gõ đúng số tiền của gói và nội dung <b>SG + SĐT shop</b>.</div></div></div></div>
+    <img class="shot" src="img/b5_ck.webp" alt="QR chuyển khoản" loading="lazy"></div>
 
-  <div class="step"><div><div class="h"><span class="n">5</span><div><h3>App tự mở khóa</h3>
-    <ul><li>Shop Gọn nhận tiền và bật tính năng → app <b>tự mở khóa</b>, hiện tên shop trên đầu và nhãn <b>Đã kích hoạt</b>.</li><li>Lúc này mới nhập tồn, bán hàng thật. Dữ liệu tự lưu vào Google Drive của shop.</li></ul>
-    <div class="tip">💡 Dữ liệu mẫu lúc xem thử không chuyển sang sổ thật. Đừng nhập tồn thật khi chưa kích hoạt.</div></div></div></div>
+  <h3 class="part">E. Gửi ủy nhiệm chi → mở khóa</h3>
+  <div class="step img"><div><div class="h"><span class="n">7</span><div><h3>Gửi ảnh ủy nhiệm chi</h3>
+    <ul><li>Quay lại Shop Gọn, kéo xuống bấm <b>📎 Gửi ảnh ủy nhiệm chi (ảnh chuyển khoản)</b> → chọn ảnh vừa chụp.</li>
+    <li>Ảnh đúng số tiền gói, đúng nội dung, đúng tài khoản nhận, giao dịch thành công → app báo <b>"✅ Đã kiểm ủy nhiệm chi"</b> và <b>mở khóa ngay</b>.</li>
+    <li>Ảnh chưa khớp (mờ, sửa nội dung, sai số tiền…) → app ghi lý do, Shop Gọn kiểm tay và kích hoạt sớm; app <b>tự mở khóa</b> khi xong (không cần bấm gì).</li></ul></div></div></div>
+    <img class="shot" src="img/b4_unc.webp" alt="Gửi ủy nhiệm chi" loading="lazy"></div>
+  <div class="step img"><div><div class="h"><span class="n">8</span><div><h3>Vào app thành công</h3>
+    <ul><li>Tên shop hiện to trên đầu, nhãn <b>Đã kích hoạt</b>. App tự tạo sổ <b>"Shop Gọn - tên shop"</b> trong Google Drive của shop.</li>
+    <li>Dữ liệu mẫu lúc xem thử <b>không</b> chuyển sang — sổ thật bắt đầu trống.</li>
+    <li>Sale <b>nhập tồn lần đầu tối đa 50 mã</b> (máy bán chạy, giá trị cao) ở tab <b>Nhập máy</b>, rồi bán thử 1 đơn cùng chủ shop.</li></ul></div></div></div>
     <img class="shot" src="img/b5_mo.webp" alt="App đã kích hoạt" loading="lazy"></div>
 
-  <h2 id="manhinh">② Đưa Shop Gọn ra màn hình chính</h2>
-  <p class="sub">Làm 1 lần, lần sau bấm biểu tượng là vào.</p>
+  <!-- ===== 5. MÀN HÌNH CHÍNH ===== -->
+  <h2 id="mh"><span class="k">5</span>Đưa app ra màn hình chính</h2>
+  <p class="sub">Làm 1 lần, lần sau bấm biểu tượng Shop Gọn là vào như app thật.</p>
   <div class="step"><div>
-    <ul><li><b>Android (Chrome):</b> bấm <b>⋮</b> góc trên phải → <b>Thêm vào màn hình chính</b> → <b>Thêm</b>.</li>
-    <li><b>iPhone (Safari):</b> bấm nút <b>Chia sẻ</b> (ô vuông có mũi tên) → <b>Thêm vào MH chính</b> → <b>Thêm</b>.</li>
-    <li>Lần sau mở app, đăng nhập <b>đúng Gmail cũ</b> để thấy lại dữ liệu.</li></ul></div></div>
+    <ul><li><b>Android (Chrome):</b> bấm <b>⋮</b> góc trên phải → <b>Thêm vào màn hình chính</b> (hoặc <b>Cài đặt ứng dụng</b>) → <b>Thêm</b>.</li>
+    <li><b>iPhone (Safari):</b> bấm nút <b>Chia sẻ</b> (ô vuông có mũi tên lên) → kéo xuống <b>Thêm vào MH chính</b> → <b>Thêm</b>.</li>
+    <li>Mở lại app sau vài ngày mà thấy chế độ xem thử: bấm <b>Đăng nhập</b>, chọn <b>đúng Gmail cũ</b> là thấy lại sổ của shop.</li>
+    <li>Dùng thêm máy thứ 2 (máy chủ shop, máy nhân viên): mở shopgon.vn/app trên máy đó, đăng nhập <b>cùng Gmail của shop</b>.</li></ul></div></div>
 
-  <h2 id="tinhnang">③ Cách dùng từng tính năng</h2>
+  <!-- ===== 6. CÁCH DÙNG ===== -->
+  <h2 id="dung"><span class="k">6</span>Cách dùng từng tính năng</h2>
   <p class="sub">5 thanh dưới đáy app: Hôm nay · Bán · Nhập máy · Kho · Thêm.</p>
-
-  <div class="step"><div><div class="h"><span class="n">📦</span><div><h3>Nhập máy — đưa hàng vào kho</h3>
+  <div class="step img"><div><div class="h"><span class="n">📦</span><div><h3>Nhập máy — đưa hàng vào kho</h3>
     <ul><li><b>Nhập điện thoại:</b> gõ tên máy (có gợi ý), chọn hãng, <b>quét IMEI</b> bằng nút camera hoặc gõ, mỗi dòng 1 máy. Điền giá nhập, giá bán dự kiến → <b>Nhập vào kho</b>.</li>
     <li><b>Nhập hàng khác:</b> phụ kiện, sim, linh kiện theo nhóm và số lượng.</li>
-    <li><b>Nhập từ ảnh hóa đơn:</b> chụp phiếu nhập, app tự đọc tên máy.</li></ul></div></div></div>
+    <li><b>Nhập từ ảnh hóa đơn:</b> chụp phiếu nhập, app tự đọc tên máy và số lượng.</li></ul></div></div></div>
     <img class="shot" src="img/f_add.webp" alt="Màn Nhập máy" loading="lazy"></div>
-
-  <div class="step"><div><div class="h"><span class="n">🛒</span><div><h3>Bán — lên đơn, in hóa đơn</h3>
+  <div class="step img"><div><div class="h"><span class="n">🛒</span><div><h3>Bán — lên đơn, in hóa đơn</h3>
     <ul><li>Quét IMEI hoặc gõ tên máy → nhập giá bán → thêm vào đơn. Thêm phụ kiện, dịch vụ cùng đơn.</li>
-    <li>Chọn <b>Tiền mặt</b> hoặc <b>Chuyển khoản</b> (app hiện QR đúng số tiền) → <b>In hóa đơn</b>.</li>
+    <li>Chọn <b>Tiền mặt</b> hoặc <b>Chuyển khoản</b> (app hiện QR đúng số tiền vào tài khoản của shop) → <b>In hóa đơn</b>.</li>
     <li>Ghi tên, SĐT khách để tra bảo hành sau này.</li></ul></div></div></div>
     <img class="shot" src="img/f_sell.webp" alt="Màn Bán" loading="lazy"></div>
-
-  <div class="step"><div><div class="h"><span class="n">🗂️</span><div><h3>Kho — xem tồn theo hãng</h3>
+  <div class="step img"><div><div class="h"><span class="n">🗂️</span><div><h3>Kho — xem tồn theo hãng</h3>
     <ul><li>Máy gom theo hãng, theo mẫu; bấm vào để xem từng IMEI.</li>
     <li>Ô <b>Tồn trên 45 ngày</b> nhắc máy tồn lâu cần đẩy.</li>
     <li>Nút <b>Tạo bảng giá gửi khách từ tồn kho</b> → ra bảng giá online gửi Zalo.</li></ul></div></div></div>
     <img class="shot" src="img/f_stock.webp" alt="Màn Kho" loading="lazy"></div>
-
-  <div class="step"><div><div class="h"><span class="n">📊</span><div><h3>Hôm nay — doanh thu &amp; tiền lời</h3>
+  <div class="step img"><div><div class="h"><span class="n">📊</span><div><h3>Hôm nay — doanh thu &amp; tiền lời</h3>
     <ul><li>Doanh thu, tiền lời, thu hộ trong ngày; bấm <b>Xem chi tiết đơn</b> để xem từng đơn.</li>
     <li><b>Tình hình kinh doanh</b> theo ngày / theo tháng, bấm từng cột xem chi tiết.</li></ul></div></div></div>
     <img class="shot" src="img/f_home.webp" alt="Màn Hôm nay" loading="lazy"></div>
-
-  <div class="step"><div><div class="h"><span class="n">⋯</span><div><h3>Thêm — công cụ của shop</h3>
+  <div class="step img"><div><div class="h"><span class="n">⋯</span><div><h3>Thêm — công cụ của shop</h3>
     <ul><li><b>Bảng giá online:</b> trang giá riêng của shop, gửi khách qua Zalo/Facebook (khách chỉ thấy còn/hết hàng).</li>
     <li><b>Thiết kế hình:</b> chọn máy, điền giá → ra ảnh đăng Facebook, Zalo.</li>
     <li><b>Tiện ích:</b> bật/tắt phụ kiện, sim, sửa chữa, thu hộ… cho app gọn.</li>
-    <li><b>Tra IMEI · Bảo hành</b>, <b>Đơn đã bán</b>, <b>Cài đặt</b> (tên shop, tài khoản ngân hàng để hiện QR khi bán).</li></ul></div></div></div>
+    <li><b>Cài đặt:</b> tên shop, % lời, <b>tài khoản ngân hàng của shop</b> để hiện QR khi bán.</li>
+    <li><b>Gia hạn:</b> gần hết hạn vào đây chuyển khoản + gửi ủy nhiệm chi, app không bị gián đoạn.</li>
+    <li><b>Hướng dẫn &amp; bảng giá:</b> mở lại trang này.</li></ul></div></div></div>
     <img class="shot" src="img/f_more.webp" alt="Màn Thêm" loading="lazy"></div>
 
-  <h2 id="loi">④ Gặp lỗi khi đăng nhập</h2>
+  <!-- ===== 7. LỖI ===== -->
+  <h2 id="loi"><span class="k">7</span>Gặp lỗi thì làm gì</h2>
   <div class="faq">
-    <details open><summary>Đang mở trong Zalo / Facebook</summary><p>Google chặn đăng nhập trong trình duyệt của Zalo/Facebook. Bấm ⋮ hoặc ··· → <b>Mở bằng trình duyệt</b>, hoặc mở Chrome/Safari rồi gõ <b>shopgon.vn/app</b>.</p></details>
-    <details><summary>Báo "Bạn đã bấm Hủy hoặc chưa cho phép"</summary><p>Bấm <b>Đăng nhập bằng Google</b> lại → chọn Gmail → bấm <b>Tiếp tục</b> đến hết, không đóng tab Google giữa chừng.</p></details>
+    <details open><summary>Bấm đăng nhập báo lỗi / đang mở trong Zalo, Facebook</summary><p>Google chặn đăng nhập trong trình duyệt của Zalo/Facebook. Bấm <b>⋮</b> hoặc <b>···</b> → <b>Mở bằng trình duyệt</b>, hoặc mở Chrome/Safari rồi gõ <b>shopgon.vn/app</b>.</p></details>
+    <details><summary>App báo "Bạn đã bấm Hủy hoặc chưa cho phép"</summary><p>Bấm <b>Đăng nhập bằng Google</b> lại → chọn Gmail → bấm <b>Tiếp tục</b> đến hết, không đóng tab Google giữa chừng.</p></details>
+    <details><summary>App báo "Chưa tạo được sổ dữ liệu trong Google Drive"</summary><p>Lúc Google hỏi quyền đã bỏ ô Google Drive. Bấm <b>Đăng nhập bằng Google</b> lại và <b>đánh dấu ô Google Drive</b> rồi Tiếp tục.</p></details>
     <details><summary>Bấm đăng nhập không thấy gì (iPhone)</summary><p>Vào <b>Cài đặt → Safari → tắt "Chặn cửa sổ bật lên"</b>, rồi bấm đăng nhập lại.</p></details>
     <details><summary>Gmail công ty / Gmail của con bị chặn</summary><p>Dùng một Gmail cá nhân thường của chủ shop.</p></details>
-    <details><summary>Đã chuyển khoản mà chưa mở khóa</summary><p>Kiểm tra đã gửi ảnh ủy nhiệm chi chưa. Shop Gọn xác nhận tiền xong app tự mở; có thể bấm <b>Kích hoạt → Kiểm tra lại</b>. Lâu quá liên hệ Sale cài app.</p></details>
+    <details><summary>Đã chuyển khoản mà chưa mở khóa</summary><p>Kiểm tra đã bấm <b>Gửi ảnh ủy nhiệm chi</b> chưa. Ảnh chưa khớp thì Shop Gọn kiểm tay — tiền về là app tự mở. Lâu quá liên hệ Sale cài app.</p></details>
+    <details><summary>Mở lại app thấy dữ liệu mẫu, mất sổ của shop</summary><p>Không mất: bấm <b>Đăng nhập</b>, chọn <b>đúng Gmail của shop</b>. Sổ vẫn nằm trong Google Drive của Gmail đó.</p></details>
   </div>
 
   <footer>Shop Gọn · <a href="https://shopgon.vn">shopgon.vn</a> · Cần hỗ trợ: liên hệ Sale đã cài app cho shop</footer>
 </div>
 
 <script>
-/* Sale mở trang với ?ctv=SĐT → nút + mã QR mang theo SĐT cộng tác viên */
+/* Sale mở trang với ?ctv=SĐT → nút mở app, demo và mã QR mang theo SĐT cộng tác viên */
 (function(){var q=new URLSearchParams(location.search),c=(q.get('ctv')||q.get('sale')||'').replace(/[^\d]/g,'').slice(0,15);if(!c)return;
-  var u='https://shopgon.vn/app/?ctv='+c,a=document.getElementById('goApp');a.href=u;document.getElementById('goUrl').textContent='shopgon.vn/app · CTV '+c;
+  var u='https://shopgon.vn/app/?ctv='+c;document.getElementById('goApp').href=u;document.getElementById('goDemo').href='https://shopgon.vn/app/?demo=1&ctv='+c;document.getElementById('goUrl').textContent='shopgon.vn/app · CTV '+c;
   var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';s.onload=function(){var b=document.getElementById('qrJs');b.style.display='grid';document.getElementById('qrImg').style.display='none';new QRCode(b,{text:u,width:150,height:150,colorDark:'#0b5e57',correctLevel:QRCode.CorrectLevel.M})};document.head.appendChild(s)})();
 </script>
 </body>
