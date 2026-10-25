@@ -160,7 +160,7 @@ function sample(){const t=fD(new Date());const ago=n=>addD(t,-n);
   const tt=[[ago(44),'phucloc@gmail.com','Phúc Lộc ĐTDĐ',36,2000000,'Kích hoạt','0388123456'],[ago(36),'cuong@gmail.com','Cường Mobile',12,1000000,'Kích hoạt',''],[ago(29),'hoangkim@gmail.com','Hoàng Kim Phone',12,1000000,'Kích hoạt','0901234567'],
     [ago(20),'ngocanh@gmail.com','Ngọc Anh Mobile',24,1500000,'Kích hoạt','0912888168'],[ago(2),'hoangkim@gmail.com','Hoàng Kim Phone',12,1000000,'Gia hạn','0901234567'],[ago(0),'cuong@gmail.com','Cường Mobile',12,1000000,'Gia hạn','']]
     .map(([ngay,email,shop,m,tien,loai,c])=>({ngay,email,shop,m,tien,loai,ctv:c,hh:c?Math.round(tien*.5):0}));
-  return {kh,tt,ctv,goi:[{m:12,ten:'1 năm',gia:1000000},{m:24,ten:'2 năm',gia:1500000},{m:36,ten:'3 năm',gia:2000000}],hhPct:50,today:t}}
+  return {kh,tt,ctv,goi:[{m:12,ten:'1 năm',gia:1190000},{m:36,ten:'3 năm',gia:2490000}],hhPct:50,today:t}}
 function call(fn,...a){if(!LIVE)return Promise.resolve(fake(fn,...a));
   return fetch(API,{method:'POST',body:JSON.stringify({act:'admin',pin:PIN,fn,args:a})}).then(r=>r.json()).then(r=>{if(r.ok)return r.data;if(r.pin){try{localStorage.removeItem(KPIN)}catch(e){}PIN='';showGate(r.msg)}throw new Error(r.msg||'Lỗi máy chủ')})}
 function showGate(msg){$('gate').hidden=false;$('pinErr').textContent=msg||'';setTimeout(()=>$('pinIn').focus(),50)}
