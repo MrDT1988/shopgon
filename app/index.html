@@ -809,12 +809,13 @@ function renderStock(){
   const imeiHit=/^\d{4,}$/.test(stockQ.trim());
   $('v-stock').innerHTML+=`<div class="panel"><div class="list">${groups.length?groups.map(g=>{const [k]=ageClass(g.old);const open=imeiHit||expModel.has(g.ten);
     return `<div class="mg"><button class="mrow" data-model="${esc(g.ten)}" aria-expanded="${open}"><span class="n"><b>${esc(g.ten)}</b><small class="num"><span class="own">Vốn ${short(g.ms.reduce((s2,m)=>s2+m.giaNhap,0))} · </span>lâu nhất ${g.old} ngày</small></span><span class="cnt num">${g.ms.length} máy</span><span class="pill ${k}">${g.old>45?'Tồn lâu':g.old>30?'Tồn vừa':'Mới'}</span><span class="chev">${open?'▴':'▾'}</span></button>
-    ${open?`<div class="imeis">${g.ms.map(m=>{const a2=ageDays(m),[k2]=ageClass(a2);return `<div class="row"><div class="n"><b class="num">${m.imei}</b><small class="num">Nhập ${dmy(m.ngayNhap)}<span class="own"> · ${money(m.giaNhap)}</span></small></div><div class="right"><span class="pill ${k2} num">${a2} ngày</span></div></div>`}).join('')}</div>`:''}</div>`}).join(''):'<div class="empty">Không có máy nào khớp.</div>'}</div></div>`;
+    ${open?`<div class="imeis">${g.ms.map(m=>{const a2=ageDays(m),[k2]=ageClass(a2);return `<div class="row"><div class="n"><b class="num">${m.imei}</b><small class="num">Nhập ${dmy(m.ngayNhap)}<span class="own"> · ${money(m.giaNhap)}</span></small></div><div class="right" style="flex-direction:row;align-items:center;gap:6px"><span class="pill ${k2} num">${a2} ngày</span><button class="ghost red" data-delimei="${m.imei}" aria-label="Xóa IMEI này">Xóa</button></div></div>
+      ${delImei===m.imei?`<div class="confirm" style="margin:0 0 8px"><b style="color:var(--red)">Xóa IMEI ${m.imei} khỏi kho?</b><span>Dùng khi nhập nhầm / nhập trùng. Máy bán rồi thì không cần xóa ở đây.</span><span class="inrow"><button class="ghost red" data-delimeiok="${m.imei}">Xác nhận xóa</button><button class="ghost" data-delimei="">Thôi</button></span></div>`:''}`}).join('')}</div>`:''}</div>`}).join(''):'<div class="empty">Không có máy nào khớp.</div>'}</div></div>`;
 }
 
 /* ===== THÊM ===== */
 let tgOpen=null, tgReject=null;
-let lookQ='', cancelId=null, resetAsk=false, histDays=1, doiId=null, traId=null, suaId=null, xoaBill=null;
+let delImei='', lookQ='', cancelId=null, resetAsk=false, histDays=1, doiId=null, traId=null, suaId=null, xoaBill=null;
 function renderMore(){
   const el=$('v-more');
   if(NV&&more!=='nvme'){more='nvme'}
@@ -982,6 +983,8 @@ function render(){
 /* ===== Sự kiện ===== */
 document.addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.delimei!==undefined){delImei=delImei===b.dataset.delimei?'':b.dataset.delimei;render();return}
+  if(b.dataset.delimeiok){const im=b.dataset.delimeiok,n0=db.may.length;db.may=db.may.filter(m=>!(m.imei===im&&m.tt==='ton'));delImei='';if(db.may.length<n0){save();toast('Đã xóa IMEI …'+im.slice(-6)+' khỏi kho')}else toast('Không tìm thấy máy tồn với IMEI này');render();return}
   if(b.dataset.cartdel){cart.splice(+b.dataset.cartdel,1);render();return}
   if(b.dataset.kmo){kmOpen=true;render();return}
   if(b.dataset.kmx){kmOpen=false;render();return}
@@ -1436,7 +1439,7 @@ function showKh(){const w=$('welcome');w.hidden=false;const st=XLIC&&XLIC.status
   showPending({status:'none'})}
 document.addEventListener('click',e=>{if(e.target.closest('[data-more="hd"]')){e.preventDefault();e.stopImmediatePropagation();location.href='/setup/'+(refSale()?'?ctv='+encodeURIComponent(refSale()):'');return}if(e.target.closest('[data-more="kichhoat"]')){e.preventDefault();e.stopImmediatePropagation();showKh()}},true);
 document.addEventListener('submit',e=>{if(!XEM||e.target.id==='fNvLogin')return;e.preventDefault();e.stopImmediatePropagation();showKh()},true);
-document.addEventListener('click',e=>{if(!XEM)return;const b=e.target.closest('form button[type=submit],form button:not([type]),[data-rcpay],[data-rcdone],[data-rcprint],[data-cancelok],[data-suaok],[data-xoaok],[data-reset],[data-more="bg"],[data-more="tt"],[data-more="giahan"],[data-more="ctv"]');if(!b)return;e.preventDefault();e.stopImmediatePropagation();showKh()},true);
+document.addEventListener('click',e=>{if(!XEM)return;const b=e.target.closest('form button[type=submit],form button:not([type]),[data-rcpay],[data-rcdone],[data-rcprint],[data-cancelok],[data-suaok],[data-xoaok],[data-delimeiok],[data-reset],[data-more="bg"],[data-more="tt"],[data-more="giahan"],[data-more="ctv"]');if(!b)return;e.preventDefault();e.stopImmediatePropagation();showKh()},true);
 render();
 (function boot(){let gs=null,seen=null;try{gs=JSON.parse(localStorage.getItem('shopgon_gg')||'null');seen=localStorage.getItem('shopgon_seen')}catch(e){}
   if(DEMO){demoBar();return}
