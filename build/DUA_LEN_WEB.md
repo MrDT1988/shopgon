@@ -15,3 +15,9 @@ Mục tiêu: repo nguồn `MrDT1988/shopgon` → RIÊNG TƯ; shopgon.vn chạy t
 
 ## Từ đó về sau (mỗi lần sửa)
 Sửa ở `shopgon` → đổi BUILD + app/ver.json → build → push sang `shopgon-web`. Robot kho chạy ở cả 2 repo (vô hại); kho thật = repo web.
+
+## Lần thử 26/10 23h30 — KẸT, đã đưa tên miền về repo cũ
+- Đã có repo `shopgon-web` (công khai) + bản build (commit 0b0e754) + app Claude được quyền ghi.
+- Bật Pages ở `shopgon-web` → lượt dựng đầu (0b0e754) bị TREO "in progress deployment"; mọi lượt sau báo "Please cancel 0b0e754… first". Lệnh hủy (API pages/deployments/…/cancel) bị proxy chặn; sửa tên miền qua Chrome bị chặn → anh tự bấm.
+- 23h49: tên miền shopgon.vn đã về lại repo `shopgon` (commit "Create CNAME" 134f050), web chạy lại bản 20261026-2156.
+- LẦN SAU: (1) bật Pages ở `shopgon-web` TRƯỚC, KHÔNG gắn tên miền, chờ mrdt1988.github.io/shopgon-web chạy được (xóa file CNAME khỏi bản build lúc thử); (2) chạy được rồi mới gỡ tên miền repo cũ → gắn sang repo mới; (3) kiểm web xong → `shopgon` sang Private.
