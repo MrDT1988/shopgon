@@ -166,7 +166,7 @@ textarea{min-height:92px;resize:vertical;font-variant-numeric:tabular-nums}
 .inrow{display:flex;gap:8px}
 .inrow input{flex:1;min-width:0}
 .seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px}
-.seg button{border:0;background:none;border-radius:10px;padding:10px 6px;font-weight:700;color:var(--muted)}
+.seg button{border:0;background:none;border-radius:10px;padding:10px 6px;font-weight:700;color:var(--muted);min-width:0;overflow-wrap:anywhere}
 .seg button[aria-pressed="true"]{background:var(--pen);color:var(--on-pen)}
 .btn{border:0;border-radius:14px;padding:14px;font-weight:700;font-size:17px;background:var(--pen);color:var(--on-pen)}
 .btn[disabled]{opacity:.4;cursor:not-allowed}
@@ -1109,6 +1109,7 @@ document.addEventListener('submit',e=>{
     PN.dong.push({t:'hang',id:ex?ex.id:'',ten,nhom,loai,sl,gn,gb,min:mn});pnSave();render();window.scrollTo(0,0);toast(`Đã thêm ${sl} ${ten} vào phiếu`);return}
   if(f.id==='fAdd'){const ten=$('aTen').value.trim();const lines=[...new Set($('aImei').value.split(/[\s,;]+/).map(s=>s.replace(/\D/g,'')).filter(Boolean))];const gn=parseMoney($('aGN').value),gb=parseMoney($('aGB').value);const err=$('aErr');
     if(!ten){err.textContent='Nhập tên máy.';return}
+    if($('aTen').dataset.ngoai!=='1'&&KM&&!KM.some(x=>x.ten.toLowerCase()===ten.toLowerCase())&&!db.may.some(m=>m.ten===ten)&&!(pnFill!==null&&PN.dong[pnFill]&&PN.dong[pnFill].ten===ten)){err.textContent='Chọn 1 dòng đúng máy + cấu hình + màu trong gợi ý, hoặc bấm "Máy ngoài danh sách" nếu không có.';sugRender(true);return}
     {const b0=$('aTen').dataset.ngoai==='1'?null:KMbad.get(ten.toLowerCase());if(b0){err.textContent='Máy này có '+[b0.nc>1?b0.nc+' cấu hình':'',b0.nm>1?b0.nm+' màu':''].filter(Boolean).join(' và ')+' — chọn đúng dòng có đủ cấu hình + màu trong gợi ý rồi mới quét IMEI.';sugRender(true);return}}
     if(!lines.length){err.textContent='Nhập ít nhất 1 IMEI.';return} if(!gn){err.textContent='Nhập giá nhập.';return}
     const bad=lines.filter(s=>s.length!==15);if(bad.length){err.textContent='IMEI phải đủ 15 số: '+bad.join(', ');return}
@@ -1538,7 +1539,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261026-1144';let verLuc=0;
+const BUILD='20261026-1924';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
