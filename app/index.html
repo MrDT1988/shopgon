@@ -215,7 +215,7 @@ body.nv .own,body.nv #sLoi,body.nv #pLoi{display:none!important}
 body.nvmode nav.tabs button[data-v=add],body.nvmode nav.tabs button[data-v=stock]{display:none}
 .nbg{display:grid;grid-template-columns:1.1fr 1fr 1.2fr;gap:6px;align-items:start;padding:8px 0;border-bottom:1px solid var(--line)}.nbg:last-child{border:0}.nbg>span{display:flex;flex-direction:column;text-align:right}.nbg>span b{font-size:16px}.nbg small{color:#46506b;font-size:12.5px}.nbg i{font-style:normal}.nbh{padding:0 0 4px;font-size:12.5px;font-weight:700;color:#46506b;text-transform:uppercase}.nbbar{grid-column:1/-1;height:6px;background:#e4ecee;border-radius:4px}.nbbar i{display:block;height:100%;border-radius:4px}
 .pnhint{background:#f0faf7;border:1px dashed #9fd4c8;border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.45;margin-bottom:12px}
-.pncard{border:2px solid #0f766e}.sug{border:1px solid #cde9e1;border-radius:12px;background:#fff;margin:-4px 0 10px;overflow:hidden}.sug button{display:flex;align-items:center;gap:10px;width:100%;border:0;border-bottom:1px solid #eef3f2;background:#fff;padding:8px 10px;text-align:left;font-size:15px}.sug button:last-child{border-bottom:0}.sug img{width:40px;height:40px;object-fit:contain;flex:none;background:#f6faf9;border-radius:8px}.sug .t{flex:1;min-width:0}.sug .t b{font-weight:700}.sug .t small{display:block;color:#46506b;font-size:12.5px}.sug .dot{width:40px;height:40px;flex:none;border-radius:8px;background:#eef6f4;display:flex;align-items:center;justify-content:center}.pned{flex-basis:100%;display:flex;flex-direction:column;gap:6px;padding:6px 0 4px}.pnsl{display:flex;align-items:center;gap:6px}.pnsl span{flex:1;font-size:14px;color:#46506b}.pnsl input{width:70px;text-align:center}.pnsl .ghost{width:42px;font-size:20px;padding:6px 0}.pnims{display:flex;flex-wrap:wrap;gap:6px}.pnim{background:#eef6f4;border-radius:999px;padding:4px 6px 4px 10px;font-size:13px;display:inline-flex;align-items:center;gap:4px}.pnim button{border:0;background:var(--red-soft);color:var(--red);border-radius:999px;width:22px;height:22px;font-weight:800}.pnim.sold{background:#f1f1f1;color:#777;padding-right:10px}
+.pncard{border:2px solid #0f766e}.sug{border:1px solid #cde9e1;border-radius:12px;background:#fff;margin:-4px 0 10px;overflow:auto;max-height:380px}.sug button{display:flex;align-items:center;gap:10px;width:100%;border:0;border-bottom:1px solid #eef3f2;background:#fff;padding:8px 10px;text-align:left;font-size:15px}.sug button:last-child{border-bottom:0}.sug img{width:40px;height:40px;object-fit:contain;flex:none;background:#f6faf9;border-radius:8px}.sug .t{flex:1;min-width:0}.sug .t b{font-weight:700}.sug .t small{display:block;color:#46506b;font-size:12.5px}.sug .dot{width:40px;height:40px;flex:none;border-radius:8px;background:#eef6f4;display:flex;align-items:center;justify-content:center}.pned{flex-basis:100%;display:flex;flex-direction:column;gap:6px;padding:6px 0 4px}.pnsl{display:flex;align-items:center;gap:6px}.pnsl span{flex:1;font-size:14px;color:#46506b}.pnsl input{width:70px;text-align:center}.pnsl .ghost{width:42px;font-size:20px;padding:6px 0}.pnims{display:flex;flex-wrap:wrap;gap:6px}.pnim{background:#eef6f4;border-radius:999px;padding:4px 6px 4px 10px;font-size:13px;display:inline-flex;align-items:center;gap:4px}.pnim button{border:0;background:var(--red-soft);color:var(--red);border-radius:999px;width:22px;height:22px;font-weight:800}.pnim.sold{background:#f1f1f1;color:#777;padding-right:10px}
 .pnbar{width:100%;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px;background:#fff4dc;color:#5c3b00;border:1px solid #f0d08a;border-radius:12px;padding:10px 12px;font-size:14.5px;margin-bottom:10px;text-align:left}.pnbar span{font-weight:800;color:#0b5e57}
 .pnrow{border-bottom:1px solid var(--line);padding:6px 0 10px}.pnrow:last-child{border-bottom:0}.pnlines{display:block;color:#46506b;font-size:13.5px;line-height:1.45}
 .bigscan{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;font-size:20px;padding:22px 12px;border-radius:16px}
@@ -765,7 +765,7 @@ function renderAdd0(){
     <button class="btn" type="submit">＋ Thêm vào phiếu nhập</button></form></div>`;addPre='';return}
   const names=[...new Set(db.may.map(m=>m.ten))].sort();
   $('v-add').innerHTML=seg+`<div class="panel"><h2>Nhập điện thoại vào kho</h2><form id="fAdd" autocomplete="off">
-    <label>Tên máy + màu<small>Gõ tên máy rồi chọn đúng màu trong danh sách — mỗi màu là 1 mẫu riêng trong kho</small><input id="aTen" placeholder="VD: A7 Pro, Reno15, iPhone 17" autocomplete="off"><small class="hint" id="aHint"></small></label><div id="aSug" class="sug" hidden></div>
+    <label>Tên máy · cấu hình · màu<small>Gõ tên máy rồi chọn đúng dòng cấu hình + màu — mỗi dòng là 1 mẫu riêng trong kho</small><input id="aTen" placeholder="VD: A7 Pro, Reno15, iPhone 17" autocomplete="off"><small class="hint" id="aHint"></small></label><div id="aSug" class="sug" hidden></div>
     <label>IMEI<small>Mỗi dòng 1 máy — quét liên tục cả lô</small>
       <span class="inrow" style="align-items:stretch"><textarea id="aImei" inputmode="numeric" placeholder="Quét hoặc gõ IMEI, mỗi máy 1 dòng"></textarea><button type="button" class="icon" data-scan="aImei" aria-label="Quét IMEI"><svg viewBox="0 0 24 24"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 8v8M10 8v8M13 8v8M17 8v8"/></svg></button></span></label>
     <label>Giá nhập / máy<input id="aGN" inputmode="numeric" class="num"></label>
@@ -1109,7 +1109,7 @@ document.addEventListener('submit',e=>{
     PN.dong.push({t:'hang',id:ex?ex.id:'',ten,nhom,loai,sl,gn,gb,min:mn});pnSave();render();window.scrollTo(0,0);toast(`Đã thêm ${sl} ${ten} vào phiếu`);return}
   if(f.id==='fAdd'){const ten=$('aTen').value.trim();const lines=[...new Set($('aImei').value.split(/[\s,;]+/).map(s=>s.replace(/\D/g,'')).filter(Boolean))];const gn=parseMoney($('aGN').value),gb=parseMoney($('aGB').value);const err=$('aErr');
     if(!ten){err.textContent='Nhập tên máy.';return}
-    {const m0=KM&&KM.find(x=>x.base.toLowerCase()===ten.toLowerCase()&&x.n>1);if(m0){err.textContent='Máy này có '+m0.n+' màu — chọn đúng tên kèm màu trong danh sách gợi ý rồi mới quét IMEI.';sugRender(true);return}}
+    {const b0=KMbad.get(ten.toLowerCase());if(b0){err.textContent='Máy này có '+[b0.nc>1?b0.nc+' cấu hình':'',b0.nm>1?b0.nm+' màu':''].filter(Boolean).join(' và ')+' — chọn đúng dòng có đủ cấu hình + màu trong gợi ý rồi mới quét IMEI.';sugRender(true);return}}
     if(!lines.length){err.textContent='Nhập ít nhất 1 IMEI.';return} if(!gn){err.textContent='Nhập giá nhập.';return}
     const bad=lines.filter(s=>s.length!==15);if(bad.length){err.textContent='IMEI phải đủ 15 số: '+bad.join(', ');return}
     const dup=lines.filter(s=>db.may.some(m=>m.imei===s));if(dup.length){err.textContent='IMEI đã có trong kho: '+dup.join(', ');return}
@@ -1511,20 +1511,24 @@ setTimeout(()=>INST.bar(),1500);
 </script>
 <script>
 /* 26/10 anh Thái: MÀU = 1 PHẦN TÊN MÁY. Kho máy có N màu → gợi ý N mẫu "Tên - Màu" (có ảnh đúng màu). Shop chọn đúng màu rồi quét IMEI → tồn kho tách theo màu. */
-let KM=null,KMload=null,SUGS=[];
+let KM=null,KMload=null,SUGS=[],KMbad=new Map();
 const nv0=x=>String(x||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d');
-function kmLoad(){if(KM||KMload)return KMload;KMload=fetch('/kho/kho-may.json').then(r=>r.json()).then(k=>{const L=[];Object.values(k.hang||{}).forEach(ds=>(ds||[]).forEach(m=>{const mau=(m.mau||[]).filter(x=>x&&x.ten);
-    if(mau.length>1)mau.forEach(c=>L.push({ten:m.ten+' - '+c.ten,base:m.ten,hang:m.hang,img:c.file?'/'+c.file:'',n:mau.length,mau:c.ten}));
-    else L.push({ten:m.ten,base:m.ten,hang:m.hang,img:mau[0]&&mau[0].file?'/'+mau[0].file:'',n:1})}));KM=L;const i=document.getElementById('aTen');if(i&&document.activeElement===i)sugRender()}).catch(()=>{KM=[]});return KMload}
+function kmLoad(){if(KM||KMload)return KMload;KMload=fetch('/kho/kho-may.json').then(r=>r.json()).then(k=>{const L=[];KMbad=new Map();
+    const dlN=d=>String(d||'').replace(/\s/g,'').replace(/GB\+/i,'+').replace(/\+/,'/');
+    Object.values(k.hang||{}).forEach(ds=>(ds||[]).forEach(m=>{const mau=(m.mau||[]).filter(x=>x&&x.ten),cfg=[...new Set((m.bienThe||[]).map(b=>dlN(b.dl)).filter(Boolean))];
+      const MS=mau.length>1?mau:[mau[0]||null],CS=cfg.length?cfg:[''],n=MS.length*CS.length;
+      CS.forEach(c=>MS.forEach(x=>L.push({ten:m.ten+(c?' '+c:'')+(x&&mau.length>1?' - '+x.ten:''),base:m.ten,hang:m.hang,img:x&&x.file?'/'+x.file:'',n,cfg:c,mau:mau.length>1&&x?x.ten:'',nm:mau.length,nc:cfg.length})));
+      if(n>1){const bad=[m.ten];if(mau.length>1)cfg.forEach(c=>bad.push(m.ten+' '+c));if(cfg.length>1)mau.forEach(x=>bad.push(m.ten+' - '+x.ten));bad.forEach(b=>KMbad.set(b.toLowerCase(),{nm:mau.length,nc:cfg.length}))}}));
+    KM=L;const i=document.getElementById('aTen');if(i&&document.activeElement===i)sugRender()}).catch(()=>{KM=[]});return KMload}
 function sugRender(force){const el=document.getElementById('aSug'),inp=document.getElementById('aTen');if(!el||!inp)return;kmLoad();
   const q=nv0(inp.value).trim(),tk=q.split(/\s+/).filter(Boolean);
   if(!tk.length&&!force){el.hidden=true;return}
   const hit=x=>tk.every(w=>nv0(x).includes(w));
   const own=[...new Set(db.may.map(m=>m.ten))].filter(hit).map(t=>({ten:t,own:1,ton:db.may.filter(m=>m.ten===t&&m.tt==='ton').length,img:(KM||[]).find(x=>x.ten===t)?.img||''}));
   const cat=(KM||[]).filter(x=>hit(x.ten)&&!own.some(o=>o.ten===x.ten));
-  SUGS=[...own,...cat].slice(0,10);
+  const tong=own.length+cat.length;SUGS=[...own,...cat].slice(0,30);
   if(!SUGS.length||SUGS.some(x=>x.ten===inp.value.trim())&&!force){el.hidden=true;return}
-  el.innerHTML=SUGS.map((x,i)=>`<button type="button" data-sug="${i}">${x.img?`<img src="${esc(x.img)}" alt="" loading="lazy">`:'<span class="dot">📱</span>'}<span class="t"><b>${esc(x.ten)}</b><small>${x.own?'Shop đã có · còn '+x.ton+' máy':x.n>1?'Màu '+esc(x.mau)+' · 1 trong '+x.n+' màu':esc(x.hang||'')}</small></span></button>`).join('')+(KM?'':'<small style="display:block;padding:8px 10px;color:#46506b">Đang tải kho máy…</small>');el.hidden=false}
+  el.innerHTML=SUGS.map((x,i)=>`<button type="button" data-sug="${i}">${x.img?`<img src="${esc(x.img)}" alt="" loading="lazy">`:'<span class="dot">📱</span>'}<span class="t"><b>${esc(x.ten)}</b><small>${x.own?'Shop đã có · còn '+x.ton+' máy':esc(x.hang||'')+(x.n>1?' · 1 trong '+x.n+' lựa chọn':'')}</small></span></button>`).join('')+(tong>SUGS.length?`<small style="display:block;padding:8px 10px;color:#46506b">Còn ${tong-SUGS.length} mẫu nữa — gõ thêm cấu hình (VD 8/256) hoặc màu để lọc</small>`:'')+(KM?'':'<small style="display:block;padding:8px 10px;color:#46506b">Đang tải kho máy…</small>');el.hidden=false}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-sug]');if(!b)return;const x=SUGS[+b.dataset.sug],inp=document.getElementById('aTen');if(!x||!inp)return;
   inp.value=x.ten;inp.dispatchEvent(new Event('input',{bubbles:true}));const sel=document.getElementById('aHang');const hg=x.hang==='Apple'?'iPhone':x.hang;if(sel&&hg){if(![...sel.options].some(o=>o.value===hg))sel.add(new Option(hg,hg));sel.value=hg}
   document.getElementById('aSug').hidden=true;const er=document.getElementById('aErr');if(er)er.textContent='';const im=document.getElementById('aImei');if(im)im.focus()});
@@ -1532,7 +1536,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261026-1126';let verLuc=0;
+const BUILD='20261026-1129';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
