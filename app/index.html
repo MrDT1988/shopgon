@@ -684,8 +684,8 @@ function renderSell(){
   const cand=!m0&&sellImei.length>=4&&sellImei.length<15?stock().filter(x=>!inCart(x.imei)&&(x.imei.includes(sellImei)||x.ten.toLowerCase().includes(sellImei.toLowerCase()))).slice(0,5):[];
   $('v-sell').innerHTML=`
   ${renderCart()}
-  <div class="seg top" role="group"><button data-sm="may" aria-pressed="${sellMode==='may'}">Điện thoại</button><button data-sm="pk" aria-pressed="${sellMode==='pk'}">${on('pk')||on('sim')?'Phụ kiện, DV':'Dịch vụ'}</button></div>
-  ${sellMode==='may'?`
+  <div class="seg top" role="group"><button data-sm="may" aria-pressed="${sellMode==='may'}">Điện thoại</button><button data-sm="pk" aria-pressed="${sellMode==='pk'}">${on('pk')||on('sim')?'Phụ kiện, DV':'Dịch vụ'}</button>${NV?'':`<button data-sm="tra" aria-pressed="${sellMode==='tra'}">↩️ Trả hàng</button>`}</div>
+  ${sellMode==='may'&&!NV||sellMode==='may'?`
   <div class="panel"><form id="fSell" autocomplete="off">
     ${!m?`<button type="button" class="btn bigscan" data-scan="sImei"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 8v8M10 8v8M13 8v8M17 8v8"/></svg>Quét IMEI để bán</button><div class="or">hoặc gõ IMEI / tên máy</div>`:''}
     <label${m?'':' style="margin-top:0"'}>${m?'IMEI':'<span class="sr" style="position:absolute;left:-9999px">IMEI hoặc tên máy</span>'}
@@ -708,7 +708,7 @@ function renderSell(){
     <div class="inrow"><button class="btn" type="submit" style="flex:1">＋ Trừ vào đơn</button><button type="button" class="ghost" data-thux="1">Thôi</button></div>
     <small style="color:#46506b">Tiền thu máy cũ trừ thẳng vào đơn. Máy cũ vào kho với tên có chữ "(cũ)" để bán lại.</small></form></div>`
     :`<button class="ghost" data-thu="1" style="width:100%;margin-bottom:10px;padding:14px;font-size:16px">♻️ Thu máy cũ của khách (đổi mới / thu mua)</button>`):''}
-  ${!NV&&!m&&!sellImei&&!cart.length?(()=>{const L=stock().slice().sort((a,b)=>ageDays(b)-ageDays(a)).slice(0,5);return L.length?`<div class="panel"><h2>Máy tồn lâu — ưu tiên bán</h2><div class="list">${L.map(x=>{const [k]=ageClass(ageDays(x));return `<div class="row"><div class="n"><b>${esc(x.ten)}</b><small class="num">IMEI …${x.imei.slice(-6)} · <span class="pill ${k}">${ageDays(x)} ngày</span></small></div><button type="button" class="ghost" data-pick="${x.imei}">Bán</button></div>`}).join('')}</div></div>`:''})():''}`:renderPkForm()}`;
+  ${!NV&&!m&&!sellImei&&!cart.length?(()=>{const L=stock().slice().sort((a,b)=>ageDays(b)-ageDays(a)).slice(0,5);return L.length?`<div class="panel"><h2>Máy tồn lâu — ưu tiên bán</h2><div class="list">${L.map(x=>{const [k]=ageClass(ageDays(x));return `<div class="row"><div class="n"><b>${esc(x.ten)}</b><small class="num">IMEI …${x.imei.slice(-6)} · <span class="pill ${k}">${ageDays(x)} ngày</span></small></div><button type="button" class="ghost" data-pick="${x.imei}">Bán</button></div>`}).join('')}</div></div>`:''})():''}`:sellMode==='tra'?renderTraHang():renderPkForm()}`;
   if(m)updSellProfit();
   if(sellMode==='pk')updPkProfit();
 }
@@ -1538,10 +1538,44 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261026-1143';let verLuc=0;
+const BUILD='20261026-1144';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
 setTimeout(verCheck,800);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')verCheck()});
+</script>
+<script>
+/* 26/10 anh Thái: TRẢ HÀNG ngay ở màn Bán — tìm đơn cũ (IMEI / SĐT / tên khách / mã HĐ) để đối chiếu, chọn món trả, hàng tự nhập lại kho. */
+let trQ='',trSel=null;
+const trCo=d=>!d.huy&&!d.tra&&!['tra','doi','km','thu'].includes(d.loai)&&(+d.giaBan||0)>=0;
+function renderTraHang(){if(NV)return '';
+  const q=nv0(trQ).trim(),from=iso(Date.now()-89*DAY);const G={};db.don.forEach(d=>{if(d.ngay<from&&!q)return;const k=d.bill||d.id;(G[k]=G[k]||[]).push(d)});
+  let B=Object.entries(G).map(([k,L])=>({k,L,d0:L[0],code:'SG'+String(k).slice(-6).toUpperCase()})).filter(b=>b.L.some(trCo)||b.L.some(x=>x.tra||x.traSl));
+  if(q)B=B.filter(b=>nv0([b.code,b.d0.khach,b.d0.sdt,...b.L.map(x=>x.ten+' '+(x.imei||''))].join(' ')).includes(q));
+  B.sort((a,b)=>(b.d0.ngay+String(b.d0.gio).padStart(5,'0')).localeCompare(a.d0.ngay+String(a.d0.gio).padStart(5,'0')));B=B.slice(0,q?20:8);
+  return `<div class="panel"><h2>↩️ Khách trả hàng</h2>
+    <label style="margin-top:0"><span class="sr" style="position:absolute;left:-9999px">Tìm đơn</span><span class="inrow"><input id="trQ" inputmode="search" placeholder="Quét IMEI, gõ SĐT, tên khách hoặc mã HĐ" value="${esc(trQ)}"><button type="button" class="icon" data-scan="trQ" aria-label="Quét IMEI"><svg viewBox="0 0 24 24"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 8v8M10 8v8M13 8v8M17 8v8"/></svg></button></span></label>
+    <small style="color:#46506b">${q?'Kết quả tìm':'Đơn gần đây'} — đối chiếu đúng đơn rồi bấm <b>Trả</b> ở món khách trả. Hàng trả tự nhập lại kho.</small></div>
+  ${B.length?B.map(b=>`<div class="panel trbill"><div class="row" style="border:0;padding-top:0"><div class="n"><b>${esc(b.d0.khach||'Khách lẻ')}${b.d0.sdt?' · '+esc(b.d0.sdt):''}</b><small class="num">${b.code} · ${dmy(b.d0.ngay)} ${esc(b.d0.gio||'')}${b.d0.nvTen?' · 👤 '+esc(b.d0.nvTen):''}</small></div></div>
+    <div class="list">${b.L.filter(x=>x.loai!=='tra').map(d=>{const sl=d.sl||1,daTra=d.tra?sl:(d.traSl||0),con=sl-daTra,can=trCo(d)&&con>0;
+      return `<div class="row" style="flex-wrap:wrap"><div class="n" style="flex:1"><b style="${d.huy?'text-decoration:line-through;opacity:.6':''}">${esc(d.ten)}</b><small class="num">${d.imei?'IMEI '+d.imei+' · ':''}${money(d.giaBan)}${daTra?` · <span class="pill a">đã trả ${d.hangId||sl>1?daTra+'/'+sl:''}</span>`:''}${d.huy?' · đã hủy':''}</small></div>
+        ${can?`<button class="ghost" data-trpick="${d.id}">Trả</button>`:''}
+        ${trSel===d.id?`<div class="confirm" style="flex-basis:100%"><b>Nhận trả: ${esc(d.ten)}</b>
+          <div class="two">${con>1?`<label>Số lượng trả<input id="trSl" inputmode="numeric" value="${con}" data-tru="${Math.round(d.giaBan/sl)}"></label>`:''}<label>Tiền hoàn khách<input id="trHoan" inputmode="numeric" class="num" value="${Math.round(d.giaBan/sl*con).toLocaleString('vi-VN')}"></label></div>
+          <label style="flex-direction:row;align-items:center;gap:8px;display:flex"><input type="checkbox" id="trLoi" style="width:22px;height:22px"> ${d.loai==='may'?'Máy lỗi — chờ bảo hành, chưa bán lại':'Hàng lỗi — không nhập lại kho'}</label>
+          <label>Lý do<input id="trLyDo" placeholder="VD: khách đổi ý, lỗi màn hình…"></label>
+          <span class="inrow"><button class="btn" data-trok="${d.id}">Xác nhận trả · nhập kho</button><button class="ghost" data-trpick="">Thôi</button></span>
+          <small style="color:#46506b">Hoàn ít hơn giá bán thì phần giữ lại tính vào lời. ${d.loai==='may'?'Máy về kho (hoặc mục chờ bảo hành nếu lỗi).':d.hangId?'Số lượng cộng lại vào kho.':'Món không có trong kho — chỉ ghi tiền hoàn.'}</small></div>`:''}</div>`}).join('')}</div></div>`).join(''):`<div class="panel"><div class="empty">${q?'Không tìm thấy đơn khớp. Thử SĐT hoặc 6 số cuối IMEI.':'Chưa có đơn nào để trả.'}</div></div>`}`}
+document.addEventListener('input',e=>{const t=e.target;if(t.id==='trQ'){trQ=t.value;trSel=null;renderSell();const i=$('trQ');i.focus();i.setSelectionRange(i.value.length,i.value.length)}
+  else if(t.id==='trSl'){const n=Math.max(1,parseMoney(t.value)||1),u=+t.dataset.tru||0;const h=$('trHoan');if(h)h.value=(u*n).toLocaleString('vi-VN')}});
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+  if(d.trpick!==undefined){trSel=d.trpick||null;renderSell();return}
+  if(d.trok){const x=db.don.find(o=>o.id===d.trok);if(!x)return;const sl=x.sl||1,con=sl-(x.traSl||0);const q=$('trSl')?Math.min(con,Math.max(1,parseMoney($('trSl').value)||1)):con;
+    const hoan=parseMoney($('trHoan').value),loi=$('trLoi').checked,ly=$('trLyDo').value.trim();let vonTra=0;
+    if(x.loai==='may'){const m=db.may.find(o=>o.imei===x.imei);if(m)m.tt=loi?'loi':'ton';vonTra=+x.giaVon||0}
+    else if(x.hangId){const h=db.hang.find(o=>o.id===x.hangId);const u=sl?(+x.giaVon||0)/sl:0;if(!loi){if(h)h.sl+=q;vonTra=Math.round(u*q)}}
+    const n0=new Date(),bill=uid();db.don.push({id:uid(),bill,ngay:todayIso(),gio:n0.getHours()+':'+String(n0.getMinutes()).padStart(2,'0'),loai:'tra',imei:x.imei||'',hangId:x.hangId||'',sl:q,ten:'Trả hàng: '+String(x.ten).replace(/ ×\d+$/,'')+(q>1?' ×'+q:'')+(ly?' ('+ly+')':''),hang:x.hang||'',giaBan:-hoan,giaVon:-vonTra,khach:x.khach||'',sdt:x.sdt||'',tt:'Tiền mặt',huy:null,traTu:x.bill||x.id});
+    x.traSl=(x.traSl||0)+q;if(x.traSl>=sl)x.tra=1;trSel=null;save();render();
+    toast('Đã nhận trả · hoàn khách '+money(hoan)+(x.loai==='may'?(loi?' · máy vào chờ bảo hành':' · máy về kho'):x.hangId&&!loi?' · đã cộng lại kho':''));openReceipt(bill);return}});
 </script>
 </body></html>
