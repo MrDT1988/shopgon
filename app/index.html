@@ -116,6 +116,7 @@ input,select,textarea{background:#fff;box-shadow:inset 0 1px 2px rgba(16,42,52,.
 .cartp{border:2px solid var(--pen)}
 .ctot{display:flex;justify-content:space-between;align-items:baseline;border-top:2px solid var(--ink);margin-top:6px;padding-top:10px;font-weight:700}.ctot b{font-size:24px;color:var(--pen)}
 .kmp{background:#fff8ec;border:1px dashed #f0b54a;border-radius:12px;padding:10px;margin-top:10px}.kmp h3{margin:0 0 8px;font-size:15px}.kmline b{color:#c2410c}.kmchips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}.kmchips button{border:1px solid #f0b54a;background:#fff;border-radius:999px;padding:8px 12px;font-weight:700;color:#9a3412}
+.imeis .row .right{max-width:100%}
 .xbtn{border:0;background:var(--red-soft);color:var(--red);border-radius:8px;width:30px;height:30px;font-weight:800;margin-left:8px}
 .welcome{position:fixed;inset:0;z-index:30;overflow-y:auto;background:linear-gradient(160deg,#14a293,#0b5e57);display:flex;align-items:center;justify-content:center;padding:max(24px,env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) max(24px,env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px))}
 .wc{margin:auto;width:100%;max-width:400px;background:#fff;border-radius:24px;padding:28px 22px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;box-shadow:0 24px 50px rgba(0,0,0,.25)}
@@ -813,7 +814,7 @@ function renderStock(){
 
 /* ===== THÊM ===== */
 let tgOpen=null, tgReject=null;
-let lookQ='', cancelId=null, resetAsk=false, histDays=1, doiId=null, traId=null;
+let lookQ='', cancelId=null, resetAsk=false, histDays=1, doiId=null, traId=null, suaId=null, xoaBill=null;
 function renderMore(){
   const el=$('v-more');
   if(NV&&more!=='nvme'){more='nvme'}
@@ -884,14 +885,25 @@ function renderMore(){
     ${histDays===-1&&debts.length?`<div class="alert amber"><b>Khách đang nợ tổng ${money(debts.reduce((a,b)=>a+b.no,0))}</b><span>${debts.length} đơn chưa trả đủ</span></div>`:''}
     <div class="panel"><div class="list">${B.length?B.map(b=>{const open=histOpen===b.k;return `<div class="mg"><button class="mrow" data-hopen="${esc(b.k)}"><span class="n"><b style="${b.huy?'text-decoration:line-through;opacity:.6':''}">${esc(b.d0.khach||'Khách lẻ')}${b.no>0?` <span class="pill r">Nợ ${short(b.no)}</span>`:''}</b><small>${dmy(b.ngay)} ${b.gio} · ${b.L.length} món · ${esc(b.d0.tt||'')}${b.d0.nvTen?' · 👤 '+esc(b.d0.nvTen):''}${b.d0.note?' · 📝 '+esc(b.d0.note.slice(0,30)):''}</small></span><span class="cnt num">${money(b.tot)}</span><span class="chev">${open?'▴':'▾'}</span></button>
       ${open?`<div class="imeis" style="padding:6px 12px 12px">
-        ${b.L.map(d=>`<div class="row" style="flex-wrap:wrap"><div class="n" style="flex:1"><b style="${d.huy?'text-decoration:line-through;opacity:.6':''}">${esc(d.ten)}</b><small>${d.imei?'IMEI '+d.imei:''}${d.huy?' · Đã hủy: '+esc(d.huy):''}${d.tra?' · Đã trả hàng':''}${d.doi?' · Đã đổi sang …'+String(d.doi).slice(-6):''}</small></div><div class="right" style="flex-direction:row;flex-wrap:wrap;gap:6px;justify-content:flex-end;align-items:center"><b class="num">${money(d.giaBan)}</b>${d.huy||d.loai==='tra'||d.loai==='doi'?'':`${d.loai==='may'&&!d.tra&&!d.doi?`<button class="ghost" data-doi="${d.id}">Đổi máy</button><button class="ghost" data-tra="${d.id}">Trả hàng</button>`:''}<button class="ghost red" data-cancel="${d.id}">Hủy</button>`}</div>
+        ${b.L.map(d=>`<div class="row" style="flex-wrap:wrap"><div class="n" style="flex:1"><b style="${d.huy?'text-decoration:line-through;opacity:.6':''}">${esc(d.ten)}</b><small>${d.imei?'IMEI '+d.imei:''}${d.huy?' · Đã hủy: '+esc(d.huy):''}${d.tra?' · Đã trả hàng':''}${d.doi?' · Đã đổi sang …'+String(d.doi).slice(-6):''}</small></div><div class="right" style="flex-direction:row;flex-wrap:wrap;gap:6px;justify-content:flex-end;align-items:center"><b class="num">${money(d.giaBan)}</b>${d.huy||d.loai==='tra'||d.loai==='doi'?'':`${d.loai==='may'&&!d.tra&&!d.doi?`<button class="ghost" data-doi="${d.id}">Đổi máy</button><button class="ghost" data-tra="${d.id}">Trả hàng</button>`:''}<button class="ghost" data-sua="${d.id}">Sửa</button><button class="ghost red" data-cancel="${d.id}">Hủy</button>`}</div>
+          ${suaId===d.id?(()=>{const isG=d.loai==='km'&&d.giaBan<0,hs=d.hangId&&db.hang.find(h=>h.id===d.hangId),sl=d.sl||1,vonEd=d.loai!=='may'&&!d.hangId&&d.loai!=='thu';
+            return `<div class="confirm" style="flex-basis:100%"><b>Sửa dòng này</b>
+            ${d.loai!=='km'||!isG?`<label>Tên<input id="eTen" value="${esc(String(d.ten).replace(/ ×\d+$/,''))}"></label>`:''}
+            <div class="two">${hs?`<label>Số lượng<input id="eSl" inputmode="numeric" value="${sl}"></label>`:''}<label>${isG?'Tiền giảm':d.loai==='thu'?'Giá thu máy cũ':hs?'Giá bán / cái':'Giá bán'}<input id="eGia" inputmode="numeric" class="num" value="${Math.abs(hs?Math.round(d.giaBan/sl):d.giaBan).toLocaleString('vi-VN')}"></label>
+            ${vonEd&&!isG?`<label>Giá vốn<input id="eVon" inputmode="numeric" class="num" value="${(+d.giaVon||0).toLocaleString('vi-VN')}"></label>`:''}
+            ${d.loai==='may'?`<label>Bảo hành (tháng)<input id="eBh" inputmode="numeric" value="${d.bh||0}"></label>`:''}</div>
+            <div class="err" id="eErr"></div>
+            <span class="inrow"><button class="btn" data-suaok="${d.id}">Lưu sửa</button><button class="ghost" data-doix="1">Thôi</button></span></div>`})():''}
           ${doiId===d.id?`<div class="confirm" style="flex-basis:100%"><b>Đổi máy cho khách</b><span class="inrow"><input id="dMoi" inputmode="numeric" placeholder="IMEI máy mới trong kho"><button type="button" class="icon" data-scan="dMoi" aria-label="Quét IMEI"><svg viewBox="0 0 24 24"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 8v8M10 8v8M13 8v8M17 8v8"/></svg></button></span><label>Khách bù thêm (nếu đổi máy đắt hơn)<input id="dBu" inputmode="numeric" class="num" placeholder="0"></label><span class="inrow"><button class="ghost red" data-doiok="${d.id}">Xác nhận đổi</button><button class="ghost" data-doix="1">Thôi</button></span><small style="color:#46506b">Máy khách trả chuyển sang "Máy lỗi chờ bảo hành" trong Kho. Bảo hành máy mới tính lại từ hôm nay.</small></div>`:''}
           ${traId===d.id?`<div class="confirm" style="flex-basis:100%"><b>Khách trả hàng</b><label>Tiền hoàn cho khách<input id="rHoan" inputmode="numeric" class="num" value="${(+d.giaBan).toLocaleString('vi-VN')}"></label><label style="flex-direction:row;align-items:center;gap:8px;display:flex"><input type="checkbox" id="rLoi" style="width:22px;height:22px"> Máy lỗi, không bán lại (chờ bảo hành)</label><span class="inrow"><button class="ghost red" data-traok="${d.id}">Xác nhận trả hàng</button><button class="ghost" data-doix="1">Thôi</button></span><small style="color:#46506b">Hoàn ít hơn giá bán thì phần giữ lại tính vào lời.</small></div>`:''}
           ${cancelId===d.id?`<div class="confirm" style="flex-basis:100%"><span class="inrow"><input id="cReason" placeholder="Lý do hủy, VD: nhập sai giá"><button class="ghost red" data-cancelok="${d.id}">Xác nhận hủy</button></span><small style="color:var(--muted)">Đơn không bị xóa, chỉ đánh dấu đã hủy.</small></div>`:''}</div>`).join('')}
         ${b.d0.sdt?`<div style="margin:8px 0 0"><a class="ghost" href="tel:${esc(String(b.d0.sdt).replace(/\s/g,''))}">📞 Gọi ${esc(b.d0.sdt)}</a></div>`:''}
-        <label style="margin-top:10px">Ghi chú<textarea id="hNote" style="min-height:64px" placeholder="VD: Hẹn trả ngày 30, người quen anh Tư…">${esc(b.d0.note||'')}</textarea></label>
+        <div class="two" style="margin-top:10px"><label>Tên khách<input id="hKh" value="${esc(b.d0.khach||'')}" placeholder="Khách lẻ"></label><label>SĐT<input id="hSd" inputmode="tel" value="${esc(b.d0.sdt||'')}"></label></div>
+        <label style="margin-top:8px">Thanh toán<select id="hTt">${['Tiền mặt','Chuyển khoản','Ghi nợ'].map(x=>`<option${(b.d0.tt||'Tiền mặt')===x?' selected':''}>${x}</option>`).join('')}</select></label>
+        <label style="margin-top:8px">Ghi chú<textarea id="hNote" style="min-height:64px" placeholder="VD: Hẹn trả ngày 30, người quen anh Tư…">${esc(b.d0.note||'')}</textarea></label>
         <label style="margin-top:8px">Khách còn nợ<input id="hNo" inputmode="numeric" class="num" value="${b.no?b.no.toLocaleString('vi-VN'):''}" placeholder="Để trống = không nợ"></label>
-        <div class="inrow" style="margin-top:10px;flex-wrap:wrap"><button class="btn" style="flex:1" data-hsave="${esc(b.k)}">Lưu</button>${b.no>0?`<button class="ghost" data-hpaid="${esc(b.k)}">✓ Đã trả đủ</button>`:''}<button class="ghost" data-hrc="${esc(b.k)}">Hóa đơn</button></div>
+        <div class="inrow" style="margin-top:10px;flex-wrap:wrap"><button class="btn" style="flex:1" data-hsave="${esc(b.k)}">Lưu</button>${b.no>0?`<button class="ghost" data-hpaid="${esc(b.k)}">✓ Đã trả đủ</button>`:''}<button class="ghost" data-hrc="${esc(b.k)}">Hóa đơn</button><button class="ghost red" data-xoa="${esc(b.k)}">🗑 Xóa đơn</button></div>
+        ${xoaBill===b.k?`<div class="confirm" style="margin-top:8px"><b style="color:var(--red)">Xóa hẳn đơn này?</b><span>Máy và hàng trong đơn trả lại kho, doanh thu và lời bỏ đơn này. Xóa rồi không lấy lại được — chỉ nhập sai mới xóa, còn khách trả hàng thì dùng nút Trả hàng.</span><span class="inrow"><button class="ghost red" data-xoaok="${esc(b.k)}">Xác nhận xóa</button><button class="ghost" data-doix="1">Thôi</button></span></div>`:''}
       </div>`:''}</div>`}).join(''):`<div class="empty">${histDays===-1?'Không có khách nào đang nợ.':'Chưa có đơn nào.'}</div>`}</div></div>`;return}
   if(more==='pin'){
     el.innerHTML=`${back}<div class="panel"><h2>${db.shop.pin?(OWN()?'🔓 Đang ở chế độ chủ shop':'🔒 Chế độ nhân viên'):'Chế độ nhân viên'}</h2>
@@ -1029,7 +1041,7 @@ document.addEventListener('click',e=>{
   if(b.dataset.chidel){if(!confirm('Xóa khoản chi này?'))return;db.chi=(db.chi||[]).filter(c=>c.id!==b.dataset.chidel);save();render();return}
   if(b.dataset.doi){doiId=b.dataset.doi;traId=null;cancelId=null;render();setTimeout(()=>$('dMoi')&&$('dMoi').focus(),0);return}
   if(b.dataset.tra){traId=b.dataset.tra;doiId=null;cancelId=null;render();return}
-  if(b.dataset.doix){doiId=traId=null;render();return}
+  if(b.dataset.doix){doiId=traId=suaId=xoaBill=null;render();return}
   if(b.dataset.doiok){const d=db.don.find(x=>x.id===b.dataset.doiok);const im=($('dMoi').value||'').replace(/\D/g,'');const m2=db.may.find(x=>x.imei===im&&x.tt==='ton');
     if(!m2){toast('Không thấy IMEI này trong kho');$('dMoi').focus();return}const bu=parseMoney($('dBu').value);const m1=db.may.find(x=>x.imei===d.imei);if(m1)m1.tt='loi';m2.tt='ban';
     const n0=new Date();db.don.push({id:uid(),bill:uid(),ngay:todayIso(),gio:n0.getHours()+':'+String(n0.getMinutes()).padStart(2,'0'),loai:'doi',imei:m2.imei,ten:'Đổi máy: '+m2.ten+' (thay máy …'+d.imei.slice(-6)+')',hang:m2.hang,giaBan:bu,giaVon:m2.giaNhap-(+d.giaVon||0),bh:d.bh,khach:d.khach,sdt:d.sdt,tt:'Tiền mặt',huy:null});
@@ -1199,7 +1211,27 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
   if(d.hdebt){histDays=-1;histOpen=null;renderMore();return}
   if(d.hopen!==undefined){histOpen=histOpen===d.hopen?null:d.hopen;cancelId=null;renderMore();return}
   const bill=k=>db.don.filter(x=>(x.bill||x.id)===k);
-  if(d.hsave){const L=bill(d.hsave);if(!L.length)return;L[0].note=$('hNote').value.trim();L[0].no=parseMoney($('hNo').value);save();renderMore();toast(L[0].no?'Đã lưu · khách còn nợ '+money(L[0].no):'Đã lưu ghi chú');return}
+  if(d.sua){suaId=suaId===d.sua?null:d.sua;cancelId=doiId=traId=null;xoaBill=null;renderMore();return}
+  if(d.xoa){xoaBill=xoaBill===d.xoa?null:d.xoa;suaId=cancelId=null;renderMore();return}
+  if(d.suaok){const x=db.don.find(o=>o.id===d.suaok);if(!x)return;const er=$('eErr'),g=parseMoney($('eGia').value);
+    const isG=x.loai==='km'&&x.giaBan<0;if(!(g>=0)||(isG&&!g)){er.textContent='Nhập số tiền';return}
+    if($('eTen')&&$('eTen').value.trim())x.ten=$('eTen').value.trim();
+    if(isG)x.giaBan=-g;
+    else if(x.loai==='thu'){x.giaBan=-g;x.giaVon=-g;const m=db.may.find(o=>o.imei===x.imei);if(m&&m.tt==='ton')m.giaNhap=g}
+    else if($('eSl')){const sl0=x.sl||1,sl=Math.max(1,parseMoney($('eSl').value)),h=db.hang.find(o=>o.id===x.hangId),u=sl0?(+x.giaVon||0)/sl0:0;
+      if(h&&!x.huy&&sl-sl0>h.sl){er.textContent='Kho chỉ còn '+h.sl;return}if(h&&!x.huy)h.sl-=sl-sl0;x.sl=sl;x.giaVon=Math.round(u*sl);x.giaBan=g*sl;if(sl>1)x.ten+=' ×'+sl}
+    else{x.giaBan=g;if($('eVon')){x.giaVon=parseMoney($('eVon').value);x.uocTinh=false}}
+    if($('eBh'))x.bh=parseMoney($('eBh').value);
+    if(x.loai==='may'){const m=db.may.find(o=>o.imei===x.imei);if(m&&!m.giaBan)m.giaBan=g}
+    suaId=null;save();renderMore();toast('Đã sửa');return}
+  if(d.xoaok){const L=bill(d.xoaok);if(!L.length)return;
+    if(L.some(x=>x.tra||x.doi||x.loai==='tra'||x.loai==='doi')){toast('Đơn đã đổi/trả hàng, không xóa được — dùng Hủy từng dòng');return}
+    for(const x of L)if(x.loai==='thu'&&!x.huy){const m=db.may.find(o=>o.imei===x.imei);if(m&&m.tt!=='ton'){toast('Máy cũ thu trong đơn đã bán lại, không xóa được');return}}
+    L.forEach(x=>{if(x.huy)return;if(x.loai==='may'){const m=db.may.find(o=>o.imei===x.imei);if(m)m.tt='ton'}
+      else if(x.loai==='thu')db.may=db.may.filter(o=>!(o.imei===x.imei&&o.tt==='ton'));
+      if(x.hangId){const h=db.hang.find(o=>o.id===x.hangId);if(h)h.sl+=x.sl||1}});
+    const ids=new Set(L.map(x=>x.id));db.don=db.don.filter(x=>!ids.has(x.id));xoaBill=null;histOpen=null;save();renderMore();toast('Đã xóa đơn, hàng đã trả lại kho');return}
+  if(d.hsave){const L=bill(d.hsave);if(!L.length)return;const kh=$('hKh').value.trim(),sd=$('hSd').value.trim(),tt=$('hTt').value;L.forEach(x=>{x.khach=kh;x.sdt=sd;x.tt=tt});L[0].note=$('hNote').value.trim();L[0].no=parseMoney($('hNo').value);save();renderMore();toast(L[0].no?'Đã lưu · khách còn nợ '+money(L[0].no):'Đã lưu ghi chú');return}
   if(d.hpaid){const L=bill(d.hpaid);if(!L.length)return;L[0].no=0;L[0].note=((L[0].note?L[0].note+' · ':'')+'Đã trả đủ '+dmy(todayIso()));save();renderMore();toast('Đã ghi: khách trả đủ');return}
   if(d.hrc){openReceipt(d.hrc);return}});
 /* 23/10: in hóa đơn khổ 58/80mm (lệnh in của máy) + in thẳng máy in nhiệt Bluetooth qua app RawBT (Android) */
@@ -1404,7 +1436,7 @@ function showKh(){const w=$('welcome');w.hidden=false;const st=XLIC&&XLIC.status
   showPending({status:'none'})}
 document.addEventListener('click',e=>{if(e.target.closest('[data-more="hd"]')){e.preventDefault();e.stopImmediatePropagation();location.href='/setup/'+(refSale()?'?ctv='+encodeURIComponent(refSale()):'');return}if(e.target.closest('[data-more="kichhoat"]')){e.preventDefault();e.stopImmediatePropagation();showKh()}},true);
 document.addEventListener('submit',e=>{if(!XEM||e.target.id==='fNvLogin')return;e.preventDefault();e.stopImmediatePropagation();showKh()},true);
-document.addEventListener('click',e=>{if(!XEM)return;const b=e.target.closest('form button[type=submit],form button:not([type]),[data-rcpay],[data-rcdone],[data-rcprint],[data-cancelok],[data-reset],[data-more="bg"],[data-more="tt"],[data-more="giahan"],[data-more="ctv"]');if(!b)return;e.preventDefault();e.stopImmediatePropagation();showKh()},true);
+document.addEventListener('click',e=>{if(!XEM)return;const b=e.target.closest('form button[type=submit],form button:not([type]),[data-rcpay],[data-rcdone],[data-rcprint],[data-cancelok],[data-suaok],[data-xoaok],[data-reset],[data-more="bg"],[data-more="tt"],[data-more="giahan"],[data-more="ctv"]');if(!b)return;e.preventDefault();e.stopImmediatePropagation();showKh()},true);
 render();
 (function boot(){let gs=null,seen=null;try{gs=JSON.parse(localStorage.getItem('shopgon_gg')||'null');seen=localStorage.getItem('shopgon_seen')}catch(e){}
   if(DEMO){demoBar();return}
