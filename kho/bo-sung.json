@@ -18,28 +18,6 @@
   ]
  },
  {
-  "hang": "Apple",
-  "ten": "iPhone 17 Pro Max",
-  "link": "https://www.apple.com/newsroom/2025/09/apple-unveils-iphone-17-pro-and-iphone-17-pro-max/",
-  "bienThe": [
-   {
-    "dl": "256GB",
-    "niemyet": 37990000,
-    "giaHang": 34990000
-   }
-  ],
-  "mau": [
-   {
-    "ten": "Cam Vũ Trụ (Cosmic Orange)",
-    "anh": "https://www.apple.com/newsroom/images/2025/09/apple-unveils-iphone-17-pro-and-iphone-17-pro-max/article/Apple-iPhone-17-Pro-cosmic-orange-250909_inline.jpg.large.jpg"
-   },
-   {
-    "ten": "Bộ 3 màu (Xanh Đậm, Cam, Bạc)",
-    "anh": "https://www.apple.com/newsroom/images/2025/09/apple-unveils-iphone-17-pro-and-iphone-17-pro-max/article/Apple-iPhone-17-Pro-color-lineup-250909_inline.jpg.large.jpg"
-   }
-  ]
- },
- {
   "hang": "vivo",
   "ten": "vivo X300 Ultra",
   "link": "https://www.vivo.com/vn/products/x300-ultra",
@@ -94,28 +72,6 @@
    {
     "ten": "Vàng Sa Mạc",
     "anh": "https://www.honor.com/content/dam/honor/common/product-list/product-series/honor-600-lite/honor-600-lite-gold.png"
-   }
-  ]
- },
- {
-  "hang": "Apple",
-  "ten": "iPhone 17 Pro",
-  "link": "https://www.apple.com/newsroom/2025/09/apple-unveils-iphone-17-pro-and-iphone-17-pro-max/",
-  "bienThe": [
-   {
-    "dl": "256GB",
-    "niemyet": 34990000,
-    "giaHang": 31990000
-   }
-  ],
-  "mau": [
-   {
-    "ten": "Cam Vũ Trụ (Cosmic Orange)",
-    "anh": "https://www.apple.com/newsroom/images/2025/09/apple-unveils-iphone-17-pro-and-iphone-17-pro-max/article/Apple-iPhone-17-Pro-cosmic-orange-250909_inline.jpg.large.jpg"
-   },
-   {
-    "ten": "Bộ 3 màu (Xanh Đậm, Cam, Bạc)",
-    "anh": "https://www.apple.com/newsroom/images/2025/09/apple-unveils-iphone-17-pro-and-iphone-17-pro-max/article/Apple-iPhone-17-Pro-color-lineup-250909_inline.jpg.large.jpg"
    }
   ]
  },
@@ -178,28 +134,6 @@
    {
     "ten": "Đỏ Đôn Hoàng",
     "anh": "https://www.honor.com/content/dam/honor/common/product-list/product-series/honor-x9d/honor-x9d-red-list.png"
-   }
-  ]
- },
- {
-  "hang": "Apple",
-  "ten": "iPhone 15",
-  "link": "https://www.apple.com/newsroom/2023/09/apple-debuts-iphone-15-and-iphone-15-plus/",
-  "bienThe": [
-   {
-    "dl": "128GB",
-    "niemyet": 21990000,
-    "giaHang": 21990000
-   }
-  ],
-  "mau": [
-   {
-    "ten": "Xanh Dương",
-    "anh": "https://www.apple.com/newsroom/images/2023/09/apple-debuts-iphone-15-and-iphone-15-plus/article/Apple-iPhone-15-lineup-design-230912_big.jpg.large.jpg"
-   },
-   {
-    "ten": "Bộ 5 màu (Đen, Xanh Dương, Xanh Lá, Vàng, Hồng)",
-    "anh": "https://www.apple.com/newsroom/images/2023/09/apple-debuts-iphone-15-and-iphone-15-plus/article/Apple-iPhone-15-lineup-color-lineup-230912_big.jpg.large.jpg"
    }
   ]
  },
@@ -320,50 +254,6 @@
    {
     "ten": "Mặc định",
     "anh": "https://image01.realme.net/general/20260401/1775039535309c8a11b6a63364726920c9373457d4691.webp"
-   }
-  ]
- },
- {
-  "hang": "Apple",
-  "ten": "iPhone 16e",
-  "link": "https://www.apple.com/newsroom/2025/02/apple-debuts-iphone-16e-a-powerful-new-member-of-the-iphone-16-family/",
-  "bienThe": [
-   {
-    "dl": "128GB",
-    "niemyet": 16990000,
-    "giaHang": 15990000
-   }
-  ],
-  "mau": [
-   {
-    "ten": "Trắng",
-    "anh": "https://www.apple.com/newsroom/images/2025/02/apple-debuts-iphone-16e-a-powerful-new-member-of-the-iphone-16-family/article/Apple-iPhone-16e-hero-250219_inline.jpg.large.jpg"
-   },
-   {
-    "ten": "Trắng và Đen",
-    "anh": "https://www.apple.com/newsroom/images/2025/02/apple-debuts-iphone-16e-a-powerful-new-member-of-the-iphone-16-family/article/Apple-iPhone-16e-color-lineup-back-250219_inline.jpg.large.jpg"
-   }
-  ]
- },
- {
-  "hang": "Apple",
-  "ten": "iPhone 16 Plus",
-  "link": "https://www.apple.com/newsroom/2024/09/apple-introduces-iphone-16-and-iphone-16-plus/",
-  "bienThe": [
-   {
-    "dl": "128GB",
-    "niemyet": 25990000,
-    "giaHang": 24990000
-   }
-  ],
-  "mau": [
-   {
-    "ten": "Xanh Lưu Ly (Ultramarine)",
-    "anh": "https://www.apple.com/newsroom/images/2024/09/apple-introduces-iphone-16-and-iphone-16-plus/article/Apple-iPhone-16-hero-240909_inline.jpg.large.jpg"
-   },
-   {
-    "ten": "Bộ 5 màu (Đen, Trắng, Hồng, Xanh Mòng Két, Xanh Lưu Ly)",
-    "anh": "https://www.apple.com/newsroom/images/2024/09/apple-introduces-iphone-16-and-iphone-16-plus/article/Apple-iPhone-16-finish-lineup-240909_big.jpg.large.jpg"
    }
   ]
  },
@@ -1770,5 +1660,880 @@
    }
   ],
   "nguonAnh": "tgdd"
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone 11",
+  "link": "https://www.apple.com/vn/iphone/",
+  "bienThe": [
+   {
+    "dl": "64GB"
+   },
+   {
+    "dl": "128GB"
+   },
+   {
+    "dl": "256GB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Đen"
+   },
+   {
+    "ten": "Trắng"
+   },
+   {
+    "ten": "Đỏ"
+   },
+   {
+    "ten": "Vàng"
+   },
+   {
+    "ten": "Xanh Lá"
+   },
+   {
+    "ten": "Tím"
+   }
+  ]
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone 11 Pro",
+  "link": "https://www.apple.com/vn/iphone/",
+  "bienThe": [
+   {
+    "dl": "64GB"
+   },
+   {
+    "dl": "256GB"
+   },
+   {
+    "dl": "512GB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Xám"
+   },
+   {
+    "ten": "Bạc"
+   },
+   {
+    "ten": "Vàng"
+   },
+   {
+    "ten": "Xanh Lá Đậm"
+   }
+  ]
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone 11 Pro Max",
+  "link": "https://www.apple.com/vn/iphone/",
+  "bienThe": [
+   {
+    "dl": "64GB"
+   },
+   {
+    "dl": "256GB"
+   },
+   {
+    "dl": "512GB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Xám"
+   },
+   {
+    "ten": "Bạc"
+   },
+   {
+    "ten": "Vàng"
+   },
+   {
+    "ten": "Xanh Lá Đậm"
+   }
+  ]
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone SE 2020",
+  "link": "https://www.apple.com/vn/iphone/",
+  "bienThe": [
+   {
+    "dl": "64GB"
+   },
+   {
+    "dl": "128GB"
+   },
+   {
+    "dl": "256GB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Đen"
+   },
+   {
+    "ten": "Trắng"
+   },
+   {
+    "ten": "Đỏ"
+   }
+  ]
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone SE 2022",
+  "link": "https://www.apple.com/vn/iphone/",
+  "bienThe": [
+   {
+    "dl": "64GB"
+   },
+   {
+    "dl": "128GB"
+   },
+   {
+    "dl": "256GB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Đen"
+   },
+   {
+    "ten": "Trắng"
+   },
+   {
+    "ten": "Đỏ"
+   }
+  ]
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone 12 mini",
+  "link": "https://www.apple.com/vn/iphone/",
+  "bienThe": [
+   {
+    "dl": "64GB"
+   },
+   {
+    "dl": "128GB"
+   },
+   {
+    "dl": "256GB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Đen"
+   },
+   {
+    "ten": "Trắng"
+   },
+   {
+    "ten": "Đỏ"
+   },
+   {
+    "ten": "Xanh Dương"
+   },
+   {
+    "ten": "Xanh Lá"
+   },
+   {
+    "ten": "Tím"
+   }
+  ]
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone 12",
+  "link": "https://www.apple.com/vn/iphone/",
+  "bienThe": [
+   {
+    "dl": "64GB"
+   },
+   {
+    "dl": "128GB"
+   },
+   {
+    "dl": "256GB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Đen"
+   },
+   {
+    "ten": "Trắng"
+   },
+   {
+    "ten": "Đỏ"
+   },
+   {
+    "ten": "Xanh Dương"
+   },
+   {
+    "ten": "Xanh Lá"
+   },
+   {
+    "ten": "Tím"
+   }
+  ]
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone 12 Pro",
+  "link": "https://www.apple.com/vn/iphone/",
+  "bienThe": [
+   {
+    "dl": "128GB"
+   },
+   {
+    "dl": "256GB"
+   },
+   {
+    "dl": "512GB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Bạc"
+   },
+   {
+    "ten": "Xám"
+   },
+   {
+    "ten": "Vàng"
+   },
+   {
+    "ten": "Xanh Dương"
+   }
+  ]
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone 12 Pro Max",
+  "link": "https://www.apple.com/vn/iphone/",
+  "bienThe": [
+   {
+    "dl": "128GB"
+   },
+   {
+    "dl": "256GB"
+   },
+   {
+    "dl": "512GB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Bạc"
+   },
+   {
+    "ten": "Xám"
+   },
+   {
+    "ten": "Vàng"
+   },
+   {
+    "ten": "Xanh Dương"
+   }
+  ]
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone 13 mini",
+  "link": "https://www.apple.com/vn/iphone/",
+  "bienThe": [
+   {
+    "dl": "128GB"
+   },
+   {
+    "dl": "256GB"
+   },
+   {
+    "dl": "512GB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Đen"
+   },
+   {
+    "ten": "Trắng"
+   },
+   {
+    "ten": "Đỏ"
+   },
+   {
+    "ten": "Xanh Dương"
+   },
+   {
+    "ten": "Hồng"
+   },
+   {
+    "ten": "Xanh Lá"
+   }
+  ]
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone 13",
+  "link": "https://www.apple.com/vn/iphone/",
+  "bienThe": [
+   {
+    "dl": "128GB"
+   },
+   {
+    "dl": "256GB"
+   },
+   {
+    "dl": "512GB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Đen"
+   },
+   {
+    "ten": "Trắng"
+   },
+   {
+    "ten": "Đỏ"
+   },
+   {
+    "ten": "Xanh Dương"
+   },
+   {
+    "ten": "Hồng"
+   },
+   {
+    "ten": "Xanh Lá"
+   }
+  ]
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone 13 Pro",
+  "link": "https://www.apple.com/vn/iphone/",
+  "bienThe": [
+   {
+    "dl": "128GB"
+   },
+   {
+    "dl": "256GB"
+   },
+   {
+    "dl": "512GB"
+   },
+   {
+    "dl": "1TB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Xám"
+   },
+   {
+    "ten": "Vàng"
+   },
+   {
+    "ten": "Bạc"
+   },
+   {
+    "ten": "Xanh Dương"
+   },
+   {
+    "ten": "Xanh Lá"
+   }
+  ]
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone 13 Pro Max",
+  "link": "https://www.apple.com/vn/iphone/",
+  "bienThe": [
+   {
+    "dl": "128GB"
+   },
+   {
+    "dl": "256GB"
+   },
+   {
+    "dl": "512GB"
+   },
+   {
+    "dl": "1TB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Xám"
+   },
+   {
+    "ten": "Vàng"
+   },
+   {
+    "ten": "Bạc"
+   },
+   {
+    "ten": "Xanh Dương"
+   },
+   {
+    "ten": "Xanh Lá"
+   }
+  ]
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone 14",
+  "link": "https://www.apple.com/vn/iphone/",
+  "bienThe": [
+   {
+    "dl": "128GB"
+   },
+   {
+    "dl": "256GB"
+   },
+   {
+    "dl": "512GB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Đen"
+   },
+   {
+    "ten": "Trắng"
+   },
+   {
+    "ten": "Đỏ"
+   },
+   {
+    "ten": "Xanh Dương"
+   },
+   {
+    "ten": "Tím"
+   },
+   {
+    "ten": "Vàng"
+   }
+  ]
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone 14 Plus",
+  "link": "https://www.apple.com/vn/iphone/",
+  "bienThe": [
+   {
+    "dl": "128GB"
+   },
+   {
+    "dl": "256GB"
+   },
+   {
+    "dl": "512GB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Đen"
+   },
+   {
+    "ten": "Trắng"
+   },
+   {
+    "ten": "Đỏ"
+   },
+   {
+    "ten": "Xanh Dương"
+   },
+   {
+    "ten": "Tím"
+   },
+   {
+    "ten": "Vàng"
+   }
+  ]
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone 14 Pro",
+  "link": "https://www.apple.com/vn/iphone/",
+  "bienThe": [
+   {
+    "dl": "128GB"
+   },
+   {
+    "dl": "256GB"
+   },
+   {
+    "dl": "512GB"
+   },
+   {
+    "dl": "1TB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Đen"
+   },
+   {
+    "ten": "Bạc"
+   },
+   {
+    "ten": "Vàng"
+   },
+   {
+    "ten": "Tím"
+   }
+  ]
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone 14 Pro Max",
+  "link": "https://www.apple.com/vn/iphone/",
+  "bienThe": [
+   {
+    "dl": "128GB"
+   },
+   {
+    "dl": "256GB"
+   },
+   {
+    "dl": "512GB"
+   },
+   {
+    "dl": "1TB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Đen"
+   },
+   {
+    "ten": "Bạc"
+   },
+   {
+    "ten": "Vàng"
+   },
+   {
+    "ten": "Tím"
+   }
+  ]
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone 15",
+  "link": "https://www.apple.com/newsroom/2023/09/apple-debuts-iphone-15-and-iphone-15-plus/",
+  "bienThe": [
+   {
+    "dl": "128GB"
+   },
+   {
+    "dl": "256GB"
+   },
+   {
+    "dl": "512GB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Đen",
+    "anh": "https://www.apple.com/newsroom/images/2023/09/apple-debuts-iphone-15-and-iphone-15-plus/article/Apple-iPhone-15-lineup-design-230912_big.jpg.large.jpg"
+   },
+   {
+    "ten": "Xanh Dương"
+   },
+   {
+    "ten": "Xanh Lá"
+   },
+   {
+    "ten": "Vàng"
+   },
+   {
+    "ten": "Hồng"
+   }
+  ]
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone 15 Plus",
+  "link": "https://www.apple.com/vn/iphone/",
+  "bienThe": [
+   {
+    "dl": "128GB"
+   },
+   {
+    "dl": "256GB"
+   },
+   {
+    "dl": "512GB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Đen"
+   },
+   {
+    "ten": "Xanh Dương"
+   },
+   {
+    "ten": "Xanh Lá"
+   },
+   {
+    "ten": "Vàng"
+   },
+   {
+    "ten": "Hồng"
+   }
+  ]
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone 15 Pro",
+  "link": "https://www.apple.com/vn/iphone/",
+  "bienThe": [
+   {
+    "dl": "128GB"
+   },
+   {
+    "dl": "256GB"
+   },
+   {
+    "dl": "512GB"
+   },
+   {
+    "dl": "1TB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Titan Tự Nhiên"
+   },
+   {
+    "ten": "Titan Xanh"
+   },
+   {
+    "ten": "Titan Trắng"
+   },
+   {
+    "ten": "Titan Đen"
+   }
+  ]
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone 15 Pro Max",
+  "link": "https://www.apple.com/vn/iphone/",
+  "bienThe": [
+   {
+    "dl": "256GB"
+   },
+   {
+    "dl": "512GB"
+   },
+   {
+    "dl": "1TB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Titan Tự Nhiên"
+   },
+   {
+    "ten": "Titan Xanh"
+   },
+   {
+    "ten": "Titan Trắng"
+   },
+   {
+    "ten": "Titan Đen"
+   }
+  ]
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone 16e",
+  "link": "https://www.apple.com/newsroom/2025/02/apple-debuts-iphone-16e-a-powerful-new-member-of-the-iphone-16-family/",
+  "bienThe": [
+   {
+    "dl": "128GB"
+   },
+   {
+    "dl": "256GB"
+   },
+   {
+    "dl": "512GB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Đen",
+    "anh": "https://www.apple.com/newsroom/images/2025/02/apple-debuts-iphone-16e-a-powerful-new-member-of-the-iphone-16-family/article/Apple-iPhone-16e-hero-250219_inline.jpg.large.jpg"
+   },
+   {
+    "ten": "Trắng"
+   }
+  ]
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone 16 Plus",
+  "link": "https://www.apple.com/newsroom/2024/09/apple-introduces-iphone-16-and-iphone-16-plus/",
+  "bienThe": [
+   {
+    "dl": "128GB"
+   },
+   {
+    "dl": "256GB"
+   },
+   {
+    "dl": "512GB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Đen",
+    "anh": "https://www.apple.com/newsroom/images/2024/09/apple-introduces-iphone-16-and-iphone-16-plus/article/Apple-iPhone-16-hero-240909_inline.jpg.large.jpg"
+   },
+   {
+    "ten": "Trắng"
+   },
+   {
+    "ten": "Hồng"
+   },
+   {
+    "ten": "Xanh Mòng Két"
+   },
+   {
+    "ten": "Xanh Lưu Ly"
+   }
+  ]
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone 16 Pro",
+  "link": "https://www.apple.com/vn/iphone/",
+  "bienThe": [
+   {
+    "dl": "128GB"
+   },
+   {
+    "dl": "256GB"
+   },
+   {
+    "dl": "512GB"
+   },
+   {
+    "dl": "1TB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Titan Sa Mạc"
+   },
+   {
+    "ten": "Titan Tự Nhiên"
+   },
+   {
+    "ten": "Titan Trắng"
+   },
+   {
+    "ten": "Titan Đen"
+   }
+  ]
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone 16 Pro Max",
+  "link": "https://www.apple.com/vn/iphone/",
+  "bienThe": [
+   {
+    "dl": "256GB"
+   },
+   {
+    "dl": "512GB"
+   },
+   {
+    "dl": "1TB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Titan Sa Mạc"
+   },
+   {
+    "ten": "Titan Tự Nhiên"
+   },
+   {
+    "ten": "Titan Trắng"
+   },
+   {
+    "ten": "Titan Đen"
+   }
+  ]
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone 17 Pro",
+  "link": "https://www.apple.com/newsroom/2025/09/apple-unveils-iphone-17-pro-and-iphone-17-pro-max/",
+  "bienThe": [
+   {
+    "dl": "256GB"
+   },
+   {
+    "dl": "512GB"
+   },
+   {
+    "dl": "1TB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Cam Vũ Trụ",
+    "anh": "https://www.apple.com/newsroom/images/2025/09/apple-unveils-iphone-17-pro-and-iphone-17-pro-max/article/Apple-iPhone-17-Pro-cosmic-orange-250909_inline.jpg.large.jpg"
+   },
+   {
+    "ten": "Xanh Đậm"
+   },
+   {
+    "ten": "Bạc"
+   }
+  ]
+ },
+ {
+  "hang": "Apple",
+  "ten": "iPhone 17 Pro Max",
+  "link": "https://www.apple.com/newsroom/2025/09/apple-unveils-iphone-17-pro-and-iphone-17-pro-max/",
+  "bienThe": [
+   {
+    "dl": "256GB"
+   },
+   {
+    "dl": "512GB"
+   },
+   {
+    "dl": "1TB"
+   },
+   {
+    "dl": "2TB"
+   }
+  ],
+  "mau": [
+   {
+    "ten": "Cam Vũ Trụ",
+    "anh": "https://www.apple.com/newsroom/images/2025/09/apple-unveils-iphone-17-pro-and-iphone-17-pro-max/article/Apple-iPhone-17-Pro-cosmic-orange-250909_inline.jpg.large.jpg"
+   },
+   {
+    "ten": "Xanh Đậm"
+   },
+   {
+    "ten": "Bạc"
+   }
+  ]
  }
 ]
