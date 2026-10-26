@@ -17,7 +17,7 @@ const OUT = process.argv[2];
 if (!OUT) { console.error('Thiếu thư mục đích (repo shopgon-web)'); process.exit(1); }
 
 const TRANG = ['index.html', 'so-sanh.html', 'privacy.html', 'terms.html', 'app/index.html', 'quantri/index.html', 'bg/index.html', 'tt/index.html', 'setup/index.html'];
-const TINH = ['style.css', 'CNAME', 'quantri/manifest.json', 'quantri/icon-192.png', 'quantri/icon-512.png', 'app/manifest.json', 'app/icon-180.png', 'app/icon-192.png', 'app/icon-512.png'];
+const TINH = ['style.css', 'CNAME', 'quantri/manifest.json', 'quantri/icon-192.png', 'quantri/icon-512.png', 'app/manifest.json', 'app/icon-180.png', 'app/icon-192.png', 'app/icon-512.png', 'app/sw.js'];
 const THU_MUC_TINH = ['setup/img'];
 const KHO_CHI_CHEP_NEU_CHUA_CO = ['kho/kho-may.json', 'kho/demo-ton.json'];   // robot ở repo web tự cập nhật
 const KHO_LUON_CHEP = ['kho/bo-sung.json'];
