@@ -115,6 +115,7 @@ input,select,textarea{background:#fff;box-shadow:inset 0 1px 2px rgba(16,42,52,.
 .rcl{border-top:0}.rcls{border-top:1px dashed var(--line);border-bottom:1px dashed var(--line)}.rcls .rcl{border:0;padding:10px 0}.rcls .rcl+.rcl{border-top:1px dotted var(--line)}
 .cartp{border:2px solid var(--pen)}
 .ctot{display:flex;justify-content:space-between;align-items:baseline;border-top:2px solid var(--ink);margin-top:6px;padding-top:10px;font-weight:700}.ctot b{font-size:24px;color:var(--pen)}
+.kmp{background:#fff8ec;border:1px dashed #f0b54a;border-radius:12px;padding:10px;margin-top:10px}.kmp h3{margin:0 0 8px;font-size:15px}.kmline b{color:#c2410c}.kmchips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0}.kmchips button{border:1px solid #f0b54a;background:#fff;border-radius:999px;padding:8px 12px;font-weight:700;color:#9a3412}
 .xbtn{border:0;background:var(--red-soft);color:var(--red);border-radius:8px;width:30px;height:30px;font-weight:800;margin-left:8px}
 .welcome{position:fixed;inset:0;z-index:30;overflow-y:auto;background:linear-gradient(160deg,#14a293,#0b5e57);display:flex;align-items:center;justify-content:center;padding:max(24px,env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-right,0px)) max(24px,env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px))}
 .wc{margin:auto;width:100%;max-width:400px;background:#fff;border-radius:24px;padding:28px 22px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;box-shadow:0 24px 50px rgba(0,0,0,.25)}
@@ -614,7 +615,7 @@ function renderHome(){if(NV){renderNvHome();return}
     <button class="kpi hero" data-toggle="todayList" aria-expanded="${showToday}"><div class="eyebrow">Doanh thu hôm nay</div><div class="v num">${money(td.dt)}</div>
       <div class="d">${td.may} máy · ${td.n-td.may} đơn phụ kiện, dịch vụ${diff!==null?` · ${diff>=0?'▲':'▼'} ${Math.abs(diff)}% so với hôm qua`:''}</div>
       <div class="more">${showToday?'Ẩn chi tiết đơn ▴':'Xem chi tiết đơn ▾'}</div></button>
-    ${showToday?`<div class="panel todaylist">${tdDon.length?`<div class="list">${tdDon.map(d=>{const isM=d.loai==='may';const p=profitOf(d);return `<div class="row"><div class="n"><b><span class="tag ${isM?'tm':'tk'}">${isM?'Máy':esc((NHOM.find(g=>g.k===d.loai)||{}).t||'')}</span> ${esc(d.ten)}</b><small class="num">${d.gio} · ${d.soTien?'tiền '+money(d.soTien)+' · phí':esc(d.tt)}${d.khach?' · '+esc(d.khach):''}${isM?' · …'+d.imei.slice(-6):''}</small></div><div class="right"><b class="num">${money(d.giaBan)}</b><small class="num own ${p<0?'neg':'good'}">${p<0?'Lỗ':'Lời'} ${money(Math.abs(p))}</small></div></div>`}).join('')}</div>`:'<div class="empty">Hôm nay chưa có đơn nào.</div>'}</div>`:''}
+    ${showToday?`<div class="panel todaylist">${tdDon.length?`<div class="list">${tdDon.map(d=>{const isM=d.loai==='may';const p=profitOf(d);return `<div class="row"><div class="n"><b><span class="tag ${isM?'tm':'tk'}">${isM?'Máy':esc((NHOM.find(g=>g.k===d.loai)||{}).t||(d.loai==='km'?'KM':''))}</span> ${esc(d.ten)}</b><small class="num">${d.gio} · ${d.soTien?'tiền '+money(d.soTien)+' · phí':esc(d.tt)}${d.khach?' · '+esc(d.khach):''}${isM?' · …'+d.imei.slice(-6):''}</small></div><div class="right"><b class="num">${money(d.giaBan)}</b><small class="num own ${p<0?'neg':'good'}">${p<0?'Lỗ':'Lời'} ${money(Math.abs(p))}</small></div></div>`}).join('')}</div>`:'<div class="empty">Hôm nay chưa có đơn nào.</div>'}</div>`:''}
     <div class="kpi own"><div class="eyebrow">Lời hôm nay</div><div class="v num good">${money(td.loi)}</div><div class="d">Tháng này ${short(mo.loi)}</div></div>
     ${(()=>{const L=tdDon.filter(d=>isDv(d.loai));const tien=L.reduce((s2,d)=>s2+(d.soTien||0),0),phi=L.reduce((s2,d)=>s2+d.giaBan,0);return `<div class="kpi"><div class="eyebrow">Thu hộ hôm nay</div><div class="v num">${money(tien)}</div><div class="d">${L.length} giao dịch · phí ${short(phi)}</div></div>`})()}
   </div>
@@ -646,8 +647,31 @@ let cart=[], cartKhach='', cartSdt='';
 const inCart=imei=>cart.some(c=>c.imei===imei);
 const cartQty=id=>cart.filter(c=>c.hangId===id).reduce((a,c)=>a+c.sl,0);
 const cartTotal=()=>cart.reduce((a,c)=>a+c.gia*(c.sl||1),0);
+/* 26/10 anh Thái: KHUYẾN MÃI CHO KHÁCH — giảm giá / tặng phụ kiện trong kho / quà khác. App chủ shop + nhân viên dùng chung.
+   Mọi dòng KM lưu loai:'km' (giảm = giaBan âm; tặng = giaBan 0, giaVon = vốn món tặng) → doanh thu, lời, tồn kho tự đúng. */
+let kmOpen=false, kmTab='giam', kmQ='';
+const isKm=c=>c.nhom==='km';
+const cartHang=()=>cart.filter(c=>!isKm(c)&&c.type!=='thu').reduce((a,c)=>a+c.gia*(c.sl||1),0);
+const cartKm=()=>cart.filter(isKm).reduce((a,c)=>a+(c.gia<0?-c.gia:0)+(NV?0:(c.von||0)*(c.sl||1)),0);
+function kmGiam(v){v=Math.round(v);if(!(v>0)){toast('Nhập số tiền giảm');return}cart=cart.filter(c=>!(isKm(c)&&c.gia<0));
+  cart.push({type:'free',nhom:'km',ten:'🎁 Giảm giá',gia:-v,von:0,sl:1});kmOpen=false;render();toast('Đã giảm '+money(v));if(v>=cartHang())toast('Lưu ý: tiền giảm ≥ tiền hàng')}
+function renderKm(){const tab=(k,t)=>`<button type="button" data-kmtab="${k}" aria-pressed="${kmTab===k}">${t}</button>`;
+  const g=cart.find(c=>isKm(c)&&c.gia<0), q=kmQ.trim().toLowerCase();
+  const cand=kmTab==='tang'?db.hang.filter(h=>(h.nhom==='pk'||h.nhom==='sim')&&h.sl-cartQty(h.id)>0&&(!q||h.ten.toLowerCase().includes(q))).slice(0,6):[];
+  return `<div class="kmp"><h3>🎁 Khuyến mãi cho khách</h3><div class="seg" role="group">${tab('giam','Giảm giá')}${on('pk')||on('sim')?tab('tang','Tặng phụ kiện'):''}${tab('qua','Quà khác')}</div>
+  ${kmTab==='giam'?`<div class="kmchips">${[50000,100000,200000,300000,500000].map(v=>`<button type="button" data-kmgiam="${v}">−${short(v)}</button>`).join('')}${[5,10].map(p=>`<button type="button" data-kmpct="${p}">−${p}%</button>`).join('')}</div>
+    <div class="inrow"><input id="kmTien" inputmode="numeric" class="num" placeholder="Hoặc gõ số tiền giảm" value="${g?(-g.gia).toLocaleString('vi-VN'):''}" style="flex:1"><button type="button" class="btn" data-kmok="1">Áp dụng</button></div>
+    <small style="color:#46506b">Trừ thẳng vào tổng đơn. Mỗi đơn 1 dòng giảm giá, áp lại là thay số mới.</small>`
+  :kmTab==='tang'?`<input id="kmQ" inputmode="search" placeholder="Gõ tên phụ kiện, VD: cường lực, ốp" value="${esc(kmQ)}" style="width:100%;margin:6px 0">
+    <div class="list">${cand.length?cand.map(h=>`<div class="row"><div class="n"><b>${esc(h.ten)}</b><small class="num">Còn ${h.sl-cartQty(h.id)}<span class="own"> · vốn ${money(h.giaNhap)}</span></small></div><button type="button" class="ghost" data-kmtang="${h.id}">Tặng</button></div>`).join(''):'<div class="empty">Không có phụ kiện nào khớp trong kho.</div>'}</div>
+    <small style="color:#46506b">Món tặng trừ tồn kho, khách không trả tiền${NV?'':', vốn món tặng trừ vào lời đơn'}.</small>`
+  :`<label>Tên quà<input id="kmQua" placeholder="VD: Dán màn hình, gói cước 1 tháng"></label>${NV?'':`<label>Giá trị quà (vốn)<small>Để tính lời đơn — bỏ trống là 0</small><input id="kmVon" inputmode="numeric" class="num"></label>`}
+    <button type="button" class="btn" data-kmqua="1" style="margin-top:8px;width:100%">＋ Thêm quà vào đơn</button>`}
+  <button type="button" class="back" data-kmx="1" style="margin-top:6px">Đóng</button></div>`}
 function renderCart(){if(!cart.length)return '';
-  return `<div class="panel cartp"><h2>Đơn đang bán · ${cart.length} món</h2><div class="list">${cart.map((c,i)=>`<div class="row"><div class="n"><b>${esc(c.ten)}${c.sl>1?' ×'+c.sl:''}</b>${c.imei?`<small class="num">IMEI …${c.imei.slice(-6)}${c.bh?' · BH '+c.bh+' tháng':''}</small>`:''}</div><div class="right" style="flex-direction:row;align-items:center"><b class="num">${money(c.gia*(c.sl||1))}</b><button class="xbtn" data-cartdel="${i}" aria-label="Bỏ món này">✕</button></div></div>`).join('')}</div>
+  return `<div class="panel cartp"><h2>Đơn đang bán · ${cart.length} món</h2><div class="list">${cart.map((c,i)=>`<div class="row${isKm(c)?' kmline':''}"><div class="n"><b>${esc(c.ten)}${c.sl>1?' ×'+c.sl:''}</b>${c.imei?`<small class="num">IMEI …${c.imei.slice(-6)}${c.bh?' · BH '+c.bh+' tháng':''}</small>`:''}</div><div class="right" style="flex-direction:row;align-items:center"><b class="num">${isKm(c)&&!c.gia?'Tặng':money(c.gia*(c.sl||1))}</b><button class="xbtn" data-cartdel="${i}" aria-label="Bỏ món này">✕</button></div></div>`).join('')}</div>
+    ${kmOpen?renderKm():`<button type="button" class="ghost" data-kmo="1" style="width:100%;margin-top:8px;border-color:#f0b54a;color:#9a3412">🎁 Khuyến mãi cho khách${cart.some(isKm)?' · '+cart.filter(isKm).length+' mục':''}</button>`}
+    ${cart.some(isKm)&&!NV?`<div style="display:flex;justify-content:space-between;color:#9a3412;font-size:13px;margin-top:6px"><span>Đơn này khuyến mãi (giảm + vốn quà)</span><b class="num">${money(cartKm())}</b></div>`:''}
     <div class="ctot"><span>${cartTotal()<0?'Shop trả khách':'Khách trả'}</span><b class="num">${money(Math.abs(cartTotal()))}</b></div>
     <div class="two"><label>Tên khách<input id="cKh" value="${esc(cartKhach)}" placeholder="Không bắt buộc"></label><label>SĐT<input id="cSd" inputmode="tel" value="${esc(cartSdt)}" placeholder="Để tra bảo hành"></label></div>
     <button class="btn" data-checkout="1" style="margin-top:10px">${cartTotal()<0?'Hoàn tất · shop trả khách '+money(-cartTotal()):'In hóa đơn · '+money(cartTotal())}</button></div>`}
@@ -947,13 +971,23 @@ function render(){
 document.addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;
   if(b.dataset.cartdel){cart.splice(+b.dataset.cartdel,1);render();return}
+  if(b.dataset.kmo){kmOpen=true;render();return}
+  if(b.dataset.kmx){kmOpen=false;render();return}
+  if(b.dataset.kmtab){kmTab=b.dataset.kmtab;render();return}
+  if(b.dataset.kmgiam){kmGiam(+b.dataset.kmgiam);return}
+  if(b.dataset.kmpct){kmGiam(Math.round(cartHang()*b.dataset.kmpct/100/1000)*1000);return}
+  if(b.dataset.kmok){kmGiam(parseMoney(($('kmTien')||{}).value||''));return}
+  if(b.dataset.kmtang){const h=db.hang.find(x=>x.id===b.dataset.kmtang);if(!h)return;const ex=cart.find(c=>isKm(c)&&c.hangId===h.id);
+    if(ex)ex.sl++;else cart.push({type:'hang',hangId:h.id,ten:'🎁 Tặng: '+h.ten,nhom:'km',gia:0,von:h.giaNhap,sl:1});render();toast('Đã thêm quà tặng: '+h.ten);return}
+  if(b.dataset.kmqua){const t=($('kmQua')||{}).value||'';if(!t.trim()){toast('Nhập tên quà');return}const v=$('kmVon')?parseMoney($('kmVon').value):0;
+    cart.push({type:'free',nhom:'km',ten:'🎁 Tặng: '+t.trim(),gia:0,von:v,sl:1});kmOpen=false;render();toast('Đã thêm quà vào đơn');return}
   if(b.dataset.checkout){if(!cart.length)return;const bill=uid();const n0=new Date();const gio=n0.getHours()+':'+String(n0.getMinutes()).padStart(2,'0');
     cart.forEach(c=>{const base={id:uid(),bill,ngay:todayIso(),gio,khach:cartKhach.trim(),sdt:cartSdt.trim(),tt:'Tiền mặt',huy:null};
       if(c.type==='may'){const m=db.may.find(x=>x.imei===c.imei);if(m)m.tt='ban';db.don.push({...base,loai:'may',imei:c.imei,ten:c.ten,hang:c.hang,giaBan:c.gia,giaVon:c.von,bh:c.bh})}
       else if(c.type==='hang'){const h=db.hang.find(x=>x.id===c.hangId);if(h)h.sl-=c.sl;db.don.push({...base,loai:c.nhom,ten:c.ten+(c.sl>1?' ×'+c.sl:''),hangId:c.hangId,sl:c.sl,giaBan:c.gia*c.sl,giaVon:c.von*c.sl})}
       else if(c.type==='thu'){if(!db.may.some(x=>x.imei===c.imei))db.may.push({imei:c.imei,ten:c.ten,hang:c.hang,giaNhap:-c.gia,giaBan:c.gb||0,ngayNhap:todayIso(),ncc:'Thu của khách'+(cartKhach.trim()?': '+cartKhach.trim():''),tt:'ton'});db.don.push({...base,loai:'thu',imei:c.imei,ten:'Thu máy cũ: '+c.ten+(c.note?' ('+c.note+')':''),hang:c.hang,giaBan:c.gia,giaVon:c.gia})}
       else db.don.push({...base,loai:c.nhom,ten:c.ten,giaBan:c.gia,giaVon:c.von,uocTinh:c.uocTinh})});
-    cart=[];cartKhach='';cartSdt='';save();render();openReceipt(bill);return}
+    cart=[];cartKhach='';cartSdt='';kmOpen=false;kmQ='';save();render();openReceipt(bill);return}
   if(b.dataset.rm){rptMode=b.dataset.rm;rptSel=null;render();return}
   if(b.dataset.rsel){rptSel=rptSel===b.dataset.rsel?null:b.dataset.rsel;render();return}
   if(b.dataset.toggle==='todayList'){showToday=!showToday;render();return}
@@ -1024,6 +1058,7 @@ document.addEventListener('input',e=>{
   const t=e.target;
   if(t.id==='cKh'){cartKhach=t.value;return}
   if(t.id==='cSd'){cartSdt=t.value;return}
+  if(t.id==='kmQ'){kmQ=t.value;renderSell();const i=$('kmQ');i.focus();i.setSelectionRange(i.value.length,i.value.length);return}
   if(t.id==='sImei'){const pos=t.selectionStart;sellImei=t.value.trim();const before=document.activeElement===t;renderSell();const i=$('sImei');if(before){i.focus();try{i.setSelectionRange(pos,pos)}catch(_){}}return}
   if(t.id==='sGia'){updSellProfit();return}
   if(t.id==='pGia'||t.id==='pVon'||t.id==='pSl'){updPkProfit();return}
@@ -1090,7 +1125,7 @@ function renderReceipt(){const lines=db.don.filter(x=>x.bill===rcId||x.id===rcId
   el.innerHTML=`<div class="rc"><div class="rcp" id="rcPrint">
     <div class="rct">${esc(db.shop.ten||'Hóa đơn bán hàng')}</div><div class="rcs">Hóa đơn ${code} · ${dmy(d.ngay)} ${d.gio}</div>
     ${d.khach||d.sdt?`<div class="rcs" style="margin-top:0">Khách: ${esc(d.khach||'')}${d.sdt?' · '+esc(d.sdt):''}</div>`:''}
-    <div class="rcls">${lines.map(x=>`<div class="rcl"><div><b>${esc(x.ten)}</b>${x.imei?`<small class="num">IMEI ${x.imei}</small>`:''}${x.bh?`<small>Bảo hành ${x.bh} tháng</small>`:''}</div><b class="num">${money(x.giaBan)}</b></div>`).join('')}</div>
+    <div class="rcls">${lines.map(x=>`<div class="rcl"><div><b>${esc(x.ten)}</b>${x.imei?`<small class="num">IMEI ${x.imei}</small>`:''}${x.bh?`<small>Bảo hành ${x.bh} tháng</small>`:''}</div><b class="num">${x.loai==='km'&&!x.giaBan?'Tặng':money(x.giaBan)}</b></div>`).join('')}</div>
     <div class="rctot"><span>${tot<0?'Shop trả khách':'Tổng tiền'}</span><b class="num">${money(Math.abs(tot))}</b></div>
     <div class="seg rcseg" role="group"><button data-rcpay="tm" aria-pressed="${rcPay==='tm'}">Tiền mặt</button><button data-rcpay="ck" aria-pressed="${rcPay==='ck'}">Chuyển khoản</button><button data-rcpay="no" aria-pressed="${rcPay==='no'}">Ghi nợ</button></div>
     ${rcPay==='ck'?(bank?`<div class="qrbox"><div id="qr"></div><div class="qri"><b>${esc(bn||'')}</b><span class="num">${esc(bank.acc)}</span><span>${esc(bank.name)}</span><span class="num">Số tiền: <b>${money(tot)}</b></span><span class="num">Nội dung: ${code}</span></div></div>`
@@ -1172,19 +1207,19 @@ function rcData(){const lines=db.don.filter(x=>x.bill===rcId||x.id===rcId);if(!l
 function printThuong(){const R=rcData();if(!R)return;const w=+(db.shop.kho||80),sm=w<70;const qr=document.querySelector('#qr canvas,#qr img');const qs=qr?(qr.tagName==='CANVAS'?qr.toDataURL():qr.src):'';
   const html=`<!doctype html><html><head><meta charset="utf-8"><style>@page{size:${w}mm auto;margin:0}*{box-sizing:border-box}body{margin:0;padding:3mm;width:${w}mm;font:${sm?11:13}px/1.35 Arial,sans-serif;color:#000}h1{font-size:${sm?15:18}px;text-align:center;margin:0 0 2px}.c{text-align:center}.r{display:flex;justify-content:space-between;gap:6px}.l{border-top:1px dashed #000;margin:5px 0}.b{font-weight:700}img{display:block;margin:4px auto;width:${sm?34:44}mm}small{font-size:.85em}</style></head><body>
   <h1>${esc(db.shop.ten||'HÓA ĐƠN BÁN HÀNG')}</h1><div class="c"><small>Hóa đơn ${R.code} · ${dmy(R.d.ngay)} ${R.d.gio}</small></div>${R.d.khach||R.d.sdt?`<div class="c"><small>Khách: ${esc(R.d.khach||'')}${R.d.sdt?' · '+esc(R.d.sdt):''}</small></div>`:''}<div class="l"></div>
-  ${R.lines.map(x=>`<div class="r"><span class="b">${esc(x.ten)}</span><span>${money(x.giaBan)}</span></div>${x.imei?`<small>IMEI ${x.imei}</small><br>`:''}${x.bh?`<small>Bảo hành ${x.bh} tháng</small>`:''}`).join('<div style="height:4px"></div>')}
+  ${R.lines.map(x=>`<div class="r"><span class="b">${esc(x.ten)}</span><span>${x.loai==='km'&&!x.giaBan?'Tặng':money(x.giaBan)}</span></div>${x.imei?`<small>IMEI ${x.imei}</small><br>`:''}${x.bh?`<small>Bảo hành ${x.bh} tháng</small>`:''}`).join('<div style="height:4px"></div>')}
   <div class="l"></div><div class="r b" style="font-size:1.2em"><span>TỔNG</span><span>${money(R.tot)}</span></div>
   ${rcPay==='ck'&&R.bank&&qs?`<div class="l"></div><div class="c"><small>Quét mã để chuyển khoản</small></div><img src="${qs}"><div class="c"><small>${esc(R.bn||'')} · ${esc(R.bank.acc)}<br>${esc(R.bank.name)}<br>Nội dung: ${R.code}</small></div>`:''}
   <div class="l"></div><div class="c">Cảm ơn quý khách!</div></body></html>`;
   const f=document.createElement('iframe');f.style.cssText='position:fixed;right:0;bottom:0;width:0;height:0;border:0';document.body.appendChild(f);const dd=f.contentDocument;dd.open();dd.write(html);dd.close();
   setTimeout(()=>{try{f.contentWindow.focus();f.contentWindow.print()}catch(_){toast('Máy này chưa in được, thử In RawBT')}setTimeout(()=>f.remove(),60000)},500)}
-function printRawbt(){const R=rcData();if(!R)return;const W=(+(db.shop.kho||80))<70?32:48;const N=s=>noMark(String(s??''));const mo=n=>money(n).replace('đ','d');
+function printRawbt(){const R=rcData();if(!R)return;const W=(+(db.shop.kho||80))<70?32:48;const N=s=>noMark(String(s??'').replace(/[\u{1F000}-\u{1FFFF}\u2600-\u27BF\uFE0F]\s?/gu,''));const mo=n=>money(n).replace('đ','d');
   const pad=(a,b)=>{a=N(a);b=N(b);const s=W-b.length-1;a=a.length>s?a.slice(0,s):a;return a+' '.repeat(Math.max(1,W-a.length-b.length))+b};
   const B=[];const t=s=>{for(const ch of N(s))B.push(ch.charCodeAt(0)&255)};const nl=()=>B.push(10);const cmd=(...a)=>B.push(...a);
   cmd(27,64);cmd(27,97,1);cmd(27,69,1);cmd(29,33,17);t(db.shop.ten||'HOA DON');nl();cmd(29,33,0);cmd(27,69,0);t('Hoa don '+R.code+' '+dmy(R.d.ngay)+' '+R.d.gio);nl();
   if(R.d.khach||R.d.sdt){t('Khach: '+(R.d.khach||'')+(R.d.sdt?' '+R.d.sdt:''));nl()}
   cmd(27,97,0);t('-'.repeat(W));nl();
-  R.lines.forEach(x=>{t(pad(x.ten,mo(x.giaBan)));nl();if(x.imei){t(' IMEI '+x.imei);nl()}if(x.bh){t(' Bao hanh '+x.bh+' thang');nl()}});
+  R.lines.forEach(x=>{t(pad(x.ten,x.loai==='km'&&!x.giaBan?'Tang':mo(x.giaBan)));nl();if(x.imei){t(' IMEI '+x.imei);nl()}if(x.bh){t(' Bao hanh '+x.bh+' thang');nl()}});
   t('-'.repeat(W));nl();cmd(27,69,1);t(pad('TONG',mo(R.tot)));nl();cmd(27,69,0);
   if(rcPay==='ck'&&R.bank){const q=vietqr(R.bank.bin,R.bank.acc,R.tot,R.code);const L=q.length+3;cmd(27,97,1);t('Quet ma de chuyen khoan');nl();
     cmd(29,40,107,4,0,49,65,50,0);cmd(29,40,107,3,0,49,67,W<40?5:6);cmd(29,40,107,3,0,49,69,49);cmd(29,40,107,L&255,L>>8,49,80,48);t(q);cmd(29,40,107,3,0,49,81,48);nl();
