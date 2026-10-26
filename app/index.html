@@ -215,7 +215,7 @@ body.nv .own,body.nv #sLoi,body.nv #pLoi{display:none!important}
 body.nvmode nav.tabs button[data-v=add],body.nvmode nav.tabs button[data-v=stock]{display:none}
 .nbg{display:grid;grid-template-columns:1.1fr 1fr 1.2fr;gap:6px;align-items:start;padding:8px 0;border-bottom:1px solid var(--line)}.nbg:last-child{border:0}.nbg>span{display:flex;flex-direction:column;text-align:right}.nbg>span b{font-size:16px}.nbg small{color:#46506b;font-size:12.5px}.nbg i{font-style:normal}.nbh{padding:0 0 4px;font-size:12.5px;font-weight:700;color:#46506b;text-transform:uppercase}.nbbar{grid-column:1/-1;height:6px;background:#e4ecee;border-radius:4px}.nbbar i{display:block;height:100%;border-radius:4px}
 .pnhint{background:#f0faf7;border:1px dashed #9fd4c8;border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.45;margin-bottom:12px}
-.pncard{border:2px solid #0f766e}.pned{flex-basis:100%;display:flex;flex-direction:column;gap:6px;padding:6px 0 4px}.pnsl{display:flex;align-items:center;gap:6px}.pnsl span{flex:1;font-size:14px;color:#46506b}.pnsl input{width:70px;text-align:center}.pnsl .ghost{width:42px;font-size:20px;padding:6px 0}.pnims{display:flex;flex-wrap:wrap;gap:6px}.pnim{background:#eef6f4;border-radius:999px;padding:4px 6px 4px 10px;font-size:13px;display:inline-flex;align-items:center;gap:4px}.pnim button{border:0;background:var(--red-soft);color:var(--red);border-radius:999px;width:22px;height:22px;font-weight:800}.pnim.sold{background:#f1f1f1;color:#777;padding-right:10px}
+.pncard{border:2px solid #0f766e}.sug{border:1px solid #cde9e1;border-radius:12px;background:#fff;margin:-4px 0 10px;overflow:hidden}.sug button{display:flex;align-items:center;gap:10px;width:100%;border:0;border-bottom:1px solid #eef3f2;background:#fff;padding:8px 10px;text-align:left;font-size:15px}.sug button:last-child{border-bottom:0}.sug img{width:40px;height:40px;object-fit:contain;flex:none;background:#f6faf9;border-radius:8px}.sug .t{flex:1;min-width:0}.sug .t b{font-weight:700}.sug .t small{display:block;color:#46506b;font-size:12.5px}.sug .dot{width:40px;height:40px;flex:none;border-radius:8px;background:#eef6f4;display:flex;align-items:center;justify-content:center}.pned{flex-basis:100%;display:flex;flex-direction:column;gap:6px;padding:6px 0 4px}.pnsl{display:flex;align-items:center;gap:6px}.pnsl span{flex:1;font-size:14px;color:#46506b}.pnsl input{width:70px;text-align:center}.pnsl .ghost{width:42px;font-size:20px;padding:6px 0}.pnims{display:flex;flex-wrap:wrap;gap:6px}.pnim{background:#eef6f4;border-radius:999px;padding:4px 6px 4px 10px;font-size:13px;display:inline-flex;align-items:center;gap:4px}.pnim button{border:0;background:var(--red-soft);color:var(--red);border-radius:999px;width:22px;height:22px;font-weight:800}.pnim.sold{background:#f1f1f1;color:#777;padding-right:10px}
 .pnbar{width:100%;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px;background:#fff4dc;color:#5c3b00;border:1px solid #f0d08a;border-radius:12px;padding:10px 12px;font-size:14.5px;margin-bottom:10px;text-align:left}.pnbar span{font-weight:800;color:#0b5e57}
 .pnrow{border-bottom:1px solid var(--line);padding:6px 0 10px}.pnrow:last-child{border-bottom:0}.pnlines{display:block;color:#46506b;font-size:13.5px;line-height:1.45}
 .bigscan{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;font-size:20px;padding:22px 12px;border-radius:16px}
@@ -765,7 +765,7 @@ function renderAdd0(){
     <button class="btn" type="submit">＋ Thêm vào phiếu nhập</button></form></div>`;addPre='';return}
   const names=[...new Set(db.may.map(m=>m.ten))].sort();
   $('v-add').innerHTML=seg+`<div class="panel"><h2>Nhập điện thoại vào kho</h2><form id="fAdd" autocomplete="off">
-    <label>Tên máy<input id="aTen" list="dlTen" placeholder="VD: OPPO Reno17 F 8/256"><small class="hint" id="aHint"></small><datalist id="dlTen">${names.map(n=>`<option value="${esc(n)}">`).join('')}</datalist></label>
+    <label>Tên máy + màu<small>Gõ tên máy rồi chọn đúng màu trong danh sách — mỗi màu là 1 mẫu riêng trong kho</small><input id="aTen" placeholder="VD: A7 Pro, Reno15, iPhone 17" autocomplete="off"><small class="hint" id="aHint"></small></label><div id="aSug" class="sug" hidden></div>
     <label>IMEI<small>Mỗi dòng 1 máy — quét liên tục cả lô</small>
       <span class="inrow" style="align-items:stretch"><textarea id="aImei" inputmode="numeric" placeholder="Quét hoặc gõ IMEI, mỗi máy 1 dòng"></textarea><button type="button" class="icon" data-scan="aImei" aria-label="Quét IMEI"><svg viewBox="0 0 24 24"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 8v8M10 8v8M13 8v8M17 8v8"/></svg></button></span></label>
     <label>Giá nhập / máy<input id="aGN" inputmode="numeric" class="num"></label>
@@ -1084,7 +1084,7 @@ document.addEventListener('input',e=>{
   if(t.id==='hTen'){const v=t.value.trim();const h=$('hHint');if(h){const ex2=v&&db.hang.find(x=>x.ten===v);h.className='hint '+(ex2?'old':'new');h.textContent=!v?'':ex2?'Đã có trong kho (còn '+ex2.sl+'), số nhập sẽ cộng thêm':'Hàng mới, sẽ tạo món mới trong kho'}const ex=db.hang.find(h=>h.ten===t.value.trim());if(ex){$('hNhom').value=ex.nhom+'|'+loaiOf(ex);$('hMin').value=ex.min;if(!$('hGN').value)$('hGN').value=ex.giaNhap.toLocaleString('vi-VN');if(!$('hGB').value&&ex.giaBan)$('hGB').value=ex.giaBan.toLocaleString('vi-VN')}return}
   if(t.id==='kQ'){stockQ=t.value;renderStock();const i=$('kQ');i.focus();i.setSelectionRange(i.value.length,i.value.length);return}
   if(t.id==='lQ'){lookQ=t.value.replace(/\D/g,'');renderMore();return}
-  if(t.id==='aTen'){const v=t.value.trim();const h=$('aHint');if(h){const ex2=v&&db.may.some(m=>m.ten===v);h.className='hint '+(ex2?'old':'new');h.textContent=!v?'':ex2?'Đã có máy này, giá lần trước được điền sẵn':'Máy mới, sẽ tạo mẫu máy mới khi nhập'}let g=guessBrand(t.value);if(!g||g==='Khác')g=guessBrand2(t.value)||g;const sel=$('aHang');if(g&&sel){if(![...sel.options].some(o=>o.value===g))sel.add(new Option(g,g));sel.value=g}const ex=db.may.filter(m=>m.ten===t.value.trim()).pop();if(ex){if(!$('aGN').value)$('aGN').value=ex.giaNhap.toLocaleString('vi-VN');if(!$('aGB').value&&ex.giaBan)$('aGB').value=ex.giaBan.toLocaleString('vi-VN')}return}
+  if(t.id==='aTen'){sugRender();const v=t.value.trim();const h=$('aHint');if(h){const ex2=v&&db.may.some(m=>m.ten===v);h.className='hint '+(ex2?'old':'new');h.textContent=!v?'':ex2?'Đã có máy này, giá lần trước được điền sẵn':'Máy mới, sẽ tạo mẫu máy mới khi nhập'}let g=guessBrand(t.value);if(!g||g==='Khác')g=guessBrand2(t.value)||g;const sel=$('aHang');if(g&&sel){if(![...sel.options].some(o=>o.value===g))sel.add(new Option(g,g));sel.value=g}const ex=db.may.filter(m=>m.ten===t.value.trim()).pop();if(ex){if(!$('aGN').value)$('aGN').value=ex.giaNhap.toLocaleString('vi-VN');if(!$('aGB').value&&ex.giaBan)$('aGB').value=ex.giaBan.toLocaleString('vi-VN')}return}
 });
 document.addEventListener('change',e=>{if(e.target.id==='rMonth'){rptMonth=e.target.value;rptSel=null;render();return}if(e.target.id==='sTT'){sellTT=e.target.value;const keep={g:$('sGia').value,k:$('sKhach').value,s:$('sSdt').value};renderSell();$('sGia').value=keep.g;$('sKhach').value=keep.k;$('sSdt').value=keep.s;updSellProfit()}});
 document.addEventListener('focusout',e=>{const t=e.target;if(['sGia','aGN','aGB','pGia','pVon','sTraTruoc','hGN','hGB'].includes(t.id)&&t.value){const n=parseMoney(t.value);t.value=n?n.toLocaleString('vi-VN'):''}});
@@ -1108,7 +1108,9 @@ document.addEventListener('submit',e=>{
     const ex=db.hang.find(x=>x.ten===ten&&x.nhom===nhom);
     PN.dong.push({t:'hang',id:ex?ex.id:'',ten,nhom,loai,sl,gn,gb,min:mn});pnSave();render();window.scrollTo(0,0);toast(`Đã thêm ${sl} ${ten} vào phiếu`);return}
   if(f.id==='fAdd'){const ten=$('aTen').value.trim();const lines=[...new Set($('aImei').value.split(/[\s,;]+/).map(s=>s.replace(/\D/g,'')).filter(Boolean))];const gn=parseMoney($('aGN').value),gb=parseMoney($('aGB').value);const err=$('aErr');
-    if(!ten){err.textContent='Nhập tên máy.';return} if(!lines.length){err.textContent='Nhập ít nhất 1 IMEI.';return} if(!gn){err.textContent='Nhập giá nhập.';return}
+    if(!ten){err.textContent='Nhập tên máy.';return}
+    {const m0=KM&&KM.find(x=>x.base.toLowerCase()===ten.toLowerCase()&&x.n>1);if(m0){err.textContent='Máy này có '+m0.n+' màu — chọn đúng tên kèm màu trong danh sách gợi ý rồi mới quét IMEI.';sugRender(true);return}}
+    if(!lines.length){err.textContent='Nhập ít nhất 1 IMEI.';return} if(!gn){err.textContent='Nhập giá nhập.';return}
     const bad=lines.filter(s=>s.length!==15);if(bad.length){err.textContent='IMEI phải đủ 15 số: '+bad.join(', ');return}
     const dup=lines.filter(s=>db.may.some(m=>m.imei===s));if(dup.length){err.textContent='IMEI đã có trong kho: '+dup.join(', ');return}
     const dupP=lines.filter(s=>PN.dong.some(d=>d.t==='may'&&(d.imeis||[]).includes(s)));if(dupP.length){err.textContent='IMEI đã có trong phiếu đang nhập: '+dupP.join(', ');return}
@@ -1506,5 +1508,26 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-caiapp],[d
   if(b.dataset.isheetx||e.target.id==='isheet'){document.getElementById('isheet').hidden=true}});
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js',{scope:'./'}).catch(()=>{});
 setTimeout(()=>INST.bar(),1500);
+</script>
+<script>
+/* 26/10 anh Thái: MÀU = 1 PHẦN TÊN MÁY. Kho máy có N màu → gợi ý N mẫu "Tên - Màu" (có ảnh đúng màu). Shop chọn đúng màu rồi quét IMEI → tồn kho tách theo màu. */
+let KM=null,KMload=null,SUGS=[];
+const nv0=x=>String(x||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d');
+function kmLoad(){if(KM||KMload)return KMload;KMload=fetch('/kho/kho-may.json').then(r=>r.json()).then(k=>{const L=[];Object.values(k.hang||{}).forEach(ds=>(ds||[]).forEach(m=>{const mau=(m.mau||[]).filter(x=>x&&x.ten);
+    if(mau.length>1)mau.forEach(c=>L.push({ten:m.ten+' - '+c.ten,base:m.ten,hang:m.hang,img:c.file?'/'+c.file:'',n:mau.length,mau:c.ten}));
+    else L.push({ten:m.ten,base:m.ten,hang:m.hang,img:mau[0]&&mau[0].file?'/'+mau[0].file:'',n:1})}));KM=L;const i=document.getElementById('aTen');if(i&&document.activeElement===i)sugRender()}).catch(()=>{KM=[]});return KMload}
+function sugRender(force){const el=document.getElementById('aSug'),inp=document.getElementById('aTen');if(!el||!inp)return;kmLoad();
+  const q=nv0(inp.value).trim(),tk=q.split(/\s+/).filter(Boolean);
+  if(!tk.length&&!force){el.hidden=true;return}
+  const hit=x=>tk.every(w=>nv0(x).includes(w));
+  const own=[...new Set(db.may.map(m=>m.ten))].filter(hit).map(t=>({ten:t,own:1,ton:db.may.filter(m=>m.ten===t&&m.tt==='ton').length,img:(KM||[]).find(x=>x.ten===t)?.img||''}));
+  const cat=(KM||[]).filter(x=>hit(x.ten)&&!own.some(o=>o.ten===x.ten));
+  SUGS=[...own,...cat].slice(0,10);
+  if(!SUGS.length||SUGS.some(x=>x.ten===inp.value.trim())&&!force){el.hidden=true;return}
+  el.innerHTML=SUGS.map((x,i)=>`<button type="button" data-sug="${i}">${x.img?`<img src="${esc(x.img)}" alt="" loading="lazy">`:'<span class="dot">📱</span>'}<span class="t"><b>${esc(x.ten)}</b><small>${x.own?'Shop đã có · còn '+x.ton+' máy':x.n>1?'Màu '+esc(x.mau)+' · 1 trong '+x.n+' màu':esc(x.hang||'')}</small></span></button>`).join('')+(KM?'':'<small style="display:block;padding:8px 10px;color:#46506b">Đang tải kho máy…</small>');el.hidden=false}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-sug]');if(!b)return;const x=SUGS[+b.dataset.sug],inp=document.getElementById('aTen');if(!x||!inp)return;
+  inp.value=x.ten;inp.dispatchEvent(new Event('input',{bubbles:true}));const sel=document.getElementById('aHang');const hg=x.hang==='Apple'?'iPhone':x.hang;if(sel&&hg){if(![...sel.options].some(o=>o.value===hg))sel.add(new Option(hg,hg));sel.value=hg}
+  document.getElementById('aSug').hidden=true;const er=document.getElementById('aErr');if(er)er.textContent='';const im=document.getElementById('aImei');if(im)im.focus()});
+document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.target.value)sugRender()}});
 </script>
 </body></html>
