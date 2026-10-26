@@ -138,12 +138,56 @@ async def main():
         await E("document.querySelector('[data-rcdone]')&&document.querySelector('[data-rcdone]').click()"); await pg.wait_for_timeout(200)
         ok('Ghi nợ: đơn còn nợ 40k', await E("db.don.some(d=>d.khach==='Anh Nợ'&&+d.no===40000)"))
 
+        # 11b. Khách hàng
+        await E("more='kh';khQ='Chị Mai';go('more')"); await pg.wait_for_timeout(100)
+        await E(f"cart=[{{type:'hang',hangId:'{hid}',ten:'Ốp test',nhom:'pk',gia:50000,von:20000,sl:1}}];cartKhach='Chị Mai';cartSdt='0909 111 222';go('sell')")
+        await pg.click('[data-checkout]'); await pg.wait_for_timeout(200); await E("$('rc').hidden=true")
+        await E("more='kh';khQ='0909111';go('more')"); await pg.wait_for_timeout(150)
+        k = await E("khachDs().find(o=>o.sdt.replace(/\\D/g,'')==='0909111222')")
+        ok('Khách hàng: tự lưu theo SĐT, có lịch sử', bool(k) and await E("document.querySelectorAll('[data-khopen]').length")>=1, k and k.get('ten'))
+        await pg.locator('[data-khopen]').first.click(); await pg.wait_for_timeout(100)
+        ok('Khách hàng: mở chi tiết có nút Gọi/Zalo', await E("!!document.querySelector('a[href^=\"https://zalo.me/0909111222\"]')"))
+        await pg.locator('#v-more .mg:has(.imeis)').first.screenshot(path='/tmp/kh.png')
+
+        # 11c. NCC: phiếu nợ → trả tiền → trả hàng trừ nợ
+        await E("go('add');addTab='moi';addMode='may';render()")
+        await pg.click('#aTen'); await pg.type('#aTen', 'reno15 5g', delay=5); await pg.wait_for_timeout(600)
+        await pg.locator('[data-sug]').first.click()
+        await pg.fill('#aImei', '860000000002001\n860000000002019'); await pg.fill('#aGN', '8.000.000'); await pg.click('#fAdd button[type=submit]'); await pg.wait_for_timeout(150)
+        await pg.fill('#pnNcc', 'NPP Test'); await pg.fill('#pnNo', '10.000.000'); await pg.click('[data-pnsave]'); await pg.wait_for_timeout(200)
+        no = await E("nccDs().find(o=>o.ten==='NPP Test').no")
+        ok('NCC: phiếu nhập ghi nợ 10tr', no == 10000000, no)
+        chi0 = await E("(db.chi||[]).length")
+        await E("more='ncc';nccOpen='NPP Test';nccAct='tien';go('more')"); await pg.fill('#nTien', '3.000.000'); await pg.click('[data-nccpay="NPP Test"]'); await pg.wait_for_timeout(150)
+        r = json.loads(await S("{no:nccDs().find(o=>o.ten==='NPP Test').no,chi:(db.chi||[]).length}"))
+        ok('NCC: trả tiền mặt 3tr → nợ còn 7tr, ghi Sổ chi', r['no'] == 7000000 and r['chi'] == chi0 + 1, r)
+        await E("nccAct='hang';nccTra=[];renderMore()"); await pg.fill('#ntIm', '860000000002001'); await pg.wait_for_timeout(150)
+        await pg.locator('#v-more .confirm').first.screenshot(path='/tmp/ncc.png')
+        await pg.click('[data-nttra="NPP Test"]'); await pg.wait_for_timeout(150)
+        r = json.loads(await S("{no:nccDs().find(o=>o.ten==='NPP Test').no,tt:db.may.find(m=>m.imei==='860000000002001').tt,ton:stock().some(m=>m.imei==='860000000002001')}"))
+        ok('NCC: trả 1 máy → rời kho, trừ nợ 8tr (còn −1tr = NCC nợ lại)', r['no'] == -1000000 and r['tt'] == 'ncc' and not r['ton'], r)
+
+        # 11d. Kiểm kho
+        await E("KK={q:[],luc:''};kkTab='may';more='kk';go('more')")
+        ton = await E("stock().map(m=>m.imei)")
+        for im in ton[:-1]: await E(f"kkAdd('{im}')")
+        await E("kkAdd('999999999999999')"); await pg.wait_for_timeout(150)
+        r = json.loads(await S("{thieu:document.body.innerText.includes('Thiếu 1 máy'),la:document.body.innerText.includes('1 IMEI lạ')}"))
+        ok('Kiểm kho: quét thiếu 1 máy + 1 IMEI lạ → báo đúng', r['thieu'] and r['la'], r)
+        await pg.locator('#v-more').screenshot(path='/tmp/kk.png')
+        await E("kkTab='hang';renderMore()"); hh = await E("db.hang.find(h=>h.sl>0).id")
+        await pg.fill(f'[data-kkh="{hh}"]', '3'); await pg.click('[data-kkhsave]'); await pg.wait_for_timeout(100)
+        ok('Kiểm kho phụ kiện: lưu số đếm', await E(f"db.hang.find(h=>h.id==='{hh}').sl") == 3)
+
+        # 11e. Dòng mới ghi được lên Sheet (cột traSl, no, loai)
+        ok('Sổ Google: có cột traSl (trả 1 phần) và no/loai (công nợ NCC)', await E("GG.cols.Don.includes('traSl')&&GG.cols.Phieu.includes('no')&&GG.cols.Phieu.includes('loai')"))
+
         ok('Không có lỗi JavaScript suốt luồng chủ shop', not errs, errs)
 
         # 12. Nhân viên: bán + KM → đồng bộ về sổ chủ
         r = await E("""(async()=>{const OWNX=JSON.parse(JSON.stringify(db));const SENT=[];window.fetch=async(u,o)=>{if(o&&o.body)SENT.push(JSON.parse(o.body));return {ok:true,json:async()=>({ok:true})}};
           NV={sdt:'0900000000',ten:'Lan'};db=nvDb({shop:OWNX.shop,may:OWNX.may.filter(m=>m.tt==='ton').map(m=>({imei:m.imei,ten:m.ten,hang:m.hang,giaBan:m.giaBan||1})),hang:OWNX.hang.filter(h=>h.sl>0)});
-          const m=db.may[0],h=db.hang.find(x=>x.sl>0);cart=[{type:'may',imei:m.imei,ten:m.ten,hang:m.hang,gia:3000000,von:0,bh:12,sl:1},{type:'free',nhom:'km',ten:'🎁 Giảm giá',gia:-100000,von:0,sl:1},{type:'hang',hangId:h.id,ten:'🎁 Tặng: '+h.ten,nhom:'km',gia:0,von:0,sl:1}];render();
+          const m=db.may[0],h=db.hang.find(x=>x.sl>0);cart=[{type:'may',imei:m.imei,ten:m.ten,hang:m.hang,gia:3000000,von:0,bh:12,sl:1},{type:'free',nhom:'km',ten:'🎁 Giảm giá',gia:-100000,von:0,sl:1},{type:'hang',hangId:h.id,ten:'🎁 Tặng: '+h.ten,nhom:'km',gia:0,von:0,sl:1}];go('sell');
           document.querySelector('[data-checkout]').click();await new Promise(r=>setTimeout(r,200));nvClose();await new Promise(r=>setTimeout(r,400));
           const o=SENT.find(x=>x.act==='nvBan');if(!o)return 'không gửi';db=OWNX;NV=null;const sl0=db.hang.find(x=>x.id===h.id).sl;nvApply(o.don);
           const L=db.don.filter(d=>d.bill===o.don.id);return JSON.stringify({n:L.length,dt:L.reduce((s,d)=>s+d.giaBan,0),may:db.may.find(x=>x.imei===m.imei).tt,pk:sl0-db.hang.find(x=>x.id===h.id).sl,von:L.find(d=>d.hangId).giaVon>0})})()""")
