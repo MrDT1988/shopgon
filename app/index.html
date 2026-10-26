@@ -1530,4 +1530,12 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-sug]');if(
   document.getElementById('aSug').hidden=true;const er=document.getElementById('aErr');if(er)er.textContent='';const im=document.getElementById('aImei');if(im)im.focus()});
 document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.target.value)sugRender()}});
 </script>
+<script>
+/* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
+const BUILD='20261026-1126';let verLuc=0;
+async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
+  if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
+    if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
+setTimeout(verCheck,800);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')verCheck()});
+</script>
 </body></html>

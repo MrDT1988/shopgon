@@ -92,3 +92,8 @@ App quản lý bán hàng cho shop điện thoại (shopgon.vn), chạy trên đ
 - **Đồng bộ gộp 3 chiều** (`GG.merge`, base `shopgon_base_<sheetId>`): 2 máy chủ shop không đè đơn nhau; phụ kiện cộng dồn chênh lệch.
 - Sổ tay chào hàng & bảng giá (`/setup/`) KHÔNG còn link trong app chủ shop / trang chủ — chỉ ở App Sale (thẻ Shop Gọn).
 - Việc tiếp: anh bán thử 1 ngày thật với Hồng Nhi → đóng băng tính năng.
+
+## 12. Phiên 26/10 — QUAN TRỌNG khi đẩy code
+- shopgon.vn chạy THẲNG từ repo này (GitHub Pages, CNAME) — push là lên web thật. Repo `shopgon-web` không tồn tại/không dùng.
+- **Mỗi lần sửa app/: đổi `BUILD` trong app/index.html VÀ `app/ver.json` cùng 1 giá trị** (vd 20261026-1130) → điện thoại tự tải bản mới khi mở lại app (không đổi = máy shop giữ bản cũ tới ~10 phút).
+- Thêm 26/10: KM cho khách (loai 'km'), Sửa/Xóa đơn, Xóa IMEI trong Kho, icon + manifest + nút Cài app + sw.js (không lưu đệm), Sửa phiếu nhập trực tiếp (PN.edit, Thôi = trả kho), Nhập máy chọn tên kèm MÀU từ kho-may.json (máy nhiều màu bắt chọn màu).
