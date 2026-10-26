@@ -215,7 +215,7 @@ body.nv .own,body.nv #sLoi,body.nv #pLoi{display:none!important}
 body.nvmode nav.tabs button[data-v=add],body.nvmode nav.tabs button[data-v=stock]{display:none}
 .nbg{display:grid;grid-template-columns:1.1fr 1fr 1.2fr;gap:6px;align-items:start;padding:8px 0;border-bottom:1px solid var(--line)}.nbg:last-child{border:0}.nbg>span{display:flex;flex-direction:column;text-align:right}.nbg>span b{font-size:16px}.nbg small{color:#46506b;font-size:12.5px}.nbg i{font-style:normal}.nbh{padding:0 0 4px;font-size:12.5px;font-weight:700;color:#46506b;text-transform:uppercase}.nbbar{grid-column:1/-1;height:6px;background:#e4ecee;border-radius:4px}.nbbar i{display:block;height:100%;border-radius:4px}
 .pnhint{background:#f0faf7;border:1px dashed #9fd4c8;border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.45;margin-bottom:12px}
-.pncard{border:2px solid #0f766e}
+.pncard{border:2px solid #0f766e}.pned{flex-basis:100%;display:flex;flex-direction:column;gap:6px;padding:6px 0 4px}.pnsl{display:flex;align-items:center;gap:6px}.pnsl span{flex:1;font-size:14px;color:#46506b}.pnsl input{width:70px;text-align:center}.pnsl .ghost{width:42px;font-size:20px;padding:6px 0}.pnims{display:flex;flex-wrap:wrap;gap:6px}.pnim{background:#eef6f4;border-radius:999px;padding:4px 6px 4px 10px;font-size:13px;display:inline-flex;align-items:center;gap:4px}.pnim button{border:0;background:var(--red-soft);color:var(--red);border-radius:999px;width:22px;height:22px;font-weight:800}.pnim.sold{background:#f1f1f1;color:#777;padding-right:10px}
 .pnbar{width:100%;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px;background:#fff4dc;color:#5c3b00;border:1px solid #f0d08a;border-radius:12px;padding:10px 12px;font-size:14.5px;margin-bottom:10px;text-align:left}.pnbar span{font-weight:800;color:#0b5e57}
 .pnrow{border-bottom:1px solid var(--line);padding:6px 0 10px}.pnrow:last-child{border-bottom:0}.pnlines{display:block;color:#46506b;font-size:13.5px;line-height:1.45}
 .bigscan{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;font-size:20px;padding:22px 12px;border-radius:16px}
@@ -1279,34 +1279,43 @@ const loKey=m=>[m.ngayNhap,m.ten,m.giaNhap,m.ncc||''].join('|');
 let PN={dong:[],ncc:'',ngay:''}, pnFill=null, pnQ='', pnAsk=null;
 try{const x=JSON.parse(localStorage.getItem('shopgon_pn')||'null');if(x&&Array.isArray(x.dong))PN=x}catch(_){}
 function pnSave(){try{localStorage.setItem('shopgon_pn',JSON.stringify(PN))}catch(_){}}
-const pnN=d=>d.t==='may'?Math.max((d.imeis||[]).length,d.can||0):d.sl, pnTien=d=>pnN(d)*(d.gn||0), pnTong=L=>(L||[]).reduce((t,d)=>t+pnTien(d),0);
+const pnN=d=>d.t==='may'?Math.max((d.imeis||[]).length+(d.daBan||[]).length,d.can||0):d.sl, pnTien=d=>pnN(d)*(d.gn||0), pnTong=L=>(L||[]).reduce((t,d)=>t+pnTien(d),0);
 const nccList=()=>[...new Set([...(db.pn||[]).map(x=>x.ncc),...db.may.map(m=>m.ncc)].filter(Boolean))].sort();
-function renderDraft(){const L=PN.dong;if(!L.length)return `<div class="pnhint">🧾 Thêm từng mẫu máy / phụ kiện vào <b>phiếu nhập</b>, cuối cùng bấm <b>Lưu phiếu</b> — vào kho 1 lần.</div>`;
+function renderDraft(){const L=PN.dong;if(!L.length&&!PN.edit)return `<div class="pnhint">🧾 Thêm từng mẫu máy / phụ kiện vào <b>phiếu nhập</b>, cuối cùng bấm <b>Lưu phiếu</b> — vào kho 1 lần.</div>`;
   const thieu=L.filter(d=>d.t==='may'&&d.can&&(d.imeis||[]).length<d.can);
-  return `<div class="panel pncard"><h2>🧾 Phiếu nhập đang tạo · ${L.length} dòng</h2><div class="list">${L.map((d,i)=>{const n=pnN(d),miss=d.t==='may'&&d.can?d.can-(d.imeis||[]).length:0;
-    return `<div class="row"><div class="n"><b>${d.t==='may'?'📱':'📦'} ${esc(d.ten)}</b><small class="num">${n} ${d.t==='may'?'máy':'cái'} × ${money(d.gn||0)} = <b>${money(pnTien(d))}</b>${miss>0?` · <span class="pill a">thiếu ${miss} IMEI</span>`:''}</small></div><div class="right" style="flex-direction:row;align-items:center;gap:6px">${d.t==='may'&&miss>0?`<button class="ghost" data-pnfill="${i}">Quét IMEI</button>`:''}<button class="xbtn" data-pndel="${i}" aria-label="Bỏ dòng này">✕</button></div></div>`}).join('')}</div>
+  return `<div class="panel pncard">${PN.edit?`<div class="pnhint" style="border-color:var(--amber);background:#fff8ec">✏️ <b>Đang sửa phiếu ${esc(PN.ncc||'')} ngày ${dmy(PN.ngay||todayIso())}</b><br>Sửa số lượng / giá / IMEI ngay dưới đây. Thêm sản phẩm mới vào phiếu thì nhập ở form phía trên như bình thường. Xong bấm <b>Lưu phiếu</b>.</div>`:''}<h2>🧾 ${PN.edit?'Sửa phiếu nhập':'Phiếu nhập đang tạo'} · ${L.length} dòng</h2><div class="list">${L.map((d,i)=>{const n=pnN(d),miss=d.t==='may'&&d.can?d.can-(d.imeis||[]).length:0;
+    return `<div class="row pnl" style="flex-wrap:wrap"><div class="n"><b>${d.t==='may'?'📱':'📦'} ${esc(d.ten)}</b><small class="num">${n} ${d.t==='may'?'máy':'cái'} × ${money(d.gn||0)} = <b>${money(pnTien(d))}</b>${miss>0?` · <span class="pill a">thiếu ${miss} IMEI</span>`:''}</small></div><div class="right" style="flex-direction:row;align-items:center;gap:6px">${d.t==='may'&&miss>0?`<button class="ghost" data-pnfill="${i}">Quét IMEI</button>`:''}<button class="xbtn" data-pndel="${i}" aria-label="Bỏ dòng này">✕</button></div>
+      <div class="pned">${d.t==='hang'?`<div class="pnsl"><span>Số lượng</span><button class="ghost" data-pnsl="${i}" data-dx="-1" aria-label="Bớt 1">−</button><input id="pnSl${i}" data-pni="${i}" inputmode="numeric" class="num" value="${d.sl}"><button class="ghost" data-pnsl="${i}" data-dx="1" aria-label="Thêm 1">＋</button></div>`
+        :`<div class="pnims">${(d.imeis||[]).map((im,k)=>`<span class="pnim num">…${esc(String(im).slice(-6))}<button data-pnimx="${i}" data-k="${k}" aria-label="Bỏ IMEI ${esc(im)}">✕</button></span>`).join('')}${(d.daBan||[]).map(im=>`<span class="pnim num sold" title="Đã bán, giữ nguyên">…${esc(String(im).slice(-6))} · đã bán</span>`).join('')}</div>
+          <span class="inrow"><input id="pnIm${i}" data-pnimi="${i}" inputmode="numeric" placeholder="Thêm IMEI vào dòng này"><button type="button" class="icon" data-scan="pnIm${i}" aria-label="Quét IMEI"><svg viewBox="0 0 24 24"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 8v8M10 8v8M13 8v8M17 8v8"/></svg></button><button class="ghost" data-pnimadd="${i}">Thêm</button></span>`}
+        <div class="two"><label>Giá nhập / ${d.t==='may'?'máy':'cái'}<input id="pnGn${i}" data-pngn="${i}" inputmode="numeric" class="num" value="${(d.gn||0).toLocaleString('vi-VN')}"></label><label>Giá bán<input id="pnGb${i}" data-pngb="${i}" inputmode="numeric" class="num" value="${d.gb?d.gb.toLocaleString('vi-VN'):''}" placeholder="Không bắt buộc"></label></div></div></div>`}).join('')}</div>
     <div class="ctot"><span>Tổng tiền phiếu</span><b class="num">${money(pnTong(L))}</b></div>
     <div class="two"><label>Nhà cung cấp<input id="pnNcc" list="dlNcc" value="${esc(PN.ncc||'')}" placeholder="VD: NPP Mekong"><datalist id="dlNcc">${nccList().map(n=>`<option value="${esc(n)}">`).join('')}</datalist></label><label>Ngày nhập<input id="pnNgay" type="date" value="${esc(PN.ngay||todayIso())}"></label></div>
     ${thieu.length?`<div class="err" style="margin-top:8px">Còn ${thieu.reduce((t,d)=>t+d.can-(d.imeis||[]).length,0)} máy chưa quét IMEI — bấm "Quét IMEI" ở dòng đó.</div>`:''}
-    <button class="btn" data-pnsave="1" style="margin-top:10px" ${thieu.length?'disabled':''}>Lưu phiếu vào kho · ${money(pnTong(L))}</button>
-    <button class="wlink" data-pnclear="1" style="margin-top:6px">Hủy phiếu này</button></div>`}
+    <button class="btn" data-pnsave="1" style="margin-top:10px" ${thieu.length?'disabled':''}>${PN.edit?'Lưu phiếu đã sửa':'Lưu phiếu vào kho'} · ${money(pnTong(L))}</button>
+    <button class="wlink" data-pnclear="1" style="margin-top:6px">${PN.edit?'Thôi, giữ nguyên phiếu cũ':'Hủy phiếu này'}</button></div>`}
 function renderAdd(){if(addTab==='da'){renderDaNhap();return}if(ocrItems){renderOcr();$('v-add').insertAdjacentHTML('afterbegin',addTabs());return}renderAdd0();
   const fl=pnFill!==null?PN.dong[pnFill]:null;
   if(fl&&addMode==='may')$('v-add').insertAdjacentHTML('afterbegin',`<div class="pnhint" style="border-color:var(--amber)">📷 Đang quét IMEI cho <b>${esc(fl.ten)}</b>${fl.can?` (còn thiếu ${fl.can-(fl.imeis||[]).length})`:''} · <button class="wlink" data-pnfillx="1" style="display:inline;padding:0">bỏ</button></div>`);
   $('v-add').insertAdjacentHTML('beforeend',renderDraft());if(PN.dong.length)$('v-add').insertAdjacentHTML('afterbegin',`<button class="pnbar" data-pngo="1">🧾 Phiếu đang nhập: <b>${PN.dong.length} dòng · ${money(pnTong(PN.dong))}</b><span>Xem & Lưu ▾</span></button>`);$('v-add').insertAdjacentHTML('afterbegin',addTabs());
   if(fl&&addMode==='may'){const a=$('aTen');if(a&&!a.value){a.value=fl.ten;a.dispatchEvent(new Event('input',{bubbles:true}))}const g=$('aGN');if(g&&!g.value&&fl.gn)g.value=fl.gn.toLocaleString('vi-VN')}}
-function pnCommit(){const L=PN.dong;if(!L.length)return;const id=uid(),ngay=PN.ngay||todayIso(),ncc=(PN.ncc||'').trim();let nMay=0;
-  const now=new Date(),gio=now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
+function pnCommit(){const L=PN.dong;const ed=PN.edit;if(!L.length&&!ed)return;if(!L.length){PN={dong:[],ncc:'',ngay:''};pnFill=null;pnSave();save();addTab='da';render();toast('Phiếu không còn dòng nào — đã xóa phiếu');return}const id=ed?ed.id:uid(),ngay=PN.ngay||todayIso(),ncc=(PN.ncc||'').trim();let nMay=0;
+  const now=new Date(),gio=ed&&ed.gio?ed.gio:now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
   L.forEach(d=>{if(d.t==='may'){(d.imeis||[]).forEach(imei=>{if(db.may.some(m=>m.imei===imei))return;db.may.push({imei,ten:d.ten,hang:d.hang||'Khác',giaNhap:d.gn,giaBan:d.gb||0,ngayNhap:ngay,ncc,tt:'ton',pn:id});nMay++});delete d.can;return}
     let h=(d.id&&db.hang.find(x=>x.id===d.id))||db.hang.find(x=>x.ten===d.ten&&x.nhom===d.nhom);
     if(h){h.giaNhap=Math.round((h.giaNhap*Math.max(0,h.sl)+d.gn*d.sl)/(Math.max(0,h.sl)+d.sl));h.sl+=d.sl;if(d.gb)h.giaBan=d.gb;if(d.min)h.min=d.min;if(d.loai)h.loai=d.loai;h.ngayNhap=ngay}
     else{h={id:uid(),ten:d.ten,nhom:d.nhom||'pk',loai:d.loai||'',giaNhap:d.gn,giaBan:d.gb||0,sl:d.sl,min:d.min??5,ngayNhap:ngay};db.hang.push(h)}d.id=h.id});
-  (db.pn=db.pn||[]).push({id,ngay,gio,ncc,tong:pnTong(L),nMay,dong:L.map(d=>({...d}))});
-  const tong=pnTong(L);PN={dong:[],ncc:'',ngay:''};pnFill=null;pnSave();save();render();toast(`Đã lưu phiếu${ncc?' '+ncc:''}: ${L.length} dòng · ${money(tong)}`)}
+  (db.pn=db.pn||[]).push({id,ngay,gio,ncc,tong:pnTong(L),nMay,dong:L.map(d=>{const x={...d};if(x.t==='may'){x.imeis=[...(x.daBan||[]),...(x.imeis||[])];delete x.daBan}return x})});
+  if(ed)db.may.forEach(m=>{if(m.pn===id&&m.tt==='ton'){m.ncc=ncc;m.ngayNhap=ngay}});
+  const tong=pnTong(L);PN={dong:[],ncc:'',ngay:''};pnFill=null;pnSave();save();if(ed)addTab='da';render();toast(`${ed?'Đã cập nhật':'Đã lưu'} phiếu${ncc?' '+ncc:''}: ${L.length} dòng · ${money(tong)}`)}
+/* 26/10 anh Thái: thôi sửa → trả kho đúng như trước khi mở phiếu */
+function pnRestore(){const ed=PN.edit;if(!ed)return;(ed.back||[]).forEach(d=>{if(d.t==='may'){(d.imeis||[]).forEach(imei=>{if(db.may.some(m=>m.imei===imei))return;db.may.push({imei,ten:d.ten,hang:d.hang||'Khác',giaNhap:d.gn,giaBan:d.gb||0,ngayNhap:ed.orig.ngay,ncc:ed.orig.ncc||'',tt:'ton',pn:ed.id})});return}
+    const h=db.hang.find(x=>x.id===d.id);if(h)h.sl+=d.sl;else if(d.sl)db.hang.push({id:d.id||uid(),ten:d.ten,nhom:d.nhom||'pk',loai:d.loai||'',giaNhap:d.gn,giaBan:d.gb||0,sl:d.sl,min:d.min??5,ngayNhap:ed.orig.ngay})});
+  (db.pn=db.pn||[]).push(ed.orig);PN={dong:[],ncc:'',ngay:''};pnFill=null;pnSave();save();addTab='da';render();toast('Đã giữ nguyên phiếu cũ')}
 /* gỡ phiếu khỏi kho: máy chưa bán bỏ ra, phụ kiện trừ lại số lượng; trả về các dòng còn gỡ được */
 function pnUndo(p){const back=[];let ban=0;
   (p.dong||[]).forEach(d=>{if(d.t==='may'){const ms=db.may.filter(m=>m.pn===p.id&&m.ten===d.ten);const ton=ms.filter(m=>m.tt==='ton').map(m=>m.imei);ban+=ms.length-ton.length;
-      db.may=db.may.filter(m=>!(m.pn===p.id&&m.ten===d.ten&&m.tt==='ton'));if(ton.length)back.push({...d,imeis:ton});return}
+      db.may=db.may.filter(m=>!(m.pn===p.id&&m.ten===d.ten&&m.tt==='ton'));const sold=ms.filter(m=>m.tt!=='ton').map(m=>m.imei);if(ton.length||sold.length)back.push({...d,imeis:ton,daBan:sold});return}
     const h=db.hang.find(x=>x.id===d.id);if(h){const tru=Math.min(d.sl,Math.max(0,h.sl));h.sl-=tru;if(tru)back.push({...d,sl:tru})}else back.push({...d,id:''})});
   db.pn=(db.pn||[]).filter(x=>x.id!==p.id);return {back,ban}}
 document.addEventListener('input',e=>{const t=e.target;if(t.id==='pnNcc'){PN.ncc=t.value;pnSave()}else if(t.id==='pnNgay'){PN.ngay=t.value;pnSave()}else if(t.id==='pnQ'){pnQ=t.value;renderDaNhap();const i=$('pnQ');i.focus();i.setSelectionRange(i.value.length,i.value.length)}});
@@ -1316,12 +1325,24 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
   if(d.pnfill!==undefined){pnFill=+d.pnfill;addMode='may';render();setTimeout(()=>{const i=$('aImei');if(i)i.focus()},0);return}
   if(d.pnfillx){pnFill=null;render();return}
   if(d.pngo){const c=document.querySelector('.pncard');if(c)c.scrollIntoView({behavior:'smooth',block:'start'});return}
+  if(d.pnclear&&PN.edit){pnRestore();return}
   if(d.pnclear){if(!confirm('Hủy phiếu đang tạo? Các dòng chưa lưu sẽ mất.'))return;PN={dong:[],ncc:'',ngay:''};pnFill=null;pnSave();render();return}
   if(d.pnsave){pnCommit();return}
   if(d.pnask!==undefined){pnAsk=d.pnask||null;render();return}
   if(d.pndelok){const p=(db.pn||[]).find(x=>x.id===d.pndelok);if(!p)return;const r=pnUndo(p);pnAsk=null;save();render();toast('Đã xóa phiếu'+(r.ban?` · ${r.ban} máy đã bán giữ nguyên`:''));return}
   if(d.pnedit){const p=(db.pn||[]).find(x=>x.id===d.pnedit);if(!p)return;if(PN.dong.length&&!confirm('Đang có phiếu chưa lưu. Mở phiếu cũ để sửa sẽ thay phiếu đang tạo — tiếp tục?'))return;
-    const r=pnUndo(p);PN={dong:r.back,ncc:p.ncc||'',ngay:p.ngay};pnFill=null;pnSave();save();addTab='moi';edLo=edH=null;render();window.scrollTo(0,0);toast('Đã mở lại phiếu để sửa — sửa xong bấm Lưu phiếu'+(r.ban?` (${r.ban} máy đã bán giữ nguyên)`:''));return}});
+    const orig=JSON.parse(JSON.stringify(p)),r=pnUndo(p);PN={dong:r.back,ncc:p.ncc||'',ngay:p.ngay,edit:{id:p.id,gio:p.gio,orig,back:JSON.parse(JSON.stringify(r.back))}};pnFill=null;pnSave();save();addTab='moi';edLo=edH=null;render();window.scrollTo(0,0);setTimeout(()=>{const c=document.querySelector('.pncard');if(c)c.scrollIntoView({block:'start'})},50);toast('Đã mở phiếu để sửa'+(r.ban?` · ${r.ban} máy đã bán giữ nguyên`:''));return}
+  if(d.pnsl!==undefined){const x=PN.dong[+d.pnsl];if(!x)return;x.sl=Math.max(1,(+x.sl||0)+(+d.dx));pnSave();render();return}
+  if(d.pnimx!==undefined){const x=PN.dong[+d.pnimx];if(!x)return;x.imeis.splice(+d.k,1);if(x.can)x.can=Math.max(0,x.can-1);if(!x.imeis.length&&!(x.daBan||[]).length)PN.dong.splice(+d.pnimx,1);pnSave();render();return}
+  if(d.pnimadd!==undefined){pnImAdd(+d.pnimadd);return}});
+function pnImAdd(i){const x=PN.dong[i],el=$('pnIm'+i);if(!x||!el)return;const im=el.value.replace(/\D/g,'');if(im.length<6){toast('IMEI chưa đủ số');return}
+  if((x.imeis||[]).includes(im)||PN.dong.some(y=>(y.imeis||[]).includes(im))||db.may.some(m=>m.imei===im)){toast('IMEI này đã có trong kho / phiếu');el.value='';return}
+  (x.imeis=x.imeis||[]).push(im);pnSave();render();toast('Đã thêm IMEI …'+im.slice(-6));setTimeout(()=>{const n=$('pnIm'+i);if(n)n.focus()},0)}
+document.addEventListener('input',e=>{const t=e.target,ds=t.dataset;
+  if(ds.pnimi!==undefined){if(/^\d{15}$/.test(t.value.trim()))pnImAdd(+ds.pnimi);return}
+  const i=ds.pni??ds.pngn??ds.pngb;if(i===undefined)return;const x=PN.dong[+i];if(!x)return;const v=parseMoney(t.value);
+  if(ds.pni!==undefined)x.sl=Math.max(1,v||1);else if(ds.pngn!==undefined)x.gn=v;else x.gb=v;pnSave()});
+document.addEventListener('change',e=>{const ds=e.target.dataset;if(ds.pni!==undefined||ds.pngn!==undefined||ds.pngb!==undefined)render()});
 function pnRow(p){const nM=(p.dong||[]).filter(x=>x.t==='may').reduce((t,x)=>t+(x.imeis||[]).length,0),nH=(p.dong||[]).filter(x=>x.t==='hang').reduce((t,x)=>t+x.sl,0);
   return `<div class="pnrow"><div class="row" style="border:0;padding-bottom:4px"><div class="n"><b>🧾 ${esc(p.ncc||'Chưa ghi nhà cung cấp')}</b><small class="num">${p.gio?p.gio+' · ':''}${nM?nM+' máy':''}${nM&&nH?' · ':''}${nH?nH+' phụ kiện/hàng':''} · <b>${money(p.tong||0)}</b></small></div>
   <div class="right" style="display:flex;gap:6px">${pnAsk===p.id?`<button class="ghost red" data-pndelok="${esc(p.id)}">Xóa phiếu</button><button class="ghost" data-pnask="">Thôi</button>`:`<button class="ghost" data-pnedit="${esc(p.id)}">Sửa</button><button class="ghost red" data-pnask="${esc(p.id)}">Xóa</button>`}</div></div>
