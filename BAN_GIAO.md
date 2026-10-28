@@ -13,7 +13,7 @@ App quản lý bán hàng cho shop điện thoại (shopgon.vn), chạy trên đ
 | `index.html` | Trang chủ giới thiệu (có thẻ "Kho máy có sẵn ảnh chính hãng" + lịch cập nhật) |
 | `app/` | App quản lý shop. `?demo=1` = bản demo cho Sale/đại lý (tồn kho mẫu trong mảng `TON`) |
 | `bg/` | Bảng giá online = website mini. Trình sửa cho shop + trang khách (`?d=` link nén, `?demo=1&xem=1` xem demo) |
-| `tt/` | Thiết kế hình sản phẩm (ảnh máy + giá + KM → ảnh đăng Zalo/Facebook) |
+| `tt/` | Thiết kế hình sản phẩm (ảnh máy + giá + KM → ảnh đăng Zalo/Facebook). Từ 28/10: 15 mẫu = 10 mẫu mới (mảng `MAU_MOI`: Khuyến mãi nổi bật, Trẻ trung, Tối giản, Chính hãng, Cao cấp, Pastel, Hot sale, Gradient, Đỏ vàng dịp lễ, Thẻ thông số — anh Thái duyệt thiết kế 28/10) + 5 mẫu cũ. Tên máy dài tự giảm cỡ chữ (`_tc`) |
 | `so-sanh.html` | So sánh giá với KiotViet, Sapo, Nhanh.vn, MISA + bảng tính năng |
 | `kho/kho-may.json` | Kho máy (đang 225 mẫu, 100% có ảnh) — robot ghi, KHÔNG sửa tay trừ khi dọn dữ liệu |
 | `kho/bo-sung.json` | Danh sách máy bổ sung tay (máy web hãng không có) — sửa file này rồi push là robot tự tải ảnh |
