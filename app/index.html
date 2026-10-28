@@ -248,6 +248,8 @@ body.nvmode nav.tabs button[data-v=add],body.nvmode nav.tabs button[data-v=stock
 .wc.lg .gbtn{padding:16px 18px;font-size:18px}.wc.lg .gbtn svg{width:24px;height:24px}
 .wc.lg .wlink{font-size:15.5px}
 .lgnv{border:1.5px solid #cfe3df;background:#fff;color:#1f3b38;border-radius:999px;padding:14px;font-weight:800;font-size:16px}
+.gialock{background:#f2f5f4!important;color:#0b5e57!important;font-weight:800}
+.kmplus{flex:none;border-color:#f0b54a!important;color:#9a3412!important;font-weight:800;white-space:nowrap}
 .lgdk{border:2px solid var(--pen);background:#fff;color:var(--pen);border-radius:999px;padding:13px;font-weight:800;font-size:16px}
 .lgtest{background:#fff7e0;border:1px solid #f1d58a;border-radius:14px;padding:12px;text-align:left;font-size:14px;color:#5b4310;line-height:1.45}
 .xnote{font-size:12.5px;color:#6b5a2a;background:#fff7e0;border-radius:10px;padding:8px 10px;width:100%;text-align:left}
@@ -710,11 +712,11 @@ function renderSell(){
     ${soldM?`<div class="err">Máy này đã bán rồi. Tra lịch sử ở Thêm → Tra IMEI.</div>`:''}
     ${m0&&!m?`<div class="err">Máy này đã có trong đơn đang bán.</div>`:''}
     ${m?`<div class="found"><b>${esc(m.ten)}</b><small class="num">IMEI ${m.imei} · Nhập ${dmy(m.ngayNhap)} (${ageDays(m)} ngày)<span class="own"> · Giá nhập ${money(m.giaNhap)}</span></small></div>
-    <label>Giá bán<input id="sGia" inputmode="numeric" class="num" value="${(m.giaBan||'').toLocaleString('vi-VN')}"></label>
+    <label>${NV&&m.giaBan?'Giá bán (giá shop)':'Giá bán'}<input id="sGia" inputmode="numeric" class="num${NV&&m.giaBan?' gialock':''}" value="${(m.giaBan||'').toLocaleString('vi-VN')}"${NV&&m.giaBan?' readonly':''}></label>
     <div class="profit" id="sLoi"></div>
     ${on('baohanh')?`<label>Bảo hành (tháng)<input id="sBh" inputmode="numeric" value="${db.shop.bh}"></label>`:''}
     <div class="err" id="sErr"></div>
-    <button class="btn" type="submit">Thêm vào đơn</button>`:''}
+    <div class="inrow"><button class="btn" type="submit" style="flex:1">Thêm vào đơn</button><button type="button" class="ghost kmplus" data-addkm="fSell">＋ Khuyến mãi</button></div>`:''}
   </form></div>
   ${on('thucu')&&!m?(thuOpen?`<div class="panel" style="border:2px solid #f0d08a"><h2>♻️ Thu máy cũ của khách</h2><form id="fThu" autocomplete="off">
     <label>Tên máy cũ<input id="tTen" placeholder="VD: iPhone 12 128GB"></label>
@@ -741,7 +743,7 @@ function renderPkForm(){
       <div class="list">${cand.length?cand.map(h=>`<div class="row"><div class="n"><b>${esc(h.ten)}</b><small class="num">Còn ${h.sl-cartQty(h.id)} · giá bán ${money(h.giaBan)}</small></div><button type="button" class="ghost" data-pkpick="${h.id}">Chọn</button></div>`).join(''):'<div class="empty">Không có món nào khớp trong kho.</div>'}</div>
       <div class="eyebrow" style="margin-top:4px">${pkNhom==='sua'?'Hoặc ghi đơn sửa không lấy linh kiện trong kho':'Hoặc bán món không có trong kho'}</div>`:''}
     ${it?`<div class="found"><b>${esc(it.ten)}</b><small class="num">Còn ${it.sl-cartQty(it.id)} trong kho · giá nhập ${money(it.giaNhap)}</small></div><button type="button" class="back" data-pkpick="">‹ Chọn món khác</button>
-      <div class="two"><label>Số lượng<input id="pSl" inputmode="numeric" value="1"></label><label>${pkNhom==='sua'?'Tiền sửa thu khách / cái':'Giá bán / cái'}<input id="pGia" inputmode="numeric" class="num" value="${it.giaBan?it.giaBan.toLocaleString('vi-VN'):''}"></label></div>`:`
+      <div class="two"><label>Số lượng<input id="pSl" inputmode="numeric" value="1"></label><label>${pkNhom==='sua'?'Tiền sửa thu khách / cái':'Giá bán / cái'}<input id="pGia" inputmode="numeric" class="num${NV&&it.giaBan?' gialock':''}" value="${it.giaBan?it.giaBan.toLocaleString('vi-VN'):''}"${NV&&it.giaBan?' readonly':''}></label></div>`:`
 ${isDv(pkNhom)?`
       <label>Loại<select id="dLoai">${DV[pkNhom].map(x=>`<option>${x}</option>`).join('')}</select></label>
       <div class="two"><label>Số tiền giao dịch<input id="dTien" inputmode="numeric" class="num" placeholder="VD: 1.250.000"></label><label>Phí thu khách<input id="pGia" inputmode="numeric" class="num" placeholder="VD: 10.000"></label></div>
@@ -751,7 +753,7 @@ ${isDv(pkNhom)?`
       <div class="two"><label>Giá bán<input id="pGia" inputmode="numeric" class="num"></label><label>Giá vốn<small>Bỏ trống: tính lời ước tính</small><input id="pVon" inputmode="numeric" class="num"></label></div>`}`}
     <div class="profit" id="pLoi"></div>
     <div class="err" id="pErr"></div>
-    <button class="btn" type="submit">${isDv(pkNhom)?'Lưu giao dịch':'Thêm vào đơn'}</button>
+    ${isDv(pkNhom)?`<button class="btn" type="submit">Lưu giao dịch</button>`:`<div class="inrow"><button class="btn" type="submit" style="flex:1">Thêm vào đơn</button><button type="button" class="ghost kmplus" data-addkm="fPk">＋ Khuyến mãi</button></div>`}
   </form></div>`;
 }
 function updSellProfit(){const m=db.may.find(x=>x.imei===sellImei);const g=parseMoney($('sGia').value);const p=g-m.giaNhap;const el=$('sLoi');el.className='profit'+(p<0?' neg':'');el.innerHTML=`<span>${p<0?'Lỗ':'Lời'} máy này</span><span class="v num">${money(Math.abs(p))}</span>`}
@@ -1109,11 +1111,11 @@ document.addEventListener('change',e=>{if(e.target.id==='rMonth'){rptMonth=e.tar
 document.addEventListener('focusout',e=>{const t=e.target;if(['sGia','aGN','aGB','pGia','pVon','sTraTruoc','hGN','hGB'].includes(t.id)&&t.value){const n=parseMoney(t.value);t.value=n?n.toLocaleString('vi-VN'):''}});
 document.addEventListener('submit',e=>{
   e.preventDefault();const f=e.target;const now=new Date();const gio=now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
-  if(f.id==='fSell'){const m=db.may.find(x=>x.imei===sellImei&&x.tt==='ton');if(!m||inCart(m.imei))return;const g=parseMoney($('sGia').value);
+  if(f.id==='fSell'){const m=db.may.find(x=>x.imei===sellImei&&x.tt==='ton');if(!m||inCart(m.imei))return;const g=NV&&m.giaBan?m.giaBan:parseMoney($('sGia').value);
     if(!g){$('sErr').textContent='Nhập giá bán.';return}
     cart.push({type:'may',imei:m.imei,ten:m.ten,hang:m.hang,gia:g,von:m.giaNhap,bh:$('sBh')?parseMoney($('sBh').value):0,sl:1});
     sellImei='';render();window.scrollTo(0,0);toast('Đã thêm '+m.ten+' vào đơn');return}
-  if(f.id==='fPk'){const it=pkPick&&db.hang.find(h=>h.id===pkPick);const g=parseMoney($('pGia').value);if(!g&&!isDv(pkNhom)){$('pErr').textContent='Nhập giá bán.';return}
+  if(f.id==='fPk'){const it=pkPick&&db.hang.find(h=>h.id===pkPick);const g=NV&&it&&it.giaBan?it.giaBan:parseMoney($('pGia').value);if(!g&&!isDv(pkNhom)){$('pErr').textContent='Nhập giá bán.';return}
     if(it){const sl=Math.max(1,parseMoney($('pSl').value));const left=it.sl-cartQty(it.id);if(sl>left){$('pErr').textContent='Kho chỉ còn '+left+'.';return}
       cart.push({type:'hang',hangId:it.id,ten:it.ten,nhom:it.nhom,gia:g,von:it.giaNhap,sl});
       pkPick=null;pkQ='';render();window.scrollTo(0,0);toast('Đã thêm '+it.ten+' vào đơn');return}
@@ -1488,6 +1490,8 @@ function showLogin(email,msg){lockApp();const w=$('welcome');w.hidden=false;if(e
     <button class="btn" style="width:100%;padding:14px;font-size:16px" data-gg="test">Vào shop test</button>
     <small>Muốn dùng thật: quay lại mục <b>Đăng nhập</b> → Đăng ký tài khoản mới.</small></div>`}
   </div>`}
+/* 28/10 anh Thái: bán hàng — giá shop mặc định (nhân viên không sửa giá), nút ＋ Khuyến mãi = thêm món vào đơn rồi mở ngay bảng khuyến mãi */
+document.addEventListener('click',e=>{const b=e.target.closest('[data-addkm]');if(!b)return;const f=$(b.dataset.addkm);if(!f)return;const n=cart.length;f.requestSubmit();if(cart.length>n){kmOpen=true;render();setTimeout(()=>{const k=document.querySelector('.kmp');if(k)k.scrollIntoView({block:'center',behavior:'smooth'})},50)}});
 document.addEventListener('click',e=>{if(!e.target.closest('[data-dangxuat]'))return;if(confirm('Đăng xuất Gmail '+GG.email+' khỏi máy này? Dữ liệu shop vẫn nằm nguyên trong Google Drive.'))ggLogout()});
 document.addEventListener('click',e=>{const t=e.target.closest('[data-lgtab]');if(!t)return;LGTAB=t.dataset.lgtab;showLogin()});
 function showLoad(msg){lockApp();const w=$('welcome');w.hidden=false;w.innerHTML=`<div class="wc"><img class="lgimg" src="/app/icon-192.png" alt="Shop Gọn"><h1>Shop Gọn</h1><small id="wMsg">${esc(msg||'Đang mở…')}</small></div>`}
@@ -1585,7 +1589,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261028-1640';let verLuc=0;
+const BUILD='20261028-1650';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}

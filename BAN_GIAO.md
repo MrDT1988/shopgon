@@ -109,3 +109,4 @@ App quản lý bán hàng cho shop điện thoại (shopgon.vn), chạy trên đ
 - `?demo=1` (Sale) và `?nv=1` không đổi. Test: 50/50 + kiểm riêng màn đăng nhập.
 - 28/10 16h30 anh chốt: CHỦ SHOP đăng nhập bằng Gmail, NHÂN VIÊN đăng nhập bằng SĐT (không làm đăng nhập SĐT cho chủ shop). Phần Gmail làm to rõ: thẻ "Gmail của shop" + nút Đăng nhập lớn; nhân viên là nút riêng.
 - 28/10 16h40: nút 🚪 Đăng xuất (Gmail) cuối tab Thêm cho chủ shop (hỏi xác nhận → ggLogout → về màn đăng nhập); shop test có nút "Thoát shop test"; nhân viên giữ nút Đăng xuất trong màn NV.
+- 28/10 16h50: Bán hàng — nhân viên KHÔNG sửa giá: ô giá = giá shop (readonly, class gialock, submit ép giaBan); cạnh nút "Thêm vào đơn" có nút "＋ Khuyến mãi" (data-addkm) = thêm món rồi mở bảng KM. Chủ shop vẫn sửa giá được, cũng có nút ＋ Khuyến mãi. Máy/phụ kiện chưa có giá shop thì nhân viên nhập tay.
