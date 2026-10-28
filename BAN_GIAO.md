@@ -107,3 +107,4 @@ App quản lý bán hàng cho shop điện thoại (shopgon.vn), chạy trên đ
 - Gmail chưa đăng ký / đang chờ duyệt → hiện ngay form đăng ký / màn chờ kích hoạt (có link "Xem thử tiếp").
 - Đăng xuất, "Đăng nhập Gmail khác", nút Đăng nhập trên thanh vàng shop test → đều về màn đăng nhập.
 - `?demo=1` (Sale) và `?nv=1` không đổi. Test: 50/50 + kiểm riêng màn đăng nhập.
+- 28/10 16h30 anh chốt: CHỦ SHOP đăng nhập bằng Gmail, NHÂN VIÊN đăng nhập bằng SĐT (không làm đăng nhập SĐT cho chủ shop). Phần Gmail làm to rõ: thẻ "Gmail của shop" + nút Đăng nhập lớn; nhân viên là nút riêng.

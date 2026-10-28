@@ -240,6 +240,14 @@ body.nvmode nav.tabs button[data-v=add],body.nvmode nav.tabs button[data-v=stock
 .lgimg{width:76px;height:76px;border-radius:20px;box-shadow:0 8px 18px rgba(11,94,87,.3)}
 .lgpane{width:100%;display:flex;flex-direction:column;gap:10px;align-items:stretch}
 .lgor{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px;margin-top:4px}.lgor:before,.lgor:after{content:"";flex:1;height:1px;background:#e3e8e7}
+.wc.lg{max-width:440px;gap:14px;padding:30px 24px}
+.wc.lg small{font-size:14.5px}
+.lgacc{display:flex;align-items:center;gap:12px;width:100%;border:1.5px solid #cfe3df;background:#f4faf9;border-radius:16px;padding:12px 14px;text-align:left}
+.lgacc i{flex:none;width:44px;height:44px;border-radius:50%;background:var(--pen);color:#fff;font-style:normal;font-weight:800;font-size:20px;display:grid;place-items:center}
+.lgacc span{min-width:0;flex:1}.lgacc em{display:block;font-style:normal;font-size:13px;color:var(--muted)}.lgacc b{display:block;font-size:16.5px;font-weight:800;word-break:break-all;line-height:1.3}
+.wc.lg .gbtn{padding:16px 18px;font-size:18px}.wc.lg .gbtn svg{width:24px;height:24px}
+.wc.lg .wlink{font-size:15.5px}
+.lgnv{border:1.5px solid #cfe3df;background:#fff;color:#1f3b38;border-radius:999px;padding:14px;font-weight:800;font-size:16px}
 .lgdk{border:2px solid var(--pen);background:#fff;color:var(--pen);border-radius:999px;padding:13px;font-weight:800;font-size:16px}
 .lgtest{background:#fff7e0;border:1px solid #f1d58a;border-radius:14px;padding:12px;text-align:left;font-size:14px;color:#5b4310;line-height:1.45}
 .xnote{font-size:12.5px;color:#6b5a2a;background:#fff7e0;border-radius:10px;padding:8px 10px;width:100%;text-align:left}
@@ -461,7 +469,7 @@ async function ggConnect(){
   if(!GG.ready()){toast('Đăng nhập Google sẽ mở khi app chạy chính thức trên shopgon.vn');return}
   if(INAPP){openOut();return}
   /* 25/10 anh Thái: đã chọn Gmail 1 lần thì lần sau không bắt chọn lại — đăng nhập im lặng theo Gmail đã lưu */
-  const quen=!!GG.email;try{welcomeMsg('Đang mở đăng nhập Google…');await GG.login(quen);await afterLogin()}catch(e){if(quen&&!(e&&e.where)){GG.email='';welcomeMsg('Bấm lại để chọn Gmail của shop.');xemBar('Bấm lại "Đăng nhập" để chọn Gmail của shop.');return}welcomeMsg(ggErr(e))}
+  const quen=!!GG.email;try{welcomeMsg('Đang mở đăng nhập Google…');await GG.login(quen);await afterLogin()}catch(e){if(quen&&!(e&&e.where)){GG.email='';if(document.querySelector('#welcome .lg')){showLogin('','Bấm Đăng nhập lại để chọn Gmail của shop.');return}welcomeMsg('Bấm lại để chọn Gmail của shop.');xemBar('Bấm lại "Đăng nhập" để chọn Gmail của shop.');return}welcomeMsg(ggErr(e))}
 }
 function ggLogout(){if(GG.ready()){XLIC=null;clearInterval(xTimer)}try{google.accounts.oauth2.revoke(GG.token,()=>{})}catch(e){}GG.token=null;GG.email='';GG.sheetId='';try{localStorage.removeItem('shopgon_gg');localStorage.removeItem('shopgon_tk')}catch(e){}if(GG.ready()){xemMode();xemBar();LGTAB='dn';showLogin()}else render();toast('Đã đăng xuất Google')}
 /* Màn hình chào: 1 bước đăng nhập */
@@ -1463,13 +1471,16 @@ const GLOGO=`<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d=
 let LGTAB='dn';
 function showLogin(email,msg){lockApp();const w=$('welcome');w.hidden=false;if(email)GG.email=email;const em=GG.email;
   const gbtn=t=>INAPP?`<button class="gbtn" data-gg="out">${IOS?'Chép link để mở bằng Safari':'Mở bằng Chrome để đăng nhập'}</button>`:`<button class="gbtn" data-gg="login">${GLOGO}${t}</button>`;
-  w.innerHTML=`<div class="wc"><img class="lgimg" src="/app/icon-192.png" alt="Shop Gọn">
+  w.innerHTML=`<div class="wc lg"><img class="lgimg" src="/app/icon-192.png" alt="Shop Gọn">
   <h1>Shop Gọn</h1><p style="margin-top:-6px">Quản lý bán hàng điện thoại ngay trên điện thoại</p>
   <div class="lgtab" role="tablist"><button data-lgtab="dn" aria-selected="${LGTAB==='dn'}">Đăng nhập</button><button data-lgtab="test" aria-selected="${LGTAB==='test'}">Tài khoản test</button></div>
   ${LGTAB==='dn'?`<div class="lgpane">
-    ${em?`<small>Lần trước đăng nhập bằng <b>${esc(em)}</b></small>${gbtn('Tiếp tục với Google')}<button class="wlink" data-gg="other">Đăng nhập Gmail khác</button>`:gbtn('Đăng nhập bằng Google')}
-    <small id="wMsg">${msg?esc(msg):INAPP?'Bạn đang mở trong Zalo/Facebook. Google không cho đăng nhập ở đây, cần mở bằng '+(IOS?'Safari':'Chrome')+'.':'Chủ shop đăng nhập bằng Gmail của shop.'}</small>
-    <button class="wlink" data-gg="nv">👤 Nhân viên cửa hàng · đăng nhập bằng SĐT</button>
+    ${em?`<div class="lgacc"><i>${esc(em.charAt(0).toUpperCase())}</i><span><em>Gmail của shop</em><b>${esc(em)}</b></span></div>`:''}
+    ${gbtn(em?'Đăng nhập':'Đăng nhập bằng Gmail')}
+    ${em?`<button class="wlink" data-gg="other">Dùng Gmail khác</button>`:''}
+    <small id="wMsg">${msg?esc(msg):INAPP?'Bạn đang mở trong Zalo/Facebook. Google không cho đăng nhập ở đây, cần mở bằng '+(IOS?'Safari':'Chrome')+'.':'Chủ shop đăng nhập bằng Gmail đã đăng ký Shop Gọn.'}</small>
+    <div class="lgor">Nhân viên cửa hàng</div>
+    <button class="lgnv" data-gg="nv">👤 Đăng nhập bằng số điện thoại</button>
     <div class="lgor">Chưa có tài khoản?</div>
     <button class="lgdk" data-gg="dk">Đăng ký tài khoản mới</button>
     <small>Đăng ký bằng Gmail của shop → điền tên shop, SĐT → Shop Gọn kích hoạt sau khi nhận thanh toán.</small></div>`
@@ -1573,7 +1584,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261028-1610';let verLuc=0;
+const BUILD='20261028-1635';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
