@@ -250,6 +250,8 @@ body.nvmode nav.tabs button[data-v=add],body.nvmode nav.tabs button[data-v=stock
 .lgnv{border:1.5px solid #cfe3df;background:#fff;color:#1f3b38;border-radius:999px;padding:14px;font-weight:800;font-size:16px}
 .gialock{background:#f2f5f4!important;color:#0b5e57!important;font-weight:800}
 .kmplus{flex:none;border-color:#f0b54a!important;color:#9a3412!important;font-weight:800;white-space:nowrap}
+.kgnote{margin:4px 0 10px;color:#46506b;font-size:14px;line-height:1.45}
+.kgrow .n{min-width:0}.kgia{flex:none;width:128px;text-align:right;font-weight:800}
 .lgdk{border:2px solid var(--pen);background:#fff;color:var(--pen);border-radius:999px;padding:13px;font-weight:800;font-size:16px}
 .lgtest{background:#fff7e0;border:1px solid #f1d58a;border-radius:14px;padding:12px;text-align:left;font-size:14px;color:#5b4310;line-height:1.45}
 .xnote{font-size:12.5px;color:#6b5a2a;background:#fff7e0;border-radius:10px;padding:8px 10px;width:100%;text-align:left}
@@ -1299,7 +1301,28 @@ function daRange(){const [y,m,dd]=daRef.split('-').map(Number);const r=new Date(
   if(daKy==='tuan'){const a=new Date(r);a.setDate(r.getDate()-((r.getDay()+6)%7));const b=new Date(a);b.setDate(a.getDate()+6);return [isoOf(a),isoOf(b),'Tuần '+dmy(isoOf(a)).slice(0,5)+' – '+dmy(isoOf(b))]}
   const a=new Date(y,m-1,1),b=new Date(y,m,0);return [isoOf(a),isoOf(b),'Tháng '+m+'/'+y]}
 function daStep(k){const [y,m,dd]=daRef.split('-').map(Number);const r=new Date(y,m-1,dd);if(daKy==='ngay')r.setDate(dd+k);else if(daKy==='tuan')r.setDate(dd+7*k);else r.setMonth(m-1+k,1);daRef=isoOf(r)}
-const addTabs=()=>`<div class="seg top" role="group" style="margin-bottom:12px"><button data-at="moi" aria-pressed="${addTab==='moi'}">Nhập hôm nay</button><button data-at="da" aria-pressed="${addTab==='da'}">Đã nhập</button></div>`;
+const addTabs=()=>`<div class="seg top" role="group" style="margin-bottom:12px"><button data-at="moi" aria-pressed="${addTab==='moi'}">Nhập hàng</button><button data-at="da" aria-pressed="${addTab==='da'}">Đã nhập</button><button data-at="kg" aria-pressed="${addTab==='kg'}">Kho hàng</button></div>`;
+/* 28/10 anh Thái: tab KHO HÀNG = website bảng giá của shop — hiện theo tồn kho, shop thấy số tồn + chỉnh giá bán; khách vào website chỉ thấy Còn hàng / Hết hàng, không thấy số tồn.
+   Giá chỉnh ở đây = giá bán mặc định của shop (nhân viên bán theo giá này, website lấy giá này). */
+let kgQ='';
+function renderKhoGia(){const nh={};db.may.filter(m=>m.tt==='ton').forEach(m=>{const x=nh[m.ten]=nh[m.ten]||{ten:m.ten,hang:m.hang||'',q:0,gs:new Set()};x.q++;x.gs.add(+m.giaBan||0)});
+  const M=Object.values(nh).sort((a,b)=>b.q-a.q||a.ten.localeCompare(b.ten)),H=db.hang.filter(h=>(h.sl||0)>0).sort((a,b)=>a.ten.localeCompare(b.ten));
+  const tong=M.reduce((t,x)=>t+x.q,0),q=kgQ.trim().toLowerCase(),an=t=>q&&!t.toLowerCase().includes(q)?' hidden':'';
+  const gia=(attr,v,ph)=>`<input ${attr} inputmode="numeric" class="num kgia" value="${v?(+v).toLocaleString('vi-VN'):''}" placeholder="${ph||'Giá bán'}">`;
+  $('v-add').innerHTML=addTabs()+`<div class="panel kgweb"><h2>🌐 Website bảng giá của shop</h2>
+    <p class="kgnote">Hiện theo <b>tồn kho</b> của shop. Shop thấy số tồn và chỉnh giá ngay dưới đây. <b>Khách</b> vào website chỉ thấy <b>Còn hàng / Hết hàng</b> — không thấy số tồn.</p>
+    <a class="btn" href="/bg/?tu=app${DEMO?'&demo=1':''}" data-kgweb="1" style="display:block;text-align:center;text-decoration:none">Mở website · gửi link cho khách</a></div>
+  <div class="panel"><label style="margin-top:0"><span class="sr" style="position:absolute;left:-9999px">Tìm</span><input id="kgQ" inputmode="search" placeholder="🔎 Tìm máy, phụ kiện…" value="${esc(kgQ)}"></label>
+    <h2 style="margin-top:12px">📱 Điện thoại · ${M.length} mẫu · ${tong} máy</h2>
+    <div class="list">${M.length?M.map(x=>{const g=[...x.gs],gb=Math.max(...g);return `<div class="row kgrow" data-kgt="${esc(x.ten)}"${an(x.ten)}><div class="n"><b>${esc(x.ten)}</b><small><span class="pill g">Tồn ${x.q}</span>${g.length>1?' <span class="pill a">giá chưa đều</span>':''}${!gb?' <span class="pill a">chưa có giá</span>':''}</small></div>${gia(`data-kgm="${esc(x.ten)}"`,gb)}</div>`}).join(''):'<div class="empty">Kho chưa có máy nào. Nhập hàng ở tab Nhập hàng.</div>'}</div>
+    ${H.length?`<h2 style="margin-top:14px">📦 Phụ kiện, linh kiện · ${H.length} món</h2><div class="list">${H.map(h=>`<div class="row kgrow" data-kgt="${esc(h.ten)}"${an(h.ten)}><div class="n"><b>${esc(h.ten)}</b><small><span class="pill g">Tồn ${h.sl}</span>${!h.giaBan?' <span class="pill a">chưa có giá</span>':''}</small></div>${gia(`data-kgh="${esc(h.id)}"`,h.giaBan)}</div>`).join('')}</div>`:''}
+    <small style="display:block;margin-top:10px;color:var(--muted)">Sửa giá xong là lưu luôn. Giá này là giá bán mặc định: nhân viên bán theo giá này, website cũng lấy giá này.</small></div>`}
+document.addEventListener('input',e=>{if(e.target.id!=='kgQ')return;kgQ=e.target.value;const q=kgQ.trim().toLowerCase();document.querySelectorAll('.kgrow').forEach(r=>r.hidden=!!q&&!r.dataset.kgt.toLowerCase().includes(q))});
+document.addEventListener('change',e=>{const t=e.target;if(!t.matches||!t.matches('.kgia'))return;const g=parseMoney(t.value);if(!(g>0)){toast('Nhập giá bán');return}
+  if(t.dataset.kgm!==undefined){let n=0;db.may.forEach(m=>{if(m.tt==='ton'&&m.ten===t.dataset.kgm){m.giaBan=g;n++}});save();toast(`Đã đổi giá ${t.dataset.kgm}: ${money(g)} (${n} máy)`)}
+  else{const h=db.hang.find(x=>x.id===t.dataset.kgh);if(!h)return;h.giaBan=g;save();toast(`Đã đổi giá ${h.ten}: ${money(g)}`)}
+  t.value=g.toLocaleString('vi-VN');if(XEM)toast('Đang xem thử — giá không được lưu');const r=t.closest('.kgrow');if(r)r.querySelectorAll('.pill.a').forEach(p=>p.remove())});
+document.addEventListener('click',e=>{if(e.target.closest('[data-kgweb]')){try{Store.save(db)}catch(_){}}},true);
 const loKey=m=>[m.ngayNhap,m.ten,m.giaNhap,m.ncc||''].join('|');
 /* 25/10 anh Thái: PHIẾU NHẬP — thêm nhiều mẫu máy + phụ kiện vào 1 phiếu, ghi nhà cung cấp 1 lần, lưu 1 lần; tìm lại theo NCC */
 let PN={dong:[],ncc:'',ngay:''}, pnFill=null, pnQ='', pnAsk=null;
@@ -1321,7 +1344,7 @@ function renderDraft(){const L=PN.dong;if(!L.length&&!PN.edit)return `<div class
     ${thieu.length?`<div class="err" style="margin-top:8px">Còn ${thieu.reduce((t,d)=>t+d.can-(d.imeis||[]).length,0)} máy chưa quét IMEI — bấm "Quét IMEI" ở dòng đó.</div>`:''}
     <button class="btn" data-pnsave="1" style="margin-top:10px" ${thieu.length?'disabled':''}>${PN.edit?'Lưu phiếu đã sửa':'Lưu phiếu vào kho'} · ${money(pnTong(L))}</button>
     <button class="wlink" data-pnclear="1" style="margin-top:6px">${PN.edit?'Thôi, giữ nguyên phiếu cũ':'Hủy phiếu này'}</button></div>`}
-function renderAdd(){if(addTab==='da'){renderDaNhap();return}if(ocrItems){renderOcr();$('v-add').insertAdjacentHTML('afterbegin',addTabs());return}renderAdd0();
+function renderAdd(){if(addTab==='da'){renderDaNhap();return}if(addTab==='kg'){renderKhoGia();return}if(ocrItems){renderOcr();$('v-add').insertAdjacentHTML('afterbegin',addTabs());return}renderAdd0();
   const fl=pnFill!==null?PN.dong[pnFill]:null;
   if(fl&&addMode==='may')$('v-add').insertAdjacentHTML('afterbegin',`<div class="pnhint" style="border-color:var(--amber)">📷 Đang quét IMEI cho <b>${esc(fl.ten)}</b>${fl.can?` (còn thiếu ${fl.can-(fl.imeis||[]).length})`:''} · <button class="wlink" data-pnfillx="1" style="display:inline;padding:0">bỏ</button></div>`);
   $('v-add').insertAdjacentHTML('beforeend',renderDraft());if(PN.dong.length)$('v-add').insertAdjacentHTML('afterbegin',`<button class="pnbar" data-pngo="1">🧾 Phiếu đang nhập: <b>${PN.dong.length} dòng · ${money(pnTong(PN.dong))}</b><span>Xem & Lưu ▾</span></button>`);$('v-add').insertAdjacentHTML('afterbegin',addTabs());
@@ -1589,7 +1612,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261028-1650';let verLuc=0;
+const BUILD='20261028-1705';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
