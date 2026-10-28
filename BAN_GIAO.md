@@ -99,3 +99,11 @@ App quản lý bán hàng cho shop điện thoại (shopgon.vn), chạy trên đ
 - Thêm 26/10: KM cho khách (loai 'km'), Sửa/Xóa đơn, Xóa IMEI trong Kho, icon + manifest + nút Cài app + sw.js (không lưu đệm), Sửa phiếu nhập trực tiếp (PN.edit, Thôi = trả kho), Nhập máy chọn tên kèm MÀU từ kho-may.json (máy nhiều màu bắt chọn màu).
 - Tối 26/10: thêm Thêm › **Khách hàng** (gộp theo SĐT/tên từ db.don, BH còn/hết, Gọi/Zalo) · **Nhà cung cấp** (công nợ = Σ pn.no; phiếu nhập có ô 'Còn nợ NCC'; trả tiền = pn loai 'tt' no âm, tiền mặt ghi thêm Sổ chi; trả hàng NCC = pn loai 'tra', máy tt='ncc') · **Kiểm kho** (quét IMEI so tồn, lưu localStorage shopgon_kk; đếm phụ kiện). Sheet thêm cột Don.traSl/traTu, Phieu.no/loai/note. Bộ test `_tam/test-toan-bo.py` 50/50.
 - ⚠ Repo shopgon đang CÔNG KHAI → chống copy (25/10) chưa hiệu lực; cần anh tạo repo riêng tư nếu muốn.
+
+## 13. Phiên 28/10 — MÀN ĐĂNG NHẬP (anh Thái yêu cầu)
+- Mở `shopgon.vn/app` / quét QR → vào **màn đăng nhập** trước (`showLogin()`), không còn vào thẳng shop mẫu.
+- 2 mục (tab): **Đăng nhập** (Google · Nhân viên đăng nhập SĐT · dưới cùng "Đăng ký tài khoản mới") và **Tài khoản test** (nút "Vào shop test" = xem thử dữ liệu mẫu cũ).
+- Đã đăng nhập rồi: có token → màn chờ "Đang mở sổ…" rồi vào thẳng sổ shop; điện thoại hết token → màn đăng nhập hiện "Tiếp tục với <gmail>" (1 chạm), không hiện shop test.
+- Gmail chưa đăng ký / đang chờ duyệt → hiện ngay form đăng ký / màn chờ kích hoạt (có link "Xem thử tiếp").
+- Đăng xuất, "Đăng nhập Gmail khác", nút Đăng nhập trên thanh vàng shop test → đều về màn đăng nhập.
+- `?demo=1` (Sale) và `?nv=1` không đổi. Test: 50/50 + kiểm riêng màn đăng nhập.
