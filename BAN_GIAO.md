@@ -111,3 +111,10 @@ App quản lý bán hàng cho shop điện thoại (shopgon.vn), chạy trên đ
 - 28/10 16h40: nút 🚪 Đăng xuất (Gmail) cuối tab Thêm cho chủ shop (hỏi xác nhận → ggLogout → về màn đăng nhập); shop test có nút "Thoát shop test"; nhân viên giữ nút Đăng xuất trong màn NV.
 - 28/10 16h50: Bán hàng — nhân viên KHÔNG sửa giá: ô giá = giá shop (readonly, class gialock, submit ép giaBan); cạnh nút "Thêm vào đơn" có nút "＋ Khuyến mãi" (data-addkm) = thêm món rồi mở bảng KM. Chủ shop vẫn sửa giá được, cũng có nút ＋ Khuyến mãi. Máy/phụ kiện chưa có giá shop thì nhân viên nhập tay.
 - 28/10 17h05: tab Nhập hàng chia 3: Nhập hàng · Đã nhập · Kho hàng (addTab "kg", renderKhoGia). Kho hàng = website bảng giá theo tồn: shop thấy tồn từng mẫu + sửa giá bán (đổi giaBan mọi máy cùng tên / hang.giaBan), nút mở /bg/?tu=app để gửi link khách; khách chỉ thấy Còn/Hết hàng.
+
+## 14. Phiên 28/10 tối — KHO = 1 chỗ đặt GIÁ + KHUYẾN MÃI (anh Thái chốt)
+- Nhập hàng chỉ còn 2 tab (Nhập hàng · Đã nhập), bỏ tab Kho hàng; form nhập **bỏ ô giá bán** (máy/phụ kiện/phiếu) — chỉ sản phẩm + số lượng/IMEI + **giá nhập** (giữ để tính lời, công nợ NCC). Máy nhập thêm cùng mẫu tự lấy giá bán đang đặt (`giaMau`).
+- Tab **Kho** dưới thanh menu có 2 tab con (`khoTab`): **📦 Kho** (tồn + ô Giá bán từng mẫu máy `data-kgm` / từng phụ kiện `data-kgh`, cảnh báo mẫu chưa có giá, thẻ Website bảng giá) · **🎁 Khuyến mãi** (`renderKmTab`, form `fKm`).
+- Khuyến mãi lưu `db.shop.km` [{id, sp:'m|tên máy'|'h|id', ten, loai giam|pct|tang, gt, tang, tangTen, den}]; bán hàng `kmGan()` tự gắn dòng KM (kmOf ↔ kid; bỏ món là bỏ KM). Nhân viên nhận KM qua nvSync (shop.km). Nhân viên gặp máy chưa có giá → báo nhờ chủ shop đặt giá.
+- Website `bg/` layTon: giá sau KM (gb) + giá gốc gạch (ny) + "Tặng …" (k).
+- Bộ test cập nhật 55/55 (thêm: không còn ô giá bán, sửa giá ở Kho, KM tự gắn, bỏ máy bỏ KM).

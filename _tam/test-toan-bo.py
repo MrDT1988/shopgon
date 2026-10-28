@@ -45,13 +45,27 @@ async def main():
         await pg.click('#fAdd button[type=submit]'); await pg.wait_for_timeout(200)
         ok('Chặn nhập máy thiếu cấu hình/màu', 'cấu hình' in (await pg.text_content('#aErr') or ''))
         await pg.locator('[data-sug]').first.click(); await pg.click('#fAdd button[type=submit]'); await pg.wait_for_timeout(200)
-        await E("addMode='hang';render()"); await pg.fill('#hTen', 'Ốp test'); await pg.fill('#hSl', '10'); await pg.fill('#hGN', '20.000'); await pg.fill('#hGB', '50.000')
+        await E("addMode='hang';render()"); await pg.fill('#hTen', 'Ốp test'); await pg.fill('#hSl', '10'); await pg.fill('#hGN', '20.000')
         await pg.click('#fAddH button[type=submit]'); await pg.wait_for_timeout(200)
         await pg.click('[data-pnsave]'); await pg.wait_for_timeout(300)
         r = json.loads(await S("{may:db.may.filter(m=>m.imei.startsWith('8600000000010')).map(m=>m.ten+'|'+m.tt),op:(db.hang.find(h=>h.ten==='Ốp test')||{}).sl,pn:db.pn.length}"))
         ok('Lưu phiếu: 2 máy vào kho', len(r['may']) == 2 and all(x.endswith('|ton') for x in r['may']), r)
         ok('Lưu phiếu: phụ kiện vào kho đúng SL', r['op'] == 10, r)
         ten_may = r['may'][0].split('|')[0]
+        ok('Nhập hàng không còn ô giá bán', await E("go('add');addMode='may';render();!document.getElementById('aGB')&&!document.getElementById('hGB')"))
+        # 2b. Giá bán đặt 1 chỗ ở Kho
+        hid = await E("db.hang.find(h=>h.ten==='Ốp test').id")
+        await E("go('stock');khoTab='kho';stockMode='hang';render()"); await pg.fill(f'[data-kgh="{hid}"]', '50.000'); await pg.press(f'[data-kgh="{hid}"]', 'Tab'); await pg.wait_for_timeout(150)
+        ok('Kho: sửa giá phụ kiện', await E(f"db.hang.find(h=>h.id==='{hid}').giaBan") == 50000)
+        await E(f"stockMode='may';stockBrand=db.may.find(m=>m.ten==={ten_may!r}).hang;render()"); await pg.fill(f'[data-kgm="{ten_may}"]', '12.000.000'); await pg.press(f'[data-kgm="{ten_may}"]', 'Tab'); await pg.wait_for_timeout(150)
+        ok('Kho: sửa giá mẫu máy áp mọi máy', await E(f"db.may.filter(m=>m.ten==={ten_may!r}&&m.tt==='ton').every(m=>m.giaBan===12000000)"))
+        # 2c. Khuyến mãi tự gắn vào đơn
+        await E("khoTab='km';kmLoai='giam';render()"); await pg.select_option('#kmSp', 'm|' + ten_may); await pg.fill('#kmGt', '200.000'); await pg.click('#fKm button[type=submit]'); await pg.wait_for_timeout(150)
+        im = await E(f"db.may.find(m=>m.ten==={ten_may!r}&&m.tt==='ton').imei")
+        await E(f"cart=[];sellImei='{im}';sellMode='may';go('sell')"); await pg.click('#fSell button[type=submit]'); await pg.wait_for_timeout(150)
+        ok('Bán: KM tự gắn vào đơn', await E("cartTotal()") == 11800000, await E("cartTotal()"))
+        await pg.click('[data-cartdel="0"]'); ok('Bỏ máy → bỏ luôn KM', await E("cart.length") == 0)
+        await E("db.shop.km=[];khoTab='kho';save();go('add')")
 
         # 3. Sửa phiếu: +1 phụ kiện, bỏ 1 IMEI, Thôi giữ nguyên rồi sửa thật
         pid = await E("db.pn[db.pn.length-1].id")

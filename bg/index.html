@@ -353,11 +353,15 @@ function layTon(tuDong) {
   if (!tuDong && (DS.length || PK.some(function (x) { return x.t; })) && !confirm('Thay bảng hiện tại bằng tồn kho trong app?')) return;
   var nhom = {};
   r.db.may.filter(function (m) { return m.tt === 'ton'; }).forEach(function (m) { var h = hangCua(m); if (!h) return; var k = h + '|' + m.ten; (nhom[k] = nhom[k] || { h: h, ten: m.ten, q: 0, gb: 0 }); nhom[k].q++; nhom[k].gb = Math.max(nhom[k].gb, m.giaBan || 0); });
-  DS = Object.keys(nhom).map(function (k) { var x = nhom[k], kk = khopKho(x.h, x.ten), mau = kk.sp && kk.sp.mau && kk.sp.mau[0]; return { h: x.h, t: kk.ten, d: kk.dl, c: mau ? mau.ten : '', i: anhCua(mau), ny: x.gb, gb: x.gb, q: x.q, k: '' }; })
+  /* 28/10: khuyến mãi cài ở app (tab Kho › Khuyến mãi) → website hiện giá gốc gạch + giá sau KM + quà tặng */
+  var KMA = ((r.db.shop && r.db.shop.km) || []).filter(function (k) { return !k.den || k.den >= new Date(Date.now() + 7 * 36e5).toISOString().slice(0, 10); });
+  function kmGia(sp, g) { KMA.forEach(function (k) { if (k.sp !== sp || !g) return; if (k.loai === 'giam') g -= k.gt; else if (k.loai === 'pct') g -= Math.round(g * k.gt / 100 / 1000) * 1000; }); return Math.max(0, g); }
+  function kmQua(sp) { return KMA.filter(function (k) { return k.sp === sp && k.loai === 'tang'; }).map(function (k) { return 'Tặng ' + (k.tangTen || 'quà'); }).join(' + '); }
+  DS = Object.keys(nhom).map(function (k) { var x = nhom[k], kk = khopKho(x.h, x.ten), mau = kk.sp && kk.sp.mau && kk.sp.mau[0]; return { h: x.h, t: kk.ten, d: kk.dl, c: mau ? mau.ten : '', i: anhCua(mau), ny: x.gb, gb: kmGia('m|' + x.ten, x.gb), q: x.q, k: kmQua('m|' + x.ten) }; })
     .sort(function (a, b) { return b.q - a.q; });
   var dem = {}; DS.forEach(function (x) { dem[x.h] = (dem[x.h] || 0) + 1; if (dem[x.h] <= 2) x.f = true; });
   if (r.key !== 'shopgon_v1' && DEMO_TON && DEMO_TON.km) { var tenG = {}; Object.keys(nhom).forEach(function (k, i) { tenG[k] = 1; }); DS.forEach(function (x) { Object.keys(DEMO_TON.km).forEach(function (t) { var kk = khopKho(x.h, t); if (kk.ten === x.t && (!kk.dl || kk.dl === x.d)) { x.ny = DEMO_TON.km[t][0]; x.k = DEMO_TON.km[t][1]; } }); }); }
-  PK = (r.db.hang || []).filter(function (x) { return /pk|sua/.test(x.nhom) && (x.sl || 0) > 0; }).map(function (x) { return { t: x.ten, g: x.giaBan || 0, k: '' }; });
+  PK = (r.db.hang || []).filter(function (x) { return /pk|sua/.test(x.nhom) && (x.sl || 0) > 0; }).map(function (x) { return { t: x.ten, g: kmGia('h|' + x.id, x.giaBan || 0), k: kmQua('h|' + x.id) }; });
   if (r.db.shop && r.db.shop.ten && !$('shop').value) $('shop').value = r.db.shop.ten;
   if (r.key !== 'shopgon_v1' && r.db.shop) { if (!$('dc').value && r.db.shop.dc) $('dc').value = r.db.shop.dc; if (!$('dt').value && r.db.shop.dt) $('dt').value = r.db.shop.dt; }
   var tong = DS.reduce(function (s, x) { return s + x.q; }, 0);
