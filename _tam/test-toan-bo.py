@@ -60,7 +60,12 @@ async def main():
         await E(f"stockMode='may';stockBrand=db.may.find(m=>m.ten==={ten_may!r}).hang;render()"); await pg.fill(f'[data-kgm="{ten_may}"]', '12.000.000'); await pg.press(f'[data-kgm="{ten_may}"]', 'Tab'); await pg.wait_for_timeout(150)
         ok('Kho: sửa giá mẫu máy áp mọi máy', await E(f"db.may.filter(m=>m.ten==={ten_may!r}&&m.tt==='ton').every(m=>m.giaBan===12000000)"))
         # 2c. Khuyến mãi tự gắn vào đơn
-        await E("khoTab='km';kmLoai='giam';render()"); await pg.select_option('#kmSp', 'm|' + ten_may); await pg.fill('#kmGt', '200.000'); await pg.click('#fKm button[type=submit]'); await pg.wait_for_timeout(150)
+        await E("khoTab='km';render()"); await pg.wait_for_timeout(300)
+        g = await E(f"gk({ten_may!r})")
+        await pg.click(f'[data-kmadd="g|{g}"]'); await pg.fill('#kmGt', '200.000'); await pg.click('#fKm button[type=submit]'); await pg.wait_for_timeout(150)
+        ok('KM: thẻ web có chip KM vừa thêm', await E(f"[...document.querySelectorAll('.wchip')].some(c=>c.textContent.includes('200k'))"))
+        await pg.click(f'[data-kmadd="g|{g}"]'); await pg.click('[data-kml=tg]'); await pg.click('#fKm button[type=submit]'); await pg.wait_for_timeout(150)
+        ok('KM: trả góp 0% lưu, không đổi giá', await E("db.shop.km.some(k=>k.loai==='tg')"))
         im = await E(f"db.may.find(m=>m.ten==={ten_may!r}&&m.tt==='ton').imei")
         await E(f"cart=[];sellImei='{im}';sellMode='may';go('sell')"); await pg.click('#fSell button[type=submit]'); await pg.wait_for_timeout(150)
         ok('Bán: KM tự gắn vào đơn', await E("cartTotal()") == 11800000, await E("cartTotal()"))

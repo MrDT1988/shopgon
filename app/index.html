@@ -256,6 +256,34 @@ body.nvmode nav.tabs button[data-v=add],body.nvmode nav.tabs button[data-v=stock
 .kgline>span{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px}.kgline .pill{white-space:normal}
 .kseg button{font-size:16px;padding:11px 8px}
 .kmp2{background:#fff3e0;color:#9a3412}
+.wtop{background:linear-gradient(135deg,#0f766e,#0b3f5c);color:#fff;border-radius:20px;padding:16px;margin-bottom:12px;display:flex;flex-direction:column;gap:4px;box-shadow:0 10px 24px rgba(11,63,92,.25)}
+.wtop small{opacity:.85;font-size:12.5px}.wtop b{font-size:21px;font-weight:900}.wtop span{font-size:13px;opacity:.9}
+.wopen{margin-top:8px;background:#fff;color:#0b5e57;border-radius:999px;padding:10px 14px;text-align:center;font-weight:800;text-decoration:none}
+.wgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media(min-width:620px){.wgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.wc2{background:#fff;border-radius:18px;padding:10px;display:flex;flex-direction:column;gap:3px;min-width:0;box-shadow:0 4px 14px rgba(16,32,30,.07);border:1px solid #e3ecea}
+.wimg{height:120px;display:grid;place-items:center;position:relative;background:linear-gradient(180deg,#f4f8f7,#fff);border-radius:14px;margin-bottom:4px}
+.wimg img{max-width:92%;max-height:112px;object-fit:contain}.wno{font-size:40px}
+.wpc{position:absolute;top:6px;left:6px;background:#e11d48;color:#fff;font-weight:900;font-size:12px;border-radius:8px;padding:2px 7px}
+.whg{font-size:10.5px;font-weight:800;color:#0f766e;text-transform:uppercase;letter-spacing:.06em}
+.wn{font-weight:800;font-size:14px;line-height:1.25}
+.wsl{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:11.5px}.wok{color:#15803d;font-weight:800}.wown{color:#7b8a87;background:#f1f4f3;border-radius:6px;padding:0 6px;font-weight:700}
+.wny{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:12px;color:#7b8a87;min-height:22px}.wny s{color:#94a3a0}
+.wtg{background:#ffd400;color:#1f2937;font-size:10px;font-weight:900;border-radius:5px;padding:1px 5px}
+.wnyi{display:flex;flex-direction:column;gap:2px;font-size:11.5px;color:#7b8a87;width:100%}.wnyi small{font-size:10.5px}.wnyi input{padding:6px 8px;font-size:13px;border-radius:8px}
+.wgb{font-size:18px;font-weight:900;color:#e11d48;line-height:1.2}.wred{color:#e11d48}
+.wlink2{border:0;background:#fff3e0;color:#9a3412;font-weight:800;font-size:12px;border-radius:8px;padding:5px 8px;text-align:left}
+.wkm{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
+.wchip{display:inline-flex;align-items:center;gap:4px;background:#fff1e6;color:#9a3412;border:1px solid #fed7aa;border-radius:999px;padding:3px 4px 3px 9px;font-size:12px;font-weight:700}
+.wchip i{font-style:normal;font-weight:600;opacity:.75}.wchip button{border:0;background:#fed7aa;color:#9a3412;border-radius:50%;width:20px;height:20px;font-size:11px;padding:0;line-height:20px}
+.wplus{border:1.5px dashed #0f766e;background:#f0fdfa;color:#0f766e;border-radius:999px;padding:4px 11px;font-weight:800;font-size:12.5px}
+.wrow{padding:10px 0;border-bottom:1px solid #eef3f2}.wrow .n small{display:block;margin-top:2px}
+.wsheet{position:fixed;inset:0;z-index:40;background:rgba(10,20,20,.45);display:flex;align-items:flex-end;justify-content:center}
+.wsbox{width:100%;max-width:520px;background:#fff;border-radius:22px 22px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:10px;max-height:88vh;overflow-y:auto}
+.wsbox h3{margin:0;font-size:19px}.wst{margin:-6px 0 0;color:#5d6f6c;font-weight:700}
+.wtypes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.wtypes button{border:1.5px solid #d5e4e1;background:#fff;border-radius:12px;padding:11px 6px;font-weight:800;font-size:14px}
+.wtypes button[aria-pressed=true]{border-color:#0f766e;background:#0f766e;color:#fff}
+.wquick{display:flex;gap:6px;flex-wrap:wrap}.wquick button{border:1px solid #fed7aa;background:#fff7ed;color:#9a3412;border-radius:999px;padding:6px 12px;font-weight:800}
 .lgdk{border:2px solid var(--pen);background:#fff;color:var(--pen);border-radius:999px;padding:13px;font-weight:800;font-size:16px}
 .lgtest{background:#fff7e0;border:1px solid #f1d58a;border-radius:14px;padding:12px;text-align:left;font-size:14px;color:#5b4310;line-height:1.45}
 .xnote{font-size:12.5px;color:#6b5a2a;background:#fff7e0;border-radius:10px;padding:8px 10px;width:100%;text-align:left}
@@ -848,39 +876,78 @@ function renderStock(){
       ${delImei===m.imei?`<div class="confirm" style="margin:0 0 8px"><b style="color:var(--red)">Xóa IMEI ${m.imei} khỏi kho?</b><span>Dùng khi nhập nhầm / nhập trùng. Máy bán rồi thì không cần xóa ở đây.</span><span class="inrow"><button class="ghost red" data-delimeiok="${m.imei}">Xác nhận xóa</button><button class="ghost" data-delimei="">Thôi</button></span></div>`:''}`}).join('')}</div>`:''}</div>`}).join(''):'<div class="empty">Không có máy nào khớp.</div>'}</div></div>`;
 }
 
-/* ===== KHUYẾN MÃI (tab Kho › Khuyến mãi) — db.shop.km: {id, sp:'m|tên máy' hoặc 'h|id phụ kiện', ten, loai:'giam'|'pct'|'tang', gt, tang(id món tặng), tangTen, den(yyyy-mm-dd, trống = không hạn)} ===== */
+/* ===== KHUYẾN MÃI (tab Kho › Khuyến mãi) — 29/10 anh Thái: tab này = GIAO DIỆN WEB KHÁCH XEM, chủ shop ghi KM thẳng trên từng thẻ.
+   Mỗi thẻ 2 trường: (1) Giá niêm yết — lấy theo Thế Giới Di Động (robot quét 6h sáng, kho/gia-tgdd.json); máy không có trên TGDD thì để trống, shop tự điền (db.shop.ny[tên mẫu]);
+   (2) Khuyến mãi — nút ＋ thêm: giảm tiền · giảm % · tặng phụ kiện · trả góp 0% · khác.
+   db.shop.km: {id, sp:'g|tên mẫu' (mọi màu) | 'm|tên máy' (cũ) | 'h|id phụ kiện', ten, loai:'giam'|'pct'|'tang'|'tg'|'txt', gt, tang, tangTen, txt, den} ===== */
+const gk=t=>String(t||'').replace(/\s+-\s+[^-]+$/,'').trim();
+function tgKey(s){s=String(s||'').toLowerCase().replace(/^điện thoại\s+/,'').replace(/^samsung\s+(?=galaxy)/,'').replace(/^xiaomi\s+(?=redmi|poco)/,'').replace(/\bmoto\s+/g,'').replace(/\s+-\s+.*$/,'').replace(/(\d)\+(\d)/g,'$1/$2').replace(/\+/g,'plus');const m=s.match(/\d+\s*(?:gb|tb)?\s*\/\s*\d+\s*(?:gb|tb)?|\d+\s*(?:gb|tb)/);if(m)s=s.slice(0,m.index+m[0].length);return s.replace(/\b[45]g\b/g,'').replace(/gb/g,'').replace(/[^a-z0-9/]/g,'')}
+let TG=null,TGload=null;const TG2={};
+function tgLoad(){if(TG||TGload)return TGload||Promise.resolve();TGload=fetch('/kho/gia-tgdd.json?v='+new Date().toISOString().slice(0,13)).then(r=>r.json()).then(j=>{TG=j||{gia:{}};const c={};Object.entries(TG.gia||{}).forEach(([k,v])=>{const k2=k.replace(/(\d+)\/(\d+)$/,'$2');(c[k2]=c[k2]||[]).push(v)});Object.entries(c).forEach(([k,v])=>{if(v.length===1)TG2[k]=v[0]})}).catch(()=>{TG={gia:{}}});return TGload}
+function tgCua(ten){if(!TG)return null;const k=tgKey(ten);return (TG.gia||{})[k]||TG2[k]||TG2[k.replace(/(\d+)\/(\d+)$/,'$2')]||null}
+/* giá niêm yết của 1 mẫu: TGDD trước, không có thì giá shop tự điền */
+function nyCua(ten){const t=tgCua(ten);if(t&&t.ny)return {v:t.ny,tg:1};const v=(db.shop.ny||{})[gk(ten)];return v?{v,tg:0}:{v:0,tg:0}}
 const kmDs=()=>db.shop.km||(db.shop.km=[]);
 const kmOn=k=>!k.den||k.den>=todayIso();
 const kmChay=()=>(db.shop.km||[]).filter(kmOn);
-const kmCua=sp=>kmChay().filter(k=>k.sp===sp);
-const kmTxt=k=>k.loai==='giam'?'giảm '+money(k.gt):k.loai==='pct'?'giảm '+k.gt+'%':'tặng '+(k.tangTen||'quà');
-let kmLoai='giam';
-function renderKmTab(){const L=kmDs().slice().sort((a,b)=>kmOn(b)-kmOn(a)||(a.ten||'').localeCompare(b.ten||''));
-  const may=[...new Set(stock().map(m=>m.ten))].sort(),hg=db.hang.filter(h=>h.sl>0).sort((a,b)=>a.ten.localeCompare(b.ten));
-  $('v-stock').innerHTML=khoSeg()+`<div class="panel"><h2>🎁 Khuyến mãi đang cài · ${kmChay().length}</h2>
-    <p class="kgnote">Bán sản phẩm có khuyến mãi là app <b>tự gắn vào đơn</b> — cả chủ shop và nhân viên. Website cũng hiện giá sau khuyến mãi.</p>
-    <div class="list">${L.length?L.map(k=>`<div class="row"><div class="n"><b>${esc(k.ten)}</b><small><span class="pill ${kmOn(k)?'g':'r'}">${esc(kmTxt(k))}</span> ${kmOn(k)?(k.den?'đến '+dmy(k.den):'không hạn'):'đã hết hạn '+dmy(k.den)}</small></div><button class="ghost red" data-kmdel="${k.id}">Xóa</button></div>`).join(''):'<div class="empty">Chưa có khuyến mãi nào. Thêm ở dưới.</div>'}</div></div>
-  <div class="panel"><h2>＋ Thêm khuyến mãi</h2><form id="fKm" autocomplete="off">
-    <label>Sản phẩm<select id="kmSp"><option value="">— Chọn sản phẩm —</option>${may.length?`<optgroup label="Điện thoại">${may.map(t=>`<option value="${esc('m|'+t)}">${esc(t)}</option>`).join('')}</optgroup>`:''}${hg.length?`<optgroup label="Phụ kiện, hàng khác">${hg.map(h=>`<option value="${esc('h|'+h.id)}">${esc(h.ten)}</option>`).join('')}</optgroup>`:''}</select></label>
-    <div class="seg" role="group" style="margin-top:10px"><button type="button" data-kml="giam" aria-pressed="${kmLoai==='giam'}">Giảm tiền</button><button type="button" data-kml="pct" aria-pressed="${kmLoai==='pct'}">Giảm %</button><button type="button" data-kml="tang" aria-pressed="${kmLoai==='tang'}">Tặng quà</button></div>
-    ${kmLoai==='tang'?`<label>Món tặng (lấy từ kho)<select id="kmTang">${hg.length?hg.map(h=>`<option value="${esc(h.id)}">${esc(h.ten)} · còn ${h.sl}</option>`).join(''):'<option value="">Kho chưa có phụ kiện</option>'}</select></label>`
-      :`<label>${kmLoai==='pct'?'Giảm bao nhiêu %':'Giảm bao nhiêu tiền'}<input id="kmGt" inputmode="numeric" class="num" placeholder="${kmLoai==='pct'?'VD: 10':'VD: 300.000'}"></label>`}
+const kmCua=sp=>{const g=sp.startsWith('m|')?'g|'+gk(sp.slice(2)):sp.startsWith('g|')?sp:null;return kmChay().filter(k=>k.sp===sp||(g&&(k.sp===g||(k.sp.startsWith('m|')&&'g|'+gk(k.sp.slice(2))===g))))};
+const kmTxt=k=>k.loai==='giam'?'giảm '+money(k.gt):k.loai==='pct'?'giảm '+k.gt+'%':k.loai==='tg'?'trả góp 0%':k.loai==='txt'?(k.txt||''):'tặng '+(k.tangTen||'quà');
+const kmChip=k=>k.loai==='giam'?'Giảm '+short(k.gt):k.loai==='pct'?'Giảm '+k.gt+'%':k.loai==='tg'?'Trả góp 0%':k.loai==='txt'?(k.txt||''):'Tặng '+(k.tangTen||'quà');
+const kmTru=(L,g)=>L.reduce((t,k)=>t+(k.loai==='giam'?+k.gt||0:k.loai==='pct'?Math.round(g*k.gt/100/1000)*1000:0),0);
+let kmLoai='giam',kmSheet=null;
+const imgCua=ten=>{if(!KM)return '';const t=String(ten).toLowerCase(),b=gk(ten).toLowerCase();const x=KM.find(z=>z.ten.toLowerCase()===t)||KM.find(z=>z.ten.toLowerCase().startsWith(b))||KM.find(z=>b.startsWith(z.base.toLowerCase()));return x&&x.img||''};
+function renderKmTab(){
+  if(!TG)tgLoad().then(()=>{if(view==='stock'&&khoTab==='km')render()});
+  if(!KM)kmLoad().then(()=>{if(view==='stock'&&khoTab==='km')render()});
+  const G={};stock().forEach(m=>{const k=gk(m.ten);const x=G[k]=G[k]||{k,ms:[],hang:m.hang||''};x.ms.push(m)});
+  const L=Object.values(G).sort((a,b)=>b.ms.length-a.ms.length||a.k.localeCompare(b.k)),H=db.hang.filter(h=>h.sl>0).sort((a,b)=>a.ten.localeCompare(b.ten));
+  const chips=(sp,ten)=>`<div class="wkm">${kmCua(sp).map(k=>`<span class="wchip">🎁 ${esc(kmChip(k))}${k.den?` <i>đến ${esc(dmy(k.den).slice(0,5))}</i>`:''}<button type="button" data-kmdel="${k.id}" aria-label="Xóa khuyến mãi">✕</button></span>`).join('')}<button type="button" class="wplus" data-kmadd="${esc(sp)}" data-kmten="${esc(ten)}">＋ KM</button></div>`;
+  const the=x=>{const gb=Math.max(...x.ms.map(m=>m.giaBan||0)),km=kmCua('g|'+x.k),cuoi=Math.max(0,gb-kmTru(km,gb)),ny=nyCua(x.k);
+    const gach=ny.v>cuoi?ny.v:(cuoi<gb?gb:0),pc=gach&&cuoi?Math.round((gach-cuoi)/gach*100):0,img=imgCua(x.ms[0].ten),mau=new Set(x.ms.map(m=>m.ten)).size;
+    return `<div class="wc2"><div class="wimg">${pc>0?`<span class="wpc">−${pc}%</span>`:''}${img?`<img src="${esc(img)}" alt="" loading="lazy">`:'<span class="wno">📱</span>'}</div>
+      <div class="whg">${esc(x.hang)}</div><div class="wn">${esc(x.k)}</div>
+      <div class="wsl"><span class="wok">✓ Còn hàng</span><span class="wown" title="Chỉ shop thấy">Tồn ${x.ms.length}${mau>1?' · '+mau+' màu':''}</span></div>
+      <div class="wny">${ny.tg?`<span>Niêm yết <s>${money(ny.v)}</s></span><b class="wtg" title="Giá Thế Giới Di Động, cập nhật 6h sáng">TGDD</b>`:`<label class="wnyi">Niêm yết <small>(TGDD không có)</small><input data-nyg="${esc(x.k)}" inputmode="numeric" class="num" value="${ny.v?(+ny.v).toLocaleString('vi-VN'):''}" placeholder="Để trống được"></label>`}</div>
+      <div class="wgb">${cuoi?money(cuoi):`<button type="button" class="wlink2" data-kt="kho">Chưa có giá · đặt ở tab Kho</button>`}</div>${chips('g|'+x.k,x.k)}</div>`};
+  const tgLuc=TG&&TG.capNhat?new Date(TG.capNhat):null;
+  $('v-stock').innerHTML=khoSeg()+`<div class="wtop"><small>👀 Giao diện khách xem · ghi khuyến mãi thẳng trên từng máy</small><b>${esc(db.shop.ten||'Shop của bạn')}</b>
+      <span>${L.length} mẫu còn hàng${tgLuc?` · giá niêm yết TGDD ${tgLuc.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})} ${tgLuc.toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit'})}`:''}</span>
+      <a class="wopen" href="/bg/?tu=app${DEMO?'&demo=1':''}" data-kgweb="1">🌐 Mở website · gửi link cho khách</a></div>
+    ${L.length?`<div class="wgrid">${L.map(the).join('')}</div>`:'<div class="empty">Kho chưa có máy. Nhập hàng trước, rồi quay lại đây ghi khuyến mãi.</div>'}
+    ${H.length?`<div class="panel" style="margin-top:12px"><h2>🎧 Phụ kiện · hàng khác</h2><div class="list">${H.map(h=>{const km=kmCua('h|'+h.id),cuoi=Math.max(0,(h.giaBan||0)-kmTru(km,h.giaBan||0));return `<div class="wrow"><div class="n"><b>${esc(h.ten)}</b><small>${cuoi<h.giaBan?`<s>${money(h.giaBan)}</s> `:''}<b class="wred">${h.giaBan?money(cuoi):'Chưa có giá'}</b> · <span class="wown">Tồn ${h.sl}</span></small>${chips('h|'+h.id,h.ten)}</div></div>`}).join('')}</div></div>`:''}
+    <p class="kgnote" style="margin:12px 4px">Khuyến mãi lưu là app <b>tự gắn vào đơn khi bán</b> (cả nhân viên). "Tồn" chỉ shop thấy — khách chỉ thấy Còn hàng / Hết hàng. Giá bán sửa ở tab <b>📦 Kho</b>.</p>
+    ${kmSheet?renderKmSheet():''}`}
+function renderKmSheet(){const hg=db.hang.filter(h=>h.sl>0).sort((a,b)=>a.ten.localeCompare(b.ten));const T=[['giam','💸 Giảm tiền'],['pct','％ Giảm %'],['tang','🎧 Tặng phụ kiện'],['tg','💳 Trả góp 0%'],['txt','✏️ Khác']];
+  return `<div class="wsheet" data-kmx="1"><form id="fKm" class="wsbox" autocomplete="off"><h3>Thêm khuyến mãi</h3><p class="wst">${esc(kmSheet.ten)}</p>
+    <div class="wtypes">${T.map(([k,t])=>`<button type="button" data-kml="${k}" aria-pressed="${kmLoai===k}">${t}</button>`).join('')}</div>
+    ${kmLoai==='giam'?`<label>Giảm bao nhiêu tiền<input id="kmGt" inputmode="numeric" class="num" placeholder="VD: 300.000"></label><div class="wquick">${[100000,200000,300000,500000,1000000].map(v=>`<button type="button" data-kmq="${v}">${short(v)}</button>`).join('')}</div>`
+     :kmLoai==='pct'?`<label>Giảm bao nhiêu %<input id="kmGt" inputmode="numeric" class="num" placeholder="VD: 10"></label>`
+     :kmLoai==='tang'?`<label>Món tặng (trừ kho khi bán)<select id="kmTang">${hg.length?hg.map(h=>`<option value="${esc(h.id)}">${esc(h.ten)} · còn ${h.sl}</option>`).join(''):'<option value="">Kho chưa có phụ kiện — nhập phụ kiện trước</option>'}</select></label>`
+     :kmLoai==='tg'?`<p class="kgnote">Hiện nhãn <b>💳 Trả góp 0%</b> trên thẻ máy cho khách thấy. Không đổi giá bán.</p>`
+     :`<label>Nội dung khuyến mãi<input id="kmTxt" maxlength="40" placeholder="VD: Bảo hành 18 tháng, Thu cũ +500K"></label>`}
     <label>Áp dụng đến ngày<small>Bỏ trống = chạy tới khi xóa</small><input id="kmDen" type="date"></label>
-    <div class="err" id="kmErr"></div><button class="btn" type="submit">Lưu khuyến mãi</button></form></div>`}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-kt],[data-kml],[data-kmdel]');if(!b)return;const d=b.dataset;
-  if(d.kt){khoTab=d.kt;render();window.scrollTo(0,0);return}
-  if(d.kml){kmLoai=d.kml;const sp=$('kmSp')&&$('kmSp').value;render();if(sp&&$('kmSp'))$('kmSp').value=sp;return}
+    <div class="err" id="kmErr"></div><div class="inrow"><button class="btn" type="submit" style="flex:1">Lưu khuyến mãi</button><button type="button" class="ghost" data-kmx="1">Thôi</button></div></form></div>`}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-kt],[data-kml],[data-kmdel],[data-kmadd],[data-kmx],[data-kmq]');if(!b)return;const d=b.dataset;
+  if(d.kmx!==undefined){if(b.classList.contains('wsheet')&&e.target!==b)return;kmSheet=null;render();return}
+  if(d.kt){khoTab=d.kt;kmSheet=null;render();window.scrollTo(0,0);return}
+  if(d.kmadd){if(XEM){showKh();return}kmSheet={sp:d.kmadd,ten:d.kmten||''};kmLoai='giam';render();setTimeout(()=>{const i=$('kmGt');if(i)i.focus()},60);return}
+  if(d.kml){kmLoai=d.kml;const den=$('kmDen')&&$('kmDen').value;render();if(den&&$('kmDen'))$('kmDen').value=den;return}
+  if(d.kmq){const i=$('kmGt');if(i)i.value=(+d.kmq).toLocaleString('vi-VN');return}
   if(d.kmdel){if(XEM){showKh();return}const k=kmDs().find(x=>x.id===d.kmdel);if(!k||!confirm('Xóa khuyến mãi "'+kmTxt(k)+'" của '+k.ten+'?'))return;db.shop.km=kmDs().filter(x=>x.id!==d.kmdel);save();render();toast('Đã xóa khuyến mãi')}});
-document.addEventListener('submit',e=>{if(e.target.id!=='fKm')return;e.preventDefault();const er=$('kmErr'),sp=$('kmSp').value;if(!sp){er.textContent='Chọn sản phẩm.';return}
-  const ten=sp.startsWith('m|')?sp.slice(2):(db.hang.find(h=>h.id===sp.slice(2))||{}).ten||'';const k={id:uid(),sp,ten,loai:kmLoai,den:$('kmDen').value||''};
+document.addEventListener('submit',e=>{if(e.target.id!=='fKm')return;e.preventDefault();const er=$('kmErr');if(!kmSheet){return}
+  const k={id:uid(),sp:kmSheet.sp,ten:kmSheet.ten,loai:kmLoai,den:$('kmDen').value||''};
   if(kmLoai==='tang'){const h=db.hang.find(x=>x.id===$('kmTang').value);if(!h){er.textContent='Chọn món tặng.';return}k.tang=h.id;k.tangTen=h.ten}
+  else if(kmLoai==='tg'){if(kmCua(k.sp).some(x=>x.loai==='tg')){er.textContent='Máy này đã có Trả góp 0%.';return}}
+  else if(kmLoai==='txt'){const t=$('kmTxt').value.trim();if(!t){er.textContent='Nhập nội dung khuyến mãi.';return}k.txt=t}
   else{const v=parseMoney($('kmGt').value);if(!(v>0)){er.textContent='Nhập số giảm.';return}if(kmLoai==='pct'&&v>=100){er.textContent='Giảm % phải nhỏ hơn 100.';return}k.gt=v}
-  kmDs().push(k);save();render();toast('Đã lưu khuyến mãi: '+ten+' · '+kmTxt(k))});
+  kmDs().push(k);kmSheet=null;save();render();toast('Đã thêm khuyến mãi: '+kmChip(k))});
+/* giá niêm yết shop tự điền (máy TGDD không có) */
+document.addEventListener('change',e=>{const t=e.target;if(!t.dataset||t.dataset.nyg===undefined)return;const v=parseMoney(t.value);db.shop.ny=db.shop.ny||{};if(v>0)db.shop.ny[t.dataset.nyg]=v;else delete db.shop.ny[t.dataset.nyg];save();render();toast(v>0?'Đã lưu giá niêm yết '+money(v):'Đã bỏ giá niêm yết')});
 /* tự gắn khuyến mãi khi thêm sản phẩm vào đơn */
 function kmGan(c,sp){const L=kmCua(sp);if(!L.length)return;c.kid=c.kid||uid();const sl=c.sl||1,ds=[];
   L.forEach(k=>{if(k.loai==='giam'){cart.push({type:'free',nhom:'km',ten:'🎁 KM '+c.ten+': giảm',gia:-k.gt*sl,von:0,sl:1,kmOf:c.kid});ds.push(kmTxt(k))}
     else if(k.loai==='pct'){const v=Math.round((c.gia||0)*k.gt/100/1000)*1000*sl;if(v>0){cart.push({type:'free',nhom:'km',ten:'🎁 KM '+c.ten+': giảm '+k.gt+'%',gia:-v,von:0,sl:1,kmOf:c.kid});ds.push(kmTxt(k))}}
-    else{const h=db.hang.find(x=>x.id===k.tang);if(h&&h.sl-cartQty(h.id)>=sl){cart.push({type:'hang',hangId:h.id,ten:'🎁 Tặng: '+h.ten,nhom:'km',gia:0,von:h.giaNhap,sl,kmOf:c.kid});ds.push(kmTxt(k))}else toast('Hết '+(k.tangTen||'quà tặng')+' trong kho — chưa tặng được')}});
+    else if(k.loai==='tang'){const h=db.hang.find(x=>x.id===k.tang);if(h&&h.sl-cartQty(h.id)>=sl){cart.push({type:'hang',hangId:h.id,ten:'🎁 Tặng: '+h.ten,nhom:'km',gia:0,von:h.giaNhap,sl,kmOf:c.kid});ds.push(kmTxt(k))}else toast('Hết '+(k.tangTen||'quà tặng')+' trong kho — chưa tặng được')}});
   if(ds.length)setTimeout(()=>toast('🎁 Đã áp khuyến mãi: '+ds.join(' + ')),600)}
 
 /* ===== THÊM ===== */
@@ -1661,7 +1728,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261028-1745';let verLuc=0;
+const BUILD='20261029-1720';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}

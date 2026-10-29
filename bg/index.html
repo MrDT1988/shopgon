@@ -51,58 +51,64 @@ input,select{font:inherit;font-size:16px;padding:9px 11px;border:1px solid var(-
 .p .c .tag{position:absolute;top:12px;left:12px;background:#ffd23f;color:#3a2a00;font-weight:900;border-radius:10px;padding:4px 10px}
 .p .chan{position:absolute;left:0;right:0;bottom:0;height:150px;background:#ffd23f;color:#06223f;display:flex;justify-content:space-between;align-items:center;padding:0 60px;font-size:26px}
 .p .chan b{font-size:36px;display:block}.p .chan .dt{font-size:46px;font-weight:900}
-.xem{max-width:620px;margin:0 auto;padding:0 0 96px;background:var(--nen);min-height:100vh}
-.xem .top{background:linear-gradient(170deg,#0b3f7c,#06223f);color:#fff;padding:20px 16px 18px}
-.xem .top b{font-size:22px;display:block}.xem .top small{opacity:.85}
-.xem .tabs{position:sticky;top:0;z-index:3;background:var(--nen);padding:10px 16px;border-bottom:1px solid var(--vien)}
-.xem .ds{padding:12px 16px;display:flex;flex-direction:column;gap:10px}
-.xem .sp{background:#fff;border:1px solid var(--vien);border-radius:14px;padding:10px;display:grid;grid-template-columns:86px minmax(0,1fr);gap:12px;align-items:center}
-.xem .sp.het{opacity:.5}
-.xem .sp img{width:86px;height:104px;object-fit:contain}
 .noimg{display:grid;place-items:center;background:var(--ngoc2);border-radius:10px;flex:none}
-.xem .sp .noimg{width:86px;height:104px;display:grid;place-items:center;font-size:40px;background:var(--ngoc2);border-radius:10px}
-.xem .sp .n{font-weight:800}.xem .sp .dl{font-size:13px;color:var(--xam)}
-.xem .sp .g{font-size:20px;font-weight:900;color:var(--do)}
-.xem .sp .cu{text-decoration:line-through;color:#8a9a97;font-size:13px;margin-right:6px}
-.xem .sp .tag{display:inline-block;background:var(--vang);color:#3a2a00;font-weight:800;border-radius:8px;padding:1px 8px;font-size:12px}
-.xem .sp .km{font-size:13px;color:#9a3412;background:#fff7ed;border-radius:8px;padding:4px 8px;margin-top:6px}
-.xem .sp .sl{font-size:12px;font-weight:700;color:var(--ngoc);margin-top:4px}
-.xem table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--vien);border-radius:14px;overflow:hidden;font-size:14px}
-.xem th,.xem td{padding:10px;border-bottom:1px solid #eef3f2;text-align:left;vertical-align:top}
-.xem th{background:var(--ngoc2);color:var(--ngoc);font-size:12px;text-transform:uppercase}
-.xem td.g{font-weight:800;color:var(--do);white-space:nowrap}
-.xem .goi{position:fixed;left:0;right:0;bottom:0;padding:10px 16px;background:#fff;border-top:1px solid var(--vien);display:flex;gap:8px;max-width:620px;margin:0 auto}
-.xem .goi a,.xem .goi button{flex:1;padding:12px 6px;font-size:15px}
-.xem .top .nho{display:block;font-size:12px;opacity:.75;margin-bottom:4px}
-.xem .top .so{display:flex;gap:16px;margin-top:10px;font-size:13px;opacity:.95}.xem .top .so b{font-size:18px;display:inline}
-.xem .timx{margin-top:12px;border:0;border-radius:12px;padding:11px 14px;font-size:15px}
-.xem .khuc{display:flex;gap:6px;overflow-x:auto;padding:10px 16px 0}
-.xem .khuc button{flex:0 0 auto;border:1px solid var(--vien);background:#fff;border-radius:10px;padding:6px 11px;font:inherit;font-size:13px;font-weight:600;color:var(--muc)}
-.xem .khuc button small{color:var(--xam);font-weight:700;margin-left:2px}
-.xem .khuc button.on{background:var(--ngoc2);border-color:var(--ngoc);color:var(--ngoc)}
-.xem .tieu{font-weight:800;font-size:16px}.xem .tieu small{color:var(--xam);font-weight:600;font-size:13px;margin-left:4px}
+.dong .sao{color:#c9d6d3}.dong .sao.on{color:#e0a400}
+/* ===== 29/10 TRANG KHÁCH — giao diện mới ===== */
+.xem{--x1:#0b3b5c;--x2:#0f766e;--do2:#e11d48;--cam:#f97316;max-width:640px;margin:0 auto;padding:0 0 104px;background:#f3f6f8;min-height:100vh}
+.xem .top{position:relative;overflow:hidden;background:radial-gradient(120% 90% at 100% 0,#14b8a6 0,transparent 55%),linear-gradient(150deg,var(--x1),#082235 70%);color:#fff;padding:22px 16px 20px;border-radius:0 0 28px 28px}
+.xem .top:after{content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.06)}
+.xem .top .nho{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:rgba(255,255,255,.14);border-radius:999px;padding:4px 10px;margin-bottom:10px}
+.xem .top b{font-size:26px;font-weight:900;display:block;line-height:1.15;letter-spacing:-.01em}
+.xem .top .dc{display:block;opacity:.82;font-size:13.5px;margin-top:3px}
+.xem .top .so{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.xem .top .so span{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:6px 10px;font-size:12.5px}.xem .top .so b{display:inline;font-size:16px}
+.xem .timx{position:relative;z-index:1;margin-top:14px;width:100%;border:0;border-radius:16px;padding:13px 16px;font-size:15px;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.xem .hot{padding:16px 0 2px}.xem .hot h4{margin:0 16px 8px;font-size:15px;font-weight:900}
+.xem .hot .ngang{display:flex;gap:10px;overflow-x:auto;padding:2px 16px 8px;scroll-snap-type:x mandatory}
+.xem .hot .ngang::-webkit-scrollbar{display:none}
+.xem .hc{flex:0 0 72%;max-width:300px;scroll-snap-align:start;background:linear-gradient(135deg,#fff7ed,#ffe4e6);border:1px solid #fed7aa;border-radius:20px;padding:12px;display:grid;grid-template-columns:78px minmax(0,1fr);gap:10px;align-items:center;cursor:pointer}
+.xem .hc img{width:78px;height:92px;object-fit:contain}.xem .hc .n{font-weight:800;font-size:14px;line-height:1.25}
+.xem .hc .g{font-size:18px;font-weight:900;color:var(--do2)}.xem .hc .cu{font-size:12px;color:#94a3a0;text-decoration:line-through}
+.xem .hc .k{font-size:11.5px;font-weight:700;color:#9a3412;margin-top:3px}
+.xem .tabs{position:sticky;top:0;z-index:4;background:rgba(243,246,248,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:10px 16px;gap:8px;border:0}
+.xem .tabs button{border:0;background:#fff;color:#334155;box-shadow:0 1px 3px rgba(15,23,42,.08);border-radius:999px;padding:9px 16px;font-weight:800}
+.xem .tabs button.on{background:var(--x1);color:#fff;box-shadow:0 6px 14px rgba(11,59,92,.3)}
+.xem .khuc{display:flex;gap:6px;overflow-x:auto;padding:4px 16px 0}
+.xem .khuc button{flex:0 0 auto;border:1px solid #dbe4ea;background:#fff;border-radius:10px;padding:6px 11px;font:inherit;font-size:12.5px;font-weight:700;color:#334155}
+.xem .khuc button small{color:#94a3a0;font-weight:700;margin-left:2px}.xem .khuc button.on{background:#e0f2fe;border-color:#7dd3fc;color:#0c4a6e}
+.xem .ds{padding:12px 16px;display:flex;flex-direction:column;gap:12px}
+.xem .tieu{font-weight:900;font-size:17px}.xem .tieu small{color:#64748b;font-weight:600;font-size:13px;margin-left:4px}
 .xem .luoi{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 @media(min-width:560px){.xem .luoi{grid-template-columns:repeat(3,minmax(0,1fr))}}
-.xem .c{background:#fff;border:1px solid var(--vien);border-radius:14px;padding:10px;display:flex;flex-direction:column;min-width:0}
-.xem .c.het{opacity:.5}
-.xem .c .anh{height:132px;display:grid;place-items:center;position:relative;margin-bottom:6px}
-.xem .c .anh img{max-width:100%;max-height:132px;object-fit:contain}
-.xem .c .anh .noimg{width:100%;height:132px;font-size:42px}
-.xem .c .tag{position:absolute;top:0;left:0;background:var(--vang);color:#3a2a00;font-weight:800;border-radius:8px;padding:1px 7px;font-size:12px;z-index:1}
-.xem .c .sao{position:absolute;top:0;right:0;background:#ffe4d6;color:#c2410c;font-weight:800;border-radius:8px;padding:1px 6px;font-size:11px;z-index:1}
-.xem .c .hg{font-size:11px;font-weight:800;color:var(--ngoc);text-transform:uppercase;letter-spacing:.05em}
-.xem .c .n{font-weight:800;font-size:14px;line-height:1.25}
-.xem .c .dl{font-size:12px;color:var(--xam)}
-.xem .c .cu{text-decoration:line-through;color:#8a9a97;font-size:12px;margin-top:4px}
-.xem .c .g{font-size:17px;font-weight:900;color:var(--do);line-height:1.2}
-.xem .c .km{font-size:12px;color:#9a3412;background:#fff7ed;border-radius:8px;padding:3px 7px;margin-top:5px}
-.xem .c .sl{font-size:12px;font-weight:700;color:var(--ngoc);margin-top:auto;padding-top:5px}
-.xem .trong{color:var(--xam);padding:20px 0;text-align:center}
-.dong .sao{color:#c9d6d3}.dong .sao.on{color:#e0a400}
-.xem .cuoi{text-align:center;font-size:12px;color:var(--xam);padding:6px}
-.xem .c .hoi{margin-top:7px;border:1.5px solid #0068ff;background:#fff;color:#0068ff;border-radius:10px;padding:8px 6px;font:700 13px/1.2 inherit;cursor:pointer}
-.xem .c.het .hoi{border-color:var(--vien);color:var(--xam)}
-.xem .toast{position:fixed;left:50%;bottom:84px;transform:translate(-50%,20px);background:#14171b;color:#fff;font-size:14px;font-weight:600;padding:10px 16px;border-radius:12px;opacity:0;transition:.2s;pointer-events:none;z-index:60;max-width:92vw;text-align:center}
+.xem .c{background:#fff;border-radius:20px;padding:8px 8px 10px;display:flex;flex-direction:column;min-width:0;box-shadow:0 6px 18px rgba(15,23,42,.07);position:relative}
+.xem .c.het{opacity:.55;filter:grayscale(.4)}
+.xem .c .anh{height:138px;display:grid;place-items:center;position:relative;margin-bottom:8px;background:linear-gradient(180deg,#eef4f7,#fff);border-radius:16px}
+.xem .c .anh img{max-width:90%;max-height:128px;object-fit:contain;transition:transform .25s}.xem .c:hover .anh img{transform:scale(1.04)}
+.xem .c .anh .noimg{width:100%;height:138px;font-size:42px;background:none}
+.xem .c .tag{position:absolute;top:8px;left:8px;background:var(--do2);color:#fff;font-weight:900;border-radius:9px;padding:2px 8px;font-size:12px;z-index:1;box-shadow:0 4px 10px rgba(225,29,72,.35)}
+.xem .c .sao{position:absolute;top:8px;right:8px;background:linear-gradient(135deg,#f97316,#ef4444);color:#fff;font-weight:800;border-radius:9px;padding:2px 7px;font-size:11px;z-index:1}
+.xem .c .hg{font-size:10.5px;font-weight:800;color:var(--x2);text-transform:uppercase;letter-spacing:.07em;padding:0 2px}
+.xem .c .n{font-weight:800;font-size:14px;line-height:1.25;padding:0 2px}
+.xem .c .dl{font-size:12px;color:#64748b;padding:0 2px}
+.xem .c .gia{margin-top:6px;padding:8px;border-radius:12px;background:#fff5f6}
+.xem .c .cu{text-decoration:line-through;color:#94a3a0;font-size:12px}.xem .c .cu i{font-style:normal;text-decoration:none;display:inline-block;margin-left:4px;color:#0f766e;font-weight:800;font-size:10px;background:#ccfbf1;border-radius:4px;padding:0 4px}
+.xem .c .g{font-size:18px;font-weight:900;color:var(--do2);line-height:1.15}
+.xem .c .tk{font-size:11px;font-weight:800;color:#15803d}
+.xem .c .kms{display:flex;flex-direction:column;gap:4px;margin-top:6px}
+.xem .c .km{font-size:11.5px;font-weight:700;color:#9a3412;background:#fff7ed;border:1px solid #fed7aa;border-radius:9px;padding:3px 7px;line-height:1.3}
+.xem .c .sl{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:800;color:#15803d;margin-top:auto;padding:7px 2px 0}.xem .c .sl:before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.xem .c.het .sl{color:#94a3a0}
+.xem .c .hoi{margin-top:8px;border:0;background:linear-gradient(135deg,#0068ff,#2f8bff);color:#fff;border-radius:12px;padding:10px 6px;font:800 13px/1.2 inherit;cursor:pointer;box-shadow:0 6px 14px rgba(0,104,255,.25)}
+.xem .c.het .hoi{background:#e2e8f0;color:#64748b;box-shadow:none}
+.xem .pkl{display:flex;flex-direction:column;gap:8px}
+.xem .pkr{background:#fff;border-radius:16px;padding:12px 14px;display:flex;justify-content:space-between;gap:10px;align-items:center;box-shadow:0 4px 12px rgba(15,23,42,.06)}
+.xem .pkr b{font-size:14px}.xem .pkr small{display:block;color:#9a3412;font-weight:700;font-size:12px;margin-top:2px}.xem .pkr .g{font-weight:900;color:var(--do2);white-space:nowrap}
+.xem .trong{color:#64748b;padding:24px 0;text-align:center}
+.xem .cuoi{text-align:center;font-size:12px;color:#64748b;padding:8px 16px}
+.xem .goi{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));padding:8px;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:20px;box-shadow:0 12px 30px rgba(15,23,42,.18);display:flex;gap:8px;max-width:616px;margin:0 auto;z-index:6}
+.xem .goi a,.xem .goi button{flex:1;padding:12px 6px;font-size:15px;border-radius:14px}
+.xem .goi .goi1{background:#16a34a}
+.xem .toast{position:fixed;left:50%;bottom:96px;transform:translate(-50%,20px);background:#14171b;color:#fff;font-size:14px;font-weight:600;padding:10px 16px;border-radius:12px;opacity:0;transition:.2s;pointer-events:none;z-index:60;max-width:92vw;text-align:center}
 .xem .toast.on{opacity:1;transform:translate(-50%,0)}
 </style></head><body>
 <div id="sua">
@@ -160,7 +166,14 @@ var esc = function (s) { return String(s || '').replace(/[&<>"]/g, function (c) 
 var anhCua = function (m) { return m ? (m.file ? '/' + m.file : (m.anh || '')) : ''; };
 var anhId = function (i) { var r = /^\/kho\/anh\/(.+)\.webp$/.exec(i || ''); return r ? r[1] : i; };
 var anhUrl = function (i) { return !i ? '' : /^(https?:|\/)/.test(i) ? i : '/kho/anh/' + i + '.webp'; };
-function giaSP(x) { var ny = x.ny || x.gb, gb = x.gb || x.ny; return { ny: ny, gb: gb, giam: Math.max(0, ny - gb) }; }
+function giaSP(x) { var gb = x.gb || x.ny || 0, ny = Math.max(x.ny || 0, x.goc || 0); if (ny <= gb) ny = gb; return { ny: ny, gb: gb, giam: Math.max(0, ny - gb) }; }
+function kmList(x) { return x.km && x.km.length ? x.km : x.k ? String(x.k).split(/\s*·\s*/).filter(Boolean) : []; }
+/* 29/10: giá niêm yết theo Thế Giới Di Động (robot 6h sáng → kho/gia-tgdd.json) — khóa khớp tên giữ y hệt app */
+var TGJ = null, TG2 = {};
+function tgKey(s) { s = String(s || '').toLowerCase().replace(/^điện thoại\s+/, '').replace(/^samsung\s+(?=galaxy)/, '').replace(/^xiaomi\s+(?=redmi|poco)/, '').replace(/\bmoto\s+/g, '').replace(/\s+-\s+.*$/, '').replace(/(\d)\+(\d)/g, '$1/$2').replace(/\+/g, 'plus'); var m = s.match(/\d+\s*(?:gb|tb)?\s*\/\s*\d+\s*(?:gb|tb)?|\d+\s*(?:gb|tb)/); if (m) s = s.slice(0, m.index + m[0].length); return s.replace(/\b[45]g\b/g, '').replace(/gb/g, '').replace(/[^a-z0-9/]/g, ''); }
+function tgNap(j) { TGJ = j || { gia: {} }; var c = {}; Object.keys(TGJ.gia || {}).forEach(function (k) { var k2 = k.replace(/(\d+)\/(\d+)$/, '$2'); (c[k2] = c[k2] || []).push(TGJ.gia[k]); }); Object.keys(c).forEach(function (k) { if (c[k].length === 1) TG2[k] = c[k][0]; }); }
+function tgCua(ten) { if (!TGJ) return null; var k = tgKey(ten); return (TGJ.gia || {})[k] || TG2[k] || TG2[k.replace(/(\d+)\/(\d+)$/, '$2')] || null; }
+var gk = function (t) { return String(t || '').replace(/\s+-\s+[^-]+$/, '').trim(); };
 function u8b64(u) { var s = ''; for (var i = 0; i < u.length; i++) s += String.fromCharCode(u[i]); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
 function b64u8(s) { s = s.replace(/-/g, '+').replace(/_/g, '/'); var b = atob(s), u = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; }
 function nen(o) {
@@ -189,16 +202,18 @@ function veXem(d) {
   var conHang = d.m.filter(function (m) { return m.q !== 0; }), tongMay = d.m.reduce(function (s, m) { return s + (m.q > 0 ? m.q : 0); }, 0);
   function trongKhuc(m, k) { var g = giaSP(m).gb, r = KHUC.find(function (z) { return z[0] === k; }); return k === 'all' || (g >= r[2] && g < r[3]); }
   function the(m) {
-    var g = giaSP(m), het = m.q === 0;
-    return '<div class="c' + (het ? ' het' : '') + '"><div class="anh">' + (g.giam ? '<span class="tag">−' + gon(g.giam) + '</span>' : '') + (m.f ? '<span class="sao">🔥 Bán chạy</span>' : '') +
+    var g = giaSP(m), het = m.q === 0, pc = g.giam && g.ny ? Math.round(g.giam / g.ny * 100) : 0, K = kmList(m).slice(0, 3);
+    return '<div class="c' + (het ? ' het' : '') + '"><div class="anh">' + (pc ? '<span class="tag">−' + pc + '%</span>' : '') + (m.f ? '<span class="sao">🔥 Bán chạy</span>' : '') +
       (m.i ? '<img src="' + esc(anhUrl(m.i)) + '" alt="" loading="lazy">' : '<div class="noimg">📱</div>') + '</div>' +
       '<div class="hg">' + esc(TEN[m.h] || '') + '</div><div class="n">' + esc(m.t) + '</div><div class="dl">' + esc([m.d, m.c].filter(Boolean).join(' · ')) + '</div>' +
-      '<div class="cu">' + (g.giam ? vnd(g.ny) : '&nbsp;') + '</div><div class="g">' + (g.gb ? vnd(g.gb) : 'Liên hệ') + '</div>' +
-      (m.k ? '<div class="km">🎁 ' + esc(m.k) + '</div>' : '') +
-      '<div class="sl">' + (het ? 'Tạm hết hàng' : m.q > 0 ? '✓ Còn hàng' : '') + '</div>' +
-      (d.p ? '<button type="button" class="hoi" data-hoi="' + d.m.indexOf(m) + '">💬 Hỏi máy này</button>' : '') + '</div>';
+      '<div class="gia">' + (g.giam ? '<div class="cu">' + vnd(g.ny) + '</div>' : '') + '<div class="g">' + (g.gb ? vnd(g.gb) : 'Liên hệ') + '</div>' + (g.giam >= 50000 ? '<div class="tk">Tiết kiệm ' + gon(g.giam) + '</div>' : '') + '</div>' +
+      (K.length ? '<div class="kms">' + K.map(function (t) { return '<div class="km">🎁 ' + esc(t) + '</div>'; }).join('') + '</div>' : '') +
+      '<div class="sl">' + (het ? 'Tạm hết hàng' : 'Còn hàng') + '</div>' +
+      (d.p ? '<button type="button" class="hoi" data-hoi="' + d.m.indexOf(m) + '">💬 Hỏi giá qua Zalo</button>' : '') + '</div>';
   }
-  function bangPK(L) { return '<table><tr><th>Phụ kiện · linh kiện</th><th>Giá</th><th>Khuyến mãi</th></tr>' + L.map(function (r) { return '<tr><td>' + esc(r.t) + '</td><td class="g">' + (r.g ? vnd(r.g) : 'Liên hệ') + '</td><td>' + esc(r.k || '') + '</td></tr>'; }).join('') + '</table>'; }
+  function hotCard(m) { var g = giaSP(m), K = kmList(m); return '<div class="hc" data-hoi="' + d.m.indexOf(m) + '">' + (m.i ? '<img src="' + esc(anhUrl(m.i)) + '" alt="">' : '<div class="noimg" style="width:78px;height:92px">📱</div>') +
+    '<div><div class="n">' + esc(m.t) + (m.d ? ' ' + esc(m.d) : '') + '</div>' + (g.giam ? '<div class="cu">' + vnd(g.ny) + '</div>' : '') + '<div class="g">' + (g.gb ? vnd(g.gb) : 'Liên hệ') + '</div>' + (K.length ? '<div class="k">🎁 ' + esc(K.join(' · ')) + '</div>' : '') + '</div></div>'; }
+  function bangPK(L) { return '<div class="tieu">🎧 Phụ kiện · linh kiện <small>' + L.length + ' món</small></div><div class="pkl">' + L.map(function (r) { return '<div class="pkr"><div><b>' + esc(r.t) + '</b>' + (r.k ? '<small>🎁 ' + esc(r.k) + '</small>' : '') + '</div><span class="g">' + (r.g ? vnd(r.g) : 'Liên hệ') + '</span></div>'; }).join('') + '</div>'; }
   function ve() {
     var ds = x.querySelector('.ds'), kh = x.querySelector('.khuc'), q = tu.trim().toLowerCase();
     [].forEach.call(x.querySelectorAll('.tabs button'), function (b) { b.classList.toggle('on', !q && b.dataset.t === tab); });
@@ -213,12 +228,14 @@ function veXem(d) {
     ds.innerHTML = '<div class="tieu">' + tieu + ' <small>' + L.length + ' mẫu</small></div>' +
       (L.length ? '<div class="luoi">' + L.map(the).join('') + '</div>' : '<div class="trong">Chưa có máy trong mức giá này.</div>') + (pk.length ? bangPK(pk) : '');
   }
-  x.innerHTML = '<div class="xem"><div class="top"><small class="nho">' + esc(d.t || 'Bảng giá hôm nay') + ' · cập nhật ' + esc(d.n || '') + '</small><b>' + esc(d.s || '') + '</b><small>' + esc(d.a || '') + '</small>' +
-    '<div class="so"><span><b>' + conHang.length + '</b> mẫu còn hàng</span><span><b>' + HANGS.length + '</b> hãng</span></div>' +
+  var HOT = d.m.filter(function (m) { return m.q !== 0 && (giaSP(m).giam || kmList(m).length); }).sort(function (a, b) { return giaSP(b).giam - giaSP(a).giam; }).slice(0, 8);
+  x.innerHTML = '<div class="xem"><div class="top"><span class="nho">🏷 ' + esc(d.t || 'Bảng giá hôm nay') + ' · ' + esc(d.n || '') + '</span><b>' + esc(d.s || '') + '</b><span class="dc">' + esc(d.a || '') + '</span>' +
+    '<div class="so"><span><b>' + conHang.length + '</b> mẫu còn hàng</span><span><b>' + HANGS.length + '</b> hãng</span>' + (HOT.length ? '<span>🔥 <b>' + HOT.length + '</b> máy đang khuyến mãi</span>' : '') + '</div>' +
     '<input class="timx" placeholder="🔍 Tìm máy: Reno, A17, iPhone 17…" autocomplete="off"></div>' +
-    '<div class="tabs">' + tabs.map(function (h) { return '<button data-t="' + h + '">' + (h === 'PK' ? 'Phụ kiện' : h === 'NB' ? '🔥 Bán chạy' : TEN[h]) + '</button>'; }).join('') + '</div>' +
-    '<div class="khuc"></div><div class="ds"></div><div class="cuoi">Giá có thể thay đổi theo ngày · Bảng giá tạo bằng Shop Gọn</div>' +
-    (d.p ? '<div class="goi"><a class="nut" href="tel:' + esc(d.p.replace(/\s/g, '')) + '">📞 Gọi</a><a class="nut zalo" href="https://zalo.me/' + esc(d.p.replace(/\D/g, '')) + '" target="_blank">💬 Zalo</a><button class="nut phu" id="xcopy">🔗 Gửi bạn</button></div>' : '') + '</div>';
+    (HOT.length ? '<div class="hot"><h4>🔥 Khuyến mãi hôm nay</h4><div class="ngang">' + HOT.map(hotCard).join('') + '</div></div>' : '') +
+    '<div class="tabs">' + tabs.map(function (h) { return '<button data-t="' + h + '">' + (h === 'PK' ? '🎧 Phụ kiện' : h === 'NB' ? '🔥 Bán chạy' : TEN[h]) + '</button>'; }).join('') + '</div>' +
+    '<div class="khuc"></div><div class="ds"></div><div class="cuoi">Giá niêm yết tham khảo Thế Giới Di Động · giá có thể thay đổi theo ngày<br>Bảng giá tạo bằng Shop Gọn · shopgon.vn</div>' +
+    (d.p ? '<div class="goi"><a class="nut goi1" href="tel:' + esc(d.p.replace(/\s/g, '')) + '">📞 Gọi shop</a><a class="nut zalo" href="https://zalo.me/' + esc(d.p.replace(/\D/g, '')) + '" target="_blank">💬 Zalo</a><button class="nut phu" id="xcopy">🔗 Gửi bạn</button></div>' : '') + '</div>';
   [].forEach.call(x.querySelectorAll('.tabs button'), function (b) { b.onclick = function () { tab = b.dataset.t; khuc = 'all'; tu = ''; x.querySelector('.timx').value = ''; ve(); window.scrollTo(0, x.querySelector('.tabs').offsetTop - 1 > window.scrollY ? window.scrollY : x.querySelector('.tabs').offsetTop); }; });
   x.querySelector('.timx').oninput = function (e) { tu = e.target.value; khuc = 'all'; ve(); };
   var xc = $('xcopy'); if (xc) xc.onclick = function () { copyLink(LINK || location.href, xc); };
@@ -246,7 +263,8 @@ function batDau() {
   var tuDongLay = /[?&]tu=app/.test(location.search) || ((DEMO || XEM_NGAY) && !DS.length) || XEM_NGAY;
   Promise.all([
     fetch('/kho/kho-may.json?v=' + Date.now()).then(function (r) { return r.json(); }).then(function (j) { KHO = j; }).catch(function () { }),
-    fetch('/kho/demo-ton.json?v=' + Date.now()).then(function (r) { return r.json(); }).then(function (j) { DEMO_TON = j; }).catch(function () { })
+    fetch('/kho/demo-ton.json?v=' + Date.now()).then(function (r) { return r.json(); }).then(function (j) { DEMO_TON = j; }).catch(function () { }),
+    fetch('/kho/gia-tgdd.json?v=' + new Date().toISOString().slice(0, 13)).then(function (r) { return r.json(); }).then(tgNap).catch(function () { tgNap(null); })
   ]).then(function () { vaAnh(DS); veHang(); veDS(); if (tuDongLay && KHO) layTon(true); else if (XEM_NGAY) capNhat(); });
   veHang(); vePK();
   $('tim').oninput = goiY; $('tim').onfocus = goiY;
@@ -301,7 +319,7 @@ function veDS() {
       var x = DS[+el.dataset.i], k = el.dataset.k;
       if (k === 'ny' || k === 'gb') { x[k] = so(el.value); el.value = x[k] ? x[k].toLocaleString('vi-VN') : ''; }
       else if (k === 'q') { x.q = el.value === '' ? null : so(el.value); }
-      else if (k === 'k') x.k = el.value;
+      else if (k === 'k') { x.k = el.value; x.km = null; }
       else if (k === 'd') x.d = el.value;
       else { var s = tim(x), m = s && s.mau[+el.value]; if (m) { x.c = m.ten; x.i = anhCua(m); el.closest('.dong').querySelector('img').src = x.i; } }
       capNhat();
@@ -352,16 +370,21 @@ function layTon(tuDong) {
   if (!KHO) { alert('Kho máy chưa tải xong, đợi 2 giây rồi bấm lại.'); return; }
   if (!tuDong && (DS.length || PK.some(function (x) { return x.t; })) && !confirm('Thay bảng hiện tại bằng tồn kho trong app?')) return;
   var nhom = {};
-  r.db.may.filter(function (m) { return m.tt === 'ton'; }).forEach(function (m) { var h = hangCua(m); if (!h) return; var k = h + '|' + m.ten; (nhom[k] = nhom[k] || { h: h, ten: m.ten, q: 0, gb: 0 }); nhom[k].q++; nhom[k].gb = Math.max(nhom[k].gb, m.giaBan || 0); });
-  /* 28/10: khuyến mãi cài ở app (tab Kho › Khuyến mãi) → website hiện giá gốc gạch + giá sau KM + quà tặng */
-  var KMA = ((r.db.shop && r.db.shop.km) || []).filter(function (k) { return !k.den || k.den >= new Date(Date.now() + 7 * 36e5).toISOString().slice(0, 10); });
-  function kmGia(sp, g) { KMA.forEach(function (k) { if (k.sp !== sp || !g) return; if (k.loai === 'giam') g -= k.gt; else if (k.loai === 'pct') g -= Math.round(g * k.gt / 100 / 1000) * 1000; }); return Math.max(0, g); }
-  function kmQua(sp) { return KMA.filter(function (k) { return k.sp === sp && k.loai === 'tang'; }).map(function (k) { return 'Tặng ' + (k.tangTen || 'quà'); }).join(' + '); }
-  DS = Object.keys(nhom).map(function (k) { var x = nhom[k], kk = khopKho(x.h, x.ten), mau = kk.sp && kk.sp.mau && kk.sp.mau[0]; return { h: x.h, t: kk.ten, d: kk.dl, c: mau ? mau.ten : '', i: anhCua(mau), ny: x.gb, gb: kmGia('m|' + x.ten, x.gb), q: x.q, k: kmQua('m|' + x.ten) }; })
+  /* 29/10: gộp mọi màu của 1 mẫu (Tên - Màu) thành 1 thẻ; giá gốc = giá shop, giá khách trả = sau giảm; giá niêm yết = TGDD, không có thì giá shop tự điền */
+  r.db.may.filter(function (m) { return m.tt === 'ton'; }).forEach(function (m) { var h = hangCua(m); if (!h) return; var g = gk(m.ten), k = h + '|' + g; var x = (nhom[k] = nhom[k] || { h: h, ten: g, q: 0, gb: 0, mau: [], ds: [] }); x.q++; x.gb = Math.max(x.gb, m.giaBan || 0); if (x.ds.indexOf(m.ten) < 0) x.ds.push(m.ten); var c = /\s+-\s+([^-]+)$/.exec(m.ten); if (c && x.mau.indexOf(c[1].trim()) < 0) x.mau.push(c[1].trim()); });
+  var homNay = new Date(Date.now() + 7 * 36e5).toISOString().slice(0, 10);
+  var KMA = ((r.db.shop && r.db.shop.km) || []).filter(function (k) { return !k.den || k.den >= homNay; });
+  function kmCua(sps) { return KMA.filter(function (k) { return sps.indexOf(k.sp) >= 0 || (k.sp.indexOf('m|') === 0 && sps.indexOf('g|' + gk(k.sp.slice(2))) >= 0); }); }
+  function kmGia(L, g) { L.forEach(function (k) { if (!g) return; if (k.loai === 'giam') g -= k.gt; else if (k.loai === 'pct') g -= Math.round(g * k.gt / 100 / 1000) * 1000; }); return Math.max(0, g); }
+  function kmChip(k) { return k.loai === 'giam' ? 'Giảm ' + gon(k.gt) : k.loai === 'pct' ? 'Giảm ' + k.gt + '%' : k.loai === 'tg' ? 'Trả góp 0%' : k.loai === 'txt' ? (k.txt || '') : 'Tặng ' + (k.tangTen || 'quà'); }
+  var NYS = (r.db.shop && r.db.shop.ny) || {};
+  DS = Object.keys(nhom).map(function (k) { var x = nhom[k], kk = khopKho(x.h, x.ten), mau = kk.sp && kk.sp.mau && kk.sp.mau[0];
+      var L = kmCua(['g|' + x.ten].concat(x.ds.map(function (t) { return 'm|' + t; }))), cuoi = kmGia(L, x.gb), tg = tgCua(x.ten), ny = tg && tg.ny ? tg.ny : (NYS[x.ten] || 0);
+      return { h: x.h, t: kk.ten, d: kk.dl, c: x.mau.length > 1 ? x.mau.length + ' màu' : (x.mau[0] || (mau ? mau.ten : '')), i: anhCua(mau), ny: ny, goc: cuoi < x.gb ? x.gb : 0, gb: cuoi, q: x.q, km: L.map(kmChip).filter(Boolean), k: L.map(kmChip).filter(Boolean).join(' · '), tg: tg && tg.ny ? 1 : 0 }; })
     .sort(function (a, b) { return b.q - a.q; });
   var dem = {}; DS.forEach(function (x) { dem[x.h] = (dem[x.h] || 0) + 1; if (dem[x.h] <= 2) x.f = true; });
-  if (r.key !== 'shopgon_v1' && DEMO_TON && DEMO_TON.km) { var tenG = {}; Object.keys(nhom).forEach(function (k, i) { tenG[k] = 1; }); DS.forEach(function (x) { Object.keys(DEMO_TON.km).forEach(function (t) { var kk = khopKho(x.h, t); if (kk.ten === x.t && (!kk.dl || kk.dl === x.d)) { x.ny = DEMO_TON.km[t][0]; x.k = DEMO_TON.km[t][1]; } }); }); }
-  PK = (r.db.hang || []).filter(function (x) { return /pk|sua/.test(x.nhom) && (x.sl || 0) > 0; }).map(function (x) { return { t: x.ten, g: kmGia('h|' + x.id, x.giaBan || 0), k: kmQua('h|' + x.id) }; });
+  if (r.key !== 'shopgon_v1' && DEMO_TON && DEMO_TON.km) { var tenG = {}; Object.keys(nhom).forEach(function (k, i) { tenG[k] = 1; }); DS.forEach(function (x) { Object.keys(DEMO_TON.km).forEach(function (t) { var kk = khopKho(x.h, t); if (kk.ten === x.t && (!kk.dl || kk.dl === x.d)) { x.ny = x.ny || DEMO_TON.km[t][0]; if (!x.km.length) { x.k = DEMO_TON.km[t][1]; x.km = kmList({ k: x.k }); } } }); }); }
+  PK = (r.db.hang || []).filter(function (x) { return /pk|sua/.test(x.nhom) && (x.sl || 0) > 0; }).map(function (x) { var L = kmCua(['h|' + x.id]); return { t: x.ten, g: kmGia(L, x.giaBan || 0), k: L.map(kmChip).filter(Boolean).join(' · ') }; });
   if (r.db.shop && r.db.shop.ten && !$('shop').value) $('shop').value = r.db.shop.ten;
   if (r.key !== 'shopgon_v1' && r.db.shop) { if (!$('dc').value && r.db.shop.dc) $('dc').value = r.db.shop.dc; if (!$('dt').value && r.db.shop.dt) $('dt').value = r.db.shop.dt; }
   var tong = DS.reduce(function (s, x) { return s + x.q; }, 0);
@@ -381,7 +404,7 @@ function capNhat() {
   clearTimeout(HEN);
   HEN = setTimeout(function () {
     var d = { t: tt.t, s: tt.s, a: tt.a, p: tt.p, n: new Date().toLocaleDateString('vi-VN'),
-      m: DS.map(function (x) { var o = { h: x.h, t: x.t, d: x.d, c: x.c, i: anhId(x.i), ny: x.ny, gb: x.gb }; if (x.q !== null && x.q !== undefined) o.q = x.q > 0 ? 1 : 0; /* khach chi biet con/het, khong lo so ton */ if (x.k) o.k = x.k; if (x.f) o.f = 1; return o; }),
+      m: DS.map(function (x) { var o = { h: x.h, t: x.t, d: x.d, c: x.c, i: anhId(x.i), ny: x.ny, gb: x.gb }; if (x.goc) o.goc = x.goc; if (x.km && x.km.length) o.km = x.km; if (x.q !== null && x.q !== undefined) o.q = x.q > 0 ? 1 : 0; /* khach chi biet con/het, khong lo so ton */ if (x.k) o.k = x.k; if (x.f) o.f = 1; return o; }),
       k: pk.map(function (r) { var o = { t: r.t, g: r.g }; if (r.k) o.k = r.k; return o; }) };
     LINK_HUA = nen(d).then(function (z) { LINK = (DS.length || pk.length) ? location.origin + location.pathname + '?d=' + z : ''; $('mo').href = LINK || '#'; if (XEM_NGAY && DS.length) { XEM_NGAY = false; veXem(d); } return LINK; });
   }, 250);

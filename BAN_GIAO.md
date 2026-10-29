@@ -118,3 +118,12 @@ App quản lý bán hàng cho shop điện thoại (shopgon.vn), chạy trên đ
 - Khuyến mãi lưu `db.shop.km` [{id, sp:'m|tên máy'|'h|id', ten, loai giam|pct|tang, gt, tang, tangTen, den}]; bán hàng `kmGan()` tự gắn dòng KM (kmOf ↔ kid; bỏ món là bỏ KM). Nhân viên nhận KM qua nvSync (shop.km). Nhân viên gặp máy chưa có giá → báo nhờ chủ shop đặt giá.
 - Website `bg/` layTon: giá sau KM (gb) + giá gốc gạch (ny) + "Tặng …" (k).
 - Bộ test cập nhật 55/55 (thêm: không còn ô giá bán, sửa giá ở Kho, KM tự gắn, bỏ máy bỏ KM).
+
+## 15. Phiên 29/10 — KHUYẾN MÃI = GIAO DIỆN WEB KHÁCH + GIÁ NIÊM YẾT TGDD (anh Thái chốt)
+- Tab **Kho › 🎁 Khuyến mãi** (`renderKmTab`) giờ là **giao diện web khách xem**: thẻ theo mẫu (gộp mọi màu, `gk()` bỏ " - Màu"), mỗi thẻ 2 trường: **Giá niêm yết** (TGDD, nhãn vàng "TGDD"; máy TGDD không có → ô trống shop tự điền, lưu `db.shop.ny[tên mẫu]`) + **Khuyến mãi** (chip + nút **＋ KM** mở bảng dưới `renderKmSheet`: giảm tiền · giảm % · tặng phụ kiện · trả góp 0% (`tg`) · khác (`txt`)). "Tồn N" chỉ shop thấy. Giá bán vẫn sửa ở tab 📦 Kho.
+- KM mới lưu `sp:'g|<tên mẫu>'` (áp mọi màu); `kmCua()` vẫn nhận `m|` cũ. `kmGan` chỉ gắn dòng tiền cho giam/pct/tang; tg/txt chỉ hiện nhãn.
+- **Robot giá TGDD**: `kho/gia-tgdd.mjs` + `.github/workflows/gia-tgdd.yml` (cron `0 23 * * *` = 06:00 VN). Playwright mở /dtdd bấm "Xem thêm" tới hết (173 máy 29/10) → fetch từng trang máy + các bản dung lượng → niêm yết = giá gạch `<del>` hoặc giá đang bán. 0đ, KHÔNG dùng Gemini (đọc thẳng HTML). Lấy < 60 mẫu thì giữ bản cũ. Ghi `kho/gia-tgdd.json` {capNhat, n, gia:{khóa:{t,ny,gb,u}}}.
+- **Khóa khớp tên `tgKey()`** — giữ y hệt ở 3 nơi: kho/gia-tgdd.mjs · app/index.html · bg/index.html (bỏ "Điện thoại", "Samsung" trước Galaxy, "Xiaomi" trước Redmi/POCO, "Moto", màu, 5G/4G, "GB"; cắt sau dung lượng; "8+128"→"8/128", "S26+"→"s26plus"). Dự phòng khớp chỉ theo ROM khi duy nhất (TG2).
+- Bản đầu `kho/gia-tgdd.json` (275 mẫu) dựng từ Chrome Mac mini 29/10 bằng đúng logic robot (tên = khóa, chưa có link) — robot 6h sáng 30/10 ghi lại đầy đủ. Demo khớp 35/38 mẫu; kho-may đang bán 275/459 (phần còn lại TGDD không bán → shop tự điền).
+- **Trang khách `bg/` thiết kế lại** (`veXem`): header gradient + ô tìm, dải "🔥 Khuyến mãi hôm nay" cuộn ngang, tab dạng pill dính trên, thẻ máy bo 20px: badge −%, giá gạch niêm yết + giá sau KM + "Tiết kiệm", chip KM, chấm Còn hàng, nút "Hỏi giá qua Zalo"; phụ kiện dạng thẻ; thanh Gọi/Zalo/Gửi bạn nổi. Link `?d=` thêm `goc` (giá trước KM) + `km` (mảng chip); link cũ vẫn mở được.
+- Test `_tam/test-toan-bo.py` 57/57.

@@ -1,0 +1,41 @@
+name: Gia niem yet TGDD (6h sang moi ngay)
+
+# 29/10/2026 anh Thai: gia niem yet trong Shop Gon lay theo Thế Giới Di Động, 6h sang quet 1 lan.
+# Robot doc thang trang TGDD (0d, khong dung AI). Ket qua: kho/gia-tgdd.json
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 23 * * *'   # 23:00 UTC = 06:00 gio VN
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gia-tgdd
+  cancel-in-progress: false
+
+jobs:
+  quet:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Cai trinh duyet robot
+        run: |
+          npm init -y >/dev/null
+          npm i playwright@1.48.2
+          npx playwright install --with-deps chromium
+      - name: Quet gia TGDD
+        run: node kho/gia-tgdd.mjs
+      - name: Luu ket qua
+        run: |
+          git config user.name "robot-gia-tgdd"
+          git config user.email "robot@shopgon.vn"
+          git add kho/gia-tgdd.json
+          git diff --cached --quiet && echo "Khong doi" && exit 0
+          git commit -m "Gia TGDD: cap nhat $(TZ=Asia/Ho_Chi_Minh date +%F)"
+          git pull --rebase origin main
+          git push origin HEAD:main
