@@ -240,7 +240,7 @@ function veXem(d) {
     '<input class="timx" placeholder="🔍 Tìm máy: Reno, A17, iPhone 17…" autocomplete="off"></div>' +
     (HOT.length ? '<div class="hot"><h4>🎁 Đang có khuyến mãi</h4><div class="ngang">' + HOT.map(hotCard).join('') + '</div></div>' : '') +
     '<div class="tabs">' + tabs.map(function (h) { return '<button data-t="' + h + '">' + (h === 'PK' ? '🎧 Phụ kiện' : h === 'NB' ? '🔥 Bán chạy' : TEN[h]) + '</button>'; }).join('') + '</div>' +
-    '<div class="khuc"></div><div class="ds"></div><div class="cuoi">Giá niêm yết tham khảo Thế Giới Di Động · giá có thể thay đổi theo ngày<br>Bảng giá tạo bằng Shop Gọn · shopgon.vn</div>' +
+    '<div class="khuc"></div><div class="ds"></div><div class="cuoi">Giá có thể thay đổi theo ngày · liên hệ shop để có giá tốt nhất<br>Bảng giá tạo bằng Shop Gọn · shopgon.vn</div>' +
     (d.p ? '<div class="goi"><a class="nut goi1" href="tel:' + esc(d.p.replace(/\s/g, '')) + '">📞 Gọi shop</a><a class="nut zalo" href="https://zalo.me/' + esc(d.p.replace(/\D/g, '')) + '" target="_blank">💬 Zalo</a><button class="nut phu" id="xcopy">🔗 Gửi bạn</button></div>' : '') + '</div>';
   /* 29/10: chủ shop mở từ app (Kho › Khuyến mãi) → vào thẳng trang khách, có thanh nhỏ Về app + Gửi link */
   if (/[?&]tu=app/.test(location.search) && !new URLSearchParams(location.search).get('d')) {
@@ -392,7 +392,7 @@ function layTon(tuDong) {
   function kmChip(k) { return k.loai === 'giam' ? 'Giảm ' + gon(k.gt) : k.loai === 'pct' ? 'Giảm ' + k.gt + '%' : k.loai === 'tg' ? 'Trả góp 0%' : k.loai === 'txt' ? (k.txt || '') : 'Tặng ' + (k.tangTen || 'quà'); }
   var NYS = (r.db.shop && r.db.shop.ny) || {};
   DS = Object.keys(nhom).map(function (k) { var x = nhom[k], kk = khopKho(x.h, x.ten), mau = kk.sp && kk.sp.mau && kk.sp.mau[0];
-      var L = kmCua(['g|' + x.ten].concat(x.ds.map(function (t) { return 'm|' + t; }))), cuoi = kmGia(L, x.gb), tg = tgCua(x.ten), ny = tg && tg.ny ? tg.ny : (NYS[x.ten] || 0);
+      var L = kmCua(['g|' + x.ten].concat(x.ds.map(function (t) { return 'm|' + t; }))), cuoi = kmGia(L, x.gb), tg = tgCua(x.ten), ny = NYS[x.ten] || (tg && tg.ny ? tg.ny : 0);
       /* 29/10 anh Thái: giá trên web = GIÁ NIÊM YẾT (TGDD, không có thì giá shop tự điền, cuối cùng mới tới giá bán shop) — KHÔNG trừ khuyến mãi; khuyến mãi chỉ liệt kê bên dưới */
       return { h: x.h, t: kk.ten, d: kk.dl, c: x.mau.length > 1 ? x.mau.length + ' màu' : (x.mau[0] || (mau ? mau.ten : '')), i: anhCua(mau) || (tg && tg.a) || '', ny: 0, gb: ny || x.gb, q: x.q, km: L.map(kmChip).filter(Boolean), k: L.map(kmChip).filter(Boolean).join(' · '), tg: tg && tg.ny ? 1 : 0 }; })
     .sort(function (a, b) { return b.q - a.q; });

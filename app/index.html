@@ -272,7 +272,11 @@ body.nvmode nav.tabs button[data-v=add],body.nvmode nav.tabs button[data-v=stock
 .whg{font-size:10px;font-weight:800;color:#0f766e;text-transform:uppercase;letter-spacing:.06em}
 .wn{font-weight:800;font-size:13px;line-height:1.25}
 .wsl{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:11px}.wok{color:#15803d;font-weight:800}.wown{color:#7b8a87;background:#f1f4f3;border-radius:6px;padding:0 6px;font-weight:700}
-.wny{display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:11.5px;color:#7b8a87;min-height:22px}.wny s{color:#94a3a0}
+.wny{display:flex;align-items:center;justify-content:space-between;gap:4px;white-space:nowrap;font-size:11.5px;color:#7b8a87;min-height:22px}.wny s{color:#94a3a0}
+.wadj{display:flex;gap:6px;margin-top:4px}.wadj button{flex:1;height:30px;border:1.5px solid #d5e4e1;background:#fff;border-radius:9px;font-size:12.5px;font-weight:800;color:#0f766e;padding:0}
+.wpr{display:block;width:100%;border:0;background:none;color:#e11d48;font-weight:900;font-size:17px;padding:2px 0;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wnyin{width:100%;padding:6px 8px;font-weight:900;color:#e11d48;border-radius:9px;font-size:16px}
+.wauto{font-style:normal;font-size:11px;color:#94a3a0}.wreset{white-space:nowrap;flex:none;border:0;background:#fff7ed;color:#c2410c;font-weight:800;font-size:11px;border-radius:6px;padding:2px 6px}
 .wtg{background:#ffd400;color:#1f2937;font-size:10px;font-weight:900;border-radius:5px;padding:1px 5px}
 .wnyi{display:flex;flex-direction:column;gap:2px;font-size:11px;color:#7b8a87;width:100%}.wnyi small{font-size:10px}.wnyi input{padding:6px 8px;font-size:12px;border-radius:8px}
 .wgb{font-size:16.5px;font-weight:900;color:#e11d48;line-height:1.2}.wred{color:#e11d48}
@@ -892,7 +896,7 @@ let TG=null,TGload=null;const TG2={};
 function tgLoad(){if(TG||TGload)return TGload||Promise.resolve();TGload=fetch('/kho/gia-tgdd.json?v='+new Date().toISOString().slice(0,13)).then(r=>r.json()).then(j=>{TG=j||{gia:{}};const c={};Object.entries(TG.gia||{}).forEach(([k,v])=>{const k2=k.replace(/(\d+)\/(\d+)$/,'$2');(c[k2]=c[k2]||[]).push(v)});Object.entries(c).forEach(([k,v])=>{if(v.length===1)TG2[k]=v[0]})}).catch(()=>{TG={gia:{}}});return TGload}
 function tgCua(ten){if(!TG)return null;const k=tgKey(ten);return (TG.gia||{})[k]||TG2[k]||TG2[k.replace(/(\d+)\/(\d+)$/,'$2')]||null}
 /* giá niêm yết của 1 mẫu: TGDD trước, không có thì giá shop tự điền */
-function nyCua(ten){const t=tgCua(ten);if(t&&t.ny)return {v:t.ny,tg:1};const v=(db.shop.ny||{})[gk(ten)];return v?{v,tg:0}:{v:0,tg:0}}
+function nyCua(ten){const v=(db.shop.ny||{})[gk(ten)];if(v)return {v,tg:0,sua:1};const t=tgCua(ten);if(t&&t.ny)return {v:t.ny,tg:1};return {v:0,tg:0}}
 const kmDs=()=>db.shop.km||(db.shop.km=[]);
 const kmOn=k=>!k.den||k.den>=todayIso();
 const kmChay=()=>(db.shop.km||[]).filter(kmOn);
@@ -900,7 +904,7 @@ const kmCua=sp=>{const g=sp.startsWith('m|')?'g|'+gk(sp.slice(2)):sp.startsWith(
 const kmTxt=k=>k.loai==='giam'?'giảm '+money(k.gt):k.loai==='pct'?'giảm '+k.gt+'%':k.loai==='tg'?'trả góp 0%':k.loai==='txt'?(k.txt||''):'tặng '+(k.tangTen||'quà');
 const kmChip=k=>k.loai==='giam'?'Giảm '+short(k.gt):k.loai==='pct'?'Giảm '+k.gt+'%':k.loai==='tg'?'Trả góp 0%':k.loai==='txt'?(k.txt||''):'Tặng '+(k.tangTen||'quà');
 const kmTru=(L,g)=>L.reduce((t,k)=>t+(k.loai==='giam'?+k.gt||0:k.loai==='pct'?Math.round(g*k.gt/100/1000)*1000:0),0);
-let kmLoai='giam',kmSheet=null,kmBrand='Tất cả';
+let kmLoai='giam',kmSheet=null,kmBrand='Tất cả',nyEdit=null;
 /* 29/10: khớp ẢNH theo mẫu máy, bỏ tên hãng/5G/dung lượng/màu (VD "Xiaomi Redmi Note 17 5G 6/256" = "REDMI Note 17") */
 function mKey(n){let s=String(n||'').toLowerCase().replace(/^điện thoại\s+/,'').replace(/\s+-\s+[^-]+$/,'').replace(/(\d)\+(\d)/g,'$1/$2').replace(/\+/g,'plus').replace(/\(([^)]*)\)/g,'$1');
   const m=s.match(/\d+\s*(?:gb|tb)\b|\d+\s*\/\s*\d+/);if(m)s=s.slice(0,m.index);
@@ -922,18 +926,19 @@ function renderKmTab(){
     return `<div class="wc2"><div class="wimg">${dau?`<span class="wpc">${esc(kmChip(dau))}</span>`:''}${img?`<img src="${esc(img)}" alt="" loading="lazy">`:'<span class="wno">📱</span>'}</div>
       <div class="whg">${esc(x.hang)}</div><div class="wn">${esc(x.k)}</div>
       <div class="wsl"><span class="wok">✓ Còn hàng</span><span class="wown" title="Chỉ shop thấy">Tồn ${x.ms.length}${mau>1?' · '+mau+' màu':''}</span></div>
-      <div class="wgb">${gia?money(gia):`<button type="button" class="wlink2" data-kt="kho">Chưa có giá · đặt ở tab Kho</button>`}</div>
-      <div class="wny">${ny.tg?`<span>Giá niêm yết</span><b class="wtg" title="Giá Thế Giới Di Động, cập nhật 6h sáng">TGDD</b>`:`<label class="wnyi">Giá niêm yết <small>(TGDD không có${!ny.v&&gb?' · đang hiện giá bán shop':''})</small><input data-nyg="${esc(x.k)}" inputmode="numeric" class="num" value="${ny.v?(+ny.v).toLocaleString('vi-VN'):''}" placeholder="Điền giá niêm yết"></label>`}</div>${chips('g|'+x.k,x.k)}</div>`};
+      <div class="wny"><span>Giá niêm yết</span>${ny.sua?`<button type="button" class="wreset" data-nyreset="${esc(x.k)}" title="Về giá tự cập nhật">↺ Về gốc</button>`:ny.tg?'<i class="wauto">tự cập nhật</i>':!ny.v&&gb?'<i class="wauto">đang lấy giá bán</i>':''}</div>
+      ${nyEdit===x.k?`<input class="wnyin num" data-nyg="${esc(x.k)}" inputmode="numeric" value="${gia?(+gia).toLocaleString('vi-VN'):''}" placeholder="Nhập giá">`:`<button type="button" class="wpr" data-nyedit="${esc(x.k)}" title="Bấm để gõ giá">${gia?money(gia):'Nhập giá'}</button>`}
+      <div class="wadj"><button type="button" data-nyd="-1" data-nyk="${esc(x.k)}" aria-label="Giảm 100 nghìn">− 100K</button><button type="button" data-nyd="1" data-nyk="${esc(x.k)}" aria-label="Tăng 100 nghìn">+ 100K</button></div>${chips('g|'+x.k,x.k)}</div>`};
   const tgLuc=TG&&TG.capNhat?new Date(TG.capNhat):null;
   $('v-stock').innerHTML=khoSeg()+`<div class="wtop"><small>👀 Giao diện khách xem · ghi khuyến mãi thẳng trên từng máy</small><b>${esc(db.shop.ten||'Shop của bạn')}</b>
-      <span>${L.length} mẫu còn hàng${tgLuc?` · giá niêm yết TGDD ${tgLuc.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})} ${tgLuc.toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit'})}`:''}</span>
+      <span>${L.length} mẫu còn hàng${tgLuc?` · giá niêm yết cập nhật ${tgLuc.toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit'})}`:''}</span>
       <a class="wopen" href="/bg/?tu=app&xem=1${DEMO?'&demo=1':''}" data-kgweb="1">🌐 Xem website như khách</a></div>
     ${(()=>{if(!L.length)return '<div class="empty">Kho chưa có máy. Nhập hàng trước, rồi quay lại đây ghi khuyến mãi.</div>';
       const hb=x=>BRANDS.includes(x.hang)?x.hang:'Khác',BB=BRANDS.filter(b=>L.some(x=>hb(x)===b));if(kmBrand!=='Tất cả'&&!BB.includes(kmBrand))kmBrand='Tất cả';
       const chipsB=`<div class="wbr">${['Tất cả',...BB].map(b=>`<button type="button" data-kmb="${esc(b)}" aria-pressed="${kmBrand===b}">${esc(b)} <small>${b==='Tất cả'?L.length:L.filter(x=>hb(x)===b).length}</small></button>`).join('')}</div>`;
       return chipsB+(kmBrand==='Tất cả'?BB:[kmBrand]).map(b=>`<h3 class="wsec">${esc(b)} <small>${L.filter(x=>hb(x)===b).length} mẫu</small></h3><div class="wgrid">${L.filter(x=>hb(x)===b).map(the).join('')}</div>`).join('')})()}
     ${H.length?`<div class="panel" style="margin-top:12px"><h2>🎧 Phụ kiện · hàng khác</h2><div class="list">${H.map(h=>{return `<div class="wrow"><div class="n"><b>${esc(h.ten)}</b><small><b class="wred">${h.giaBan?money(h.giaBan):'Chưa có giá'}</b> · <span class="wown">Tồn ${h.sl}</span></small>${chips('h|'+h.id,h.ten)}</div></div>`}).join('')}</div></div>`:''}
-    <p class="kgnote" style="margin:12px 4px">Khuyến mãi lưu là app <b>tự gắn vào đơn khi bán</b> (cả nhân viên). "Tồn" chỉ shop thấy — khách chỉ thấy Còn hàng / Hết hàng. Giá trên web = <b>giá niêm yết</b> (TGDD). Giá bán của shop sửa ở tab <b>📦 Kho</b> — khách không thấy.</p>
+    <p class="kgnote" style="margin:12px 4px">Khuyến mãi lưu là app <b>tự gắn vào đơn khi bán</b> (cả nhân viên). "Tồn" chỉ shop thấy — khách chỉ thấy Còn hàng / Hết hàng. Giá trên web = <b>giá niêm yết</b> (tự cập nhật mỗi sáng, bấm − / + để chỉnh). Giá bán của shop sửa ở tab <b>📦 Kho</b> — khách không thấy.</p>
     ${kmSheet?renderKmSheet():''}`}
 function renderKmSheet(){const hg=db.hang.filter(h=>h.sl>0).sort((a,b)=>a.ten.localeCompare(b.ten));const T=[['giam','💸 Giảm tiền'],['pct','％ Giảm %'],['tang','🎧 Tặng phụ kiện'],['tg','💳 Trả góp 0%'],['txt','✏️ Khác']];
   return `<div class="wsheet" data-kmx="1"><form id="fKm" class="wsbox" autocomplete="off"><h3>Thêm khuyến mãi</h3><p class="wst">${esc(kmSheet.ten)}</p>
@@ -961,7 +966,12 @@ document.addEventListener('submit',e=>{if(e.target.id!=='fKm')return;e.preventDe
   else{const v=parseMoney($('kmGt').value);if(!(v>0)){er.textContent='Nhập số giảm.';return}if(kmLoai==='pct'&&v>=100){er.textContent='Giảm % phải nhỏ hơn 100.';return}k.gt=v}
   kmDs().push(k);kmSheet=null;save();render();toast('Đã thêm khuyến mãi: '+kmChip(k))});
 /* giá niêm yết shop tự điền (máy TGDD không có) */
-document.addEventListener('change',e=>{const t=e.target;if(!t.dataset||t.dataset.nyg===undefined)return;const v=parseMoney(t.value);db.shop.ny=db.shop.ny||{};if(v>0)db.shop.ny[t.dataset.nyg]=v;else delete db.shop.ny[t.dataset.nyg];save();render();toast(v>0?'Đã lưu giá niêm yết '+money(v):'Đã bỏ giá niêm yết')});
+function nyDat(k,v){nyEdit=null;db.shop.ny=db.shop.ny||{};const t=tgCua(k);if(v>0&&!(t&&t.ny===v))db.shop.ny[k]=v;else delete db.shop.ny[k];save();render()}
+document.addEventListener('change',e=>{const t=e.target;if(!t.dataset||t.dataset.nyg===undefined)return;if(XEM){showKh();return}const v=parseMoney(t.value);nyDat(t.dataset.nyg,v);toast(v>0?'Đã lưu giá niêm yết '+money(v):'Đã bỏ giá shop chỉnh')});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-nyd],[data-nyreset],[data-nyedit]');if(!b)return;if(XEM){showKh();return}
+  if(b.dataset.nyedit!==undefined){nyEdit=b.dataset.nyedit;render();setTimeout(()=>{const i=document.querySelector('[data-nyg]');if(i){i.focus();i.select()}},30);return}
+  if(b.dataset.nyreset!==undefined){nyDat(b.dataset.nyreset,0);toast('Đã về giá niêm yết tự cập nhật');return}
+  const k=b.dataset.nyk,G=stock().filter(m=>gk(m.ten)===k),gb=Math.max(0,...G.map(m=>m.giaBan||0)),cur=nyCua(k).v||gb,v=Math.max(0,cur+(+b.dataset.nyd)*100000);nyDat(k,v)});
 /* tự gắn khuyến mãi khi thêm sản phẩm vào đơn */
 function kmGan(c,sp){const L=kmCua(sp);if(!L.length)return;c.kid=c.kid||uid();const sl=c.sl||1,ds=[];
   L.forEach(k=>{if(k.loai==='giam'){cart.push({type:'free',nhom:'km',ten:'🎁 KM '+c.ten+': giảm',gia:-k.gt*sl,von:0,sl:1,kmOf:c.kid});ds.push(kmTxt(k))}
@@ -1747,7 +1757,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261029-2100';let verLuc=0;
+const BUILD='20261029-2200';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
