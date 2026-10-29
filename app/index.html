@@ -251,6 +251,7 @@ body.nvmode nav.tabs button[data-v=add],body.nvmode nav.tabs button[data-v=stock
 .gialock{background:#f2f5f4!important;color:#0b5e57!important;font-weight:800}
 .kmplus{flex:none;border-color:#f0b54a!important;color:#9a3412!important;font-weight:800;white-space:nowrap}
 .kgnote2{background:#f0fdfa;border:1px solid #99f6e4;border-radius:12px;padding:8px 10px;margin:4px 0 10px;font-size:13px;color:#134e4a;line-height:1.45}.kgnote2 p{margin:3px 0}
+.wlinkbox{margin-top:8px;background:rgba(255,255,255,.15);border-radius:10px;padding:7px 10px;font-size:13px}.wlinkbox b{font-size:14px}
 .wtop2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.wtop2 .wopen{margin:0;border:0;font:inherit;font-weight:800;font-size:13.5px;padding:10px 6px}
 .kggoi{border:1px solid #99f6e4;background:#f0fdfa;color:#0f766e;font-weight:800;cursor:pointer}
 .kgnote{margin:4px 0 10px;color:#46506b;font-size:13px;line-height:1.45}
@@ -406,7 +407,7 @@ const firstOpen=!Store.load();
 let db=Store.load()||sampleDb();
 if(DEMO&&firstOpen)Store.save(db);   /* 24/10: lưu ngay để trang Bảng giá (shopgon.vn/bg) đọc được tồn kho mẫu */
 if(!db.hang)db.hang=db.sample?sampleDb().hang:[];
-const save=()=>{if(XEM||NV)return;Store.save(db);if(GG.token&&GG.sheetId&&!db.sample){GG.queue();nvQueue()}};
+const save=()=>{if(XEM||NV)return;Store.save(db);if(typeof linkHen==='function')linkHen();if(GG.token&&GG.sheetId&&!db.sample){GG.queue();nvQueue()}};
 
 /* ===== Google: đăng nhập 1 bước + lưu vào Google Sheet trong Drive của shop =====
    Chỉ xin quyền drive.file: app chỉ thấy đúng file do chính nó tạo, không đụng file khác.
@@ -944,6 +945,7 @@ function renderKmTab(){
   const tgLuc=TG&&TG.capNhat?new Date(TG.capNhat):null;
   $('v-stock').innerHTML=khoSeg()+`<div class="wtop"><small>👀 Giao diện khách xem · ghi khuyến mãi thẳng trên từng máy</small><b>${esc(db.shop.ten||'Shop của bạn')}</b>
       <span>${L.length} mẫu còn hàng${tgLuc?` · giá niêm yết cập nhật ${tgLuc.toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit'})}`:''}</span>
+      <div class="wlinkbox">🔗 Link web của shop: <b class="wlinkngan">${esc(linkNgan().replace(/^https?:\/\//,'')||'đang tạo…')}</b></div>
       <div class="wtop2"><button type="button" class="wopen" data-weblink="1">📋 Copy link gửi khách</button><button type="button" class="wopen" data-webpost="1">📝 Copy bài đăng</button></div></div>
     ${(()=>{if(!L.length)return '<div class="empty">Kho chưa có máy. Nhập hàng trước, rồi quay lại đây ghi khuyến mãi.</div>';
       const hb=x=>BRANDS.includes(x.hang)?x.hang:'Khác',BB=BRANDS.filter(b=>L.some(x=>hb(x)===b));if(kmBrand!=='Tất cả'&&!BB.includes(kmBrand))kmBrand='Tất cả';
@@ -1494,6 +1496,11 @@ async function layLinkWeb(){const L=await layLinkDai();if(!L)return '';const sx=
   try{const r=await (await fetch(GG.LICENSE_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({act:'web',z,k,ma,shop:db.shop.ten||''})})).json();
     if(r&&r.ok&&r.ma){s('sg_web_ma',r.ma);s('sg_web_z',z);const N=ngan(r.ma);try{localStorage.setItem('sg_web_link',N)}catch(_){}return N}}catch(_){}
   return L}
+/* 29/10 anh Thái: link ngắn GẮN MẶC ĐỊNH — app tự tạo khi mở và tự cập nhật (chạy ngầm) mỗi khi đổi giá/KM/kho, không cần bấm */
+let linkT=null,linkDang=false;
+function linkHen(ms=8000){if(XEM||NV)return;clearTimeout(linkT);linkT=setTimeout(async()=>{if(linkDang){linkHen(5000);return}linkDang=true;try{if(stock().length){const L=await layLinkWeb();if(L&&/\/s\//.test(L)&&view==='stock'&&khoTab==='km'){const el=document.querySelector('.wlinkngan');if(el)el.textContent=L.replace(/^https?:\/\//,'')}}}catch(_){}linkDang=false},ms)}
+const linkNgan=()=>{try{const x=localStorage.getItem('sg_web_link')||'';return /\/s\//.test(x)?x:''}catch(_){return ''}};
+setTimeout(()=>linkHen(1),4000);
 const CTA=l=>'👉 Truy cập ngay để tham khảo giá và khuyến mãi: '+l;
 function baiDang(link){const G={};stock().forEach(m=>{const k=gk(m.ten);(G[k]=G[k]||{k,gb:0,n:0}).n++;G[k].gb=Math.max(G[k].gb,m.giaBan||0)});
   const L=Object.values(G).filter(x=>kmCua('g|'+x.k).length).sort((a,b)=>b.n-a.n).slice(0,8),D=L.length?L:Object.values(G).sort((a,b)=>b.n-a.n).slice(0,6);
@@ -1793,7 +1800,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261029-2235';let verLuc=0;
+const BUILD='20261029-2250';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
