@@ -4,6 +4,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js"></script>
+<script src="/mua.js"></script>
 <style>
 :root{--ngoc:#0f766e;--ngoc2:#e6f4f1;--muc:#10201e;--xam:#5d6f6c;--vien:#d5e4e1;--nen:#f6faf9;--trang:#fff;--do:#c2410c}
 *{box-sizing:border-box}
@@ -54,6 +55,8 @@ input,select,textarea{font:inherit;font-size:16px;padding:10px 12px;border:1px s
 .k .may{position:absolute;filter:drop-shadow(0 40px 50px rgba(0,0,0,.35));object-fit:contain}
 .k .gach{text-decoration:line-through;opacity:.75}
 .k .nhan{display:inline-block;padding:8px 20px;border-radius:14px;font-weight:900;font-size:34px}
+body.robot #cho{position:fixed;left:0;top:0;z-index:99}
+.k .hieuung{position:absolute;inset:0;pointer-events:none;z-index:50}
 </style></head><body>
 <header><a id="veapp" hidden style="color:inherit;font-size:13px;text-decoration:none;opacity:.85">‹ Về app</a><b>🖼 Thiết kế hình sản phẩm</b><small id="capnhat"></small></header>
 <div class="tab"><button class="on">🖼 Thiết kế hình</button><button onclick="alert('Đang làm')">🎬 Thiết kế video</button></div>
@@ -405,4 +408,68 @@ $('copy').onclick = function () { var t = $('cap').value; (navigator.clipboard ?
 document.addEventListener('click', function (e) { if (!e.target.closest('#goiy') && e.target.id !== 'tim') $('goiy').style.display = 'none'; });
 </script>
 <script>if(/[?&]tu=app/.test(location.search)){var va=document.getElementById('veapp');va.hidden=false;va.href='/app/'+(/[?&]demo=1/.test(location.search)?'?demo=1':'');}</script>
+
+<script>
+/* ===== 29/10 anh Thái: HIỆU ỨNG MÙA (vẽ lên ảnh) + CHẾ ĐỘ ROBOT hàng chờ (?robot=1) ===== */
+function _rand(seed) { var x = seed % 2147483647; if (x <= 0) x += 2147483646; return function () { x = x * 16807 % 2147483647; return (x - 1) / 2147483646; }; }
+function _hash(t) { var h = 7; t = String(t || ''); for (var i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) % 2147483647; return h || 1; }
+var HIEU_UNG = {
+  noel: function (seed) {
+    var r = _rand(seed), h = '';
+    for (var i = 0; i < 80; i++) {                      /* tuyết nhỏ, mờ — không che giá/chữ */
+      var x = Math.round(r() * 1080), y = Math.round(r() * 1180), s = 3 + Math.round(r() * r() * 9), o = (.35 + r() * .4).toFixed(2);
+      h += '<div style="position:absolute;left:' + x + 'px;top:' + y + 'px;width:' + s + 'px;height:' + s + 'px;border-radius:50%;background:#fff;opacity:' + o + ';box-shadow:0 0 ' + Math.max(2, s) + 'px rgba(255,255,255,.8)"></div>';
+    }
+    for (var k = 0; k < 8; k++) {                       /* bông tuyết lớn chỉ ở 2 mép */
+      var fs = 24 + Math.round(r() * 16), fx = k % 2 ? 1040 - fs + Math.round(r() * 20) : Math.round(r() * 14) - 6, fy = 140 + Math.round(r() * 960);
+      h += '<div style="position:absolute;left:' + fx + 'px;top:' + fy + 'px;font-size:' + fs + 'px;color:#fff;opacity:.8;text-shadow:0 0 10px rgba(160,200,255,.9);transform:rotate(' + Math.round(r() * 60) + 'deg)">❄</div>';
+    }
+    var cap = ''; for (var c = 0; c < 14; c++) cap += 'radial-gradient(circle at ' + (c * 80 + 30) + 'px -8px,#fff 0 ' + (30 + Math.round(r() * 16)) + 'px,transparent ' + (31 + Math.round(r() * 16)) + 'px),';
+    h += '<div style="position:absolute;left:0;right:0;top:0;height:56px;background:' + cap.slice(0, -1) + ';filter:drop-shadow(0 5px 5px rgba(120,160,210,.35))"></div>';
+    h += '<div style="position:absolute;left:50%;top:10px;transform:translateX(-50%);background:#c8102e;color:#fff;font:800 20px/1 \'Be Vietnam Pro\',sans-serif;padding:8px 18px;border-radius:999px;box-shadow:0 4px 12px rgba(120,0,20,.3);border:3px solid #fff;white-space:nowrap">🎄 Merry Christmas</div>';
+    return '<div class="hieuung">' + h + '</div>';
+  }
+};
+function veHieuUng(id, seed) { return HIEU_UNG[id] ? HIEU_UNG[id](seed || 1) : ''; }
+
+/* job từ app → dữ liệu mẫu (giống D()) */
+function dRobot(du) {
+  var g = du.gia || {}, ny = +g.ny || 0, cuoi = g.cuoi != null ? +g.cuoi : ny, giam = Math.max(0, ny - cuoi);
+  var sh = du.shop || {};
+  return { ten: (du.may && du.may.ten) || '', dl: '', mau: '', anh: (du.may && du.may.anh) || '',
+    g: { ny: ny, kmh: 0, kms: 0, giam: giam, cuoi: cuoi, pt: ny ? Math.round(giam / ny * 100) : 0 },
+    qua: (du.qua || []).slice(0, 3), gop: +du.gop || 0, tro: 0, diem: (du.txt || []).slice(0, 4),
+    shop: sh.ten || 'Shop của bạn', dc: sh.dc || '', dt: sh.dt || '' };
+}
+/* chọn 4 mẫu hợp nội dung, xoay vòng theo mã đơn để mỗi bài 1 khác */
+function robotChon(du, ma) {
+  var d = dRobot(du), ten = MAU5.map(function (m) { return m[0]; }), kq = [];
+  var them = function (n) { var i = ten.indexOf(n); if (i >= 0 && kq.indexOf(i) < 0 && kq.length < 4) kq.push(i); };
+  var le = ['noel', 'namoi', 'tet'].indexOf(du.mua) >= 0;
+  if (le) them('Đỏ vàng dịp lễ');
+  if (d.g.giam) them('Khuyến mãi nổi bật');
+  if (d.qua.length) them('Giá sốc + quà');
+  if (d.gop) them('Trả góp');
+  var bo = ['Thu cũ đổi mới']; if (!d.diem.length) bo.push('Thẻ thông số', 'Điểm nổi bật'); if (!d.g.giam) bo.push('Hot sale đen vàng', 'Khuyến mãi nổi bật'); if (!d.g.giam && !d.qua.length) bo.push('Giá sốc + quà'); if (!d.gop) bo.push('Trả góp');
+  var pool = ten.map(function (_, i) { return i; }).filter(function (i) { return bo.indexOf(ten[i]) < 0 && kq.indexOf(i) < 0; });
+  var r = _rand(_hash(ma));
+  for (var i = pool.length - 1; i > 0; i--) { var j = Math.floor(r() * (i + 1)), t = pool[i]; pool[i] = pool[j]; pool[j] = t; }
+  while (kq.length < 4 && pool.length) kq.push(pool.shift());
+  return kq.map(function (i) { return { i: i, ten: ten[i] }; });
+}
+function robotVe(du, i, ma) {
+  var d = dRobot(du), cho = $('cho');
+  cho.innerHTML = MAU5[i][1](d);
+  if (du.mua) { var k = cho.querySelector('.k'); if (k) k.insertAdjacentHTML('beforeend', veHieuUng(du.mua, _hash(ma + ':' + i))); }
+  return MAU5[i][0];
+}
+window.robotChon = robotChon; window.robotVe = robotVe; window.veHieuUng = veHieuUng;
+if (/[?&]robot=1/.test(location.search)) document.body.classList.add('robot');
+/* trang Thiết kế hình: shop tự làm cũng có hiệu ứng mùa đang chạy */
+(function () {
+  if (/[?&]robot=1/.test(location.search)) return;
+  var m = typeof muaHienTai === 'function' ? muaHienTai() : null; if (!m || !HIEU_UNG[m.id]) return;
+  MAU5 = MAU5.map(function (x, i) { return [x[0], function (d) { var h = x[1](d); var p = h.lastIndexOf('</div>'); return h.slice(0, p) + veHieuUng(m.id, 99 + i) + h.slice(p); }]; });
+})();
+</script>
 </body></html>
