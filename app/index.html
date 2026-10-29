@@ -1813,7 +1813,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261030-0000';let verLuc=0;
+const BUILD='20261030-0645';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
@@ -1956,6 +1956,7 @@ function ttqDanhDau(){if(!TTQ.ds)return;const s=new Set(ttqSeen());TTQ.ds.filter
 const ttqMoi=()=>TTQ.ds?TTQ.ds.filter(x=>x.tt==='xong'&&!ttqSeen().includes(x.ma)).length:0;
 function ttqDot(){const n=ttqMoi(),b=document.querySelector('[role=tab][data-v="more"]');if(b){let d=b.querySelector('#dotTtq');if(!d){d=document.createElement('span');d.className='dot';d.id='dotTtq';b.appendChild(d)}d.textContent=n;d.hidden=!n}
   const m=document.querySelector('.menu [data-more="ttq"]');if(m)m.classList.toggle('moi',!!n)}
+const ttqGio=v=>{const d=/T.*Z$/.test(String(v))?new Date(v):new Date(String(v).replace(' ','T')+'+07:00');return isNaN(d)?'':d.toLocaleString('vi-VN',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit',timeZone:'Asia/Ho_Chi_Minh'})};
 const ttqDangCho=()=>TTQ.ds&&TTQ.ds.some(x=>x.tt==='cho'||x.tt==='dang');
 async function ttqTai(quiet){if(XEM||NV||TTQ.busy||!GG.LICENSE_URL)return;if(!ttqDemo()&&!GG.token)return;TTQ.busy=true;
   const cu=TTQ.ds?TTQ.ds.filter(x=>x.tt==='xong').length:-1;
@@ -1978,7 +1979,7 @@ function renderTtq(){
   if(!TTQ.ds&&!TTQ.busy&&!TTQ.loi)ttqTai();
   const han=TTQ.han||2,con=TTQ.con==null?'…':TTQ.con,st={cho:'⏳ Đang chờ',dang:'⚙️ Robot đang dựng',xong:'✅ Xong',loi:'⚠️ Chưa dựng được'};
   const the=x=>`<div class="ttcard ${x.tt}"><div class="tth"><b>${esc(x.ten||'Bài truyền thông')}</b><span class="ttst">${st[x.tt]||esc(x.tt)}${(x.tt==='cho'||x.tt==='dang')&&x.viTri?` · vị trí ${x.viTri}`:''}</span></div>
-    <small class="ttl">Gửi lúc ${esc(String(x.luc||'').slice(11,16))} ${esc(String(x.luc||'').slice(8,10)+'/'+String(x.luc||'').slice(5,7))}${x.mua?' · '+esc(x.mua):''}</small>
+    <small class="ttl">Gửi lúc ${esc(ttqGio(x.luc))}${x.mua?' · '+esc(x.mua):''}</small>
     ${x.tt==='xong'?`<div class="ttgrid">${(x.anh||[]).map((a,i)=>`<figure><a href="https://lh3.googleusercontent.com/d/${esc(a.id)}=w1080" target="_blank" rel="noopener"><img src="https://lh3.googleusercontent.com/d/${esc(a.id)}=w420" alt="${esc(a.ten)}" loading="lazy"></a>
         <figcaption>${esc(a.ten||('Mẫu '+(i+1)))}</figcaption><div class="ttbtn"><button type="button" data-ttshare="${esc(a.id)}" data-ttten="${esc((x.ten||'anh')+'_'+(i+1))}">📤 Chia sẻ</button><a href="https://drive.google.com/uc?export=download&id=${esc(a.id)}" target="_blank" rel="noopener">⬇ Tải</a></div></figure>`).join('')}</div>
       ${x.cap?`<button type="button" class="ghost" data-ttcap="${esc(x.ma)}" style="width:100%;margin-top:8px">📋 Copy caption đăng bài</button>`:''}`
