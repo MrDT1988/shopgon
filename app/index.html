@@ -1492,7 +1492,7 @@ async function layLinkWeb(){const L=await layLinkDai();if(!L)return '';const sx=
   let z='';try{z=new URL(L).searchParams.get('d')||''}catch(_){}if(!z||!GG.LICENSE_URL)return L;
   let ma=g('sg_web_ma'),k=g('sg_web_k');if(!k){k=Array.from(crypto.getRandomValues(new Uint8Array(18)),b=>(b%36).toString(36)).join('');s('sg_web_k',k)}
   const ngan=m=>(location.hostname==='shopgon.vn'?'https://shopgon.vn':location.origin)+'/s/'+m;
-  if(ma&&g('sg_web_z')===z)return ngan(ma);
+  if(ma&&g('sg_web_z')===z){try{localStorage.setItem('sg_web_link',ngan(ma))}catch(_){}return ngan(ma)}
   try{const r=await (await fetch(GG.LICENSE_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({act:'web',z,k,ma,shop:db.shop.ten||''})})).json();
     if(r&&r.ok&&r.ma){s('sg_web_ma',r.ma);s('sg_web_z',z);const N=ngan(r.ma);try{localStorage.setItem('sg_web_link',N)}catch(_){}return N}}catch(_){}
   return L}
@@ -1800,7 +1800,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261029-2250';let verLuc=0;
+const BUILD='20261029-2300';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}

@@ -421,7 +421,7 @@ function capNhat() {
     var d = { t: tt.t, s: tt.s, a: tt.a, p: tt.p, n: new Date().toLocaleDateString('vi-VN'),
       m: DS.map(function (x) { var o = { h: x.h, t: x.t, d: x.d, c: x.c, i: anhId(x.i), ny: x.ny, gb: x.gb }; if (x.goc) o.goc = x.goc; if (x.km && x.km.length) o.km = x.km; if (x.q !== null && x.q !== undefined) o.q = x.q > 0 ? 1 : 0; /* khach chi biet con/het, khong lo so ton */ if (x.k) o.k = x.k; if (x.f) o.f = 1; return o; }),
       k: pk.map(function (r) { var o = { t: r.t, g: r.g }; if (r.k) o.k = r.k; return o; }) };
-    LINK_HUA = nen(d).then(function (z) { LINK = (DS.length || pk.length) ? location.origin + location.pathname + '?d=' + z : ''; try { if (LINK && /[?&]tu=app/.test(location.search)) localStorage.setItem('sg_web_link', LINK); } catch (e) { } $('mo').href = LINK || '#'; if (XEM_NGAY && DS.length) { XEM_NGAY = false; veXem(d); } return LINK; });
+    LINK_HUA = nen(d).then(function (z) { LINK = (DS.length || pk.length) ? location.origin + location.pathname + '?d=' + z : ''; try { if (LINK && /[?&]tu=app/.test(location.search) && !/\/s\//.test(localStorage.getItem('sg_web_link') || '')) localStorage.setItem('sg_web_link', LINK); } catch (e) { } $('mo').href = LINK || '#'; if (XEM_NGAY && DS.length) { XEM_NGAY = false; veXem(d); } return LINK; });
   }, 250);
 }
 function coGian() { var k = $('khung'); $('pv').style.transform = 'scale(' + (k.clientWidth / 1080) + ')'; }
