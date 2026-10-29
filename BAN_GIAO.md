@@ -132,3 +132,4 @@ App quản lý bán hàng cho shop điện thoại (shopgon.vn), chạy trên đ
 - Trang khách bản 2: nền sáng kiểu sàn TMĐT (header trắng + logo chữ cái, tab viền, thẻ viền mảnh, ảnh vuông, chip cấu hình/màu, hộp KM, nút Zalo viền).
 - Ảnh: 22 iPhone đời cũ (11 → 16 Pro Max) trong `kho/bo-sung.json` thêm ảnh TGDD (og:image) → robot kho-may tự tải. Robot giá TGDD lưu thêm `a` = ảnh TGDD từng máy; app/web dùng khi kho máy không có ảnh.
 - 29/10 20h50: tab Khuyến mãi chia theo **hãng** (chip Tất cả/OPPO/Samsung/iPhone/Xiaomi… + tiêu đề từng hãng, `kmBrand`). Ảnh: `mKey()` khớp theo mẫu (bỏ hãng/5G/dung lượng/màu, "Xiaomi Redmi Note 17 5G 6/256" = "REDMI Note 17"), `kmLoad` lấy ảnh cả khi màu trong kho-may không có tên (Xiaomi) → demo 38/38 mẫu có ảnh.
+- 29/10 21h: cỡ chữ app nhỏ lại ~8% (body 16→14,5px; mọi font-size ≥13px ×0,92, nhỏ hơn ×0,95); ô nhập giữ 16px để iPhone không tự phóng to khi gõ.
