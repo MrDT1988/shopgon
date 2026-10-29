@@ -393,8 +393,8 @@ function layTon(tuDong) {
   var NYS = (r.db.shop && r.db.shop.ny) || {};
   DS = Object.keys(nhom).map(function (k) { var x = nhom[k], kk = khopKho(x.h, x.ten), mau = kk.sp && kk.sp.mau && kk.sp.mau[0];
       var L = kmCua(['g|' + x.ten].concat(x.ds.map(function (t) { return 'm|' + t; }))), cuoi = kmGia(L, x.gb), tg = tgCua(x.ten), ny = NYS[x.ten] || (tg && tg.ny ? tg.ny : 0);
-      /* 29/10 anh Thái: giá trên web = GIÁ NIÊM YẾT (TGDD, không có thì giá shop tự điền, cuối cùng mới tới giá bán shop) — KHÔNG trừ khuyến mãi; khuyến mãi chỉ liệt kê bên dưới */
-      return { h: x.h, t: kk.ten, d: kk.dl, c: x.mau.length > 1 ? x.mau.length + ' màu' : (x.mau[0] || (mau ? mau.ten : '')), i: anhCua(mau) || (tg && tg.a) || '', ny: 0, gb: ny || x.gb, q: x.q, km: L.map(kmChip).filter(Boolean), k: L.map(kmChip).filter(Boolean).join(' · '), tg: tg && tg.ny ? 1 : 0 }; })
+      /* 29/10 22h anh Thái chốt: giá trên web = GIÁ Ở TAB KHO của shop (1 giá duy nhất), máy chưa có giá mới lấy giá tự cập nhật; KHÔNG trừ khuyến mãi — KM chỉ liệt kê */
+      return { h: x.h, t: kk.ten, d: kk.dl, c: x.mau.length > 1 ? x.mau.length + ' màu' : (x.mau[0] || (mau ? mau.ten : '')), i: anhCua(mau) || (tg && tg.a) || '', ny: 0, gb: x.gb || (tg && tg.ny) || 0, q: x.q, km: L.map(kmChip).filter(Boolean), k: L.map(kmChip).filter(Boolean).join(' · '), tg: tg && tg.ny ? 1 : 0 }; })
     .sort(function (a, b) { return b.q - a.q; });
   var dem = {}; DS.forEach(function (x) { dem[x.h] = (dem[x.h] || 0) + 1; if (dem[x.h] <= 2) x.f = true; });
   if (r.key !== 'shopgon_v1' && DEMO_TON && DEMO_TON.km) { var tenG = {}; Object.keys(nhom).forEach(function (k, i) { tenG[k] = 1; }); DS.forEach(function (x) { Object.keys(DEMO_TON.km).forEach(function (t) { var kk = khopKho(x.h, t); if (kk.ten === x.t && (!kk.dl || kk.dl === x.d)) { if (!x.tg && !NYS[x.t]) x.gb = DEMO_TON.km[t][0] || x.gb; if (!x.km.length) { x.k = DEMO_TON.km[t][1]; x.km = kmList({ k: x.k }); } } }); }); }

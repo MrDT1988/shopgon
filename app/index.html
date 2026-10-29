@@ -250,6 +250,7 @@ body.nvmode nav.tabs button[data-v=add],body.nvmode nav.tabs button[data-v=stock
 .lgnv{border:1.5px solid #cfe3df;background:#fff;color:#1f3b38;border-radius:999px;padding:14px;font-weight:800;font-size:14.5px}
 .gialock{background:#f2f5f4!important;color:#0b5e57!important;font-weight:800}
 .kmplus{flex:none;border-color:#f0b54a!important;color:#9a3412!important;font-weight:800;white-space:nowrap}
+.kggoi{border:1px solid #99f6e4;background:#f0fdfa;color:#0f766e;font-weight:800;cursor:pointer}
 .kgnote{margin:4px 0 10px;color:#46506b;font-size:13px;line-height:1.45}
 .kgrow .n{min-width:0}.kgia{flex:none;width:128px;text-align:right;font-weight:800}
 .kgline{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:2px 4px 10px;font-size:13px;color:#46506b;font-weight:700}
@@ -274,6 +275,7 @@ body.nvmode nav.tabs button[data-v=add],body.nvmode nav.tabs button[data-v=stock
 .wsl{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:11px}.wok{color:#15803d;font-weight:800}.wown{color:#7b8a87;background:#f1f4f3;border-radius:6px;padding:0 6px;font-weight:700}
 .wny{display:flex;align-items:center;justify-content:space-between;gap:4px;white-space:nowrap;font-size:11.5px;color:#7b8a87;min-height:22px}.wny s{color:#94a3a0}
 .wadj{display:flex;gap:6px;margin-top:4px}.wadj button{flex:1;height:30px;border:1.5px solid #d5e4e1;background:#fff;border-radius:9px;font-size:12.5px;font-weight:800;color:#0f766e;padding:0}
+.wpr2{color:#e11d48;font-weight:900;font-size:17px;line-height:1.25}.wlink3{border:0;background:none;color:#0f766e;font-weight:800;padding:0;font-size:inherit}
 .wpr{display:block;width:100%;border:0;background:none;color:#e11d48;font-weight:900;font-size:17px;padding:2px 0;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .wnyin{width:100%;padding:6px 8px;font-weight:900;color:#e11d48;border-radius:9px;font-size:16px}
 .wauto{font-style:normal;font-size:11px;color:#94a3a0}.wreset{white-space:nowrap;flex:none;border:0;background:#fff7ed;color:#c2410c;font-weight:800;font-size:11px;border-radius:6px;padding:2px 6px}
@@ -843,6 +845,10 @@ function renderAdd0(){
 let expModel=new Set();
 /* 28/10 anh Thái: tab KHO = 1 chỗ duy nhất đặt GIÁ BÁN + KHUYẾN MÃI cho cả shop (app bán, nhân viên, website đều theo). Nhập hàng chỉ còn sản phẩm + số lượng/IMEI + giá nhập. */
 let khoTab='kho';
+/* 29/10 anh Thái chốt: 1 GIÁ DUY NHẤT ở tab Kho = giá bán = giá hiện trên web (mọi màu của 1 mẫu cùng giá). Giá tự cập nhật mỗi sáng chỉ để GỢI Ý / điền sẵn cho máy chưa có giá. */
+function datGiaMau(ten,g){const k=gk(ten);let n=0;db.may.forEach(m=>{if(m.tt==='ton'&&gk(m.ten)===k){m.giaBan=g;n++}});save();return n}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-kggoi]');if(!b)return;if(XEM){showKh();return}const v=+b.dataset.v;const n=datGiaMau(b.dataset.kggoi,v);render();toast(`Đã đặt giá ${money(v)} cho ${n} máy`)});
+const giaMauGk=ten=>{const k=gk(ten);let g=0;db.may.forEach(m=>{if(m.giaBan&&gk(m.ten)===k)g=m.giaBan});return g};
 const giaMau=ten=>{let g=0,ng='';db.may.forEach(m=>{if(m.ten===ten&&m.giaBan&&(m.ngayNhap||'')>=ng){g=m.giaBan;ng=m.ngayNhap||''}});return g};
 const khoSeg=()=>`<div class="seg kseg" role="group" style="margin-bottom:10px"><button data-kt="kho" aria-pressed="${khoTab==='kho'}">📦 Kho</button><button data-kt="km" aria-pressed="${khoTab==='km'}">🎁 Khuyến mãi${kmChay().length?' · '+kmChay().length:''}</button></div>`;
 const webCard=()=>`<div class="panel kgweb"><h2>🌐 Website bảng giá của shop</h2><p class="kgnote">Hiện theo tồn kho. Khách chỉ thấy <b>Còn hàng / Hết hàng</b> và giá sau khuyến mãi — không thấy số tồn.</p><a class="btn" href="/bg/?tu=app&xem=1${DEMO?'&demo=1':''}" data-kgweb="1" style="display:block;text-align:center;text-decoration:none">🌐 Xem website như khách</a></div>`;
@@ -881,7 +887,7 @@ function renderStock(){
   const imeiHit=/^\d{4,}$/.test(stockQ.trim());
   $('v-stock').innerHTML+=`<div class="panel"><div class="list">${groups.length?groups.map(g=>{const [k]=ageClass(g.old);const open=imeiHit||expModel.has(g.ten);
     return `<div class="mg"><button class="mrow" data-model="${esc(g.ten)}" aria-expanded="${open}"><span class="n"><b>${esc(g.ten)}</b><small class="num"><span class="own">Vốn ${short(g.ms.reduce((s2,m)=>s2+m.giaNhap,0))} · </span>lâu nhất ${g.old} ngày</small></span><span class="cnt num">${g.ms.length} máy</span><span class="pill ${k}">${g.old>45?'Tồn lâu':g.old>30?'Tồn vừa':'Mới'}</span><span class="chev">${open?'▴':'▾'}</span></button>
-    <div class="kgline"><span>Giá bán${(()=>{const k=kmCua('m|'+g.ten);return k.length?` <span class="pill kmp2">🎁 ${esc(k.map(kmTxt).join(' + '))}</span>`:''})()}${new Set(g.ms.map(m=>m.giaBan||0)).size>1?' <span class="pill a">giá chưa đều</span>':''}</span>${giaO(`data-kgm="${esc(g.ten)}"`,Math.max(...g.ms.map(m=>m.giaBan||0)))}</div>
+    <div class="kgline"><span>Giá bán · hiện trên web${(()=>{const gb=Math.max(...g.ms.map(m=>m.giaBan||0)),t=tgCua(g.ten);return !gb&&t&&t.ny?` <button type="button" class="pill kggoi" data-kggoi="${esc(g.ten)}" data-v="${t.ny}">Dùng giá gợi ý ${money(t.ny)}</button>`:''})()}${(()=>{const k=kmCua('m|'+g.ten);return k.length?` <span class="pill kmp2">🎁 ${esc(k.map(kmTxt).join(' + '))}</span>`:''})()}${new Set(g.ms.map(m=>m.giaBan||0)).size>1?' <span class="pill a">giá chưa đều</span>':''}</span>${giaO(`data-kgm="${esc(g.ten)}"`,Math.max(...g.ms.map(m=>m.giaBan||0)))}</div>
     ${open?`<div class="imeis">${g.ms.map(m=>{const a2=ageDays(m),[k2]=ageClass(a2);return `<div class="row"><div class="n"><b class="num">${m.imei}</b><small class="num">Nhập ${dmy(m.ngayNhap)}<span class="own"> · ${money(m.giaNhap)}</span></small></div><div class="right" style="flex-direction:row;align-items:center;gap:6px"><span class="pill ${k2} num">${a2} ngày</span><button class="ghost red" data-delimei="${m.imei}" aria-label="Xóa IMEI này">Xóa</button></div></div>
       ${delImei===m.imei?`<div class="confirm" style="margin:0 0 8px"><b style="color:var(--red)">Xóa IMEI ${m.imei} khỏi kho?</b><span>Dùng khi nhập nhầm / nhập trùng. Máy bán rồi thì không cần xóa ở đây.</span><span class="inrow"><button class="ghost red" data-delimeiok="${m.imei}">Xác nhận xóa</button><button class="ghost" data-delimei="">Thôi</button></span></div>`:''}`}).join('')}</div>`:''}</div>`}).join(''):'<div class="empty">Không có máy nào khớp.</div>'}</div></div>`;
 }
@@ -921,14 +927,13 @@ function renderKmTab(){
   const L=Object.values(G).sort((a,b)=>b.ms.length-a.ms.length||a.k.localeCompare(b.k)),H=db.hang.filter(h=>h.sl>0).sort((a,b)=>a.ten.localeCompare(b.ten));
   const chips=(sp,ten)=>`<div class="wkm">${kmCua(sp).map(k=>`<span class="wchip">🎁 ${esc(kmChip(k))}${k.den?` <i>đến ${esc(dmy(k.den).slice(0,5))}</i>`:''}<button type="button" data-kmdel="${k.id}" aria-label="Xóa khuyến mãi">✕</button></span>`).join('')}<button type="button" class="wplus" data-kmadd="${esc(sp)}" data-kmten="${esc(ten)}">＋ KM</button></div>`;
   /* 29/10 anh Thái: giá trên web = GIÁ NIÊM YẾT (TGDD / shop điền), không trừ KM — KM chỉ liệt kê. Chưa có niêm yết thì tạm hiện giá bán shop. */
-  const the=x=>{const gb=Math.max(...x.ms.map(m=>m.giaBan||0)),km=kmCua('g|'+x.k),ny=nyCua(x.k),gia=ny.v||gb,tg=tgCua(x.k);
+  const the=x=>{const gb=Math.max(...x.ms.map(m=>m.giaBan||0)),km=kmCua('g|'+x.k),tg=tgCua(x.k);
     const img=imgCua(x.ms[0].ten)||(tg&&tg.a)||'',mau=new Set(x.ms.map(m=>m.ten)).size,dau=km.find(k=>k.loai==='giam'||k.loai==='pct'||k.loai==='tg');
     return `<div class="wc2"><div class="wimg">${dau?`<span class="wpc">${esc(kmChip(dau))}</span>`:''}${img?`<img src="${esc(img)}" alt="" loading="lazy">`:'<span class="wno">📱</span>'}</div>
       <div class="whg">${esc(x.hang)}</div><div class="wn">${esc(x.k)}</div>
       <div class="wsl"><span class="wok">✓ Còn hàng</span><span class="wown" title="Chỉ shop thấy">Tồn ${x.ms.length}${mau>1?' · '+mau+' màu':''}</span></div>
-      <div class="wny"><span>Giá niêm yết</span>${ny.sua?`<button type="button" class="wreset" data-nyreset="${esc(x.k)}" title="Về giá tự cập nhật">↺ Về gốc</button>`:ny.tg?'<i class="wauto">tự cập nhật</i>':!ny.v&&gb?'<i class="wauto">đang lấy giá bán</i>':''}</div>
-      ${nyEdit===x.k?`<input class="wnyin num" data-nyg="${esc(x.k)}" inputmode="numeric" value="${gia?(+gia).toLocaleString('vi-VN'):''}" placeholder="Nhập giá">`:`<button type="button" class="wpr" data-nyedit="${esc(x.k)}" title="Bấm để gõ giá">${gia?money(gia):'Nhập giá'}</button>`}
-      <div class="wadj"><button type="button" data-nyd="-1" data-nyk="${esc(x.k)}" aria-label="Giảm 100 nghìn">− 100K</button><button type="button" data-nyd="1" data-nyk="${esc(x.k)}" aria-label="Tăng 100 nghìn">+ 100K</button></div>${chips('g|'+x.k,x.k)}</div>`};
+      <div class="wpr2">${gb?money(gb):`<button type="button" class="wlink2" data-kt="kho">Chưa có giá · đặt ở tab Kho</button>`}</div>
+      <div class="wny"><span>Giá bán · sửa ở tab <button type="button" class="wlink3" data-kt="kho">📦 Kho</button></span></div>${chips('g|'+x.k,x.k)}</div>`};
   const tgLuc=TG&&TG.capNhat?new Date(TG.capNhat):null;
   $('v-stock').innerHTML=khoSeg()+`<div class="wtop"><small>👀 Giao diện khách xem · ghi khuyến mãi thẳng trên từng máy</small><b>${esc(db.shop.ten||'Shop của bạn')}</b>
       <span>${L.length} mẫu còn hàng${tgLuc?` · giá niêm yết cập nhật ${tgLuc.toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit'})}`:''}</span>
@@ -938,7 +943,7 @@ function renderKmTab(){
       const chipsB=`<div class="wbr">${['Tất cả',...BB].map(b=>`<button type="button" data-kmb="${esc(b)}" aria-pressed="${kmBrand===b}">${esc(b)} <small>${b==='Tất cả'?L.length:L.filter(x=>hb(x)===b).length}</small></button>`).join('')}</div>`;
       return chipsB+(kmBrand==='Tất cả'?BB:[kmBrand]).map(b=>`<h3 class="wsec">${esc(b)} <small>${L.filter(x=>hb(x)===b).length} mẫu</small></h3><div class="wgrid">${L.filter(x=>hb(x)===b).map(the).join('')}</div>`).join('')})()}
     ${H.length?`<div class="panel" style="margin-top:12px"><h2>🎧 Phụ kiện · hàng khác</h2><div class="list">${H.map(h=>{return `<div class="wrow"><div class="n"><b>${esc(h.ten)}</b><small><b class="wred">${h.giaBan?money(h.giaBan):'Chưa có giá'}</b> · <span class="wown">Tồn ${h.sl}</span></small>${chips('h|'+h.id,h.ten)}</div></div>`}).join('')}</div></div>`:''}
-    <p class="kgnote" style="margin:12px 4px">Khuyến mãi lưu là app <b>tự gắn vào đơn khi bán</b> (cả nhân viên). "Tồn" chỉ shop thấy — khách chỉ thấy Còn hàng / Hết hàng. Giá trên web = <b>giá niêm yết</b> (tự cập nhật mỗi sáng, bấm − / + để chỉnh). Giá bán của shop sửa ở tab <b>📦 Kho</b> — khách không thấy.</p>
+    <p class="kgnote" style="margin:12px 4px">Khuyến mãi lưu là app <b>tự gắn vào đơn khi bán</b> (cả nhân viên). "Tồn" chỉ shop thấy — khách chỉ thấy Còn hàng / Hết hàng. Giá trên web = <b>giá bán ở tab 📦 Kho</b> — đổi giá ở Kho là web đổi theo.</p>
     ${kmSheet?renderKmSheet():''}`}
 function renderKmSheet(){const hg=db.hang.filter(h=>h.sl>0).sort((a,b)=>a.ten.localeCompare(b.ten));const T=[['giam','💸 Giảm tiền'],['pct','％ Giảm %'],['tang','🎧 Tặng phụ kiện'],['tg','💳 Trả góp 0%'],['txt','✏️ Khác']];
   return `<div class="wsheet" data-kmx="1"><form id="fKm" class="wsbox" autocomplete="off"><h3>Thêm khuyến mãi</h3><p class="wst">${esc(kmSheet.ten)}</p>
@@ -1464,7 +1469,7 @@ function renderKhoGia(){const nh={};db.may.filter(m=>m.tt==='ton').forEach(m=>{c
     <small style="display:block;margin-top:10px;color:var(--muted)">Sửa giá xong là lưu luôn. Giá này là giá bán mặc định: nhân viên bán theo giá này, website cũng lấy giá này.</small></div>`}
 document.addEventListener('input',e=>{if(e.target.id!=='kgQ')return;kgQ=e.target.value;const q=kgQ.trim().toLowerCase();document.querySelectorAll('.kgrow').forEach(r=>r.hidden=!!q&&!r.dataset.kgt.toLowerCase().includes(q))});
 document.addEventListener('change',e=>{const t=e.target;if(!t.matches||!t.matches('.kgia'))return;const g=parseMoney(t.value);if(!(g>0)){toast('Nhập giá bán');return}
-  if(t.dataset.kgm!==undefined){let n=0;db.may.forEach(m=>{if(m.tt==='ton'&&m.ten===t.dataset.kgm){m.giaBan=g;n++}});save();toast(`Đã đổi giá ${t.dataset.kgm}: ${money(g)} (${n} máy)`)}
+  if(t.dataset.kgm!==undefined){const n=datGiaMau(t.dataset.kgm,g);toast(`Đã đổi giá ${gk(t.dataset.kgm)}: ${money(g)} (${n} máy, mọi màu) · web đổi theo`)}
   else{const h=db.hang.find(x=>x.id===t.dataset.kgh);if(!h)return;h.giaBan=g;save();toast(`Đã đổi giá ${h.ten}: ${money(g)}`)}
   t.value=g.toLocaleString('vi-VN');if(XEM)toast('Đang xem thử — giá không được lưu');const r=t.closest('.kgrow');if(r)r.querySelectorAll('.pill.a').forEach(p=>p.remove())});
 document.addEventListener('click',e=>{if(e.target.closest('[data-kgweb]')){try{Store.save(db)}catch(_){}}},true);
@@ -1496,7 +1501,7 @@ function renderAdd(){if(addTab==='da'){renderDaNhap();return}if(addTab==='kg')ad
   if(fl&&addMode==='may'){const a=$('aTen');if(a&&!a.value){a.value=fl.ten;a.dispatchEvent(new Event('input',{bubbles:true}))}const g=$('aGN');if(g&&!g.value&&fl.gn)g.value=fl.gn.toLocaleString('vi-VN')}}
 function pnCommit(){const L=PN.dong;const ed=PN.edit;if(!L.length&&!ed)return;if(!L.length){PN={dong:[],ncc:'',ngay:''};pnFill=null;pnSave();save();addTab='da';render();toast('Phiếu không còn dòng nào — đã xóa phiếu');return}const id=ed?ed.id:uid(),ngay=PN.ngay||todayIso(),ncc=(PN.ncc||'').trim();let nMay=0;
   const now=new Date(),gio=ed&&ed.gio?ed.gio:now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
-  L.forEach(d=>{if(d.t==='may'){(d.imeis||[]).forEach(imei=>{if(db.may.some(m=>m.imei===imei))return;db.may.push({imei,ten:d.ten,hang:d.hang||'Khác',giaNhap:d.gn,giaBan:d.gb||giaMau(d.ten),ngayNhap:ngay,ncc,tt:'ton',pn:id});nMay++});delete d.can;return}
+  L.forEach(d=>{if(d.t==='may'){(d.imeis||[]).forEach(imei=>{if(db.may.some(m=>m.imei===imei))return;db.may.push({imei,ten:d.ten,hang:d.hang||'Khác',giaNhap:d.gn,giaBan:d.gb||giaMau(d.ten)||giaMauGk(d.ten)||((tgCua(d.ten)||{}).ny||0),ngayNhap:ngay,ncc,tt:'ton',pn:id});nMay++});delete d.can;return}
     let h=(d.id&&db.hang.find(x=>x.id===d.id))||db.hang.find(x=>x.ten===d.ten&&x.nhom===d.nhom);
     if(h){h.giaNhap=Math.round((h.giaNhap*Math.max(0,h.sl)+d.gn*d.sl)/(Math.max(0,h.sl)+d.sl));h.sl+=d.sl;if(d.gb)h.giaBan=d.gb;if(d.min)h.min=d.min;if(d.loai)h.loai=d.loai;h.ngayNhap=ngay}
     else{h={id:uid(),ten:d.ten,nhom:d.nhom||'pk',loai:d.loai||'',giaNhap:d.gn,giaBan:d.gb||0,sl:d.sl,min:d.min??5,ngayNhap:ngay};db.hang.push(h)}d.id=h.id});
@@ -1757,7 +1762,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261029-2200';let verLuc=0;
+const BUILD='20261029-2215';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
