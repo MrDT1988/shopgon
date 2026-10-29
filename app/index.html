@@ -259,6 +259,10 @@ body.nvmode nav.tabs button[data-v=add],body.nvmode nav.tabs button[data-v=stock
 .wtop{background:linear-gradient(135deg,#0f766e,#0b3f5c);color:#fff;border-radius:20px;padding:16px;margin-bottom:12px;display:flex;flex-direction:column;gap:4px;box-shadow:0 10px 24px rgba(11,63,92,.25)}
 .wtop small{opacity:.85;font-size:12.5px}.wtop b{font-size:21px;font-weight:900}.wtop span{font-size:13px;opacity:.9}
 .wopen{margin-top:8px;background:#fff;color:#0b5e57;border-radius:999px;padding:10px 14px;text-align:center;font-weight:800;text-decoration:none}
+.wbr{display:flex;gap:6px;overflow-x:auto;padding:2px 0 4px;position:sticky;top:0;z-index:3;background:var(--bg,#eef4f3)}
+.wbr button{flex:0 0 auto;border:1.5px solid #d5e4e1;background:#fff;border-radius:999px;padding:8px 14px;font-weight:800;font-size:14px;color:#334}
+.wbr button small{color:#7b8a87;font-weight:700}.wbr button[aria-pressed=true]{background:#0f766e;border-color:#0f766e;color:#fff}.wbr button[aria-pressed=true] small{color:#ccfbf1}
+.wsec{margin:14px 4px 8px;font-size:17px;font-weight:900}.wsec small{color:#7b8a87;font-weight:600;font-size:13px}
 .wgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 @media(min-width:620px){.wgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .wc2{background:#fff;border-radius:18px;padding:10px;display:flex;flex-direction:column;gap:3px;min-width:0;box-shadow:0 4px 14px rgba(16,32,30,.07);border:1px solid #e3ecea}
@@ -896,8 +900,16 @@ const kmCua=sp=>{const g=sp.startsWith('m|')?'g|'+gk(sp.slice(2)):sp.startsWith(
 const kmTxt=k=>k.loai==='giam'?'giảm '+money(k.gt):k.loai==='pct'?'giảm '+k.gt+'%':k.loai==='tg'?'trả góp 0%':k.loai==='txt'?(k.txt||''):'tặng '+(k.tangTen||'quà');
 const kmChip=k=>k.loai==='giam'?'Giảm '+short(k.gt):k.loai==='pct'?'Giảm '+k.gt+'%':k.loai==='tg'?'Trả góp 0%':k.loai==='txt'?(k.txt||''):'Tặng '+(k.tangTen||'quà');
 const kmTru=(L,g)=>L.reduce((t,k)=>t+(k.loai==='giam'?+k.gt||0:k.loai==='pct'?Math.round(g*k.gt/100/1000)*1000:0),0);
-let kmLoai='giam',kmSheet=null;
-const imgCua=ten=>{if(!KM)return '';const t=String(ten).toLowerCase(),b=gk(ten).toLowerCase();const x=KM.find(z=>z.ten.toLowerCase()===t)||KM.find(z=>z.ten.toLowerCase().startsWith(b))||KM.find(z=>b.startsWith(z.base.toLowerCase()));return x&&x.img||''};
+let kmLoai='giam',kmSheet=null,kmBrand='Tất cả';
+/* 29/10: khớp ẢNH theo mẫu máy, bỏ tên hãng/5G/dung lượng/màu (VD "Xiaomi Redmi Note 17 5G 6/256" = "REDMI Note 17") */
+function mKey(n){let s=String(n||'').toLowerCase().replace(/^điện thoại\s+/,'').replace(/\s+-\s+[^-]+$/,'').replace(/(\d)\+(\d)/g,'$1/$2').replace(/\+/g,'plus').replace(/\(([^)]*)\)/g,'$1');
+  const m=s.match(/\d+\s*(?:gb|tb)\b|\d+\s*\/\s*\d+/);if(m)s=s.slice(0,m.index);
+  return s.replace(/\b(samsung|xiaomi|apple|oppo|motorola|moto|honor|realme|vivo|tecno|nubia|nokia|hmd|masstel|mobell|nothing|phone|[45]g)\b/g,'').replace(/[^a-z0-9]/g,'')}
+let MKI=null;
+function mkIndex(){if(MKI||!KM)return MKI;MKI=new Map();KM.forEach(z=>{if(!z.img)return;const k=mKey(z.base);if(!MKI.has(k))MKI.set(k,[]);MKI.get(k).push(z)});return MKI}
+const imgCua=ten=>{if(!KM)return '';const I=mkIndex();const k=mKey(ten),mau=(/\s+-\s+([^-]+)$/.exec(ten)||[])[1];let L=I.get(k);
+  if(!L){let best='';for(const kk of I.keys())if(kk.length>best.length&&(k.startsWith(kk)||kk.startsWith(k))&&Math.min(k.length,kk.length)>=4)best=kk;L=best?I.get(best):null}
+  if(!L)return '';const x=mau&&L.find(z=>z.mau&&z.mau.toLowerCase()===mau.trim().toLowerCase());return (x||L[0]).img||''};
 function renderKmTab(){
   if(!TG)tgLoad().then(()=>{if(view==='stock'&&khoTab==='km')render()});
   if(!KM)kmLoad().then(()=>{if(view==='stock'&&khoTab==='km')render()});
@@ -916,7 +928,10 @@ function renderKmTab(){
   $('v-stock').innerHTML=khoSeg()+`<div class="wtop"><small>👀 Giao diện khách xem · ghi khuyến mãi thẳng trên từng máy</small><b>${esc(db.shop.ten||'Shop của bạn')}</b>
       <span>${L.length} mẫu còn hàng${tgLuc?` · giá niêm yết TGDD ${tgLuc.toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})} ${tgLuc.toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit'})}`:''}</span>
       <a class="wopen" href="/bg/?tu=app&xem=1${DEMO?'&demo=1':''}" data-kgweb="1">🌐 Xem website như khách</a></div>
-    ${L.length?`<div class="wgrid">${L.map(the).join('')}</div>`:'<div class="empty">Kho chưa có máy. Nhập hàng trước, rồi quay lại đây ghi khuyến mãi.</div>'}
+    ${(()=>{if(!L.length)return '<div class="empty">Kho chưa có máy. Nhập hàng trước, rồi quay lại đây ghi khuyến mãi.</div>';
+      const hb=x=>BRANDS.includes(x.hang)?x.hang:'Khác',BB=BRANDS.filter(b=>L.some(x=>hb(x)===b));if(kmBrand!=='Tất cả'&&!BB.includes(kmBrand))kmBrand='Tất cả';
+      const chipsB=`<div class="wbr">${['Tất cả',...BB].map(b=>`<button type="button" data-kmb="${esc(b)}" aria-pressed="${kmBrand===b}">${esc(b)} <small>${b==='Tất cả'?L.length:L.filter(x=>hb(x)===b).length}</small></button>`).join('')}</div>`;
+      return chipsB+(kmBrand==='Tất cả'?BB:[kmBrand]).map(b=>`<h3 class="wsec">${esc(b)} <small>${L.filter(x=>hb(x)===b).length} mẫu</small></h3><div class="wgrid">${L.filter(x=>hb(x)===b).map(the).join('')}</div>`).join('')})()}
     ${H.length?`<div class="panel" style="margin-top:12px"><h2>🎧 Phụ kiện · hàng khác</h2><div class="list">${H.map(h=>{return `<div class="wrow"><div class="n"><b>${esc(h.ten)}</b><small><b class="wred">${h.giaBan?money(h.giaBan):'Chưa có giá'}</b> · <span class="wown">Tồn ${h.sl}</span></small>${chips('h|'+h.id,h.ten)}</div></div>`}).join('')}</div></div>`:''}
     <p class="kgnote" style="margin:12px 4px">Khuyến mãi lưu là app <b>tự gắn vào đơn khi bán</b> (cả nhân viên). "Tồn" chỉ shop thấy — khách chỉ thấy Còn hàng / Hết hàng. Giá trên web = <b>giá niêm yết</b> (TGDD). Giá bán của shop sửa ở tab <b>📦 Kho</b> — khách không thấy.</p>
     ${kmSheet?renderKmSheet():''}`}
@@ -930,7 +945,8 @@ function renderKmSheet(){const hg=db.hang.filter(h=>h.sl>0).sort((a,b)=>a.ten.lo
      :`<label>Nội dung khuyến mãi<input id="kmTxt" maxlength="40" placeholder="VD: Bảo hành 18 tháng, Thu cũ +500K"></label>`}
     <label>Áp dụng đến ngày<small>Bỏ trống = chạy tới khi xóa</small><input id="kmDen" type="date"></label>
     <div class="err" id="kmErr"></div><div class="inrow"><button class="btn" type="submit" style="flex:1">Lưu khuyến mãi</button><button type="button" class="ghost" data-kmx="1">Thôi</button></div></form></div>`}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-kt],[data-kml],[data-kmdel],[data-kmadd],[data-kmx],[data-kmq]');if(!b)return;const d=b.dataset;
+document.addEventListener('click',e=>{const b=e.target.closest('[data-kt],[data-kml],[data-kmdel],[data-kmadd],[data-kmx],[data-kmq],[data-kmb]');if(!b)return;const d=b.dataset;
+  if(d.kmb){kmBrand=d.kmb;render();const c=document.querySelector('.wbr [aria-pressed=true]');if(c)c.scrollIntoView({inline:'center',block:'nearest'});const h=document.querySelector('.wbr');if(h)window.scrollTo(0,h.getBoundingClientRect().top+window.scrollY-70);return}
   if(d.kmx!==undefined){if(b.classList.contains('wsheet')&&e.target!==b)return;kmSheet=null;render();return}
   if(d.kt){khoTab=d.kt;kmSheet=null;render();window.scrollTo(0,0);return}
   if(d.kmadd){if(XEM){showKh();return}kmSheet={sp:d.kmadd,ten:d.kmten||''};kmLoai='giam';render();setTimeout(()=>{const i=$('kmGt');if(i)i.focus()},60);return}
@@ -1708,9 +1724,9 @@ let KM=null,KMload=null,SUGS=[],KMbad=new Map();
 const nv0=x=>String(x||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d');
 function kmLoad(){if(KM||KMload)return KMload;KMload=fetch('/kho/kho-may.json').then(r=>r.json()).then(k=>{const L=[];KMbad=new Map();
     const dlN=d=>String(d||'').replace(/\s/g,'').replace(/GB\+/i,'+').replace(/\+/,'/');
-    Object.values(k.hang||{}).forEach(ds=>(ds||[]).forEach(m=>{const mau=(m.mau||[]).filter(x=>x&&x.ten),cfg=[...new Set((m.bienThe||[]).map(b=>dlN(b.dl)).filter(Boolean))];
+    Object.values(k.hang||{}).forEach(ds=>(ds||[]).forEach(m=>{const f0=(m.mau||[]).find(z=>z&&z.file),mau=(m.mau||[]).filter(x=>x&&x.ten),cfg=[...new Set((m.bienThe||[]).map(b=>dlN(b.dl)).filter(Boolean))];
       const MS=mau.length>1?mau:[mau[0]||null],CS=cfg.length?cfg:[''],n=MS.length*CS.length;
-      CS.forEach(c=>MS.forEach(x=>L.push({ten:m.ten+(c?' '+c:'')+(x&&mau.length>1?' - '+x.ten:''),base:m.ten,hang:m.hang,img:x&&x.file?'/'+x.file:'',n,cfg:c,mau:mau.length>1&&x?x.ten:'',nm:mau.length,nc:cfg.length})));
+      CS.forEach(c=>MS.forEach(x=>L.push({ten:m.ten+(c?' '+c:'')+(x&&mau.length>1?' - '+x.ten:''),base:m.ten,hang:m.hang,img:x&&x.file?'/'+x.file:f0?'/'+f0.file:'',n,cfg:c,mau:mau.length>1&&x?x.ten:'',nm:mau.length,nc:cfg.length})));
       if(n>1){const bad=[m.ten];if(mau.length>1)cfg.forEach(c=>bad.push(m.ten+' '+c));if(cfg.length>1)mau.forEach(x=>bad.push(m.ten+' - '+x.ten));bad.forEach(b=>KMbad.set(b.toLowerCase(),{nm:mau.length,nc:cfg.length}))}}));
     KM=L;const i=document.getElementById('aTen');if(i&&document.activeElement===i)sugRender()}).catch(()=>{KM=[]});return KMload}
 function sugRender(force){const el=document.getElementById('aSug'),inp=document.getElementById('aTen');if(!el||!inp)return;kmLoad();
@@ -1731,7 +1747,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261029-1815';let verLuc=0;
+const BUILD='20261029-2050';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
