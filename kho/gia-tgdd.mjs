@@ -2,7 +2,7 @@
 // Chạy: node kho/gia-tgdd.mjs  (GitHub Actions .github/workflows/gia-tgdd.yml, 06:00 giờ VN mỗi ngày)
 // Cách lấy (0đ, không cần AI): mở thegioididong.com/dtdd bằng Playwright, bấm "Xem thêm" tới hết → đọc từng thẻ máy
 // (tên + giá) → mở trang từng máy lấy thêm các bản dung lượng khác. Giá niêm yết = giá gạch (giá gốc) nếu có, không thì giá đang bán.
-// Ghi kho/gia-tgdd.json: { capNhat, n, gia: { <khóa>: { t, ny, gb, u } } } — khóa = tgKey(tên) (app + bảng giá dùng cùng hàm).
+// Ghi kho/gia-tgdd.json: { capNhat, n, gia: { <khóa>: { t, ny, gb, u, a (ảnh TGDD — dùng khi kho máy không có ảnh) } } } — khóa = tgKey(tên) (app + bảng giá dùng cùng hàm).
 import { chromium } from 'playwright';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 
@@ -27,7 +27,8 @@ function docTrang(h) {
   const gach = so((h.match(/<del[^>]*>([\d.]{6,})<!-- -->đ/) || [])[1]);
   const ban = so((h.match(/text-red-5">([\d.]{6,})<!-- -->đ/) || [])[1]) || so((h.match(/Giá bán:\s*<b>([\d.]{6,})₫/) || [])[1]);
   const bienThe = [...new Set((h.match(/href="\/dtdd\/[a-z0-9-]+"/g) || []).map(x => x.slice(6, -1)))];
-  return { ten, ny: Math.max(gach, ban), gb: ban || gach, bienThe };
+  const anh = ((h.match(/property="og:image"\s+content="([^"]+)"/) || h.match(/content="([^"]+)"\s+property="og:image"/) || [])[1] || '').replace(/&amp;/g, '&');
+  return { ten, ny: Math.max(gach, ban), gb: ban || gach, bienThe, anh };
 }
 
 async function layHtml(p) {
@@ -77,7 +78,7 @@ async function tho() {
     const p = hang.shift(); if (daXem.has(p)) continue; daXem.add(p);
     const h = await layHtml(p); if (!h) continue;
     const d = docTrang(h);
-    if (d.ten && d.ny) { const k = tgKey(d.ten); gia[k] = { t: d.ten, ny: d.ny, gb: d.gb, u: p }; }
+    if (d.ten && d.ny) { const k = tgKey(d.ten); gia[k] = { t: d.ten, ny: d.ny, gb: d.gb, u: p }; if (/^https:\/\/cdn[v2]*\.tgdd\.vn\//.test(d.anh)) gia[k].a = d.anh; }
     d.bienThe.forEach(b => { if (!daXem.has(b) && !hang.includes(b)) hang.push(b); });
     await ngu(250);
   }
