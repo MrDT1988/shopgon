@@ -250,6 +250,8 @@ body.nvmode nav.tabs button[data-v=add],body.nvmode nav.tabs button[data-v=stock
 .lgnv{border:1.5px solid #cfe3df;background:#fff;color:#1f3b38;border-radius:999px;padding:14px;font-weight:800;font-size:14.5px}
 .gialock{background:#f2f5f4!important;color:#0b5e57!important;font-weight:800}
 .kmplus{flex:none;border-color:#f0b54a!important;color:#9a3412!important;font-weight:800;white-space:nowrap}
+.kgnote2{background:#f0fdfa;border:1px solid #99f6e4;border-radius:12px;padding:8px 10px;margin:4px 0 10px;font-size:13px;color:#134e4a;line-height:1.45}.kgnote2 p{margin:3px 0}
+.wtop2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.wtop2 .wopen{margin:0;border:0;font:inherit;font-weight:800;font-size:13.5px;padding:10px 6px}
 .kggoi{border:1px solid #99f6e4;background:#f0fdfa;color:#0f766e;font-weight:800;cursor:pointer}
 .kgnote{margin:4px 0 10px;color:#46506b;font-size:13px;line-height:1.45}
 .kgrow .n{min-width:0}.kgia{flex:none;width:128px;text-align:right;font-weight:800}
@@ -846,12 +848,18 @@ let expModel=new Set();
 /* 28/10 anh Thái: tab KHO = 1 chỗ duy nhất đặt GIÁ BÁN + KHUYẾN MÃI cho cả shop (app bán, nhân viên, website đều theo). Nhập hàng chỉ còn sản phẩm + số lượng/IMEI + giá nhập. */
 let khoTab='kho';
 /* 29/10 anh Thái chốt: 1 GIÁ DUY NHẤT ở tab Kho = giá bán = giá hiện trên web (mọi màu của 1 mẫu cùng giá). Giá tự cập nhật mỗi sáng chỉ để GỢI Ý / điền sẵn cho máy chưa có giá. */
-function datGiaMau(ten,g){const k=gk(ten);let n=0;db.may.forEach(m=>{if(m.tt==='ton'&&gk(m.ten)===k){m.giaBan=g;n++}});save();return n}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-kggoi]');if(!b)return;if(XEM){showKh();return}const v=+b.dataset.v;const n=datGiaMau(b.dataset.kggoi,v);render();toast(`Đã đặt giá ${money(v)} cho ${n} máy`)});
+/* 29/10 22h30 anh Thái: giá niêm yết theo giá niêm yết TGDĐ HẰNG NGÀY (tự cập nhật) — mẫu nào shop tự sửa giá ở Kho thì giữ giá shop (db.shop.giaTay[mẫu]=1) */
+function datGiaMau(ten,g){const k=gk(ten);let n=0;db.may.forEach(m=>{if(m.tt==='ton'&&gk(m.ten)===k){m.giaBan=g;n++}});(db.shop.giaTay=db.shop.giaTay||{})[k]=1;save();return n}
+function giaTuDong(){if(!TG||NV||XEM||db.sample&&!DEMO)return 0;const tay=db.shop.giaTay=db.shop.giaTay||{};let doi=0;
+  if(!db.shop.giaTayInit){/* lần đầu: mẫu nào shop đã có giá khác giá niêm yết thì coi là shop tự đặt, không đè */const G={};stock().forEach(m=>{(G[gk(m.ten)]=G[gk(m.ten)]||[]).push(m)});
+    Object.entries(G).forEach(([k,ms])=>{const t=tgCua(k),gb=Math.max(...ms.map(m=>m.giaBan||0));if(gb&&!(t&&t.ny===gb))tay[k]=1});db.shop.giaTayInit=1;doi++}
+  stock().forEach(m=>{const k=gk(m.ten);if(tay[k])return;const t=tgCua(k);if(t&&t.ny&&m.giaBan!==t.ny){m.giaBan=t.ny;doi++}});
+  if(doi)save();return doi}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-kggoi]');if(!b)return;if(XEM){showKh();return}const k=gk(b.dataset.kggoi);delete (db.shop.giaTay||{})[k];giaTuDong();save();render();toast('Đã về giá niêm yết tự cập nhật')});
 const giaMauGk=ten=>{const k=gk(ten);let g=0;db.may.forEach(m=>{if(m.giaBan&&gk(m.ten)===k)g=m.giaBan});return g};
 const giaMau=ten=>{let g=0,ng='';db.may.forEach(m=>{if(m.ten===ten&&m.giaBan&&(m.ngayNhap||'')>=ng){g=m.giaBan;ng=m.ngayNhap||''}});return g};
 const khoSeg=()=>`<div class="seg kseg" role="group" style="margin-bottom:10px"><button data-kt="kho" aria-pressed="${khoTab==='kho'}">📦 Kho</button><button data-kt="km" aria-pressed="${khoTab==='km'}">🎁 Khuyến mãi${kmChay().length?' · '+kmChay().length:''}</button></div>`;
-const webCard=()=>`<div class="panel kgweb"><h2>🌐 Website bảng giá của shop</h2><p class="kgnote">Hiện theo tồn kho. Khách chỉ thấy <b>Còn hàng / Hết hàng</b> và giá sau khuyến mãi — không thấy số tồn.</p><a class="btn" href="/bg/?tu=app&xem=1${DEMO?'&demo=1':''}" data-kgweb="1" style="display:block;text-align:center;text-decoration:none">🌐 Xem website như khách</a></div>`;
+const webCard=()=>`<div class="panel kgweb"><h2>🌐 Website bảng giá của shop</h2><div class="kgnote2"><p><b>①</b> Giá niêm yết tự cập nhật mỗi ngày theo giá niêm yết của TGDĐ.</p><p><b>②</b> Sửa giá ở Kho là giá trên website đổi theo (website chỉ thêm khuyến mãi). Máy shop đã sửa giá sẽ giữ giá shop, không tự đổi nữa.</p></div><a class="btn" href="/bg/?tu=app&xem=1${DEMO?'&demo=1':''}" data-kgweb="1" style="display:block;text-align:center;text-decoration:none">🌐 Xem website như khách</a></div>`;
 const giaO=(attr,v)=>`<input ${attr} inputmode="numeric" class="num kgia" value="${v?(+v).toLocaleString('vi-VN'):''}" placeholder="Giá bán" aria-label="Giá bán">`;
 let stockMode='may', stockBrand='Tất cả', stockQ='', stockOld=false, hangNhom='all', hangQ='';
 const hangLow=h=>h.sl<=0||(h.min>0&&h.sl<=h.min);
@@ -887,7 +895,7 @@ function renderStock(){
   const imeiHit=/^\d{4,}$/.test(stockQ.trim());
   $('v-stock').innerHTML+=`<div class="panel"><div class="list">${groups.length?groups.map(g=>{const [k]=ageClass(g.old);const open=imeiHit||expModel.has(g.ten);
     return `<div class="mg"><button class="mrow" data-model="${esc(g.ten)}" aria-expanded="${open}"><span class="n"><b>${esc(g.ten)}</b><small class="num"><span class="own">Vốn ${short(g.ms.reduce((s2,m)=>s2+m.giaNhap,0))} · </span>lâu nhất ${g.old} ngày</small></span><span class="cnt num">${g.ms.length} máy</span><span class="pill ${k}">${g.old>45?'Tồn lâu':g.old>30?'Tồn vừa':'Mới'}</span><span class="chev">${open?'▴':'▾'}</span></button>
-    <div class="kgline"><span>Giá bán · hiện trên web${(()=>{const gb=Math.max(...g.ms.map(m=>m.giaBan||0)),t=tgCua(g.ten);return !gb&&t&&t.ny?` <button type="button" class="pill kggoi" data-kggoi="${esc(g.ten)}" data-v="${t.ny}">Dùng giá gợi ý ${money(t.ny)}</button>`:''})()}${(()=>{const k=kmCua('m|'+g.ten);return k.length?` <span class="pill kmp2">🎁 ${esc(k.map(kmTxt).join(' + '))}</span>`:''})()}${new Set(g.ms.map(m=>m.giaBan||0)).size>1?' <span class="pill a">giá chưa đều</span>':''}</span>${giaO(`data-kgm="${esc(g.ten)}"`,Math.max(...g.ms.map(m=>m.giaBan||0)))}</div>
+    <div class="kgline"><span>Giá bán · hiện trên web${(()=>{const t=tgCua(g.ten),tay=(db.shop.giaTay||{})[gk(g.ten)];return tay&&t&&t.ny?` <button type="button" class="pill kggoi" data-kggoi="${esc(g.ten)}">↺ Theo giá niêm yết ${money(t.ny)}</button>`:!tay&&t&&t.ny?' <span class="pill g">tự cập nhật</span>':''})()}${(()=>{const k=kmCua('m|'+g.ten);return k.length?` <span class="pill kmp2">🎁 ${esc(k.map(kmTxt).join(' + '))}</span>`:''})()}${new Set(g.ms.map(m=>m.giaBan||0)).size>1?' <span class="pill a">giá chưa đều</span>':''}</span>${giaO(`data-kgm="${esc(g.ten)}"`,Math.max(...g.ms.map(m=>m.giaBan||0)))}</div>
     ${open?`<div class="imeis">${g.ms.map(m=>{const a2=ageDays(m),[k2]=ageClass(a2);return `<div class="row"><div class="n"><b class="num">${m.imei}</b><small class="num">Nhập ${dmy(m.ngayNhap)}<span class="own"> · ${money(m.giaNhap)}</span></small></div><div class="right" style="flex-direction:row;align-items:center;gap:6px"><span class="pill ${k2} num">${a2} ngày</span><button class="ghost red" data-delimei="${m.imei}" aria-label="Xóa IMEI này">Xóa</button></div></div>
       ${delImei===m.imei?`<div class="confirm" style="margin:0 0 8px"><b style="color:var(--red)">Xóa IMEI ${m.imei} khỏi kho?</b><span>Dùng khi nhập nhầm / nhập trùng. Máy bán rồi thì không cần xóa ở đây.</span><span class="inrow"><button class="ghost red" data-delimeiok="${m.imei}">Xác nhận xóa</button><button class="ghost" data-delimei="">Thôi</button></span></div>`:''}`}).join('')}</div>`:''}</div>`}).join(''):'<div class="empty">Không có máy nào khớp.</div>'}</div></div>`;
 }
@@ -932,18 +940,17 @@ function renderKmTab(){
     return `<div class="wc2"><div class="wimg">${dau?`<span class="wpc">${esc(kmChip(dau))}</span>`:''}${img?`<img src="${esc(img)}" alt="" loading="lazy">`:'<span class="wno">📱</span>'}</div>
       <div class="whg">${esc(x.hang)}</div><div class="wn">${esc(x.k)}</div>
       <div class="wsl"><span class="wok">✓ Còn hàng</span><span class="wown" title="Chỉ shop thấy">Tồn ${x.ms.length}${mau>1?' · '+mau+' màu':''}</span></div>
-      <div class="wpr2">${gb?money(gb):`<button type="button" class="wlink2" data-kt="kho">Chưa có giá · đặt ở tab Kho</button>`}</div>
-      <div class="wny"><span>Giá bán · sửa ở tab <button type="button" class="wlink3" data-kt="kho">📦 Kho</button></span></div>${chips('g|'+x.k,x.k)}</div>`};
+      <div class="wpr2">${gb?money(gb):`<button type="button" class="wlink2" data-kt="kho">Chưa có giá · đặt ở tab Kho</button>`}</div>${chips('g|'+x.k,x.k)}</div>`};
   const tgLuc=TG&&TG.capNhat?new Date(TG.capNhat):null;
   $('v-stock').innerHTML=khoSeg()+`<div class="wtop"><small>👀 Giao diện khách xem · ghi khuyến mãi thẳng trên từng máy</small><b>${esc(db.shop.ten||'Shop của bạn')}</b>
       <span>${L.length} mẫu còn hàng${tgLuc?` · giá niêm yết cập nhật ${tgLuc.toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit'})}`:''}</span>
-      <a class="wopen" href="/bg/?tu=app&xem=1${DEMO?'&demo=1':''}" data-kgweb="1">🌐 Xem website như khách</a></div>
+      <div class="wtop2"><button type="button" class="wopen" data-weblink="1">📋 Copy link gửi khách</button><button type="button" class="wopen" data-webpost="1">📝 Copy bài đăng</button></div></div>
     ${(()=>{if(!L.length)return '<div class="empty">Kho chưa có máy. Nhập hàng trước, rồi quay lại đây ghi khuyến mãi.</div>';
       const hb=x=>BRANDS.includes(x.hang)?x.hang:'Khác',BB=BRANDS.filter(b=>L.some(x=>hb(x)===b));if(kmBrand!=='Tất cả'&&!BB.includes(kmBrand))kmBrand='Tất cả';
       const chipsB=`<div class="wbr">${['Tất cả',...BB].map(b=>`<button type="button" data-kmb="${esc(b)}" aria-pressed="${kmBrand===b}">${esc(b)} <small>${b==='Tất cả'?L.length:L.filter(x=>hb(x)===b).length}</small></button>`).join('')}</div>`;
       return chipsB+(kmBrand==='Tất cả'?BB:[kmBrand]).map(b=>`<h3 class="wsec">${esc(b)} <small>${L.filter(x=>hb(x)===b).length} mẫu</small></h3><div class="wgrid">${L.filter(x=>hb(x)===b).map(the).join('')}</div>`).join('')})()}
     ${H.length?`<div class="panel" style="margin-top:12px"><h2>🎧 Phụ kiện · hàng khác</h2><div class="list">${H.map(h=>{return `<div class="wrow"><div class="n"><b>${esc(h.ten)}</b><small><b class="wred">${h.giaBan?money(h.giaBan):'Chưa có giá'}</b> · <span class="wown">Tồn ${h.sl}</span></small>${chips('h|'+h.id,h.ten)}</div></div>`}).join('')}</div></div>`:''}
-    <p class="kgnote" style="margin:12px 4px">Khuyến mãi lưu là app <b>tự gắn vào đơn khi bán</b> (cả nhân viên). "Tồn" chỉ shop thấy — khách chỉ thấy Còn hàng / Hết hàng. Giá trên web = <b>giá bán ở tab 📦 Kho</b> — đổi giá ở Kho là web đổi theo.</p>
+    <p class="kgnote" style="margin:12px 4px">Khuyến mãi lưu là app <b>tự gắn vào đơn khi bán</b> (cả nhân viên). "Tồn" chỉ shop thấy — khách chỉ thấy Còn hàng / Hết hàng.</p>
     ${kmSheet?renderKmSheet():''}`}
 function renderKmSheet(){const hg=db.hang.filter(h=>h.sl>0).sort((a,b)=>a.ten.localeCompare(b.ten));const T=[['giam','💸 Giảm tiền'],['pct','％ Giảm %'],['tang','🎧 Tặng phụ kiện'],['tg','💳 Trả góp 0%'],['txt','✏️ Khác']];
   return `<div class="wsheet" data-kmx="1"><form id="fKm" class="wsbox" autocomplete="off"><h3>Thêm khuyến mãi</h3><p class="wst">${esc(kmSheet.ten)}</p>
@@ -1146,6 +1153,7 @@ function renderMore(){
 }
 
 function render(){
+  if(TG)giaTuDong();else if(!TGload&&!NV)tgLoad().then(()=>{if(giaTuDong())render()});
   document.body.classList.toggle('nv',!OWN()||!!NV);document.body.classList.toggle('nvmode',!!NV);if(!OWN()&&(more==='set'||more==='tien'))more='pin';
   $('shopName').textContent=db.shop.ten||'Chưa đặt tên shop';
   $('today').textContent=['Chủ nhật','Thứ hai','Thứ ba','Thứ tư','Thứ năm','Thứ sáu','Thứ bảy'][new Date().getDay()]+', '+dmy(todayIso());
@@ -1473,6 +1481,19 @@ document.addEventListener('change',e=>{const t=e.target;if(!t.matches||!t.matche
   else{const h=db.hang.find(x=>x.id===t.dataset.kgh);if(!h)return;h.giaBan=g;save();toast(`Đã đổi giá ${h.ten}: ${money(g)}`)}
   t.value=g.toLocaleString('vi-VN');if(XEM)toast('Đang xem thử — giá không được lưu');const r=t.closest('.kgrow');if(r)r.querySelectorAll('.pill.a').forEach(p=>p.remove())});
 document.addEventListener('click',e=>{if(e.target.closest('[data-kgweb]')){try{Store.save(db)}catch(_){}}},true);
+/* 29/10: link website của shop — dựng bằng trang bảng giá chạy ẩn (cùng dữ liệu kho trên máy) */
+function layLinkWeb(){try{Store.save(db)}catch(_){}return new Promise(ok=>{const f=document.createElement('iframe');f.style.cssText='position:fixed;left:-9999px;width:390px;height:600px;border:0';f.src='/bg/?tu=app&nhung=1'+(DEMO?'&demo=1':'');document.body.appendChild(f);let n=0;
+  const t=setInterval(()=>{n++;let L='';try{L=f.contentWindow.LINK||''}catch(_){}if(L||n>60){clearInterval(t);f.remove();if(L){try{localStorage.setItem('sg_web_link',L)}catch(_){}}ok(L||(()=>{try{return localStorage.getItem('sg_web_link')||''}catch(_){return ''}})())}},200)})}
+const CTA=l=>'👉 Truy cập ngay để tham khảo giá và khuyến mãi: '+l;
+function baiDang(link){const G={};stock().forEach(m=>{const k=gk(m.ten);(G[k]=G[k]||{k,gb:0,n:0}).n++;G[k].gb=Math.max(G[k].gb,m.giaBan||0)});
+  const L=Object.values(G).filter(x=>kmCua('g|'+x.k).length).sort((a,b)=>b.n-a.n).slice(0,8),D=L.length?L:Object.values(G).sort((a,b)=>b.n-a.n).slice(0,6);
+  return ['🔥 '+(db.shop.ten||'Shop')+' — '+(L.length?'KHUYẾN MÃI HÔM NAY':'BẢNG GIÁ HÔM NAY')+' 🔥','',...D.map(x=>'📱 '+x.k+(x.gb?' — '+money(x.gb):'')+(kmCua('g|'+x.k).length?'\n   🎁 '+kmCua('g|'+x.k).map(kmChip).join(' · '):'')),'',
+    (db.shop.dc?'📍 '+db.shop.dc+'\n':'')+(db.shop.dt?'📞 '+db.shop.dt+'\n':''),CTA(link)].join('\n')}
+async function chepText(t,b,ok){try{await navigator.clipboard.writeText(t)}catch(_){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(__){}a.remove()}if(b){const c=b.textContent;b.textContent=ok;setTimeout(()=>b.textContent=c,1800)}}
+document.addEventListener('click',async e=>{const b=e.target.closest('[data-weblink],[data-webpost]');if(!b)return;const c=b.textContent;b.textContent='Đang tạo link…';const L=await layLinkWeb();b.textContent=c;
+  if(!L){toast('Chưa tạo được link — kho chưa có máy còn hàng?');return}
+  if(b.dataset.weblink!==undefined){if(navigator.share&&/Android|iPhone|iPad/i.test(navigator.userAgent)){navigator.share({title:db.shop.ten||'Bảng giá',text:CTA(''),url:L}).catch(()=>{});return}await chepText(L,b,'✓ Đã copy link');toast('Đã copy link — dán vào Zalo gửi khách')}
+  else{await chepText(baiDang(L),b,'✓ Đã copy bài');toast('Đã copy bài đăng — dán lên Facebook/Zalo')}});
 const loKey=m=>[m.ngayNhap,m.ten,m.giaNhap,m.ncc||''].join('|');
 /* 25/10 anh Thái: PHIẾU NHẬP — thêm nhiều mẫu máy + phụ kiện vào 1 phiếu, ghi nhà cung cấp 1 lần, lưu 1 lần; tìm lại theo NCC */
 let PN={dong:[],ncc:'',ngay:''}, pnFill=null, pnQ='', pnAsk=null;
@@ -1762,7 +1783,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261029-2215';let verLuc=0;
+const BUILD='20261029-2240';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}

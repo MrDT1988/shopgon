@@ -384,6 +384,9 @@ function taiHinh(i, d) {
     var a = document.createElement('a'); a.href = url; a.download = (d.ten + ' ' + MAU5[i][0]).replace(/\s+/g, '_') + '.png'; a.click(); b.textContent = cu;
   }).catch(function (e) { b.textContent = cu; alert('Chưa xuất được hình: ' + (e && e.message || e)); });
 }
+/* 29/10 anh Thái: mọi nội dung tạo cho shop luôn có câu chốt 👉 + link website của shop */
+function linkShop() { try { return localStorage.getItem('sg_web_link') || ''; } catch (e) { return ''; } }
+function chot() { var l = linkShop(); return '\n👉 Truy cập ngay để tham khảo giá và khuyến mãi: ' + (l || 'https://shopgon.vn'); }
 function caption(d) {
   var g = d.g, gia = g.ny ? vnd(g.cuoi) : 'Liên hệ', giam = g.giam ? ' (giảm ' + gon(g.giam) + ')' : '';
   var tag = '#' + d.ten.replace(/[^A-Za-z0-9]/g, '') + ' #' + (SP ? SP.hang : '') + ' #' + d.shop.replace(/[^A-Za-zÀ-ỹ0-9]/g, '');
@@ -393,8 +396,8 @@ function caption(d) {
     '✨ ' + d.ten + ' đã có hàng tại ' + d.shop + '!\n' + (d.diem.length ? d.diem.map(function (t) { return '✅ ' + t; }).join('\n') + '\n' : '') +
       '💰 Giá ' + gia + (g.giam ? ' — rẻ hơn giá hãng ' + gon(g.giam) : '') + '\n' + qua + (d.gop ? '💳 Trả góp chỉ ' + vnd(d.gop) + '/tháng\n' : '') +
       '📍 ' + d.dc + '\n📞 ' + d.dt + '\n' + tag,
-    '⏰ Số lượng có hạn! ' + d.ten + ' giá ' + gia + giam + '\n' + qua + '👉 Inbox / Zalo ' + d.dt + ' để giữ máy ngay hôm nay.\n📍 ' + d.shop + ' — ' + d.dc + '\n' + tag
-  ];
+    '⏰ Số lượng có hạn! ' + d.ten + ' giá ' + gia + giam + '\n' + qua + '📲 Inbox / Zalo ' + d.dt + ' để giữ máy ngay hôm nay.\n📍 ' + d.shop + ' — ' + d.dc + '\n' + tag
+  ].map(function (t) { return t + chot(); });
 }
 function chonCap(i) { $('cap').value = CAPS[i]; [].forEach.call($('capchon').children, function (b, j) { b.classList.toggle('on', i === j); }); }
 [].forEach.call($('capchon').children, function (b, j) { b.onclick = function () { chonCap(j); }; });
