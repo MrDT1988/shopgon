@@ -438,24 +438,14 @@ function dRobot(du) {
   var sh = du.shop || {};
   return { ten: (du.may && du.may.ten) || '', dl: '', mau: '', anh: (du.may && du.may.anh) || '',
     g: { ny: ny, kmh: 0, kms: 0, giam: giam, cuoi: cuoi, pt: ny ? Math.round(giam / ny * 100) : 0 },
-    qua: (du.qua || []).slice(0, 3), gop: +du.gop || 0, tro: 0, diem: (du.txt || []).slice(0, 4),
+    qua: (du.qua || []).slice(0, 3), gop: +du.gop || 0, tro: 0, diem: ((du.txt || []).length ? du.txt : ['Sẵn hàng, nhận máy ngay', 'Xem & trải nghiệm tại shop', 'Tư vấn tận tình']).slice(0, 4),
     shop: sh.ten || 'Shop của bạn', dc: sh.dc || '', dt: sh.dt || '' };
 }
 /* chọn 4 mẫu hợp nội dung, xoay vòng theo mã đơn để mỗi bài 1 khác */
-function robotChon(du, ma) {
-  var d = dRobot(du), ten = MAU5.map(function (m) { return m[0]; }), kq = [];
-  var them = function (n) { var i = ten.indexOf(n); if (i >= 0 && kq.indexOf(i) < 0 && kq.length < 4) kq.push(i); };
-  var le = ['noel', 'namoi', 'tet'].indexOf(du.mua) >= 0;
-  if (le) them('Đỏ vàng dịp lễ');
-  if (d.g.giam) them('Khuyến mãi nổi bật');
-  if (d.qua.length) them('Giá sốc + quà');
-  if (d.gop) them('Trả góp');
-  var bo = ['Thu cũ đổi mới']; if (!d.diem.length) bo.push('Thẻ thông số', 'Điểm nổi bật'); if (!d.g.giam) bo.push('Hot sale đen vàng', 'Khuyến mãi nổi bật'); if (!d.g.giam && !d.qua.length) bo.push('Giá sốc + quà'); if (!d.gop) bo.push('Trả góp');
-  var pool = ten.map(function (_, i) { return i; }).filter(function (i) { return bo.indexOf(ten[i]) < 0 && kq.indexOf(i) < 0; });
-  var r = _rand(_hash(ma));
-  for (var i = pool.length - 1; i > 0; i--) { var j = Math.floor(r() * (i + 1)), t = pool[i]; pool[i] = pool[j]; pool[j] = t; }
-  while (kq.length < 4 && pool.length) kq.push(pool.shift());
-  return kq.map(function (i) { return { i: i, ten: ten[i] }; });
+function robotChon(du, ma) {   /* 30/10 anh Thái: ra ĐỦ 15 mẫu đã chốt — shop tự lựa, sau đó đếm mẫu được chọn để giữ/thay */
+  var L = MAU5.map(function (m, i) { return { i: i, ten: m[0] }; });
+  if (['noel', 'namoi', 'tet'].indexOf(du.mua) >= 0) L.sort(function (a, b) { return (b.ten === 'Đỏ vàng dịp lễ') - (a.ten === 'Đỏ vàng dịp lễ'); });
+  return L;
 }
 function robotVe(du, i, ma) {
   var d = dRobot(du), cho = $('cho');
