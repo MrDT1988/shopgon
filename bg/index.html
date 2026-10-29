@@ -110,6 +110,9 @@ input,select{font:inherit;font-size:16px;padding:9px 11px;border:1px solid var(-
 .xem .goi .goi1{background:#16a34a}
 .xem .toast{position:fixed;left:50%;bottom:96px;transform:translate(-50%,20px);background:#14171b;color:#fff;font-size:14px;font-weight:600;padding:10px 16px;border-radius:12px;opacity:0;transition:.2s;pointer-events:none;z-index:60;max-width:92vw;text-align:center}
 .xem .toast.on{opacity:1;transform:translate(-50%,0)}
+.xem .chu{position:relative;z-index:7;display:flex;align-items:center;gap:8px;padding:8px 12px;background:#111827;color:#fff;font-size:12.5px}
+.xem .chu a{color:#fff;text-decoration:none;font-weight:800}.xem .chu span{flex:1;opacity:.7;text-align:center}
+.xem .chu button{border:0;background:#ffd400;color:#111827;font-weight:800;border-radius:999px;padding:6px 11px;font-size:12.5px}
 </style></head><body>
 <div id="sua">
 <header><a id="veapp" hidden style="color:inherit;font-size:13px;text-decoration:none;opacity:.85">‹ Về app</a><b>🏷 Bảng giá online</b><small>Bản demo · bản thật tự lấy từ tồn kho · ảnh máy cập nhật ngày 10, ngày 20 và ngày cuối tháng</small></header>
@@ -236,6 +239,13 @@ function veXem(d) {
     '<div class="tabs">' + tabs.map(function (h) { return '<button data-t="' + h + '">' + (h === 'PK' ? '🎧 Phụ kiện' : h === 'NB' ? '🔥 Bán chạy' : TEN[h]) + '</button>'; }).join('') + '</div>' +
     '<div class="khuc"></div><div class="ds"></div><div class="cuoi">Giá niêm yết tham khảo Thế Giới Di Động · giá có thể thay đổi theo ngày<br>Bảng giá tạo bằng Shop Gọn · shopgon.vn</div>' +
     (d.p ? '<div class="goi"><a class="nut goi1" href="tel:' + esc(d.p.replace(/\s/g, '')) + '">📞 Gọi shop</a><a class="nut zalo" href="https://zalo.me/' + esc(d.p.replace(/\D/g, '')) + '" target="_blank">💬 Zalo</a><button class="nut phu" id="xcopy">🔗 Gửi bạn</button></div>' : '') + '</div>';
+  /* 29/10: chủ shop mở từ app (Kho › Khuyến mãi) → vào thẳng trang khách, có thanh nhỏ Về app + Gửi link */
+  if (/[?&]tu=app/.test(location.search) && !new URLSearchParams(location.search).get('d')) {
+    var ob = document.createElement('div'); ob.className = 'chu';
+    ob.innerHTML = '<a href="/app/' + (DEMO ? '?demo=1' : '') + '">‹ Về app</a><span>Bạn đang xem như khách</span><button type="button" id="chuGui">📤 Gửi link khách</button>';
+    x.firstChild.insertBefore(ob, x.firstChild.firstChild);
+    ob.querySelector('#chuGui').onclick = function () { var L = LINK || location.href; if (navigator.share) navigator.share({ title: d.s || 'Bảng giá', url: L }).catch(function () { }); else copyLink(L, ob.querySelector('#chuGui')); };
+  }
   [].forEach.call(x.querySelectorAll('.tabs button'), function (b) { b.onclick = function () { tab = b.dataset.t; khuc = 'all'; tu = ''; x.querySelector('.timx').value = ''; ve(); window.scrollTo(0, x.querySelector('.tabs').offsetTop - 1 > window.scrollY ? window.scrollY : x.querySelector('.tabs').offsetTop); }; });
   x.querySelector('.timx').oninput = function (e) { tu = e.target.value; khuc = 'all'; ve(); };
   var xc = $('xcopy'); if (xc) xc.onclick = function () { copyLink(LINK || location.href, xc); };
