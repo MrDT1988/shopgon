@@ -1,0 +1,15 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bảng giá · Shop Gọn</title><style>body{margin:0;font:16px/1.5 system-ui,sans-serif;background:#f5f6f8;color:#111827;display:grid;place-items:center;min-height:100vh}p{padding:24px;text-align:center}</style></head><body>
+<p id="t">Đang mở bảng giá của shop…</p>
+<script>
+/* 29/10: link ngắn shopgon.vn/s/<mã> → lấy bảng giá nén từ máy chủ Shop Gọn → mở trang khách */
+(function () {
+  var SV = 'https://script.google.com/macros/s/AKfycbyyqlK8nFmTxO_6ZNDee0FdTZeynwzHWsgRvQKxfKI0qZKtPEve_rrP4kL9O1PWj25bJg/exec';
+  var m = (location.pathname.match(/^\/s\/([a-z0-9]{4,10})\/?$/) || [])[1] || new URLSearchParams(location.search).get('m') || '';
+  if (!m) { if (/^\/s\/?$/.test(location.pathname) || location.pathname.indexOf('/s/') === 0) document.getElementById('t').textContent = 'Link bảng giá không đúng — nhờ shop gửi lại nhé.'; else location.replace('/'); return; }
+  fetch(SV + '?web=' + encodeURIComponent(m) + '&_t=' + Date.now(), { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (j) {
+    if (j && j.ok && j.z) location.replace('/bg/?d=' + encodeURIComponent(j.z).replace(/%2D/g, '-').replace(/%5F/g, '_') + '&s=' + m);
+    else document.getElementById('t').textContent = 'Không tìm thấy bảng giá — nhờ shop gửi lại link nhé.';
+  }).catch(function () { document.getElementById('t').textContent = 'Mạng chậm, bấm tải lại trang nhé.'; });
+})();
+</script></body></html>

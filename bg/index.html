@@ -247,11 +247,12 @@ function veXem(d) {
     var ob = document.createElement('div'); ob.className = 'chu';
     ob.innerHTML = '<a href="/app/' + (DEMO ? '?demo=1' : '') + '">‹ Về app</a><span>Bạn đang xem như khách</span><button type="button" id="chuGui">📤 Gửi link khách</button>';
     x.firstChild.insertBefore(ob, x.firstChild.firstChild);
-    ob.querySelector('#chuGui').onclick = function () { var L = LINK || location.href; if (navigator.share) navigator.share({ title: d.s || 'Bảng giá', url: L }).catch(function () { }); else copyLink(L, ob.querySelector('#chuGui')); };
+    ob.querySelector('#chuGui').onclick = function () { var L = (function () { try { var x = localStorage.getItem('sg_web_link'); return x && x.indexOf('/s/') > 0 ? x : ''; } catch (e) { return ''; } })() || LINK || location.href; if (navigator.share) navigator.share({ title: d.s || 'Bảng giá', url: L }).catch(function () { }); else copyLink(L, ob.querySelector('#chuGui')); };
   }
   [].forEach.call(x.querySelectorAll('.tabs button'), function (b) { b.onclick = function () { tab = b.dataset.t; khuc = 'all'; tu = ''; x.querySelector('.timx').value = ''; ve(); window.scrollTo(0, x.querySelector('.tabs').offsetTop - 1 > window.scrollY ? window.scrollY : x.querySelector('.tabs').offsetTop); }; });
   x.querySelector('.timx').oninput = function (e) { tu = e.target.value; khuc = 'all'; ve(); };
-  var xc = $('xcopy'); if (xc) xc.onclick = function () { copyLink(LINK || location.href, xc); };
+  var sMa = new URLSearchParams(location.search).get('s'), linkGui = sMa ? location.origin + '/s/' + sMa : (LINK || location.href);
+  var xc = $('xcopy'); if (xc) xc.onclick = function () { copyLink(linkGui, xc); };
   x.addEventListener('click', function (e) {
     var b = e.target.closest && e.target.closest('[data-hoi]'); if (!b || !d.p) return;
     var m = d.m[+b.dataset.hoi]; if (!m) return; var g = giaSP(m);
