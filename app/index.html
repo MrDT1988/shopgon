@@ -102,6 +102,16 @@ body::before{background:#0f7f74}
 .ghost{box-shadow:0 1px 0 rgba(16,42,52,.1),0 2px 6px rgba(16,42,52,.06)}
 .ghost:active,.chip:active,.menu button:active{transform:translateY(1px)}
 nav.tabs{box-shadow:0 -6px 20px rgba(16,42,52,.10);border-top:0}
+/* 01/11 (2) tìm kiếm trang chủ · web & truyền thông · bắt đầu */
+.gs{margin:0 0 12px}.gsb{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:0 6px 0 12px;box-shadow:0 1px 2px rgba(16,42,52,.06),0 6px 16px rgba(16,42,52,.06)}.gsb>svg{width:20px;height:20px;fill:none;stroke:var(--muted);stroke-width:2;stroke-linecap:round;flex:none}
+.gsb input{flex:1;min-width:0;border:0;background:none;box-shadow:none;padding:13px 0;font-size:16px;outline:0}.gsc{border:0;background:var(--pen-soft);border-radius:10px;width:40px;height:40px;display:grid;place-items:center;cursor:pointer}.gsc svg{width:22px;height:22px;fill:none;stroke:var(--pen);stroke-width:2;stroke-linecap:round}
+.gsl{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-top:8px;overflow:hidden}.gsr{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;background:none;border:0;border-top:1px solid var(--line);padding:11px 14px;font:inherit;text-align:left;cursor:pointer}.gsr:first-child{border-top:0}.gsr:active{background:var(--bg)}
+.gsr .n{display:flex;flex-direction:column;min-width:0}.gsr small,.gss small{color:var(--muted);font-size:12px}.gsa{color:var(--pen);font-weight:700;font-size:13px;white-space:nowrap}
+.hw2 .wl{background:var(--bg);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;margin-bottom:10px}.hw2 .wl span{color:var(--muted);font-size:12.5px}.hw2 .wl b{font-size:14px;color:var(--pen);word-break:break-all}.hw2 .wb{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.hw2 .wopen{border:1.5px solid #b9e3da;background:linear-gradient(135deg,#e6f6f2,#fff);color:var(--pen);border-radius:12px;padding:11px 8px;font:inherit;font-size:13px;font-weight:700;cursor:pointer;line-height:1.3}
+.gst{border:2px solid #b9e3da;background:linear-gradient(180deg,#f2fbf8,#fff)}.gst .qh small{color:var(--pen);font-weight:800}.gsbar{height:6px;background:#d9ece7;border-radius:6px;margin:0 4px 6px;overflow:hidden}.gsbar i{display:block;height:100%;background:var(--pen);border-radius:6px}
+.gss{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;border-top:1px solid #e3efec;padding:11px 4px;font:inherit;text-align:left;cursor:pointer}.gss:first-of-type{border-top:0}.gss .n{display:flex;flex-direction:column;flex:1;min-width:0}.gss b{font-size:14px}
+.gsn{width:28px;height:28px;border-radius:50%;background:#fff;border:2px solid var(--pen);color:var(--pen);display:grid;place-items:center;font-weight:800;font-size:13px;flex:none}.gss.ok .gsn{background:var(--pen);color:#fff}.gss.ok b{text-decoration:line-through;opacity:.55}
 /* 01/11 lưới phụ kiện · menu nhóm · màn trống (học từ Sổ Bán Hàng) */
 .pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}.pt{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:3px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px 8px 10px;text-align:left;font:inherit;cursor:pointer;min-width:0}.pt:active{transform:translateY(1px);background:var(--bg)}
 .pt .pi{width:100%;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--pen-soft),#eef7f5);display:grid;place-items:center;font-size:28px;margin-bottom:4px}.pt b{font-size:12.5px;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:31px;width:100%}.pt .pp{font-size:13px;font-weight:800;color:var(--pen)}.pt small{color:var(--muted);font-size:11.5px}
@@ -689,6 +699,23 @@ document.addEventListener('submit',async e=>{const f=e.target;if(f.id!=='fNvLogi
   try{const r=await nvPost({act:'nvLogin',sdt:so});if(!r.ok){err.textContent=r.msg||'Không đăng nhập được.';return}
     try{localStorage.setItem('shopgon_nv',JSON.stringify({sdt:so,ten:r.ten}))}catch(_){}location.href='/app/'}
   catch(_){err.textContent='Chưa kết nối được, kiểm tra mạng rồi thử lại.'}});
+/* 01/11 (2) học từ Sổ Bán Hàng: thanh tìm kiếm + quét trên đầu · thẻ Web & Truyền thông · hướng dẫn bắt đầu */
+let gsQ='';
+function gsHtml(){const q=gsQ.trim();if(q.length<2)return '';const nq=nv0(q),dq=q.replace(/\D/g,'');const R=[];
+  if(/^\d{4,}$/.test(q.replace(/\s/g,''))){db.may.filter(m=>m.imei.includes(dq)).sort((a,b)=>(a.tt==='ton'?0:1)-(b.tt==='ton'?0:1)).slice(0,5).forEach(m=>R.push(`<button class="gsr" data-gspick="m|${m.imei}"><span class="n"><b>📱 ${esc(m.ten)}</b><small class="num">IMEI …${m.imei.slice(-6)} · ${m.tt==='ton'?'Còn trong kho':'Đã bán'}</small></span><span class="gsa">${m.tt==='ton'?'Bán':'Tra BH'} ›</span></button>`))}
+  else{const G=new Map();db.may.filter(m=>nv0(m.ten).includes(nq)).forEach(m=>{const o=G.get(m.ten)||{ten:m.ten,ton:0,ban:0};if(m.tt==='ton')o.ton++;else o.ban++;G.set(m.ten,o)});[...G.values()].sort((a,b)=>b.ton-a.ton).slice(0,5).forEach(o=>R.push(`<button class="gsr" data-gspick="t|${esc(o.ten)}"><span class="n"><b>📱 ${esc(o.ten)}</b><small class="num">${o.ton?'Còn '+o.ton+' máy':'Hết máy'}${o.ban?' · đã bán '+o.ban:''}</small></span><span class="gsa">${o.ton?'Bán':'Xem'} ›</span></button>`))}
+  if(!NV)khachDs().filter(o=>nv0(o.ten).includes(nq)||(dq.length>=4&&String(o.sdt||'').replace(/\D/g,'').includes(dq))).slice(0,4).forEach(o=>R.push(`<button class="gsr" data-gspick="k|${esc(o.ten||o.sdt)}"><span class="n"><b>👤 ${esc(o.ten||'Khách')}</b><small class="num">${esc(o.sdt||'Chưa có SĐT')}</small></span><span class="gsa">Xem ›</span></button>`));
+  db.hang.filter(h=>nv0(h.ten).includes(nq)).slice(0,4).forEach(h=>R.push(`<button class="gsr" data-gspick="h|${h.id}"><span class="n"><b>🎧 ${esc(h.ten)}</b><small class="num">Còn ${Math.max(0,h.sl)}${h.giaBan?' · '+money(h.giaBan):''}</small></span><span class="gsa">Kho ›</span></button>`));
+  return `<div class="gsl">${R.length?R.join(''):'<div class="empty sm">Không thấy kết quả. Thử gõ 4–6 số cuối IMEI hoặc tên khác.</div>'}</div>`}
+function homeSearch(){return `<div class="gs"><div class="gsb"><svg viewBox="0 0 24 24"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-5-5"/></svg><input id="gsQ" inputmode="search" autocomplete="off" placeholder="Tìm máy, IMEI, khách, phụ kiện…" value="${esc(gsQ)}"><button type="button" class="gsc" data-scan="gsQ" aria-label="Quét IMEI"><svg viewBox="0 0 24 24"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 8v8M10 8v8M13 8v8M17 8v8"/></svg></button></div><div id="gsRes">${gsHtml()}</div></div>`}
+const sgTry=f=>{try{return f()}catch(_){return undefined}};
+function homeWeb(){if(NV)return '';const L=sgTry(linkNgan)||'',tq=sgTry(()=>TTQ)||{},con=tq.con==null?null:tq.con,han=tq.han||2,ns=stock().length;
+  return `<div class="panel qa hw2"><div class="qh"><b>🌐 Website & truyền thông</b><button class="lnk" data-more="bg">Mở ›</button></div>
+  <div class="wl">${L?`<span>Web của shop</span><b>${esc(L.replace(/^https?:\/\//,''))}</b>`:`<span>${ns?'Web bảng giá tự tạo từ kho của anh':'Nhập máy vào kho là có web bảng giá ngay'}</span>`}</div>
+  <div class="wb"><button type="button" class="wopen" data-weblink="1">🔗 Gửi link khách</button><button type="button" class="wopen" data-more="ttq">🖼 Tạo ảnh + bài đăng${con!==null?` · còn ${con}/${han}`:''}</button></div></div>`}
+function homeStart(){if(NV||XEM||db.sample)return '';const st=[[db.may.length+db.hang.length>0,'Nhập hàng vào kho','Máy (IMEI) hoặc phụ kiện','data-go="add"'],[db.don.length>0,'Bán đơn đầu tiên','Quét IMEI hoặc chọn phụ kiện','data-go="sell"'],[!!sgTry(linkNgan),'Gửi bảng giá cho khách','Web tự tạo từ kho, kèm giá và khuyến mãi','data-more="bg"'],[((sgTry(()=>TTQ)||{}).ds||[]).length>0,'Tạo ảnh + bài đăng đầu tiên','Robot thiết kế 15 mẫu cho một máy','data-more="ttq"']];
+  const done=st.filter(x=>x[0]).length;if(done>=st.length||db.don.length>=5)return '';
+  return `<div class="panel qa gst"><div class="qh"><b>🚀 Bắt đầu với Shop Gọn</b><small>${done}/${st.length}</small></div><div class="gsbar"><i style="width:${done/st.length*100}%"></i></div>${st.map(([ok,t,d,a],i)=>`<button class="gss${ok?' ok':''}" ${a}><span class="gsn">${ok?'✓':i+1}</span><span class="n"><b>${t}</b><small>${d}</small></span><span class="gsa">›</span></button>`).join('')}</div>`}
 /* 01/11 học từ app Sổ Bán Hàng: lối tắt + Việc cần làm ngay trang chủ */
 function homeQuick(){const Q=[['data-go="sell"','Bán hàng','M3 4h2l2.4 11.2a1 1 0 0 0 1 .8h9.2a1 1 0 0 0 1-.8L20 8H6M9 20h.01M17 20h.01'],['data-go="add"','Nhập hàng','M6 2h12v20H6zM12 8v6M9 11h6'],['data-more="hist"','Đơn đã bán','M12 8v4l3 2M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5'],['data-more="kh"','Khách hàng','M16 19v-1a4 4 0 0 0-8 0v1M12 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6M20 19v-1a3 3 0 0 0-2-2.8M4 19v-1a3 3 0 0 1 2-2.8'],['data-more="look"','Tra IMEI · BH','M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-5-5'],['data-more="bg"','Bảng giá online','M3 7l9-4 9 4-9 4zM3 12l9 4 9-4M3 17l9 4 9-4']];
   return `<div class="panel qa"><div class="qh"><b>Truy cập nhanh</b><button class="lnk" data-v="more">Xem thêm ›</button></div><div class="qg">${Q.map(([a,t,d])=>`<button ${a}><i><svg viewBox="0 0 24 24"><path d="${d}"/></svg></i>${t}</button>`).join('')}</div></div>`}
@@ -720,6 +747,7 @@ function renderHome(){if(NV){renderNvHome();return}
   const tdDon=live().filter(d=>d.ngay===t).sort((a,b)=>b.gio.localeCompare(a.gio,undefined,{numeric:true}));
   const diff=yd.dt?Math.round((td.dt/yd.dt-1)*100):null;
   $('v-home').innerHTML=`
+  ${homeSearch()}${homeStart()}
   ${db.sample&&!XEM?`<div class="alert amber"><b>Đang xem dữ liệu mẫu.</b><span>Bấm thử thoải mái. Khi dùng thật, vào Thêm → Cài đặt → Bắt đầu dữ liệu thật.</span></div>`:''}
   <div class="kpis">
     <button class="kpi hero" data-toggle="todayList" aria-expanded="${showToday}"><div class="eyebrow">Doanh thu hôm nay</div><div class="v num">${money(td.dt)}</div>
@@ -729,7 +757,7 @@ function renderHome(){if(NV){renderNvHome();return}
     <div class="kpi own"><div class="eyebrow">Lời hôm nay</div><div class="v num good">${money(td.loi)}</div><div class="d">Tháng này ${short(mo.loi)}</div></div>
     ${(()=>{const L=tdDon.filter(d=>isDv(d.loai));const tien=L.reduce((s2,d)=>s2+(d.soTien||0),0),phi=L.reduce((s2,d)=>s2+d.giaBan,0);return `<div class="kpi"><div class="eyebrow">Thu hộ hôm nay</div><div class="v num">${money(tien)}</div><div class="d">${L.length} giao dịch · phí ${short(phi)}</div></div>`})()}
   </div>
-  ${homeQuick()}${homeTasks(old,warn,tg)}
+  ${homeQuick()}${homeWeb()}${homeTasks(old,warn,tg)}
   ${on('chi')?(()=>{const k=ketNgay(todayIso()),m0=todayIso().slice(0,8)+'01',cm=chiOf(m0,todayIso()),lm=sumRange(m0,todayIso()).loi;return `<button class="panel ketcard" data-more="chi" style="width:100%;text-align:left;display:block;cursor:pointer"><div class="ketbig" style="margin:0;padding:0;border:0"><span><b style="font-size:14px">💵 Tiền mặt phải có trong két</b></span><b class="num">${money(k.ket)}</b></div><small style="color:#46506b">CK ${short(k.ck)} · đã chi ${short(k.chi)}<span class="own"> · Lời ròng tháng ${short(lm-cm)}</span> · Bấm để chốt két ›</small></button>`})():''}
   ${(()=>{/* 25/10 anh Thái: doanh thu theo người bán (chủ shop + từng nhân viên) */
     const t=todayIso(),m0=t.slice(0,8)+'01',L=live().filter(d=>d.ngay>=m0&&d.ngay<=t&&d.loai!=='thu');
@@ -1236,6 +1264,11 @@ document.addEventListener('click',e=>{
   if(b.dataset.pick){sellImei=b.dataset.pick;sellTT='Tiền mặt';render();return}
   if(b.dataset.sellimei){sellMode='may';sellImei=b.dataset.sellimei;sellTT='Tiền mặt';go('sell');return}
   if(b.dataset.nhom){pkNhom=b.dataset.nhom;pkPick=null;pkQ='';renderSell();return}
+  if(b.dataset.gspick){const [ty,...r]=b.dataset.gspick.split('|'),v=r.join('|');gsQ='';
+    if(ty==='t'){sellMode='may';sellImei=v;sellTT='Tiền mặt';go('sell')}
+    else if(ty==='m'){const m=db.may.find(x=>x.imei===v);if(m&&m.tt==='ton'){sellMode='may';sellImei=v;sellTT='Tiền mặt';go('sell')}else{lookQ=v;more='look';go('more')}}
+    else if(ty==='k'){khQ=v;khOpen=null;more='kh';go('more')}
+    else{stockMode='hang';hangQ=(db.hang.find(x=>x.id===v)||{}).ten||'';go('stock')}return}
   if(b.dataset.pkadd){const it=db.hang.find(x=>x.id===b.dataset.pkadd);if(it&&it.giaBan&&it.sl-cartQty(it.id)>0){cart.push({type:'hang',hangId:it.id,ten:it.ten,nhom:it.nhom,gia:it.giaBan,von:it.giaNhap,sl:1});kmGan(cart[cart.length-1],'h|'+it.id);render();toast('Đã thêm '+it.ten)}return}
   if('pkpick' in b.dataset){pkPick=b.dataset.pkpick||null;renderSell();return}
   if(b.dataset.am){addMode=b.dataset.am;render();return}
@@ -1300,6 +1333,7 @@ document.addEventListener('input',e=>{
   if(t.id==='sImei'){const pos=t.selectionStart;sellImei=t.value.trim();const before=document.activeElement===t;renderSell();const i=$('sImei');if(before){i.focus();try{i.setSelectionRange(pos,pos)}catch(_){}}return}
   if(t.id==='sGia'){updSellProfit();return}
   if(t.id==='pGia'||t.id==='pVon'||t.id==='pSl'){updPkProfit();return}
+  if(t.id==='gsQ'){gsQ=t.value;const r=$('gsRes');if(r)r.innerHTML=gsHtml();return}
   if(t.id==='pQ'){pkQ=t.value;renderSell();const i=$('pQ');i.focus();i.setSelectionRange(i.value.length,i.value.length);return}
   if(t.id==='hQ'){hangQ=t.value;renderStock();const i=$('hQ');i.focus();i.setSelectionRange(i.value.length,i.value.length);return}
   if(t.id==='hTen'){const v=t.value.trim();const h=$('hHint');if(h){const ex2=v&&db.hang.find(x=>x.ten===v);h.className='hint '+(ex2?'old':'new');h.textContent=!v?'':ex2?'Đã có trong kho (còn '+ex2.sl+'), số nhập sẽ cộng thêm':'Hàng mới, sẽ tạo món mới trong kho'}const ex=db.hang.find(h=>h.ten===t.value.trim());if(ex){$('hNhom').value=ex.nhom+'|'+loaiOf(ex);$('hMin').value=ex.min;if(!$('hGN').value)$('hGN').value=ex.giaNhap.toLocaleString('vi-VN');if(!$('hGB').value&&ex.giaBan)$('hGB').value=ex.giaBan.toLocaleString('vi-VN')}return}
@@ -1839,7 +1873,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261101-2350';let verLuc=0;
+const BUILD='20261102-0010';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
