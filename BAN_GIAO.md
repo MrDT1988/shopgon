@@ -159,3 +159,11 @@ App quản lý bán hàng cho shop điện thoại (shopgon.vn), chạy trên đ
 - Chưa làm (ý tưởng từ Sổ, chờ anh duyệt): chọn lối tắt tuỳ ý (nút bút) · In mã vạch · "Máy quét" (súng quét) bên cạnh camera · Danh thiếp shop · nút Khoản thu/Khoản chi cố định dưới đáy màn Sổ chi · hộp thư thông báo.
 - Bẫy: `TTQ`, `linkNgan` khai báo SAU `renderHome` (let/const) → lần vẽ đầu bị TDZ; mọi chỗ trang chủ dùng chúng phải qua `sgTry(...)`.
 - BUILD 20261102-0010. Test `_tam/test-toan-bo.py` 57/57.
+
+## 18. Phiên 02/11 sáng sớm — GỌN LẠI THEO SỔ BÁN HÀNG (anh Thái: "trang Hôm nay đang nhồi quá nhiều")
+- **Thanh dưới mới (5 mục):** Trang chủ · Bán · Kho hàng · Báo cáo · Thêm. Tab "Nhập hàng" bỏ khỏi thanh dưới, vào qua Kho hàng › Nhập hàng hoặc lối tắt trang chủ (view `add` vẫn còn, `go('add')` chạy như cũ; khi đang ở `add` thì tab Kho hàng sáng).
+- **Trang chủ** (`renderHome`) chỉ còn: ô tìm kiếm + quét · thẻ doanh thu hôm nay (bấm → Báo cáo) · Truy cập nhanh 6 nút (Bán hàng, Nhập hàng, Đơn đã bán, Khách hàng, Thu chi, Báo cáo) · Việc cần làm (ô số) · Website & truyền thông. Shop thật còn trống: thẻ "Bắt đầu với Shop Gọn" thay cho thẻ doanh thu. Nút ＋ Bán hàng nổi.
+- **Tab Báo cáo** (`renderRpt`, view `v-rpt`, `rptTab` ban|lai|kho): Bán hàng = biểu đồ/`reportPanel` + doanh thu theo người bán + đơn hôm nay · Lãi lỗ = lời hôm nay/thu hộ + lời tháng theo hãng + két · Kho hàng = tóm tắt tồn. (Nhân viên không thấy tab này.)
+- **Kho hàng** = danh sách đơn giản (`renderKhoHub`, biến `khoHub`): 3 số (máy tồn/phụ kiện/vốn) + dòng Nhập hàng, Tồn kho điện thoại, Tồn kho phụ kiện, Phiếu đã nhập, Giá bán & khuyến mãi, Kiểm kho, Nhà cung cấp, Tra IMEI, Bảng giá online. Bấm tab Kho hàng ở thanh dưới → hub; mọi chỗ gọi `go('stock')` bằng code vẫn ra màn tồn kho cũ (khoHub mặc định false); màn con có nút "‹ Kho hàng". `renderStock0` = màn tồn kho cũ.
+- **Thu chi** (`more==='chi'`, `renderThuChi`, `tcKy` ngay|thang, `chiSub` list|chi|ket): thẻ "Thu − chi trong kỳ" + Tổng thu/Tổng chi + lời ròng, danh sách giao dịch (thu = đơn bán, chi = sổ chi, xóa được), nút cố định dưới đáy "Khoản chi" (cam) và "Bán hàng" (xanh); form ghi chi và chốt két mở bằng `chiSub`.
+- Test: `_tam/test-toan-bo.py` 62/62 (thêm 5 test giao diện mới). Sửa 2 chỗ test phụ thuộc giờ/giao diện: trả hàng tìm theo IMEI (không phụ thuộc giờ máy), ghi chi đặt `chiSub='chi'`. BUILD 20261102-0100.

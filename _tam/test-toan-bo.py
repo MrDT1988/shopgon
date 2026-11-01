@@ -105,7 +105,7 @@ async def main():
         await E("$('rc').hidden=true")
 
         # 5. Trả hàng từ màn Bán: 1 ốp + máy
-        await E("sellMode='tra';trQ='';render()")
+        await E("sellMode='tra';trQ='860000000001001';render()")
         oid = await E(f"db.don.find(d=>d.bill==='{bill}'&&d.hangId).id")
         await pg.click(f'[data-trpick="{oid}"]'); await pg.fill('#trSl', '1'); await pg.click(f'[data-trok="{oid}"]'); await pg.wait_for_timeout(250); await E("$('rc').hidden=true")
         mid = await E(f"db.don.find(d=>d.bill==='{bill}'&&d.loai==='may').id")
@@ -148,8 +148,21 @@ async def main():
         ok('Kho: xóa 1 IMEI', await E("db.may.filter(m=>m.tt==='ton').length") == n0 - 1)
 
         # 10. Sổ chi + chốt két
-        await E("more='chi';go('more')"); await pg.fill('#chiTien', '150.000'); await pg.click('#fChi button[type=submit]'); await pg.wait_for_timeout(150)
+        await E("more='chi';chiSub='chi';go('more')"); await pg.fill('#chiTien', '150.000'); await pg.click('#fChi button[type=submit]'); await pg.wait_for_timeout(150)
         ok('Sổ chi: ghi khoản chi', await E("(db.chi||[]).some(c=>c.tien===150000)"))
+
+        # --- Giao diện mới 02/11 (học Sổ Bán Hàng): trang chủ gọn · báo cáo · kho danh sách · thu chi ---
+        await E("go('home')")
+        ok('Trang chủ gọn: 6 lối tắt, không còn biểu đồ báo cáo', await E("document.querySelectorAll('#v-home .qg button').length===6&&!$('v-home').innerText.includes('Tình hình kinh doanh')&&!document.querySelector('#v-home .ketcard')"))
+        await E("go('rpt')")
+        ok('Tab Báo cáo: có biểu đồ + 3 tab', await E("$('v-rpt').innerText.includes('Tình hình kinh doanh')&&document.querySelectorAll('#v-rpt [data-rt]').length===3"))
+        await E("khoHub=true;go('stock')")
+        ok('Kho hàng: danh sách ≥7 mục', await E("document.querySelectorAll('#v-stock .hubl button').length>=7"))
+        await pg.click('[data-kh="may"]')
+        ok('Kho › Tồn kho điện thoại: có nút ‹ Kho hàng', await E("!!document.querySelector('#v-stock [data-kh=hub]')"))
+        await E("khoHub=false;more='chi';chiSub='list';go('more')")
+        ok('Thu chi: thẻ tổng kết + 2 nút cố định dưới đáy', await E("!!document.querySelector('.tcsum')&&document.querySelectorAll('.tcbar button').length===2"))
+        await E("go('home')")
 
         # 11. Khách nợ
         await E(f"cart=[{{type:'hang',hangId:'{hid}',ten:'Ốp test',nhom:'pk',gia:50000,von:20000,sl:1}}];cartKhach='Anh Nợ';go('sell')")
