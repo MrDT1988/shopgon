@@ -184,3 +184,8 @@ App quản lý bán hàng cho shop điện thoại (shopgon.vn), chạy trên đ
 - Thẻ máy ở tab Web (`.wc2`) phẳng như lưới Bán.
 - Chip "Trả hàng" bỏ khỏi màn Bán; vào bằng nút "Trả hàng" trong Lịch sử đơn (tự điền mã HĐ) hoặc Thêm → Khách trả hàng. Luồng trả inline cũ trong lịch sử không còn gọi (code `traId` chết).
 - Ô tìm phụ kiện dạng pill; lịch sử đơn có nhãn Đã thanh toán / Còn nợ / Đã hủy. BUILD 20261102-0330.
+
+## 22. (02/11) Hóa đơn sau bán: QR mặc định, bỏ "Tiền mặt"
+- `openReceipt` mặc định `rcPay='ck'` (hiện QR VietQR khi shop có tài khoản); bỏ nút Tiền mặt/Chuyển khoản. Nút dưới: In hóa đơn · Ghi nợ (`data-rcpay="no"`, bấm lại "Bỏ ghi nợ") · Xong. Đơn lưu `tt='Đã thanh toán'` hoặc 'Ghi nợ'. Hóa đơn thêm địa chỉ/SĐT shop.
+- Tài khoản test/demo (`sampleDb`): LK Mobile Store (mẫu), MB Bank STK 0123456789 (SỐ GIẢ để xem giao diện — shop thật nhập ở Thêm → Cài đặt). QR dùng CDN cdnjs nên môi trường không có mạng sẽ báo "không tải được".
+BUILD 20261102-0400.

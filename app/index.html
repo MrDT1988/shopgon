@@ -489,7 +489,7 @@ function sampleDb(){
       don.push({id:'h'+d+'_'+j,ngay,gio:(9+j*3)+':15',loai:'may',imei,ten,hang:guessBrand(ten),giaBan:gb-off,giaVon:gn,tt:'Tiền mặt',khach:'',sdt:'',bh:12,huy:null})}
       const np=1+Math.floor(r()*3);for(let j=0;j<np;j++){const [l,t2,gb,gv]=pkL[Math.floor(r()*pkL.length)];don.push({id:'q'+d+'_'+j,ngay,gio:'16:'+(10+j),loai:l,ten:t2,giaBan:gb,giaVon:gv,tt:'Tiền mặt',huy:null})}}}
   const hang=[['Cường lực iPhone 15','pk',25000,100000,18,10],['Cường lực OPPO A-series','pk',20000,80000,4,10],['Ốp lưng silicon','pk',35000,120000,25,10],['Sạc nhanh 33W','pk',160000,290000,3,5],['Cáp Type-C','pk',25000,80000,30,10],['Tai nghe Bluetooth','pk',210000,390000,6,3],['Củ sạc 20W iPhone','pk',180000,350000,0,4],['Sim 0868 123 789','sim',180000,450000,1,0],['Sim 0379 888 168','sim',150000,350000,1,0],['Sim data Viettel 4G','sim',90000,150000,12,5],['Thẻ cào 100k','sim',96000,100000,3,10],['Màn hình iPhone 11','sua',600000,1200000,2,1],['Pin iPhone 11','sua',220000,450000,4,2]].map(([ten,nhom,gn,gb,sl,min],i)=>({id:'h'+i,ten,nhom,loai:['Cường lực','Cường lực','Ốp lưng','Sạc, cáp','Sạc, cáp','Tai nghe','Sạc, cáp','Sim số đẹp','Sim số đẹp','Sim data','Thẻ cào','Màn hình','Pin thay thế'][i],giaNhap:gn,giaBan:gb,sl,min,ngayNhap:iso(Date.now()-(i*3)*DAY)}));
-  return {v:1,sample:true,hang,shop:{ten:'Điện thoại Minh Phát (mẫu)',pct:{pk:40,sim:10,sua:45,khac:20},bh:12},may,don};
+  return {v:1,sample:true,hang,shop:{ten:'LK Mobile Store (mẫu)',dc:'Tiền Giang',dt:'0900 000 000',bank:{bin:'970422',acc:'0123456789',name:'LK MOBILE STORE'},pct:{pk:40,sim:10,sua:45,khac:20},bh:12},may,don};
 }
 function emptyDb(){return {v:1,sample:false,hang:[],pn:[],chi:[],shop:{ten:'',pct:{pk:40,sim:10,sua:45,khac:20},bh:12},may:[],don:[]}}
 
@@ -721,7 +721,7 @@ async function nvLoad(quiet){try{const r=await nvPost({act:'nvLogin',sdt:NV.sdt}
     const seen={},ds=[...(r.homNay||[]),...nvHomNay()].filter(o=>seen[o.id]?0:(seen[o.id]=1));nvHomNaySet(ds);render();if(!quiet)toast('Đã tải tồn kho mới')}
   catch(e){if(!quiet)toast('Chưa tải được, kiểm tra mạng')}}
 async function nvFlush(){const q=nvQ();if(!q.length)return;const left=[];for(const o of q){try{const r=await nvPost({act:'nvBan',sdt:NV.sdt,don:o});if(!r.ok){left.push(o);if(/không còn|hết hạn/.test(r.msg||''))toast(r.msg)}}catch(e){left.push(o)}}nvQSet(left);if(view==='home')render()}
-function nvClose(){const lines=db.don.filter(x=>x.bill===rcId||x.id===rcId);const tra=rcPay==='no'&&$('rcTra')?parseMoney($('rcTra').value):0;const tt=rcPay==='ck'?'Chuyển khoản':rcPay==='no'?'Ghi nợ':'Tiền mặt';
+function nvClose(){const lines=db.don.filter(x=>x.bill===rcId||x.id===rcId);const tra=rcPay==='no'&&$('rcTra')?parseMoney($('rcTra').value):0;const tt=rcPay==='no'?'Ghi nợ':'Đã thanh toán';
   const tot=lines.reduce((a,x)=>a+x.giaBan,0);$('rc').hidden=true;
   if(lines.length){const d0=lines[0];const o={id:d0.bill||d0.id,ngay:d0.ngay,gio:d0.gio,tt,no:rcPay==='no'?Math.max(0,tot-tra):0,khach:d0.khach||'',sdtKh:d0.sdt||'',
       lines:lines.map(x=>({loai:x.loai,imei:x.imei||'',ten:x.ten,hang:x.hang||'',giaBan:x.giaBan,giaVon:x.loai==='may'||x.hangId?0:x.giaVon,hangId:x.hangId||'',sl:x.sl||1,bh:x.bh||0,soTien:x.soTien||0,uocTinh:!!x.uocTinh}))};
@@ -1297,7 +1297,7 @@ function renderMore(){
           ${cancelId===d.id?`<div class="confirm" style="flex-basis:100%"><span class="inrow"><input id="cReason" placeholder="Lý do hủy, VD: nhập sai giá"><button class="ghost red" data-cancelok="${d.id}">Xác nhận hủy</button></span><small style="color:var(--muted)">Đơn không bị xóa, chỉ đánh dấu đã hủy.</small></div>`:''}</div>`).join('')}
         ${b.d0.sdt?`<div style="margin:8px 0 0"><a class="ghost" href="tel:${esc(String(b.d0.sdt).replace(/\s/g,''))}">📞 Gọi ${esc(b.d0.sdt)}</a></div>`:''}
         <div class="two" style="margin-top:10px"><label>Tên khách<input id="hKh" value="${esc(b.d0.khach||'')}" placeholder="Khách lẻ"></label><label>SĐT<input id="hSd" inputmode="tel" value="${esc(b.d0.sdt||'')}"></label></div>
-        <label style="margin-top:8px">Thanh toán<select id="hTt">${['Tiền mặt','Chuyển khoản','Ghi nợ'].map(x=>`<option${(b.d0.tt||'Tiền mặt')===x?' selected':''}>${x}</option>`).join('')}</select></label>
+        <label style="margin-top:8px">Thanh toán<select id="hTt">${['Đã thanh toán','Tiền mặt','Chuyển khoản','Ghi nợ'].map(x=>`<option${(b.d0.tt||'Tiền mặt')===x?' selected':''}>${x}</option>`).join('')}</select></label>
         <label style="margin-top:8px">Ghi chú<textarea id="hNote" style="min-height:64px" placeholder="VD: Hẹn trả ngày 30, người quen anh Tư…">${esc(b.d0.note||'')}</textarea></label>
         <label style="margin-top:8px">Khách còn nợ<input id="hNo" inputmode="numeric" class="num" value="${b.no?b.no.toLocaleString('vi-VN'):''}" placeholder="Để trống = không nợ"></label>
         <div class="inrow" style="margin-top:10px;flex-wrap:wrap"><button class="btn" style="flex:1" data-hsave="${esc(b.k)}">Lưu</button>${b.no>0?`<button class="ghost" data-hpaid="${esc(b.k)}">✓ Đã trả đủ</button>`:''}<button class="ghost" data-hrc="${esc(b.k)}">Hóa đơn</button><button class="ghost red" data-xoa="${esc(b.k)}">🗑 Xóa đơn</button></div>
@@ -1534,23 +1534,22 @@ function vietqr(bin,acc,amount,info){const mai=tlv('00','A000000727')+tlv('01',t
 const noMark=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').replace(/[^A-Za-z0-9 ]/g,'');
 function loadQr(){return window.QRCode?Promise.resolve():new Promise((ok,bad)=>{const sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';sc.onload=ok;sc.onerror=bad;document.head.appendChild(sc)})}
 let rcId=null, rcPay='ck';
-function openReceipt(id){rcId=id;rcPay=db.shop.bank?'ck':'tm';renderReceipt()}
+function openReceipt(id){rcId=id;rcPay='ck';renderReceipt()}
 function renderReceipt(){const lines=db.don.filter(x=>x.bill===rcId||x.id===rcId);if(!lines.length)return;const d=lines[0];const tot=lines.reduce((a,x)=>a+x.giaBan,0);const el=$('rc');el.hidden=false;
   const bank=db.shop.bank, bn=bank&&(BANKS.find(b=>b[0]===bank.bin)||[])[1];const code='SG'+rcId.slice(-6).toUpperCase();
   const canPrint=(()=>{try{return window.self===window.top}catch(e){return false}})();
   el.innerHTML=`<div class="rc"><div class="rcp" id="rcPrint">
-    <div class="rct">${esc(db.shop.ten||'Hóa đơn bán hàng')}</div><div class="rcs">Hóa đơn ${code} · ${dmy(d.ngay)} ${d.gio}</div>
+    <div class="rct">${esc(db.shop.ten||'Hóa đơn bán hàng')}</div>${db.shop.dc||db.shop.dt?`<div class="rcs" style="margin-top:0">${db.shop.dc?'📍 '+esc(db.shop.dc):''}${db.shop.dc&&db.shop.dt?' · ':''}${db.shop.dt?'📞 '+esc(db.shop.dt):''}</div>`:''}<div class="rcs">Hóa đơn ${code} · ${dmy(d.ngay)} ${d.gio}</div>
     ${d.khach||d.sdt?`<div class="rcs" style="margin-top:0">Khách: ${esc(d.khach||'')}${d.sdt?' · '+esc(d.sdt):''}</div>`:''}
     <div class="rcls">${lines.map(x=>`<div class="rcl"><div><b>${esc(x.ten)}</b>${x.imei?`<small class="num">IMEI ${x.imei}</small>`:''}${x.bh?`<small>Bảo hành ${x.bh} tháng</small>`:''}</div><b class="num">${x.loai==='km'&&!x.giaBan?'Tặng':money(x.giaBan)}</b></div>`).join('')}</div>
     <div class="rctot"><span>${tot<0?'Shop trả khách':'Tổng tiền'}</span><b class="num">${money(Math.abs(tot))}</b></div>
-    <div class="seg rcseg" role="group"><button data-rcpay="tm" aria-pressed="${rcPay==='tm'}">Tiền mặt</button><button data-rcpay="ck" aria-pressed="${rcPay==='ck'}">Chuyển khoản</button><button data-rcpay="no" aria-pressed="${rcPay==='no'}">Ghi nợ</button></div>
-    ${rcPay==='ck'?(bank?`<div class="qrbox"><div id="qr"></div><div class="qri"><b>${esc(bn||'')}</b><span class="num">${esc(bank.acc)}</span><span>${esc(bank.name)}</span><span class="num">Số tiền: <b>${money(tot)}</b></span><span class="num">Nội dung: ${code}</span></div></div>`
-      :`<div class="alert amber"><b>Chưa có tài khoản nhận tiền</b><span>Vào Thêm → Cài đặt, nhập ngân hàng và số tài khoản của shop để hiện mã QR.</span></div>`):rcPay==='no'?`<div style="display:flex;flex-direction:column;gap:6px"><label>Khách trả trước<input id="rcTra" inputmode="numeric" class="num" placeholder="0"></label><small style="color:var(--muted)">Phần còn lại ghi vào sổ nợ (Thêm › Đơn đã bán › Khách nợ).${d.khach?'':' Nên nhập tên khách ở đơn để dễ nhắc nợ.'}</small></div>`:`<div class="rcthanks">Cảm ơn quý khách!</div>`}
+    ${rcPay!=='no'?(bank?`<div class="qrbox"><div id="qr"></div><div class="qri"><b>${esc(bn||'')}</b><span class="num">${esc(bank.acc)}</span><span>${esc(bank.name)}</span><span class="num">Số tiền: <b>${money(tot)}</b></span><span class="num">Nội dung: ${code}</span></div></div><div class="rcthanks">Quý khách quét mã để chuyển khoản · hoặc trả tiền mặt tại quầy<br>Cảm ơn quý khách!</div>`
+      :`<div class="alert amber"><b>Chưa có tài khoản nhận tiền</b><span>Vào Thêm → Cài đặt, nhập ngân hàng và số tài khoản của shop để hiện mã QR.</span></div><div class="rcthanks">Cảm ơn quý khách!</div>`):rcPay==='no'?`<div style="display:flex;flex-direction:column;gap:6px"><label>Khách trả trước<input id="rcTra" inputmode="numeric" class="num" placeholder="0"></label><small style="color:var(--muted)">Phần còn lại ghi vào sổ nợ (Thêm › Đơn đã bán › Khách nợ).${d.khach?'':' Nên nhập tên khách ở đơn để dễ nhắc nợ.'}</small></div>`:''}
   </div>
-  <div class="rca">${canPrint?`<button class="ghost" data-rcprint="1">🖨 In</button>`:''}${canPrint&&/Android/i.test(navigator.userAgent)?`<button class="ghost" data-rcraw="1">In RawBT</button>`:''}<button class="btn" data-rcdone="1">Xong</button></div></div>`;
-  if(rcPay==='ck'&&bank){const amt=tot;loadQr().then(()=>{const q=$('qr');if(!q)return;q.innerHTML='';new QRCode(q,{text:vietqr(bank.bin,bank.acc,amt,code),width:220,height:220,correctLevel:QRCode.CorrectLevel.M})}).catch(()=>{const q=$('qr');if(q)q.textContent='Không tải được mã QR, kiểm tra mạng.'})}
+  <div class="rca">${canPrint?`<button class="ghost" data-rcprint="1">🖨 In hóa đơn</button>`:''}${NV?'':rcPay==='no'?`<button class="ghost" data-rcpay="ck">↩ Bỏ ghi nợ</button>`:`<button class="ghost" data-rcpay="no">📒 Ghi nợ</button>`}${canPrint&&/Android/i.test(navigator.userAgent)?`<button class="ghost" data-rcraw="1">In RawBT</button>`:''}<button class="btn" data-rcdone="1">Xong</button></div></div>`;
+  if(rcPay!=='no'&&bank){const amt=tot;loadQr().then(()=>{const q=$('qr');if(!q)return;q.innerHTML='';new QRCode(q,{text:vietqr(bank.bin,bank.acc,amt,code),width:220,height:220,correctLevel:QRCode.CorrectLevel.M})}).catch(()=>{const q=$('qr');if(q)q.textContent='Không tải được mã QR, kiểm tra mạng.'})}
 }
-function closeReceipt(){if(NV){nvClose();return}const lines=db.don.filter(x=>x.bill===rcId||x.id===rcId);const tra=rcPay==='no'&&$('rcTra')?parseMoney($('rcTra').value):0;lines.forEach(x=>x.tt=rcPay==='ck'?'Chuyển khoản':rcPay==='no'?'Ghi nợ':'Tiền mặt');if(rcPay==='no'&&lines.length)lines[0].no=Math.max(0,lines.reduce((a,x)=>a+x.giaBan,0)-tra);save();$('rc').hidden=true;rcId=null;render();if(lines.length)toast('Đã lưu đơn '+money(lines.reduce((a,x)=>a+x.giaBan,0)))}
+function closeReceipt(){if(NV){nvClose();return}const lines=db.don.filter(x=>x.bill===rcId||x.id===rcId);const tra=rcPay==='no'&&$('rcTra')?parseMoney($('rcTra').value):0;lines.forEach(x=>x.tt=rcPay==='no'?'Ghi nợ':'Đã thanh toán');if(rcPay==='no'&&lines.length)lines[0].no=Math.max(0,lines.reduce((a,x)=>a+x.giaBan,0)-tra);save();$('rc').hidden=true;rcId=null;render();if(lines.length)toast('Đã lưu đơn '+money(lines.reduce((a,x)=>a+x.giaBan,0)))}
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.rcpay){rcPay=b.dataset.rcpay;renderReceipt()}else if(b.dataset.rcdone)closeReceipt();else if(b.dataset.rcprint)printThuong();else if(b.dataset.rcraw)printRawbt();});
 
 /* ===== Quét mã vạch =====
@@ -2013,7 +2012,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261102-0330';let verLuc=0;
+const BUILD='20261102-0400';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
