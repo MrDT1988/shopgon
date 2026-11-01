@@ -69,7 +69,7 @@ async def main():
         im = await E(f"db.may.find(m=>m.ten==={ten_may!r}&&m.tt==='ton').imei")
         await E(f"cart=[];sellImei='{im}';sellMode='may';go('sell')"); await pg.click('#fSell button[type=submit]'); await pg.wait_for_timeout(150)
         ok('Bán: KM tự gắn vào đơn', await E("cartTotal()") == 11800000, await E("cartTotal()"))
-        await pg.click('[data-cartdel="0"]'); ok('Bỏ máy → bỏ luôn KM', await E("cart.length") == 0)
+        await E("cartOpen=true;render()"); await pg.click('[data-cartdel="0"]'); ok('Bỏ máy → bỏ luôn KM', await E("cart.length") == 0)
         await E("db.shop.km=[];khoTab='kho';save();go('add')")
 
         # 3. Sửa phiếu: +1 phụ kiện, bỏ 1 IMEI, Thôi giữ nguyên rồi sửa thật
@@ -89,12 +89,12 @@ async def main():
         await pg.fill('#sGia', '12.000.000'); await pg.click('#fSell button[type=submit]'); await pg.wait_for_timeout(150)
         hid = await E("db.hang.find(h=>h.ten==='Ốp test').id")
         await E(f"cart.push({{type:'hang',hangId:'{hid}',ten:'Ốp test',nhom:'pk',gia:50000,von:20000,sl:2}});render()")
-        await pg.click('[data-kmo]'); await pg.click('[data-kmgiam="200000"]')
-        await pg.click('[data-kmo]'); await pg.click('[data-kmtab="qua"]'); await pg.fill('#kmQua', 'Dán màn'); await pg.fill('#kmVon', '15000'); await pg.click('[data-kmqua]')
+        await E("cartOpen=true;render()"); await pg.click('[data-kmo]'); await pg.click('[data-kmgiam="200000"]')
+        await E("cartOpen=true;render()"); await pg.click('[data-kmo]'); await pg.click('[data-kmtab="qua"]'); await pg.fill('#kmQua', 'Dán màn'); await pg.fill('#kmVon', '15000'); await pg.click('[data-kmqua]')
         tong = await E("cartTotal()")
         ok('Giỏ hàng: tổng = 12tr + 100k − 200k', tong == 11900000, tong)
         dt0 = await E("live().filter(d=>d.ngay===todayIso()&&d.loai!=='thu').reduce((s,d)=>s+d.giaBan,0)")
-        await pg.click('[data-checkout]'); await pg.wait_for_timeout(300)
+        await E("cartOpen=true;render()"); await pg.click('[data-checkout]'); await pg.wait_for_timeout(300)
         bill = await E("rcId")
         ok('In hóa đơn hiện ra', await E("!$('rc').hidden"))
         r = json.loads(await S(f"{{may:db.may.find(m=>m.imei==='860000000001001').tt,op:db.hang.find(h=>h.id==='{hid}').sl,lines:db.don.filter(d=>d.bill==='{bill}').length,loi:db.don.filter(d=>d.bill==='{bill}').reduce((s,d)=>s+profitOf(d),0)}}"))
@@ -116,7 +116,7 @@ async def main():
 
         # 6. Sửa đơn / Hủy / Xóa đơn
         await E(f"cart=[{{type:'may',imei:'860000000001001',ten:'{ten_may}',hang:'OPPO',gia:11000000,von:10000000,bh:12,sl:1}}];render()")
-        await pg.click('[data-checkout]'); await pg.wait_for_timeout(250); b2 = await E("rcId"); await E("$('rc').hidden=true")
+        await E("cartOpen=true;render()"); await pg.click('[data-checkout]'); await pg.wait_for_timeout(250); b2 = await E("rcId"); await E("$('rc').hidden=true")
         await E(f"more='hist';histDays=1;histOpen='{b2}';go('more')")
         d2 = await E(f"db.don.find(d=>d.bill==='{b2}').id")
         await pg.click(f'[data-sua="{d2}"]'); await pg.fill('#eGia', '11.500.000'); await pg.click(f'[data-suaok="{d2}"]'); await pg.wait_for_timeout(150)
@@ -129,13 +129,13 @@ async def main():
         await E("go('sell');thuOpen=true;render()")
         await pg.fill('#tTen', 'iPhone 11 cũ'); await pg.fill('#tImei', '355555555555551'); await pg.fill('#tGia', '3.000.000'); await pg.click('#fThu button[type=submit]'); await pg.wait_for_timeout(150)
         ok('Thu cũ: trừ vào đơn', await E("cartTotal()") == -3000000)
-        await pg.click('[data-checkout]'); await pg.wait_for_timeout(250); await E("$('rc').hidden=true")
+        await E("cartOpen=true;render()"); await pg.click('[data-checkout]'); await pg.wait_for_timeout(250); await E("$('rc').hidden=true")
         ok('Thu cũ: máy cũ vào kho', await E("!!db.may.find(m=>m.imei==='355555555555551'&&m.tt==='ton')"))
 
         # 8. Đổi máy
         im_a = await E("stock().find(m=>m.imei!=='355555555555551').imei"); im_b = await E(f"stock().find(m=>m.imei!=='{im_a}'&&m.imei!=='355555555555551').imei")
         await E(f"cart=[{{type:'may',imei:'{im_a}',ten:'A',hang:'OPPO',gia:5000000,von:4000000,bh:12,sl:1}}];render()")
-        await pg.click('[data-checkout]'); await pg.wait_for_timeout(250); b3 = await E("rcId"); await E("$('rc').hidden=true")
+        await E("cartOpen=true;render()"); await pg.click('[data-checkout]'); await pg.wait_for_timeout(250); b3 = await E("rcId"); await E("$('rc').hidden=true")
         d3 = await E(f"db.don.find(d=>d.bill==='{b3}').id")
         await E(f"more='hist';histOpen='{b3}';go('more')"); await pg.click(f'[data-doi="{d3}"]'); await pg.fill('#dMoi', im_b); await pg.click(f'[data-doiok="{d3}"]'); await pg.wait_for_timeout(200)
         r = json.loads(await S(f"[db.may.find(m=>m.imei==='{im_a}').tt,db.may.find(m=>m.imei==='{im_b}').tt]"))
@@ -166,14 +166,14 @@ async def main():
 
         # 11. Khách nợ
         await E(f"cart=[{{type:'hang',hangId:'{hid}',ten:'Ốp test',nhom:'pk',gia:50000,von:20000,sl:1}}];cartKhach='Anh Nợ';go('sell')")
-        await pg.click('[data-checkout]'); await pg.wait_for_timeout(200); await pg.click('[data-rcpay="no"]'); await pg.fill('#rcTra', '10.000')
+        await E("cartOpen=true;render()"); await pg.click('[data-checkout]'); await pg.wait_for_timeout(200); await pg.click('[data-rcpay="no"]'); await pg.fill('#rcTra', '10.000')
         await E("document.querySelector('[data-rcdone]')&&document.querySelector('[data-rcdone]').click()"); await pg.wait_for_timeout(200)
         ok('Ghi nợ: đơn còn nợ 40k', await E("db.don.some(d=>d.khach==='Anh Nợ'&&+d.no===40000)"))
 
         # 11b. Khách hàng
         await E("more='kh';khQ='Chị Mai';go('more')"); await pg.wait_for_timeout(100)
         await E(f"cart=[{{type:'hang',hangId:'{hid}',ten:'Ốp test',nhom:'pk',gia:50000,von:20000,sl:1}}];cartKhach='Chị Mai';cartSdt='0909 111 222';go('sell')")
-        await pg.click('[data-checkout]'); await pg.wait_for_timeout(200); await E("$('rc').hidden=true")
+        await E("cartOpen=true;render()"); await pg.click('[data-checkout]'); await pg.wait_for_timeout(200); await E("$('rc').hidden=true")
         await E("more='kh';khQ='0909111';go('more')"); await pg.wait_for_timeout(150)
         k = await E("khachDs().find(o=>o.sdt.replace(/\\D/g,'')==='0909111222')")
         ok('Khách hàng: tự lưu theo SĐT, có lịch sử', bool(k) and await E("document.querySelectorAll('[data-khopen]').length")>=1, k and k.get('ten'))
@@ -220,7 +220,7 @@ async def main():
         r = await E("""(async()=>{const OWNX=JSON.parse(JSON.stringify(db));const SENT=[];window.fetch=async(u,o)=>{if(o&&o.body)SENT.push(JSON.parse(o.body));return {ok:true,json:async()=>({ok:true})}};
           NV={sdt:'0900000000',ten:'Lan'};db=nvDb({shop:OWNX.shop,may:OWNX.may.filter(m=>m.tt==='ton').map(m=>({imei:m.imei,ten:m.ten,hang:m.hang,giaBan:m.giaBan||1})),hang:OWNX.hang.filter(h=>h.sl>0)});
           const m=db.may[0],h=db.hang.find(x=>x.sl>0);cart=[{type:'may',imei:m.imei,ten:m.ten,hang:m.hang,gia:3000000,von:0,bh:12,sl:1},{type:'free',nhom:'km',ten:'🎁 Giảm giá',gia:-100000,von:0,sl:1},{type:'hang',hangId:h.id,ten:'🎁 Tặng: '+h.ten,nhom:'km',gia:0,von:0,sl:1}];go('sell');
-          document.querySelector('[data-checkout]').click();await new Promise(r=>setTimeout(r,200));nvClose();await new Promise(r=>setTimeout(r,400));
+          cartOpen=true;render();document.querySelector('[data-checkout]').click();await new Promise(r=>setTimeout(r,200));nvClose();await new Promise(r=>setTimeout(r,400));
           const o=SENT.find(x=>x.act==='nvBan');if(!o)return 'không gửi';db=OWNX;NV=null;const sl0=db.hang.find(x=>x.id===h.id).sl;nvApply(o.don);
           const L=db.don.filter(d=>d.bill===o.don.id);return JSON.stringify({n:L.length,dt:L.reduce((s,d)=>s+d.giaBan,0),may:db.may.find(x=>x.imei===m.imei).tt,pk:sl0-db.hang.find(x=>x.id===h.id).sl,von:L.find(d=>d.hangId).giaVon>0})})()""")
         try: r = json.loads(r)

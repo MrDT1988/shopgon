@@ -167,3 +167,10 @@ App quản lý bán hàng cho shop điện thoại (shopgon.vn), chạy trên đ
 - **Kho hàng** = danh sách đơn giản (`renderKhoHub`, biến `khoHub`): 3 số (máy tồn/phụ kiện/vốn) + dòng Nhập hàng, Tồn kho điện thoại, Tồn kho phụ kiện, Phiếu đã nhập, Giá bán & khuyến mãi, Kiểm kho, Nhà cung cấp, Tra IMEI, Bảng giá online. Bấm tab Kho hàng ở thanh dưới → hub; mọi chỗ gọi `go('stock')` bằng code vẫn ra màn tồn kho cũ (khoHub mặc định false); màn con có nút "‹ Kho hàng". `renderStock0` = màn tồn kho cũ.
 - **Thu chi** (`more==='chi'`, `renderThuChi`, `tcKy` ngay|thang, `chiSub` list|chi|ket): thẻ "Thu − chi trong kỳ" + Tổng thu/Tổng chi + lời ròng, danh sách giao dịch (thu = đơn bán, chi = sổ chi, xóa được), nút cố định dưới đáy "Khoản chi" (cam) và "Bán hàng" (xanh); form ghi chi và chốt két mở bằng `chiSub`.
 - Test: `_tam/test-toan-bo.py` 62/62 (thêm 5 test giao diện mới). Sửa 2 chỗ test phụ thuộc giờ/giao diện: trả hàng tìm theo IMEI (không phụ thuộc giờ máy), ghi chi đặt `chiSub='chi'`. BUILD 20261102-0100.
+
+## 19. (02/11) Làm lại màn Bán theo kiểu Sổ Bán Hàng
+- Màn Bán: chip hãng/nhóm, lưới thẻ `.sgrid/.sc` (`sellGrid`), chọn model → chọn đơn vị (`sellGrp`), biến `sellBrand/sellOld`.
+- Phụ kiện: ô `.pt` có ảnh/icon, bấm là thêm, có stepper −/+ (`cartStep`, `data-pkdec/pkadd`).
+- Thanh xanh dưới "Số lượng ⓝ  tổng ›" (`cartBar`, `.cbar2`, `data-copen`) → màn "Xác nhận đơn" (`cartOpen`, `data-cclose`) chứa giỏ, KM, tên/SĐT khách, nút In hóa đơn.
+- Test: các bước giỏ phải `cartOpen=true;render()` trước. BUILD 20261102-0200. Test 62/62.
+- Chưa làm (gợi ý): Bán nhanh (máy tính), đọc đơn bằng giọng nói, giá lẻ/sỉ, in mã vạch, tab trạng thái đơn.

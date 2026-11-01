@@ -112,6 +112,21 @@ nav.tabs{box-shadow:0 -6px 20px rgba(16,42,52,.10);border-top:0}
 .gst{border:2px solid #b9e3da;background:linear-gradient(180deg,#f2fbf8,#fff)}.gst .qh small{color:var(--pen);font-weight:800}.gsbar{height:6px;background:#d9ece7;border-radius:6px;margin:0 4px 6px;overflow:hidden}.gsbar i{display:block;height:100%;background:var(--pen);border-radius:6px}
 .gss{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;border-top:1px solid #e3efec;padding:11px 4px;font:inherit;text-align:left;cursor:pointer}.gss:first-of-type{border-top:0}.gss .n{display:flex;flex-direction:column;flex:1;min-width:0}.gss b{font-size:14px}
 .gsn{width:28px;height:28px;border-radius:50%;background:#fff;border:2px solid var(--pen);color:var(--pen);display:grid;place-items:center;font-weight:800;font-size:13px;flex:none}.gss.ok .gsn{background:var(--pen);color:#fff}.gss.ok b{text-decoration:line-through;opacity:.55}
+/* 02/11 màn Bán: tìm + quét · chip · lưới máy có ảnh · giỏ hàng dưới đáy */
+#v-sell .seg.top button{font-size:14px;padding:11px 4px;white-space:nowrap;overflow-wrap:normal}
+.gsb.sb{margin:0 0 4px;box-shadow:none;background:var(--bg)}
+.schips{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 10px;margin:0 -2px;scrollbar-width:none}.schips::-webkit-scrollbar{display:none}.schips .chip{white-space:nowrap;flex:none;padding:8px 14px;font-size:13.5px}.schips .chip[aria-pressed="true"]{background:var(--pen);color:#fff;border-color:var(--pen)}.schips .chip.thuc{background:#fff8e6;border-color:#f0d08a;color:#8a5a00}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.sc{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:3px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:10px 10px 12px;text-align:left;font:inherit;cursor:pointer;min-width:0;box-shadow:0 1px 2px rgba(16,42,52,.06),0 6px 16px rgba(16,42,52,.06)}.sc:active{transform:translateY(1px);background:var(--bg)}
+.sc .simg{width:100%;aspect-ratio:1/1;border-radius:12px;background:#fff;display:grid;place-items:center;overflow:hidden;margin-bottom:6px;border:1px solid #eef2f4}.sc .simg img{width:86%;height:86%;object-fit:contain}.fe{font-size:40px}
+.sc b{font-size:13.5px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:35px;width:100%}.sc .spr{font-size:15px;font-weight:800;color:var(--pen)}.sc small{color:var(--muted);font-size:12px}
+.sbd{position:absolute;top:8px;left:8px;z-index:1;background:var(--red);color:#fff;font-style:normal;font-size:11px;font-weight:800;border-radius:8px;padding:2px 8px}
+.found.fi{display:flex;gap:12px;align-items:center}.found.fi img{width:60px;height:60px;object-fit:contain;background:#fff;border-radius:12px;border:1px solid #eef2f4;flex:none}.found.fi .fe{font-size:34px}.found .fx{display:flex;flex-direction:column;min-width:0}
+.cbarp{height:78px}.cbar{position:fixed;left:12px;right:12px;bottom:calc(72px + env(safe-area-inset-bottom,0px));z-index:5;display:flex;align-items:center;gap:12px;background:var(--ink);color:#fff;border-radius:18px;padding:10px 10px 10px 16px;box-shadow:0 10px 24px rgba(16,42,52,.35)}.cbar span{display:flex;flex-direction:column;line-height:1.2}.cbar small{opacity:.7;font-size:11.5px}.cbar>b{flex:1;font-size:17px;text-align:right}.cbar button{border:0;background:var(--pen);color:#fff;border-radius:12px;padding:12px 16px;font:inherit;font-weight:800;font-size:14.5px;cursor:pointer;white-space:nowrap}
+/* 02/11 (2) học màn Bán hàng Sổ: thẻ có − + · thanh Số lượng xanh · màn Xác nhận */
+.pt{padding:8px;gap:6px}.pt .ptb{display:flex;flex-direction:column;align-items:flex-start;gap:3px;background:none;border:0;padding:0;font:inherit;text-align:left;cursor:pointer;width:100%}.pt.on{border:2px solid var(--pen);background:#f2fbf8}
+.pt .stp{display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid #b9e3da;border-radius:10px;padding:2px;width:100%}.pt .stp button{width:34px;height:30px;border:0;border-radius:8px;background:var(--pen-soft);color:var(--pen);font-size:20px;font-weight:700;cursor:pointer;line-height:1}.pt .stp b{font-size:15px;min-height:0;width:auto;display:block}
+.cbar2{position:fixed;left:12px;right:12px;bottom:calc(72px + env(safe-area-inset-bottom,0px));z-index:5;display:flex;align-items:center;gap:10px;background:linear-gradient(180deg,#16a34a,#12873c);color:#fff;border:0;border-radius:16px;padding:15px 18px;font:inherit;font-size:16px;font-weight:700;box-shadow:0 10px 24px rgba(18,135,60,.4);cursor:pointer;text-align:left}.cbar2 .cn{display:inline-grid;place-items:center;min-width:24px;height:24px;border-radius:12px;background:var(--red);font-style:normal;font-size:13px;margin-left:6px;padding:0 6px}.cbar2>b{flex:1;text-align:right;font-size:17px}.cbar2 .ar{font-size:22px}
+.cxt{margin:2px 0 12px;font-size:19px}
 /* 02/11 trang chủ gọn · báo cáo · kho danh sách · thu chi (học Sổ Bán Hàng) */
 .hh{width:100%;display:block;text-align:left;margin:0 0 12px;cursor:pointer}
 .kpis.kh3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}.kh3 .kpi{padding:12px 10px}.kh3 .v{font-size:20px}
@@ -878,22 +893,51 @@ function renderCart(){if(!cart.length)return '';
     <div class="ctot"><span>${cartTotal()<0?'Shop trả khách':'Khách trả'}</span><b class="num">${money(Math.abs(cartTotal()))}</b></div>
     <div class="two"><label>Tên khách<input id="cKh" value="${esc(cartKhach)}" placeholder="Không bắt buộc"></label><label>SĐT<input id="cSd" inputmode="tel" value="${esc(cartSdt)}" placeholder="Để tra bảo hành"></label></div>
     <button class="btn" data-checkout="1" style="margin-top:10px">${cartTotal()<0?'Hoàn tất · shop trả khách '+money(-cartTotal()):'In hóa đơn · '+money(cartTotal())}</button></div>`}
+/* 02/11 học màn Bán hàng của Sổ: ô tìm + quét · chip hãng · lưới máy có ảnh · giỏ hàng cố định dưới đáy */
+let sellBrand='all', sellOld=false, sellGrp='';
+let cartOpen=false;
+function cartBar(){if(!cart.length||sellMode==='tra')return '';const n=cart.filter(c=>!isKm(c)).reduce((a,c)=>a+(c.sl||1),0);
+  return `<div class="cbarp"></div><button type="button" class="cbar2" data-copen="1"><span>Số lượng <i class="cn">${n}</i></span><b class="num">${money(Math.abs(cartTotal()))}</b><span class="ar">›</span></button>`}
+const hIcon=n=>{const t=nv0(n);return /tai nghe|airpod|earbud/.test(t)?'🎧':/sac|adapter|charger/.test(t)?'🔌':/\bcap\b|cable|type c|lightning/.test(t)?'🔗':/cuong luc|dan man|dan |kinh/.test(t)?'🛡️':/\bop\b|case|bao da/.test(t)?'📱':/pin|du phong/.test(t)?'🔋':/loa|speaker/.test(t)?'🔊':/watch|band|dong ho/.test(t)?'⌚':/sim/.test(t)?'📶':/gia do|stand|gay/.test(t)?'🤳':'📦'};
+function cartStep(id,d){const i=cart.findIndex(c=>c.type==='hang'&&c.hangId===id&&!isKm(c));const it=db.hang.find(h=>h.id===id);if(!it)return;
+  if(i<0){if(d>0&&it.giaBan&&it.sl-cartQty(id)>0){const c={type:'hang',hangId:id,ten:it.ten,nhom:it.nhom,gia:it.giaBan,von:it.giaNhap,sl:1};cart.push(c);kmGan(c,'h|'+id)}return}
+  const c=cart[i];if(c.kid)cart=cart.filter(x=>x.kmOf!==c.kid);
+  if(d>0){if(it.sl-cartQty(id)<=0){toast('Kho chỉ còn '+it.sl);if(c.kid)kmGan(c,'h|'+id);return}c.sl++}else{c.sl--;if(c.sl<=0){cart=cart.filter(x=>x!==c);return}}
+  kmGan(c,'h|'+id)}
+function sellGrid(cand){if(sellMode!=='may')return '';
+  const st=stock().filter(x=>!inCart(x.imei));
+  if(cand.length&&/^\d{4,14}$/.test(sellImei))return '';
+  if(sellGrp){const U=st.filter(x=>gk(x.ten)===sellGrp).sort((a,b)=>ageDays(b)-ageDays(a));
+    return `<div class="panel"><button type="button" class="back" data-sclr="all">‹ Tất cả máy</button><h2>${esc(sellGrp)}</h2><div class="small" style="color:var(--muted);margin:-6px 0 6px">Chọn đúng máy (IMEI) khách mua</div><div class="list">${U.length?U.map(x=>{const [k]=ageClass(ageDays(x));return `<div class="row"><div class="n"><b>IMEI …${x.imei.slice(-6)}</b><small class="num">${(/\s+-\s+([^-]+)$/.exec(x.ten)||[])[1]?esc((/\s+-\s+([^-]+)$/.exec(x.ten)||[])[1])+' · ':''}Nhập ${dmy(x.ngayNhap)} · <span class="pill ${k}">${ageDays(x)} ngày</span></small></div><button type="button" class="ghost" data-pick="${x.imei}">Chọn bán</button></div>`}).join(''):'<div class="empty">Hết máy trong kho.</div>'}</div></div>`}
+  const G=new Map();st.forEach(x=>{const k=gk(x.ten);const o=G.get(k)||{k,ms:[],hang:x.hang||'Khác'};o.ms.push(x);G.set(k,o)});
+  let L=[...G.values()];L.forEach(g=>{g.old=Math.max(...g.ms.map(ageDays));g.gia=Math.max(0,...g.ms.map(x=>x.giaBan||0))});
+  const brands=new Map();L.forEach(g=>brands.set(g.hang,(brands.get(g.hang)||0)+g.ms.length));
+  const nOld=L.filter(g=>g.old>45).length,q=nv0(sellImei.trim());
+  if(sellBrand!=='all'&&!brands.has(sellBrand))sellBrand='all';
+  if(sellBrand!=='all')L=L.filter(g=>g.hang===sellBrand);
+  if(sellOld)L=L.filter(g=>g.old>45);
+  if(q)L=L.filter(g=>nv0(g.k).includes(q));
+  L.sort(sellOld?(a,b)=>b.old-a.old:(a,b)=>b.ms.length-a.ms.length||a.k.localeCompare(b.k,'vi'));
+  const chip=(a,t,on_)=>`<button type="button" class="chip" ${a} aria-pressed="${on_}">${t}</button>`;
+  const chips=`<div class="schips">${chip('data-sbrand="all"','Tất cả · '+st.length,sellBrand==='all'&&!sellOld)}${[...brands].sort((a,b)=>b[1]-a[1]).map(([h,n])=>chip('data-sbrand="'+esc(h)+'"',esc(h)+' · '+n,sellBrand===h)).join('')}${nOld?chip('data-sold="1"','⏳ Tồn lâu · '+nOld,sellOld):''}${on('thucu')?`<button type="button" class="chip thuc" data-thu="1">♻️ Thu máy cũ</button>`:''}</div>`;
+  if(!st.length)return chips+`<div class="panel"><div class="empty">Kho chưa có máy để bán.<br><button type="button" class="ghost" data-go="add" style="margin-top:10px">Nhập hàng ngay</button></div></div>`;
+  return chips+(L.length?`<div class="sgrid">${L.map(g=>{const im=imgCua(g.ms[0].ten);return `<button type="button" class="sc" data-sgrp="${esc(g.k)}">${g.old>45?`<em class="sbd">Tồn ${g.old} ngày</em>`:''}<span class="simg">${im?`<img src="${esc(im)}" alt="" loading="lazy">`:'<span class="fe">📱</span>'}</span><b>${esc(g.k)}</b><span class="spr num">${g.gia?money(g.gia):'Chưa đặt giá'}</span><small>Còn ${g.ms.length} máy</small></button>`}).join('')}</div>`:`<div class="panel"><div class="empty">Không có máy nào khớp.<br><small>Thử gõ tên khác hoặc bỏ lọc hãng.</small></div></div>`)}
 function renderSell(){
   const m0=db.may.find(x=>x.imei===sellImei&&x.tt==='ton');const m=m0&&!inCart(m0.imei)?m0:null;
   const soldM=!m0&&sellImei.length>=6?db.may.find(x=>x.imei===sellImei&&x.tt==='ban'):null;
-  const cand=!m0&&sellImei.length>=4&&sellImei.length<15?stock().filter(x=>!inCart(x.imei)&&(x.imei.includes(sellImei)||x.ten.toLowerCase().includes(sellImei.toLowerCase()))).slice(0,5):[];
+  const cand=!m0&&/^\d{4,14}$/.test(sellImei)?stock().filter(x=>!inCart(x.imei)&&(x.imei.includes(sellImei)||x.ten.toLowerCase().includes(sellImei.toLowerCase()))).slice(0,5):[];
+  if(!cart.length)cartOpen=false;
+  if(cartOpen&&sellMode!=='tra'){$('v-sell').innerHTML=`<button type="button" class="back" data-cclose="1">‹ Tiếp tục chọn hàng</button><h2 class="cxt">Xác nhận đơn</h2>${renderCart()}`;return}
   $('v-sell').innerHTML=`
-  ${renderCart()}
-  <div class="seg top" role="group"><button data-sm="may" aria-pressed="${sellMode==='may'}">Điện thoại</button><button data-sm="pk" aria-pressed="${sellMode==='pk'}">${on('pk')||on('sim')?'Phụ kiện, DV':'Dịch vụ'}</button>${NV?'':`<button data-sm="tra" aria-pressed="${sellMode==='tra'}">↩️ Trả hàng</button>`}</div>
+  <div class="seg top" role="group"><button data-sm="may" aria-pressed="${sellMode==='may'}">Điện thoại</button><button data-sm="pk" aria-pressed="${sellMode==='pk'}">${on('pk')||on('sim')?'Phụ kiện':'Dịch vụ'}</button>${NV?'':`<button data-sm="tra" aria-pressed="${sellMode==='tra'}">Trả hàng</button>`}</div>
   ${sellMode==='may'&&!NV||sellMode==='may'?`
   <div class="panel"><form id="fSell" autocomplete="off">
-    ${!m?`<button type="button" class="btn bigscan" data-scan="sImei"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 8v8M10 8v8M13 8v8M17 8v8"/></svg>Quét IMEI để bán</button><div class="or">hoặc gõ IMEI / tên máy</div>`:''}
-    <label${m?'':' style="margin-top:0"'}>${m?'IMEI':'<span class="sr" style="position:absolute;left:-9999px">IMEI hoặc tên máy</span>'}
-      <span class="inrow"><input id="sImei" inputmode="search" value="${esc(sellImei)}" placeholder="VD: 3512… hoặc A7 Pro"><button type="button" class="icon" data-scan="sImei" aria-label="Quét IMEI"><svg viewBox="0 0 24 24"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 8v8M10 8v8M13 8v8M17 8v8"/></svg></button></span></label>
+    ${m?`<button type="button" class="back" data-sclr="1">‹ Chọn máy khác</button><label>IMEI<span class="inrow"><input id="sImei" inputmode="search" value="${esc(sellImei)}"><button type="button" class="icon" data-scan="sImei" aria-label="Quét IMEI"><svg viewBox="0 0 24 24"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 8v8M10 8v8M13 8v8M17 8v8"/></svg></button></span></label>`
+      :`<div class="gsb sb"><svg viewBox="0 0 24 24"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-5-5"/></svg><input id="sImei" inputmode="search" autocomplete="off" value="${esc(sellImei)}" placeholder="Tìm tên máy hoặc IMEI…"><button type="button" class="gsc" data-scan="sImei" aria-label="Quét IMEI"><svg viewBox="0 0 24 24"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 8v8M10 8v8M13 8v8M17 8v8"/></svg></button></div>`}
     ${cand.length?`<div class="list">${cand.map(x=>`<div class="row"><div class="n"><b>${esc(x.ten)}</b><small class="num">IMEI …${x.imei.slice(-6)} · ${ageDays(x)} ngày</small></div><button type="button" class="ghost" data-pick="${x.imei}">Chọn</button></div>`).join('')}</div>`:''}
     ${soldM?`<div class="err">Máy này đã bán rồi. Tra lịch sử ở Thêm → Tra IMEI.</div>`:''}
     ${m0&&!m?`<div class="err">Máy này đã có trong đơn đang bán.</div>`:''}
-    ${m?`<div class="found"><b>${esc(m.ten)}</b><small class="num">IMEI ${m.imei} · Nhập ${dmy(m.ngayNhap)} (${ageDays(m)} ngày)<span class="own"> · Giá nhập ${money(m.giaNhap)}</span></small></div>
+    ${m?`<div class="found fi">${imgCua(m.ten)?`<img src="${esc(imgCua(m.ten))}" alt="">`:'<span class="fe">📱</span>'}<div class="fx"><b>${esc(m.ten)}</b><small class="num">IMEI ${m.imei} · Nhập ${dmy(m.ngayNhap)} (${ageDays(m)} ngày)<span class="own"> · Giá nhập ${money(m.giaNhap)}</span></small></div></div>
     <label>${NV&&m.giaBan?'Giá bán (giá shop)':'Giá bán'}<input id="sGia" inputmode="numeric" class="num${NV&&m.giaBan?' gialock':''}" value="${(m.giaBan||'').toLocaleString('vi-VN')}"${NV&&m.giaBan?' readonly':''}></label>
     <div class="profit" id="sLoi"></div>
     ${on('baohanh')?`<label>Bảo hành (tháng)<input id="sBh" inputmode="numeric" value="${db.shop.bh}"></label>`:''}
@@ -907,9 +951,10 @@ function renderSell(){
     <label>Tình trạng<input id="tNote" placeholder="VD: trầy nhẹ, pin 85%"></label><div class="err" id="tErr"></div>
     <div class="inrow"><button class="btn" type="submit" style="flex:1">＋ Trừ vào đơn</button><button type="button" class="ghost" data-thux="1">Thôi</button></div>
     <small style="color:#46506b">Tiền thu máy cũ trừ thẳng vào đơn. Máy cũ vào kho với tên có chữ "(cũ)" để bán lại.</small></form></div>`
-    :`<button class="ghost" data-thu="1" style="width:100%;margin-bottom:10px;padding:14px;font-size:14.5px">♻️ Thu máy cũ của khách (đổi mới / thu mua)</button>`):''}
-  ${!NV&&!m&&!sellImei&&!cart.length?(()=>{const L=stock().slice().sort((a,b)=>ageDays(b)-ageDays(a)).slice(0,5);return L.length?`<div class="panel"><h2>Máy tồn lâu — ưu tiên bán</h2><div class="list">${L.map(x=>{const [k]=ageClass(ageDays(x));return `<div class="row"><div class="n"><b>${esc(x.ten)}</b><small class="num">IMEI …${x.imei.slice(-6)} · <span class="pill ${k}">${ageDays(x)} ngày</span></small></div><button type="button" class="ghost" data-pick="${x.imei}">Bán</button></div>`}).join('')}</div></div>`:''})():''}`:sellMode==='tra'?renderTraHang():renderPkForm()}`;
+    :''):''}
+  ${!m&&!thuOpen?sellGrid(cand):''}`:sellMode==='tra'?renderTraHang():renderPkForm()}${cartBar()}`;
   if(m)updSellProfit();
+  if(sellMode==='may'&&!KM)kmLoad().then(()=>{if(view==='sell')renderSell()}).catch(()=>{});
   if(sellMode==='pk')updPkProfit();
 }
 let pkNhom='pk', pkPick=null, pkQ='', thuOpen=false, chiLoai='';
@@ -920,9 +965,10 @@ function renderPkForm(){
   const q=pkQ.trim().toLowerCase();
   const cand=isStockNhom(pkNhom)&&!it?db.hang.filter(h=>h.nhom===pkNhom&&h.sl-cartQty(h.id)>0&&(!q||h.ten.toLowerCase().includes(q))).sort((x,y)=>x.ten.localeCompare(y.ten,'vi')).slice(0,60):[];
   return `<div class="panel"><form id="fPk" autocomplete="off">
-    <div class="chips" role="group">${nhomOn().map(g=>`<button type="button" class="chip" data-nhom="${g.k}" aria-pressed="${g.k===pkNhom}">${g.t}</button>`).join('')}</div>
+    <div class="schips" role="group">${nhomOn().map(g=>`<button type="button" class="chip" data-nhom="${g.k}" aria-pressed="${g.k===pkNhom}">${g.t}</button>`).join('')}</div>
     ${isStockNhom(pkNhom)&&!it?`<label>${pkNhom==='sua'?'Linh kiện dùng (lấy từ kho)':'Chọn món trong kho'}<input id="pQ" inputmode="search" placeholder="Gõ tên để tìm, VD: cường lực" value="${esc(pkQ)}"></label>
-      ${cand.length?`<div class="pgrid">${cand.map(h=>{const left=h.sl-cartQty(h.id),inC=cartQty(h.id),ic=({pk:'🎧',sim:'📶',sua:'🔧'})[h.nhom]||'📦';return `<button type="button" class="pt" ${h.giaBan?`data-pkadd="${h.id}"`:`data-pkpick="${h.id}"`}>${inC?`<em class="inc">×${inC}</em>`:''}<span class="pi">${ic}</span><b>${esc(h.ten)}</b><span class="pp num">${h.giaBan?money(h.giaBan):'Nhập giá'}</span><small>Còn ${left}</small></button>`}).join('')}</div><small style="display:block;color:var(--muted);margin-top:8px">Bấm vào món để thêm 1 cái vào đơn. Cần số lượng khác thì bấm nhiều lần.</small>`:`<div class="empty">${q?'Không có món nào khớp. Thử gõ tên khác.':'Kho chưa có món này.'}${q?'':'<br><button type="button" class="ghost" data-go="add" style="margin-top:10px">Nhập hàng ngay</button>'}</div>`}
+      ${cand.length?`<div class="pgrid">${cand.map(h=>{const left=h.sl-cartQty(h.id),inC=cartQty(h.id),ic=hIcon(h.ten);const body=`<span class="pi">${ic}</span><b>${esc(h.ten)}</b><span class="pp num">${h.giaBan?money(h.giaBan):'Nhập giá'}</span>`;
+        return `<div class="pt${inC?' on':''}">${h.giaBan?`<button type="button" class="ptb" data-pkadd="${h.id}">${body}</button>`:`<button type="button" class="ptb" data-pkpick="${h.id}">${body}</button>`}${inC?`<span class="stp"><button type="button" data-pkdec="${h.id}" aria-label="Bớt">−</button><b class="num">${inC}</b><button type="button" data-pkadd="${h.id}" aria-label="Thêm">+</button></span>`:`<small>Còn ${left}</small>`}</div>`}).join('')}</div><small style="display:block;color:var(--muted);margin-top:8px">Bấm vào món để thêm vào đơn, dùng − + để đổi số lượng.</small>`:`<div class="empty">${q?'Không có món nào khớp. Thử gõ tên khác.':'Kho chưa có món này.'}${q?'':'<br><button type="button" class="ghost" data-go="add" style="margin-top:10px">Nhập hàng ngay</button>'}</div>`}
       <div class="eyebrow" style="margin-top:4px">${pkNhom==='sua'?'Hoặc ghi đơn sửa không lấy linh kiện trong kho':'Hoặc bán món không có trong kho'}</div>`:''}
     ${it?`<div class="found"><b>${esc(it.ten)}</b><small class="num">Còn ${it.sl-cartQty(it.id)} trong kho · giá nhập ${money(it.giaNhap)}</small></div><button type="button" class="back" data-pkpick="">‹ Chọn món khác</button>
       <div class="two"><label>Số lượng<input id="pSl" inputmode="numeric" value="1"></label><label>${pkNhom==='sua'?'Tiền sửa thu khách / cái':'Giá bán / cái'}<input id="pGia" inputmode="numeric" class="num${NV&&it.giaBan?' gialock':''}" value="${it.giaBan?it.giaBan.toLocaleString('vi-VN'):''}"${NV&&it.giaBan?' readonly':''}></label></div>`:`
@@ -1312,15 +1358,22 @@ document.addEventListener('click',e=>{
   if(b.dataset.more==='bg'||b.dataset.more==='tt'){try{Store.save(db)}catch(e){}location.href='/'+b.dataset.more+'/?tu=app'+(DEMO?'&demo=1':'');return}
   if(b.dataset.more){if(b.dataset.more==='chi')chiSub='list';more=b.dataset.more;cancelId=null;resetAsk=false;if(view!=='more')go('more');else{render();window.scrollTo(0,0)}return}
   if(b.dataset.sm){sellMode=b.dataset.sm;render();return}
-  if(b.dataset.pick){sellImei=b.dataset.pick;sellTT='Tiền mặt';render();return}
+  if(b.dataset.sgrp!==undefined){const k=b.dataset.sgrp,ms=stock().filter(x=>gk(x.ten)===k&&!inCart(x.imei));if(ms.length===1){sellImei=ms[0].imei;sellTT='Tiền mặt'}else sellGrp=k;render();window.scrollTo(0,0);return}
+  if(b.dataset.sbrand!==undefined){sellBrand=b.dataset.sbrand;sellOld=false;render();return}
+  if(b.dataset.sold){sellOld=!sellOld;if(sellOld)sellBrand='all';render();return}
+  if(b.dataset.sclr){if(b.dataset.sclr==='all')sellGrp='';sellImei='';render();window.scrollTo(0,0);return}
+  if(b.dataset.copen){cartOpen=true;render();window.scrollTo(0,0);return}
+  if(b.dataset.cclose){cartOpen=false;render();window.scrollTo(0,0);return}
+  if(b.dataset.pkdec){cartStep(b.dataset.pkdec,-1);render();return}
+  if(b.dataset.pick){sellImei=b.dataset.pick;sellGrp='';sellTT='Tiền mặt';render();window.scrollTo(0,0);return}
   if(b.dataset.sellimei){sellMode='may';sellImei=b.dataset.sellimei;sellTT='Tiền mặt';go('sell');return}
   if(b.dataset.nhom){pkNhom=b.dataset.nhom;pkPick=null;pkQ='';renderSell();return}
   if(b.dataset.gspick){const [ty,...r]=b.dataset.gspick.split('|'),v=r.join('|');gsQ='';
-    if(ty==='t'){sellMode='may';sellImei=v;sellTT='Tiền mặt';go('sell')}
+    if(ty==='t'){sellMode='may';sellImei='';sellGrp=gk(v);sellTT='Tiền mặt';go('sell')}
     else if(ty==='m'){const m=db.may.find(x=>x.imei===v);if(m&&m.tt==='ton'){sellMode='may';sellImei=v;sellTT='Tiền mặt';go('sell')}else{lookQ=v;more='look';go('more')}}
     else if(ty==='k'){khQ=v;khOpen=null;more='kh';go('more')}
     else{khoHub=false;khoTab='kho';stockMode='hang';hangQ=(db.hang.find(x=>x.id===v)||{}).ten||'';go('stock')}return}
-  if(b.dataset.pkadd){const it=db.hang.find(x=>x.id===b.dataset.pkadd);if(it&&it.giaBan&&it.sl-cartQty(it.id)>0){cart.push({type:'hang',hangId:it.id,ten:it.ten,nhom:it.nhom,gia:it.giaBan,von:it.giaNhap,sl:1});kmGan(cart[cart.length-1],'h|'+it.id);render();toast('Đã thêm '+it.ten)}return}
+  if(b.dataset.pkadd){cartStep(b.dataset.pkadd,1);render();return}
   if('pkpick' in b.dataset){pkPick=b.dataset.pkpick||null;renderSell();return}
   if(b.dataset.am){addMode=b.dataset.am;render();return}
   if(b.dataset.km){stockMode=b.dataset.km;render();return}
@@ -1826,7 +1879,7 @@ function showLogin(email,msg){lockApp();const w=$('welcome');w.hidden=false;if(e
     <small>Muốn dùng thật: quay lại mục <b>Đăng nhập</b> → Đăng ký tài khoản mới.</small></div>`}
   </div>`}
 /* 28/10 anh Thái: bán hàng — giá shop mặc định (nhân viên không sửa giá), nút ＋ Khuyến mãi = thêm món vào đơn rồi mở ngay bảng khuyến mãi */
-document.addEventListener('click',e=>{const b=e.target.closest('[data-addkm]');if(!b)return;const f=$(b.dataset.addkm);if(!f)return;const n=cart.length;f.requestSubmit();if(cart.length>n){kmOpen=true;render();setTimeout(()=>{const k=document.querySelector('.kmp');if(k)k.scrollIntoView({block:'center',behavior:'smooth'})},50)}});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-addkm]');if(!b)return;const f=$(b.dataset.addkm);if(!f)return;const n=cart.length;f.requestSubmit();if(cart.length>n){kmOpen=true;cartOpen=true;render();setTimeout(()=>{const k=document.querySelector('.kmp');if(k)k.scrollIntoView({block:'center',behavior:'smooth'})},50)}});
 document.addEventListener('click',e=>{if(!e.target.closest('[data-dangxuat]'))return;if(confirm('Đăng xuất Gmail '+GG.email+' khỏi máy này? Dữ liệu shop vẫn nằm nguyên trong Google Drive.'))ggLogout()});
 document.addEventListener('click',e=>{const t=e.target.closest('[data-lgtab]');if(!t)return;LGTAB=t.dataset.lgtab;showLogin()});
 function showLoad(msg){lockApp();const w=$('welcome');w.hidden=false;w.innerHTML=`<div class="wc"><img class="lgimg" src="/app/icon-192.png" alt="Shop Gọn"><h1>Shop Gọn</h1><small id="wMsg">${esc(msg||'Đang mở…')}</small></div>`}
@@ -1924,7 +1977,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261102-0100';let verLuc=0;
+const BUILD='20261102-0200';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
