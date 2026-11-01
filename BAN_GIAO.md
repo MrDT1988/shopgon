@@ -178,3 +178,9 @@ App quản lý bán hàng cho shop điện thoại (shopgon.vn), chạy trên đ
 ## 20. (02/11) Màn Bán giống Sổ + chọn màu theme
 - Màn Bán: nền phẳng, chip chế độ `.smodes`, ô tìm xám, lưới 3 cột không viền, giá đỏ; phụ kiện 1 icon chung. CSS khối "02/11 (3)" nằm cuối `<style>` chính.
 - Theme: biến `--pen/--pen-hi/--pen-dk/--pen-bg/--pen-line/--pen-rgb`; `THEMES` (8 màu) + `applyTheme(hex)`; lưu `db.shop.theme` + localStorage `sg_theme`. Menu Thêm → "Màu giao diện" (`more==='theme'`, `data-theme`). Mọi màu teal cứng trong CSS đã đổi sang biến. BUILD 20261102-0300.
+
+## 21. (02/11) Gộp giao diện KM + gọn Trả hàng
+- KM lên đơn (`renderKm`) dùng chung sheet `.wsheet/.wsbox` + `.wtypes` + `.wquick` với KM trên web; màu theo theme (không còn cam).
+- Thẻ máy ở tab Web (`.wc2`) phẳng như lưới Bán.
+- Chip "Trả hàng" bỏ khỏi màn Bán; vào bằng nút "Trả hàng" trong Lịch sử đơn (tự điền mã HĐ) hoặc Thêm → Khách trả hàng. Luồng trả inline cũ trong lịch sử không còn gọi (code `traId` chết).
+- Ô tìm phụ kiện dạng pill; lịch sử đơn có nhãn Đã thanh toán / Còn nợ / Đã hủy. BUILD 20261102-0330.
