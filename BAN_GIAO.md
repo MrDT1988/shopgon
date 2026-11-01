@@ -174,3 +174,7 @@ App quản lý bán hàng cho shop điện thoại (shopgon.vn), chạy trên đ
 - Thanh xanh dưới "Số lượng ⓝ  tổng ›" (`cartBar`, `.cbar2`, `data-copen`) → màn "Xác nhận đơn" (`cartOpen`, `data-cclose`) chứa giỏ, KM, tên/SĐT khách, nút In hóa đơn.
 - Test: các bước giỏ phải `cartOpen=true;render()` trước. BUILD 20261102-0200. Test 62/62.
 - Chưa làm (gợi ý): Bán nhanh (máy tính), đọc đơn bằng giọng nói, giá lẻ/sỉ, in mã vạch, tab trạng thái đơn.
+
+## 20. (02/11) Màn Bán giống Sổ + chọn màu theme
+- Màn Bán: nền phẳng, chip chế độ `.smodes`, ô tìm xám, lưới 3 cột không viền, giá đỏ; phụ kiện 1 icon chung. CSS khối "02/11 (3)" nằm cuối `<style>` chính.
+- Theme: biến `--pen/--pen-hi/--pen-dk/--pen-bg/--pen-line/--pen-rgb`; `THEMES` (8 màu) + `applyTheme(hex)`; lưu `db.shop.theme` + localStorage `sg_theme`. Menu Thêm → "Màu giao diện" (`more==='theme'`, `data-theme`). Mọi màu teal cứng trong CSS đã đổi sang biến. BUILD 20261102-0300.
