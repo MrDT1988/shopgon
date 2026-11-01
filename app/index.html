@@ -898,7 +898,7 @@ let sellBrand='all', sellOld=false, sellGrp='';
 let cartOpen=false;
 function cartBar(){if(!cart.length||sellMode==='tra')return '';const n=cart.filter(c=>!isKm(c)).reduce((a,c)=>a+(c.sl||1),0);
   return `<div class="cbarp"></div><button type="button" class="cbar2" data-copen="1"><span>Số lượng <i class="cn">${n}</i></span><b class="num">${money(Math.abs(cartTotal()))}</b><span class="ar">›</span></button>`}
-const hIcon=n=>{const t=nv0(n);return /tai nghe|airpod|earbud/.test(t)?'🎧':/sac|adapter|charger/.test(t)?'🔌':/\bcap\b|cable|type c|lightning/.test(t)?'🔗':/cuong luc|dan man|dan |kinh/.test(t)?'🛡️':/\bop\b|case|bao da/.test(t)?'📱':/pin|du phong/.test(t)?'🔋':/loa|speaker/.test(t)?'🔊':/watch|band|dong ho/.test(t)?'⌚':/sim/.test(t)?'📶':/gia do|stand|gay/.test(t)?'🤳':'📦'};
+const hIcon=n=>'🎧';
 function cartStep(id,d){const i=cart.findIndex(c=>c.type==='hang'&&c.hangId===id&&!isKm(c));const it=db.hang.find(h=>h.id===id);if(!it)return;
   if(i<0){if(d>0&&it.giaBan&&it.sl-cartQty(id)>0){const c={type:'hang',hangId:id,ten:it.ten,nhom:it.nhom,gia:it.giaBan,von:it.giaNhap,sl:1};cart.push(c);kmGan(c,'h|'+id)}return}
   const c=cart[i];if(c.kid)cart=cart.filter(x=>x.kmOf!==c.kid);
@@ -1977,7 +1977,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261102-0200';let verLuc=0;
+const BUILD='20261102-0215';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
