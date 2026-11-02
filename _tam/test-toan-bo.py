@@ -256,6 +256,15 @@ async def main():
         ok('Nhân viên: tối đa 3/shop, đủ 3 thì ẩn ô thêm', r.get('het'), r)
         await ctx.close()
 
+        # 12c. (02/11) Nhân viên đã đăng nhập → mở lại app vào thẳng màn Bán, không lỗi, không bắt đăng nhập lại
+        ctx, pg, errs = await trang(b, '/app/')
+        await pg.evaluate("localStorage.setItem('shopgon_nv',JSON.stringify({sdt:'0911222333',ten:'Lan',phien:'P1'}))")
+        for i in range(2):
+            await pg.reload(); await pg.wait_for_timeout(900)
+        r = json.loads(await pg.evaluate("JSON.stringify({nv:NV&&NV.sdt,ban:!$('v-sell').hidden,login:!$('welcome').hidden,ls:!!localStorage.getItem('shopgon_nv')})"))
+        ok('Nhân viên: mở lại app vẫn đăng nhập, vào thẳng màn Bán, không lỗi', r['nv'] == '0911222333' and r['ban'] and not r['login'] and r['ls'] and not errs, (r, errs))
+        await ctx.close()
+
         # 13. Các trang khác + cài app
         for path, ten in [('/', 'Trang chủ'), ('/so-sanh.html', 'So sánh giá'), ('/bg/?demo=1&xem=1', 'Bảng giá online (khách)'), ('/tt/', 'Thiết kế hình'), ('/setup/', 'Trang hướng dẫn Sale'), ('/quantri/', 'Trang quản trị')]:
             c2, p2, e2 = await trang(b, path); await p2.wait_for_timeout(600)

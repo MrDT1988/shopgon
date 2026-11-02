@@ -461,6 +461,7 @@ const parseMoney=s=>{const d=String(s||'').replace(/[^\d]/g,'');return d?+d:0};
 const iso=d=>{const x=new Date(d);return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0')};
 const todayIso=()=>iso(Date.now());
 const dmy=s=>{const [y,m,d]=s.split('-');return d+'/'+m+'/'+y};
+const nv0=x=>String(x||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d');
 const ageDays=m=>Math.max(0,Math.floor((new Date(todayIso())-new Date(m.ngayNhap))/DAY));
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const BRANDS=['OPPO','Samsung','iPhone','Xiaomi','vivo','realme','Honor','Nokia','Tecno','Infinix','itel','Masstel','Benco','ZTE','Huawei','Pixel','Khác'];
@@ -2000,10 +2001,12 @@ function showKh(){const w=$('welcome');w.hidden=false;const st=XLIC&&XLIC.status
   showPending({status:'none'})}
 document.addEventListener('click',e=>{if(e.target.closest('[data-more="hd"]')){e.preventDefault();e.stopImmediatePropagation();location.href='/setup/'+(refSale()?'?ctv='+encodeURIComponent(refSale()):'');return}if(e.target.closest('[data-more="kichhoat"]')){e.preventDefault();e.stopImmediatePropagation();showKh()}},true);
 document.addEventListener('submit',e=>{if(!XEM||e.target.id==='fNvLogin')return;e.preventDefault();e.stopImmediatePropagation();showKh()},true);
-document.addEventListener('click',e=>{if(!XEM)return;const b=e.target.closest('form button[type=submit],form button:not([type]),[data-rcpay],[data-rcdone],[data-rcprint],[data-cancelok],[data-suaok],[data-xoaok],[data-delimeiok],[data-nccpay],[data-nttra],[data-kkhsave],[data-trok],[data-reset],[data-more="bg"],[data-more="tt"],[data-more="giahan"],[data-more="ctv"]');if(!b)return;e.preventDefault();e.stopImmediatePropagation();showKh()},true);
+document.addEventListener('click',e=>{if(!XEM)return;const b=e.target.closest('form button[type=submit],form button:not([type]),[data-rcpay],[data-rcdone],[data-rcprint],[data-cancelok],[data-suaok],[data-xoaok],[data-delimeiok],[data-nccpay],[data-nttra],[data-kkhsave],[data-trok],[data-reset],[data-more="bg"],[data-more="tt"],[data-more="giahan"],[data-more="ctv"]');if(!b||b.closest('#fNvLogin'))return;e.preventDefault();e.stopImmediatePropagation();showKh()},true);
 render();
 (function boot(){let gs=null,seen=null;try{gs=JSON.parse(localStorage.getItem('shopgon_gg')||'null');seen=localStorage.getItem('shopgon_seen')}catch(e){}
   if(DEMO){if(TEST){const b=$('xbar');if(b){b.hidden=false;b.className='ok';b.innerHTML='<span class="t">🧪 <b>Tài khoản test</b> · đủ tính năng, dữ liệu mẫu lưu trên máy này.</span><button data-gg="thoattest">Thoát</button>'}}else demoBar();return}
+  /* 02/11: chế độ nhân viên chạy SAU khi nạp hết các khối script (trước đây vẽ màn Bán quá sớm → lỗi nv0/KM is not defined, màn trắng) */
+  {let s0=null;try{s0=JSON.parse(localStorage.getItem('shopgon_nv')||'null')}catch(_){}if(s0&&s0.sdt){if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',nvBoot);else nvBoot();return}}
   if(nvBoot())return;
   if(GG.ready()){ /* bản chính thức: chưa đăng nhập + chưa kích hoạt thì không vào được app */
     xemMode();lockApp();
@@ -2048,7 +2051,7 @@ setTimeout(()=>INST.bar(),1500);
 <script>
 /* 26/10 anh Thái: MÀU = 1 PHẦN TÊN MÁY. Kho máy có N màu → gợi ý N mẫu "Tên - Màu" (có ảnh đúng màu). Shop chọn đúng màu rồi quét IMEI → tồn kho tách theo màu. */
 let KM=null,KMload=null,SUGS=[],KMbad=new Map();
-const nv0=x=>String(x||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d');
+/* nv0 đã chuyển lên đầu (02/11: chế độ nhân viên vẽ màn Bán trước khi tới đây → lỗi nv0 is not defined) */
 function kmLoad(){if(KM||KMload)return KMload;KMload=fetch('/kho/kho-may.json').then(r=>r.json()).then(k=>{const L=[];KMbad=new Map();
     const dlN=d=>String(d||'').replace(/\s/g,'').replace(/GB\+/i,'+').replace(/\+/,'/');
     Object.values(k.hang||{}).forEach(ds=>(ds||[]).forEach(m=>{const f0=(m.mau||[]).find(z=>z&&z.file),mau=(m.mau||[]).filter(x=>x&&x.ten),cfg=[...new Set((m.bienThe||[]).map(b=>dlN(b.dl)).filter(Boolean))];
@@ -2074,7 +2077,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261102-1430';let verLuc=0;
+const BUILD='20261102-1530';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}

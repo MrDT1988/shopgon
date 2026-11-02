@@ -234,3 +234,9 @@ Quy tắc: sửa app thì đổi BUILD trong index.html và app/ver.json cùng g
 - App: hằng `NV_MAX=3`; Thêm › Nhân viên cửa hàng hiện "Đang có n/3", đủ 3 thì ẩn ô thêm + báo "xóa bớt hoặc liên hệ Shop Gọn để nâng gói".
 - Máy chủ **Phiên bản 19**: `const NV_MAX = 3`, `nvSync_` chỉ nhận 3 nhân viên đầu (chặn gửi lách). Sau này nâng gói → đổi NV_MAX theo gói ở cả 2 nơi.
 - BUILD 20261102-1430. Test 65/65.
+
+## 30. (02/11 15h30) Nhân viên đăng nhập 1 lần là nhớ (anh Thái báo: mỗi lần vào phải đăng nhập lại)
+- Lỗi gốc: chế độ nhân viên (`nvBoot`) chạy ngay trong khối script đầu → vẽ màn Bán khi `nv0`, `KM`… (khai báo ở khối script sau) chưa có → lỗi "nv0 is not defined", boot dừng giữa chừng, không tải lại tồn/phiên. Sửa: có `shopgon_nv` thì chờ `DOMContentLoaded` rồi mới `nvBoot()`; `nv0` chuyển lên đầu (cạnh `ageDays`).
+- Lỗi phụ: ở màn đăng nhập (chế độ xem thử) bấm nút "Vào bán hàng" bị chặn bởi bộ chặn XEM → mở bảng Kích hoạt (chỉ bấm Enter trên bàn phím mới vào được). Đã cho `#fNvLogin` qua.
+- Test mới: mở lại app 2 lần vẫn đăng nhập, vào thẳng màn Bán, không lỗi. BUILD 20261102-1530. Test 66/66.
+- Lưu ý iPhone: Safari và app "Thêm vào MH chính" giữ đăng nhập RIÊNG — nhân viên đăng nhập trong cái nào thì dùng cái đó (cài app xong đăng nhập lại 1 lần trong app).
