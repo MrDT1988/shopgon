@@ -6,7 +6,7 @@ tag=sys.argv[1] if len(sys.argv)>1 else 'x'
 VIEWS=[('home',"go('home')"),('sell',"sellMode='may';go('sell')"),('sellpk',"sellMode='pk';go('sell')"),('selldv',"sellMode='dv';go('sell')"),
  ('add',"addTab='moi';addMode='may';go('add')"),('addh',"addTab='moi';addMode='hang';go('add')"),('da',"addTab='da';go('add')"),
  ('khohub',"khoHub=true;go('stock')"),('kho',"khoHub=false;stockMode='may';go('stock')"),('khoh',"khoHub=false;stockMode='hang';go('stock')"),
- ('km',"go('km')"),('rpt',"go('rpt')"),('more',"more='menu';go('more')"),('chi',"more='chi';chiSub='list';go('more')"),('hist',"more='hist';go('more')")]
+ ('km',"go('km')"),('rpt',"go('rpt')"),('more',"more='menu';go('more')"),('chi',"more='chi';chiSub='list';go('more')"),('hist',"more='hist';go('more')"),('nvch',"more='nvch';go('more')"),('nvlogin',"more='nvlogin';go('more')")]
 JS="""()=>{const W=innerWidth,bad=[];const box=e=>e.closest('.panel,.kpi,.wc2,.sc,.pt,.row,.gsb,button,nav,header,.alert,.wtop');
 const scr=e=>{for(let a=e.parentElement;a;a=a.parentElement){const o=getComputedStyle(a).overflowX;if(o==='auto'||o==='scroll')return true}return false};
 for(const e of document.querySelectorAll('body *')){if(e.closest('[hidden]')||e.tagName==='IFRAME'||e.closest('.bar,.bars')||scr(e)||!e.offsetParent&&getComputedStyle(e).position!=='fixed')continue;

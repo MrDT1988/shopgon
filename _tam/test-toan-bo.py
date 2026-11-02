@@ -227,6 +227,28 @@ async def main():
         except Exception: r = {'loi': r}
         ok('Nhân viên bán (có KM) → về sổ chủ đủ 3 dòng, đúng tiền', r.get('n') == 3 and r.get('dt') == 2900000, r)
         ok('Nhân viên bán → sổ chủ trừ máy + quà, có giá vốn quà', r.get('may') == 'ban' and r.get('pk') == 1 and r.get('von'), r)
+
+        # 12b. (02/11) Mật khẩu nhân viên: chủ đặt MK → gửi lên máy chủ 1 lần rồi xóa khỏi máy; NV gửi phiên khi bán; bị đổi MK thì thoát
+        r = await E("""(async()=>{const SENT=[];let RESP={ok:true,don:[],nv:[]};window.fetch=async(u,o)=>{const b=o&&o.body?JSON.parse(o.body):{};SENT.push(b);return {ok:true,json:async()=>RESP}};
+          NV=null;db.sample=false;XEM=false;GG.token='t'.repeat(40);db.shop.nv=[];localStorage.removeItem('shopgon_nvmk');more='nvch';go('more');
+          $('nvTen').value='Lan';$('nvSo').value='0911222333';$('nvMk').value='';document.querySelector('#fNvAdd button[type=submit]').click();await new Promise(r=>setTimeout(r,50));
+          const thieuMk=!(db.shop.nv||[]).length&&/mật khẩu/i.test($('nvAddErr').textContent);
+          $('nvMk').value='lan2468';document.querySelector('#fNvAdd button[type=submit]').click();await new Promise(r=>setTimeout(r,50));
+          const cho=nvMkQ()['0911222333']==='lan2468'&&!JSON.stringify(db).includes('lan2468');
+          RESP={ok:true,don:[],nv:[{sdt:'0911222333',ten:'Lan',coMk:true}]};nvBusy=false;await nvSync();
+          const s1=SENT.filter(x=>x.act==='nvSync').pop();const guiMk=s1&&s1.nv[0].mk==='lan2468';const xoa=!nvMkQ()['0911222333'];
+          nvBusy=false;await nvSync();const s2=SENT.filter(x=>x.act==='nvSync').pop();const khongGuiLai=!s2.nv[0].mk;
+          render();const nhan=document.body.innerText.includes('Đã có mật khẩu');
+          NV={sdt:'0911222333',ten:'Lan',phien:'P1'};nvQSet([{id:'X1',lines:[{loai:'pk',ten:'a',giaBan:1}]}]);RESP={ok:true};await nvFlush();
+          const b1=SENT.filter(x=>x.act==='nvBan').pop();const coPhien=b1&&b1.phien==='P1';
+          let thoat=0;const lo=window.nvLogout;window.nvLogout=()=>{thoat++};nvLogout=window.nvLogout;
+          nvQSet([{id:'X2',lines:[{loai:'pk',ten:'a',giaBan:1}]}]);RESP={ok:false,dangXuat:true,msg:'Mật khẩu đã được chủ shop đổi. Đăng nhập lại.'};await nvFlush();await new Promise(r=>setTimeout(r,1700));
+          const giuDon=nvQ().length===1;NV=null;nvQSet([]);db.shop.nv=[];
+          return JSON.stringify({thieuMk,cho,guiMk,xoa,khongGuiLai,nhan,coPhien,thoat,giuDon})})()""")
+        try: r = json.loads(r)
+        except Exception: r = {'loi': r}
+        ok('Mật khẩu NV: bắt buộc khi thêm, không lưu vào sổ, gửi lên máy chủ 1 lần rồi xóa', r.get('thieuMk') and r.get('cho') and r.get('guiMk') and r.get('xoa') and r.get('khongGuiLai') and r.get('nhan'), r)
+        ok('Mật khẩu NV: bán gửi kèm phiên; bị đổi MK → thoát, giữ đơn chưa gửi', r.get('coPhien') and r.get('thoat') == 1 and r.get('giuDon'), r)
         await ctx.close()
 
         # 13. Các trang khác + cài app

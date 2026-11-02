@@ -216,3 +216,9 @@ Quy tắc: sửa app thì đổi BUILD trong index.html và app/ver.json cùng g
 - Trang chủ: 1 thẻ tháng 2 cột (Doanh thu | Lợi nhuận, cỡ chữ co theo màn), thẻ ngày số lớn + 1 dòng phụ dưới. Bỏ thanh vàng "Đang xem dữ liệu mẫu" khi là demo/test (trùng thanh test). Bỏ nút nổi "＋ Bán hàng" (che nội dung, trùng tab Bán). Ô tìm rút gọn chữ gợi ý.
 - Thanh dưới: chữ 11px không xuống dòng. Tab Khuyến mãi: đầu trang thành thẻ trắng gọn, thẻ máy trắng bo góc. Thêm: nhóm Truyền thông 1 cột. Giá trong lưới Bán co chữ, không tràn.
 - **BẮT BUỘC trước khi báo anh:** chạy `python3 _tam/kiem-giao-dien.py` (kiểm 15 màn app + web ở 320/340/360/412px: tràn màn, tràn khung, nhãn thanh dưới 2 dòng) phải "TONG LOI: 0", rồi xem ảnh 360px bằng mắt. BUILD 20261102-0930. Test 62/62.
+
+## 27. (02/11 13h) Nhân viên đăng nhập SĐT + MẬT KHẨU (anh Thái duyệt)
+- Máy chủ "Shop Gọn - Máy chủ bản quyền" **Phiên bản 18** (76 hàm, thêm `nvHash_`, `nvRow_`): tab NhanVien thêm cột **MK** (SHA-256 của `shopgon-nv|sdt|mk`) + **Phien** (uuid, đổi mỗi lần đặt MK). `nvSync_` nhận `nv[].mk` (4–32 ký tự) → băm + phiên mới; trả `nv[].coMk`. `nvLogin_`: có `phien` → so phiên (sai → `dangXuat`); không có → so MK, sai 5 lần khóa 15 phút (Cache `nvsai_<sdt>`); chưa có MK → `canMk`. `nvBan_` bắt buộc đúng phiên.
+- App: Thêm › Nhân viên cửa hàng — ô **Mật khẩu cho nhân viên** (bắt buộc), mỗi dòng có trạng thái 🔑/⚠ + nút **Đặt MK / Đổi MK**. MK chờ gửi nằm `localStorage shopgon_nvmk` (KHÔNG vào sổ Drive), gửi 1 lần qua nvSync rồi xóa. Nhân viên: màn đăng nhập có ô Mật khẩu; lưu `shopgon_nv.phien`; bị đổi MK → thoát, giữ đơn chưa gửi. Phiên cũ không có `phien` → tự thoát ra đăng nhập lại.
+- Tài khoản test thấy cả "Nhân viên cửa hàng" (chủ) và "Nhân viên đăng nhập". Nhân viên cũ chưa có MK: chủ shop phải bấm Đặt MK.
+- BUILD 20261102-1300. Test 64/64 (thêm 2 test MK). Kiểm giao diện 0 lỗi.
