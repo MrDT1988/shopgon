@@ -229,3 +229,8 @@ Quy tắc: sửa app thì đổi BUILD trong index.html và app/ver.json cùng g
 - Nhập hàng (ô IMEI) + Kiểm kho: **quét liên tục** từng hộp, rung + khung vàng mỗi máy, danh sách có ✕ bỏ, bấm "Xong" là đổ vào ô. Ô khác: quét 1 mã là đóng.
 - Dự phòng **📷 Chụp ảnh** (camera gốc, ảnh nét cao) → đọc mã trong ảnh (thử cả xoay 90°). Đèn pin 🔦 khi máy hỗ trợ (Android).
 - Thử bằng Playwright (Chromium không có BarcodeDetector = cùng đường iPhone): ảnh chụp mờ nghiêng → đúng IMEI1; camera giả quét liên tục → đúng IMEI1, bỏ IMEI2. CHƯA thử trên iPhone thật. BUILD 20261102-1400. Test 64/64.
+
+## 29. (02/11 13h) Tối đa 3 nhân viên / shop (anh Thái chốt; cần thêm thì nâng gói — anh tính sau)
+- App: hằng `NV_MAX=3`; Thêm › Nhân viên cửa hàng hiện "Đang có n/3", đủ 3 thì ẩn ô thêm + báo "xóa bớt hoặc liên hệ Shop Gọn để nâng gói".
+- Máy chủ **Phiên bản 19**: `const NV_MAX = 3`, `nvSync_` chỉ nhận 3 nhân viên đầu (chặn gửi lách). Sau này nâng gói → đổi NV_MAX theo gói ở cả 2 nơi.
+- BUILD 20261102-1430. Test 65/65.

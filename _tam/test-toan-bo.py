@@ -249,6 +249,11 @@ async def main():
         except Exception: r = {'loi': r}
         ok('Mật khẩu NV: bắt buộc khi thêm, không lưu vào sổ, gửi lên máy chủ 1 lần rồi xóa', r.get('thieuMk') and r.get('cho') and r.get('guiMk') and r.get('xoa') and r.get('khongGuiLai') and r.get('nhan'), r)
         ok('Mật khẩu NV: bán gửi kèm phiên; bị đổi MK → thoát, giữ đơn chưa gửi', r.get('coPhien') and r.get('thoat') == 1 and r.get('giuDon'), r)
+        r = await E("""(async()=>{window.fetch=async()=>({ok:true,json:async()=>({ok:true,don:[],nv:[]})});NV=null;db.shop.nv=[];more='nvch';go('more');
+          for(const [n,s] of [['A','0911000001'],['B','0911000002'],['C','0911000003']]){$('nvTen').value=n;$('nvSo').value=s;$('nvMk').value='1234';document.querySelector('#fNvAdd button[type=submit]').click();await new Promise(r=>setTimeout(r,30))}
+          const het=!$('fNvAdd')&&document.body.innerText.includes('Đã đủ 3/3');db.shop.nv=[];localStorage.removeItem('shopgon_nvmk');return JSON.stringify({n:3,het})})()""")
+        r = json.loads(r)
+        ok('Nhân viên: tối đa 3/shop, đủ 3 thì ẩn ô thêm', r.get('het'), r)
         await ctx.close()
 
         # 13. Các trang khác + cài app
