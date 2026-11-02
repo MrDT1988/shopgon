@@ -222,3 +222,10 @@ Quy tắc: sửa app thì đổi BUILD trong index.html và app/ver.json cùng g
 - App: Thêm › Nhân viên cửa hàng — ô **Mật khẩu cho nhân viên** (bắt buộc), mỗi dòng có trạng thái 🔑/⚠ + nút **Đặt MK / Đổi MK**. MK chờ gửi nằm `localStorage shopgon_nvmk` (KHÔNG vào sổ Drive), gửi 1 lần qua nvSync rồi xóa. Nhân viên: màn đăng nhập có ô Mật khẩu; lưu `shopgon_nv.phien`; bị đổi MK → thoát, giữ đơn chưa gửi. Phiên cũ không có `phien` → tự thoát ra đăng nhập lại.
 - Tài khoản test thấy cả "Nhân viên cửa hàng" (chủ) và "Nhân viên đăng nhập". Nhân viên cũ chưa có MK: chủ shop phải bấm Đặt MK.
 - BUILD 20261102-1300. Test 64/64 (thêm 2 test MK). Kiểm giao diện 0 lỗi.
+
+## 28. (02/11 14h) Quét IMEI trên iPhone (anh Thái: iPhone quét không ăn)
+- Nguyên nhân: iPhone (Safari) không có BarcodeDetector → app dùng ZXing JS cũ (0.21.3) tải từ CDN, camera mặc định 640×480 → mã IMEI nhỏ đọc không ra.
+- Đã thay: Chrome Android vẫn dùng BarcodeDetector có sẵn; máy không có (iPhone) dùng **ZXing-C++ WebAssembly** tự lưu trong repo `app/bd/ponyfill.js` (barcode-detector 3.2.2, IIFE) + `app/bd/zxing_reader.wasm` (zxing-wasm 3.1.3, 1,1 MB, chỉ tải khi bấm quét). Camera xin 1920×1080, lấy nét liên tục, zoom 2x nếu máy cho (iPhone Pro không lấy nét gần), đọc cả khung rồi dải giữa, **kiểm số Luhn** (bỏ mã đọc sai / mã không phải IMEI), hộp có IMEI1+IMEI2 → luôn lấy IMEI1 (trên cùng).
+- Nhập hàng (ô IMEI) + Kiểm kho: **quét liên tục** từng hộp, rung + khung vàng mỗi máy, danh sách có ✕ bỏ, bấm "Xong" là đổ vào ô. Ô khác: quét 1 mã là đóng.
+- Dự phòng **📷 Chụp ảnh** (camera gốc, ảnh nét cao) → đọc mã trong ảnh (thử cả xoay 90°). Đèn pin 🔦 khi máy hỗ trợ (Android).
+- Thử bằng Playwright (Chromium không có BarcodeDetector = cùng đường iPhone): ảnh chụp mờ nghiêng → đúng IMEI1; camera giả quét liên tục → đúng IMEI1, bỏ IMEI2. CHƯA thử trên iPhone thật. BUILD 20261102-1400. Test 64/64.

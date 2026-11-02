@@ -262,7 +262,10 @@ nav.tabs button[aria-selected="true"]{color:var(--pen);background:var(--pen-soft
 .dot{position:absolute;top:2px;right:calc(50% - 20px);min-width:18px;height:18px;border-radius:9px;background:var(--red);color:#fff;font-size:10.5px;display:grid;place-items:center;padding:0 4px}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(88px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:999px;font-weight:700;font-size:14px;z-index:9;max-width:calc(100% - 32px);text-align:center}
 .scan{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));color:#fff}
-.scan video{width:100%;max-width:420px;border-radius:16px;background:#000}
+.scv{position:relative;width:100%;max-width:440px}.scan video{width:100%;max-width:440px;border-radius:16px;background:#000;display:block;aspect-ratio:4/3;object-fit:cover}
+.scf{position:absolute;left:8%;right:8%;top:34%;height:32%;border:3px solid #22c55e;border-radius:12px;box-shadow:0 0 0 999px rgba(0,0,0,.25);pointer-events:none}.scf.ok{border-color:#fde047}
+.scb{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.scb .ghost,.scb .btn{padding:11px 16px;font-size:14.5px}.scph{display:inline-flex;align-items:center;cursor:pointer;color:var(--pen)}
+.scl{width:100%;max-width:440px;max-height:24vh;overflow:auto;background:rgba(255,255,255,.1);border-radius:12px;padding:6px 10px;font-size:13.5px}.scl div{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.12)}.scl button{border:0;background:none;color:#fca5a5;font-size:16px}
 .scan p{margin:0;text-align:center;max-width:36ch}
 .foot{font-size:12px;color:var(--muted);text-align:center}
 /* 23/10: khối lời theo hãng gọn lại */
@@ -427,7 +430,7 @@ body.nv .hmg>div.own{display:none}body.nv .hmg{grid-template-columns:1fr}
 <div class="toast" id="toast" hidden></div>
 <div class="rcwrap" id="rc" hidden></div>
 <div class="welcome" id="welcome" hidden></div>
-<div class="scan" id="scan" hidden><video id="cam" playsinline muted></video><p id="scanMsg">Đưa mã vạch IMEI vào giữa khung</p><button class="ghost" id="scanClose">Đóng</button></div>
+<div class="scan" id="scan" hidden><div class="scv"><video id="cam" playsinline muted autoplay></video><i class="scf"></i></div><p id="scanMsg">Đưa mã vạch IMEI vào giữa khung</p><div id="scanList" class="scl" hidden></div><div class="scb"><button class="ghost" id="scanTorch" hidden>🔦 Đèn</button><label class="ghost scph">📷 Chụp ảnh<input type="file" accept="image/*" capture="environment" id="scanPhoto" hidden></label><button class="btn" id="scanClose">Đóng</button></div></div>
 
 <script>
 /* ===== Lớp lưu trữ =====
@@ -1567,28 +1570,67 @@ function renderReceipt(){const lines=db.don.filter(x=>x.bill===rcId||x.id===rcId
 function closeReceipt(){if(NV){nvClose();return}const lines=db.don.filter(x=>x.bill===rcId||x.id===rcId);const tra=rcPay==='no'&&$('rcTra')?parseMoney($('rcTra').value):0;lines.forEach(x=>x.tt=rcPay==='no'?'Ghi nợ':'Đã thanh toán');if(rcPay==='no'&&lines.length)lines[0].no=Math.max(0,lines.reduce((a,x)=>a+x.giaBan,0)-tra);save();$('rc').hidden=true;rcId=null;render();if(lines.length)toast('Đã lưu đơn '+money(lines.reduce((a,x)=>a+x.giaBan,0)))}
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.rcpay){rcPay=b.dataset.rcpay;renderReceipt()}else if(b.dataset.rcdone)closeReceipt();else if(b.dataset.rcprint)printThuong();else if(b.dataset.rcraw)printRawbt();});
 
-/* ===== Quét mã vạch =====
-   Dùng BarcodeDetector của trình duyệt (Chrome Android). Nếu máy không hỗ trợ hoặc không cấp camera thì báo gõ tay. */
-let stream=null, scanTarget=null, scanTimer=null, zxReader=null;
-function loadZxing(){return window.ZXing?Promise.resolve():new Promise((ok,bad)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js';s.onload=ok;s.onerror=bad;document.head.appendChild(s)})}
+/* ===== Quét mã vạch IMEI =====
+   02/11 anh Thái: iPhone quét không ăn → bỏ ZXing JS cũ. Dùng BarcodeDetector có sẵn (Chrome Android), máy không có (iPhone) dùng
+   ZXing-C++ WebAssembly tự lưu ở /app/bd/ (barcode-detector 3.2.2 + zxing_reader.wasm). Camera độ phân giải cao, đọc vùng giữa khung,
+   kiểm số Luhn của IMEI (loại đọc sai), zoom 2x nếu máy cho (iPhone Pro không lấy nét gần). Nhập kho / kiểm kho: quét liên tục.
+   Dự phòng: 📷 Chụp ảnh → ảnh gốc độ nét cao → đọc mã trong ảnh. */
+let stream=null, scanTarget=null, scanTimer=null, scanDet=null, scanBusy=false, scanGot=[], scanLast={}, scanTorchOn=false;
+const scanMulti=t=>t==='aImei'||t==='kkIn';
+const imeiOk=s=>{if(!/^\d{15}$/.test(s))return false;let sum=0;for(let i=0;i<15;i++){let d=+s[i];if(i%2===1){d*=2;if(d>9)d-=9}sum+=d}return sum%10===0};
+function loadBd(){if(window.BarcodeDetectionAPI)return Promise.resolve();return new Promise((ok,bad)=>{const s=document.createElement('script');s.src='/app/bd/ponyfill.js?v=322';s.onload=ok;s.onerror=bad;document.head.appendChild(s)})}
+async function getDet(){if(scanDet)return scanDet;
+  try{if('BarcodeDetector' in window){const f=await BarcodeDetector.getSupportedFormats();if(f.includes('code_128')){scanDet=new BarcodeDetector({formats:['code_128','code_39','ean_13']});return scanDet}}}catch(_){}
+  await loadBd();const A=window.BarcodeDetectionAPI;A.setZXingModuleOverrides({locateFile:(p,pre)=>p.endsWith('.wasm')?'/app/bd/zxing_reader.wasm':pre+p});
+  scanDet=new A.BarcodeDetector({formats:['code_128','code_39','ean_13']});return scanDet}
+/* chọn IMEI từ các mã đọc được: hộp máy có IMEI1 (trên) + IMEI2 (dưới) → lấy cái trên cùng */
+function pickImei(r){const L=r.map(x=>({s:String(x.rawValue||'').replace(/\D/g,''),y:x.boundingBox?x.boundingBox.y:0})).filter(x=>imeiOk(x.s)).sort((a,b)=>a.y-b.y);return L}
+let scanCv=null;
+async function scanFrame(){const v=$('cam');if(scanBusy||!v||!v.videoWidth)return;scanBusy=true;
+  try{const W=v.videoWidth,H=v.videoHeight;scanCv=scanCv||document.createElement('canvas');
+    /* vùng giữa khung (dải ngang) ở độ phân giải gốc — mã IMEI nhỏ, đọc cả khung dễ trượt */
+    const ch=Math.round(H*.5),cy=Math.round(H*.25);scanCv.width=W;scanCv.height=ch;const g=scanCv.getContext('2d',{willReadFrequently:true});g.drawImage(v,0,cy,W,ch,0,0,W,ch);
+    /* cả khung trước (thấy đủ IMEI1 + IMEI2 → luôn lấy IMEI1 trên cùng, máy nào cũng ra cùng 1 số), không thấy thì đọc dải giữa */let L=pickImei(await scanDet.detect(v));if(!L.length)L=pickImei(await scanDet.detect(scanCv));
+    if(L.length)gotImei(L)}catch(_){}finally{scanBusy=false}}
+function gotImei(L){const s=L[0].s,now=Date.now();
+  if(!scanMulti(scanTarget)){gotCode(s);return}
+  /* quét liên tục: bỏ mã vừa quét, bỏ IMEI2 cùng hộp (thấy cùng khung với IMEI1) */
+  L.slice(1).forEach(x=>scanLast[x.s]=now+60000);if(scanLast[s]&&scanLast[s]>now)return;scanLast[s]=now+4000;
+  if(scanGot.includes(s)){$('scanMsg').textContent='Đã quét rồi: …'+s.slice(-6);return}
+  scanGot.push(s);try{navigator.vibrate&&navigator.vibrate(60)}catch(_){}const f=document.querySelector('.scf');if(f){f.classList.add('ok');setTimeout(()=>f.classList.remove('ok'),400)}
+  $('scanMsg').textContent='✓ '+scanGot.length+' máy · quét tiếp hộp khác';drawScanList()}
+function drawScanList(){const el=$('scanList');el.hidden=!scanGot.length;el.innerHTML=scanGot.map((s,i)=>`<div><span class="num">${i+1}. ${s}</span><button type="button" data-scdel="${i}" aria-label="Bỏ">✕</button></div>`).join('')}
 async function openScan(target){
-  scanTarget=target;const box=$('scan'),msg=$('scanMsg');box.hidden=false;msg.textContent='Đang mở camera…';
-  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){msg.textContent='Trình duyệt này không mở được camera. Tạm gõ IMEI bằng tay (bấm *#06# trên máy để xem IMEI).';return}
-  if(!('BarcodeDetector' in window)){ // iPhone (Safari) và máy cũ: dùng thư viện ZXing
-    try{await loadZxing();const reader=new ZXing.BrowserMultiFormatReader();zxReader=reader;msg.textContent='Đưa mã vạch IMEI vào giữa khung';
-      reader.decodeFromConstraints({video:{facingMode:'environment'}},$('cam'),res=>{if(!res)return;const s=res.getText().replace(/\D/g,'');if(s.length===15)gotCode(s)});
-    }catch(err){msg.textContent='Không mở được camera. Hãy cho phép camera, hoặc gõ IMEI bằng tay.'}
-    return}
-  try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});const v=$('cam');v.srcObject=stream;await v.play();msg.textContent='Đưa mã vạch IMEI vào giữa khung';
-    const det=new BarcodeDetector({formats:['code_128','ean_13','code_39']});
-    scanTimer=setInterval(async()=>{try{const r=await det.detect(v);const hit=r.map(x=>x.rawValue.replace(/\D/g,'')).find(s=>s.length===15);if(hit)gotCode(hit)}catch(_){}},350);
-  }catch(err){msg.textContent='Không mở được camera. Hãy cho phép camera, hoặc gõ IMEI bằng tay.'}
+  scanTarget=target;scanGot=[];scanLast={};const box=$('scan'),msg=$('scanMsg');box.hidden=false;drawScanList();$('scanClose').textContent=scanMulti(target)?'Xong':'Đóng';$('scanTorch').hidden=true;
+  msg.textContent='Đang mở camera…';
+  try{await getDet()}catch(e){msg.textContent='Chưa tải được bộ đọc mã (kiểm tra mạng). Bấm 📷 Chụp ảnh hoặc gõ IMEI bằng tay.';return}
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){msg.textContent='Trình duyệt này không mở được camera. Bấm 📷 Chụp ảnh, hoặc gõ IMEI (bấm *#06# để xem).';return}
+  try{stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}}});
+    const v=$('cam');v.srcObject=stream;await v.play();
+    const tr=stream.getVideoTracks()[0],cap=tr.getCapabilities?tr.getCapabilities():{};const adv={};
+    if(cap.focusMode&&cap.focusMode.includes('continuous'))adv.focusMode='continuous';
+    if(cap.zoom&&cap.zoom.max>=2)adv.zoom=Math.min(2,cap.zoom.max);
+    if(Object.keys(adv).length)try{await tr.applyConstraints({advanced:[adv]})}catch(_){}
+    if(cap.torch)$('scanTorch').hidden=false;
+    msg.textContent=scanMulti(target)?'Đưa mã IMEI vào khung xanh · quét liên tục từng hộp':'Đưa mã vạch IMEI vào khung xanh, cách 15–20 cm';
+    scanTimer=setInterval(scanFrame,220);
+  }catch(err){msg.textContent='Không mở được camera. Cho phép camera trong Cài đặt, hoặc bấm 📷 Chụp ảnh.'}
 }
-function closeScan(){clearInterval(scanTimer);if(zxReader){try{zxReader.reset()}catch(_){}zxReader=null}if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;$('scan').hidden=true}
+async function scanPhoto(f){const msg=$('scanMsg');if(!f)return;msg.textContent='Đang đọc ảnh…';
+  try{await getDet();const bmp=await createImageBitmap(f);let L=pickImei(await scanDet.detect(bmp));
+    if(!L.length){/* thử thu nhỏ + xoay ngang/dọc */const c=document.createElement('canvas'),k=Math.min(1,2000/Math.max(bmp.width,bmp.height));
+      for(const rot of [0,90]){const w=Math.round(bmp.width*k),h=Math.round(bmp.height*k);c.width=rot?h:w;c.height=rot?w:h;const g=c.getContext('2d');g.save();if(rot){g.translate(h,0);g.rotate(Math.PI/2)}g.drawImage(bmp,0,0,w,h);g.restore();L=pickImei(await scanDet.detect(c));if(L.length)break}}
+    if(!L.length){msg.textContent='Không thấy mã IMEI trong ảnh. Chụp gần hơn, đủ sáng, mã nằm ngang.';return}
+    if(scanMulti(scanTarget)){gotImei(L)}else gotCode(L[0].s)}catch(_){msg.textContent='Không đọc được ảnh, thử lại.'}}
+function closeScan(){clearInterval(scanTimer);scanTimer=null;if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;$('scan').hidden=true;
+  if(scanMulti(scanTarget)&&scanGot.length){const el=$(scanTarget);if(el){if(scanTarget==='aImei'){const cu=el.value.split(/\s+/).filter(Boolean);el.value=[...cu,...scanGot.filter(s=>!cu.includes(s))].join('\n');toast('Đã quét '+scanGot.length+' IMEI')}else scanGot.forEach(s=>kkAdd(s))}scanGot=[]}}
 function gotCode(code){closeScan();const el=$(scanTarget);if(!el)return;
   if(scanTarget==='aImei'){el.value=(el.value.trim()?el.value.trim()+'\n':'')+code;toast('Đã quét '+code)}
   else{el.value=code;el.dispatchEvent(new Event('input',{bubbles:true}))}}
 $('scanClose').addEventListener('click',closeScan);
+$('scanPhoto').addEventListener('change',e=>{const f=e.target.files&&e.target.files[0];e.target.value='';scanPhoto(f)});
+$('scanTorch').addEventListener('click',async()=>{try{const tr=stream&&stream.getVideoTracks()[0];scanTorchOn=!scanTorchOn;await tr.applyConstraints({advanced:[{torch:scanTorchOn}]})}catch(_){}});
+$('scanList').addEventListener('click',e=>{const b=e.target.closest('[data-scdel]');if(!b)return;scanGot.splice(+b.dataset.scdel,1);drawScanList()});
 
 /* 23/10: QR thanh toán gói ngay trên màn chờ duyệt — TK nhận tiền + bảng giá lấy từ máy chủ (tab CauHinh), không ghi trong code */
 let payGoi=0, payLic=null;
@@ -2028,7 +2070,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261102-1300';let verLuc=0;
+const BUILD='20261102-1400';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
