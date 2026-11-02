@@ -60,7 +60,7 @@ async def main():
         await E(f"stockMode='may';stockBrand=db.may.find(m=>m.ten==={ten_may!r}).hang;render()"); await pg.fill(f'[data-kgm="{ten_may}"]', '12.000.000'); await pg.press(f'[data-kgm="{ten_may}"]', 'Tab'); await pg.wait_for_timeout(150)
         ok('Kho: sửa giá mẫu máy áp mọi máy', await E(f"db.may.filter(m=>m.ten==={ten_may!r}&&m.tt==='ton').every(m=>m.giaBan===12000000)"))
         # 2c. Khuyến mãi tự gắn vào đơn
-        await E("khoTab='km';render()"); await pg.wait_for_timeout(300)
+        await E("go('km')"); await pg.wait_for_timeout(300)
         g = await E(f"gk({ten_may!r})")
         await pg.click(f'[data-kmadd="g|{g}"]'); await pg.fill('#kmGt', '200.000'); await pg.click('#fKm button[type=submit]'); await pg.wait_for_timeout(150)
         ok('KM: thẻ web có chip KM vừa thêm', await E(f"[...document.querySelectorAll('.wchip')].some(c=>c.textContent.includes('200k'))"))

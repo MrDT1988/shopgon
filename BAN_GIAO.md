@@ -207,3 +207,7 @@ Quy tắc: sửa app thì đổi BUILD trong index.html và app/ver.json cùng g
 - **Màn Bán:** 3 tab Điện thoại · Phụ kiện (pk, sim) · Dịch vụ khác (sửa chữa, thu hộ, chuyển tiền, khác) — `sellMode` 'may'|'pk'|'dv', `nhomMode()`. Bỏ "Tồn N ngày" và chip "Tồn lâu" ở màn Bán, chỉ hiện "Trong kho: N".
 - **Giao diện:** `.seg.top` gọn lại (cao 50px) dùng chung Bán/Nhập/Kho/Báo cáo; màn Bán không còn kiểu phẳng, lưới máy/phụ kiện nằm trong thẻ trắng bo góc; Nhập hàng dùng chip (Điện thoại · Hàng khác · Ảnh hóa đơn) trong thẻ như Bán. CSS khối "02/11 (4)" cuối `<style>`.
 - BUILD 20261102-0830. Test 62/62.
+
+## 25. (02/11 8h30) Tab Khuyến mãi thay Báo cáo · trang chủ mới
+- Thanh dưới: Trang chủ · Bán · Kho hàng · **Khuyến mãi** · Thêm. View `km` = `renderKmTab` (ghi KM từng máy, Copy bài đăng). Đã bỏ tab KM trong Kho và dòng "Giá bán & khuyến mãi" ở Kho hàng (giá vẫn sửa ở Kho › tồn kho). View `rpt` (Báo cáo) còn, vào từ thẻ doanh thu/lối tắt trang chủ.
+- Trang chủ từ trên xuống: Doanh thu tháng + Lợi nhuận tháng · tab Hôm nay/Hôm qua/7 ngày (`homeD`) · ô tìm IMEI · phần còn lại giữ nguyên. BUILD 20261102-0900. Test 62/62.
