@@ -261,7 +261,7 @@ nav.tabs svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1
 nav.tabs button[aria-selected="true"]{color:var(--pen);background:var(--pen-soft)}
 .dot{position:absolute;top:2px;right:calc(50% - 20px);min-width:18px;height:18px;border-radius:9px;background:var(--red);color:#fff;font-size:10.5px;display:grid;place-items:center;padding:0 4px}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(88px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:999px;font-weight:700;font-size:14px;z-index:9;max-width:calc(100% - 32px);text-align:center}
-.scan{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));color:#fff}
+.scan{position:fixed;inset:0;z-index:20;background:#0b1114;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));color:#fff}
 .scv{position:relative;width:100%;max-width:440px}.scan video{width:100%;max-width:440px;border-radius:16px;background:#000;display:block;aspect-ratio:4/3;object-fit:cover}
 .scf{position:absolute;left:8%;right:8%;top:34%;height:32%;border:3px solid #22c55e;border-radius:12px;box-shadow:0 0 0 999px rgba(0,0,0,.25);pointer-events:none}.scf.ok{border-color:#fde047}
 .scb{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.scb .ghost,.scb .btn{padding:11px 16px;font-size:14.5px}.scph{display:inline-flex;align-items:center;cursor:pointer;color:var(--pen)}
@@ -1596,7 +1596,7 @@ function gotImei(L){const s=L[0].s,now=Date.now();
   if(!scanMulti(scanTarget)){gotCode(s);return}
   /* quét liên tục: bỏ mã vừa quét, bỏ IMEI2 cùng hộp (thấy cùng khung với IMEI1) */
   L.slice(1).forEach(x=>scanLast[x.s]=now+60000);if(scanLast[s]&&scanLast[s]>now)return;scanLast[s]=now+4000;
-  if(scanGot.includes(s)){$('scanMsg').textContent='Đã quét rồi: …'+s.slice(-6);return}
+  if(scanGot.includes(s)){$('scanMsg').textContent='✓ '+scanGot.length+' máy · máy …'+s.slice(-6)+' đã quét, đưa hộp khác vào';return}
   scanGot.push(s);try{navigator.vibrate&&navigator.vibrate(60)}catch(_){}const f=document.querySelector('.scf');if(f){f.classList.add('ok');setTimeout(()=>f.classList.remove('ok'),400)}
   $('scanMsg').textContent='✓ '+scanGot.length+' máy · quét tiếp hộp khác';drawScanList()}
 function drawScanList(){const el=$('scanList');el.hidden=!scanGot.length;el.innerHTML=scanGot.map((s,i)=>`<div><span class="num">${i+1}. ${s}</span><button type="button" data-scdel="${i}" aria-label="Bỏ">✕</button></div>`).join('')}
@@ -2070,7 +2070,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261102-1400';let verLuc=0;
+const BUILD='20261102-1410';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
