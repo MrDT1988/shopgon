@@ -53,62 +53,60 @@ input,select{font:inherit;font-size:16px;padding:9px 11px;border:1px solid var(-
 .p .chan b{font-size:36px;display:block}.p .chan .dt{font-size:46px;font-weight:900}
 .noimg{display:grid;place-items:center;background:var(--ngoc2);border-radius:10px;flex:none}
 .dong .sao{color:#c9d6d3}.dong .sao.on{color:#e0a400}
-/* ===== 29/10 (bản 2) TRANG KHÁCH — sáng, sạch, kiểu sàn TMĐT ===== */
-.xem{--ch:#0f766e;--ch2:#e7f6f3;--do2:#d7263d;--muc2:#111827;--xam2:#6b7280;--vien2:#e5e7eb;max-width:640px;margin:0 auto;padding:0 0 100px;background:#f5f6f8;min-height:100vh;color:var(--muc2)}
-.xem .top{background:#fff;padding:14px 16px 12px;border-bottom:1px solid var(--vien2)}
-.xem .top .hang1{display:flex;align-items:center;gap:12px}
-.xem .top .logo{flex:none;width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#14b8a6,#0f766e);color:#fff;display:grid;place-items:center;font-weight:900;font-size:20px}
-.xem .top b{font-size:19px;font-weight:900;display:block;line-height:1.2}
-.xem .top .dc{display:block;color:var(--xam2);font-size:12.5px;margin-top:1px}
-.xem .top .nho{display:none}
-.xem .top .so{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
-.xem .top .so span{background:var(--ch2);color:var(--ch);border-radius:999px;padding:4px 10px;font-size:12px;font-weight:700}.xem .top .so b{display:inline;font-size:13px}
-.xem .timx{margin-top:10px;width:100%;border:1.5px solid var(--vien2);background:#f9fafb;border-radius:12px;padding:11px 14px;font-size:15px}
+/* ===== 02/11 TRANG KHÁCH gọn — 1 khung hình: 3 máy ngang × 4 máy dọc, giá + giá niêm yết gạch ngang; khuyến mãi xem khi bấm vào máy ===== */
+.xem{--ch:#0f766e;--ch2:#e7f6f3;--do2:#d7263d;--muc2:#111827;--xam2:#6b7280;--vien2:#e5e7eb;max-width:640px;margin:0 auto;padding:0 0 76px;background:#f5f6f8;min-height:100vh;color:var(--muc2)}
+.xem .top{background:#fff;padding:8px 12px 7px;border-bottom:1px solid var(--vien2)}
+.xem .top .hang1{display:flex;align-items:center;gap:10px}
+.xem .top .logo{flex:none;width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#14b8a6,#0f766e);color:#fff;display:grid;place-items:center;font-weight:900;font-size:17px}
+.xem .top .tt{flex:1;min-width:0}.xem .top .tt b{font-size:16px;font-weight:900;display:block;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.xem .top .dc{display:block;color:var(--xam2);font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.xem .top .cnt{flex:none;background:var(--ch2);color:var(--ch);border-radius:999px;padding:3px 9px;font-size:11.5px;font-weight:700;white-space:nowrap}
+.xem .timx{margin-top:6px;width:100%;border:1.5px solid var(--vien2);background:#f9fafb;border-radius:10px;padding:6px 12px;font-size:15px}
 .xem .timx:focus{outline:0;border-color:var(--ch);background:#fff}
-.xem .hot{padding:12px 0 0}.xem .hot h4{margin:0 16px 8px;font-size:15px;font-weight:900;display:flex;align-items:center;gap:6px}
-.xem .hot .ngang{display:flex;gap:10px;overflow-x:auto;padding:2px 16px 6px;scroll-snap-type:x mandatory}.xem .hot .ngang::-webkit-scrollbar{display:none}
-.xem .hc{flex:0 0 76%;max-width:310px;scroll-snap-align:start;background:#fff;border:1px solid #fde2c8;border-radius:16px;padding:10px;display:grid;grid-template-columns:74px minmax(0,1fr);gap:10px;align-items:center;cursor:pointer;box-shadow:0 2px 8px rgba(249,115,22,.08)}
-.xem .hc img{width:74px;height:84px;object-fit:contain}.xem .hc .n{font-weight:800;font-size:13.5px;line-height:1.25}
-.xem .hc .g{font-size:16px;font-weight:900;color:var(--do2)}.xem .hc .cu{display:none}
-.xem .hc .k{font-size:11.5px;font-weight:700;color:#c2410c;margin-top:2px}
-.xem .tabs{position:sticky;top:0;z-index:4;background:#fff;padding:8px 12px;gap:6px;border-bottom:1px solid var(--vien2);box-shadow:0 2px 6px rgba(0,0,0,.03)}
-.xem .tabs button{flex:0 0 auto;border:1.5px solid var(--vien2);background:#fff;color:#374151;border-radius:10px;padding:7px 14px;font-weight:800;font-size:14px}
-.xem .tabs button.on{border-color:var(--ch);background:var(--ch2);color:var(--ch)}
-.xem .khuc{display:flex;gap:6px;overflow-x:auto;padding:10px 16px 0}
-.xem .khuc button{flex:0 0 auto;border:1px solid var(--vien2);background:#fff;border-radius:999px;padding:5px 11px;font:inherit;font-size:12.5px;font-weight:700;color:#374151}
-.xem .khuc button small{color:#9ca3af;font-weight:700;margin-left:2px}.xem .khuc button.on{background:#111827;border-color:#111827;color:#fff}.xem .khuc button.on small{color:#d1d5db}
-.xem .ds{padding:10px 10px 12px;display:flex;flex-direction:column;gap:10px}
-.xem .tieu{font-weight:900;font-size:16px;padding:0 6px}.xem .tieu small{color:var(--xam2);font-weight:600;font-size:13px;margin-left:4px}
-.xem .luoi{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-@media(min-width:560px){.xem .luoi{grid-template-columns:repeat(3,minmax(0,1fr))}}
-.xem .c{background:#fff;border-radius:14px;padding:10px;display:flex;flex-direction:column;min-width:0;border:1px solid #eef0f3;position:relative}
+.xem .tabs{position:sticky;top:0;z-index:4;background:#fff;padding:5px 10px;gap:6px;border-bottom:1px solid var(--vien2);box-shadow:0 2px 6px rgba(0,0,0,.03);overflow-x:auto;scrollbar-width:none}.xem .tabs::-webkit-scrollbar{display:none}
+.xem .tabs button{flex:0 0 auto;border:1.5px solid var(--vien2);background:#fff;color:#374151;border-radius:999px;padding:5px 12px;font-weight:800;font-size:13px}
+.xem .tabs button.on{border-color:var(--ch);background:var(--ch);color:#fff}
+.xem .ds{padding:6px 8px 6px}
+.xem .luoi{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+@media(min-width:560px){.xem .luoi{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.xem .c{background:#fff;border:1px solid #eef0f3;border-radius:12px;padding:4px 5px 5px;display:flex;flex-direction:column;min-width:0;position:relative;font:inherit;color:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.xem .c:active{background:#f3f4f6}
 .xem .c.het{opacity:.55}
-.xem .c .anh{aspect-ratio:1/1;display:grid;place-items:center;position:relative;margin-bottom:8px}
-.xem .c .anh img{max-width:100%;max-height:100%;object-fit:contain}
-.xem .c .anh .noimg{width:100%;height:100%;font-size:40px;background:#f3f4f6;border-radius:12px}
-.xem .c .tag{position:absolute;top:0;left:0;background:#fff1e6;color:#c2410c;font-weight:800;border-radius:6px;padding:2px 6px;font-size:11px;z-index:1;border:1px solid #fed7aa}
-.xem .c .sao{position:absolute;top:0;right:0;background:#fee2e2;color:#b91c1c;font-weight:800;border-radius:6px;padding:2px 6px;font-size:11px;z-index:1}
-.xem .c .hg{display:none}
-.xem .c .n{font-weight:700;font-size:14px;line-height:1.3;min-height:2.6em}
-.xem .c .dl{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
-.xem .c .dl span{font-size:11px;font-weight:700;color:#374151;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:6px;padding:1px 6px}
-.xem .c .gia{margin-top:6px}
-.xem .c .g{font-size:17px;font-weight:900;color:var(--do2);line-height:1.2}
-.xem .c .ny{font-size:11px;color:var(--xam2)}
-.xem .c .kms{display:flex;flex-direction:column;gap:3px;margin-top:7px;background:#fafafa;border:1px solid #f0f0f0;border-radius:10px;padding:6px 7px}
-.xem .c .km{font-size:11.5px;font-weight:600;color:#374151;line-height:1.3}.xem .c .km b{color:#c2410c}
-.xem .c .sl{font-size:11.5px;font-weight:700;color:#16a34a;margin-top:auto;padding-top:7px}
-.xem .c.het .sl{color:#9ca3af}
-.xem .c .hoi{margin-top:8px;border:1.5px solid #0068ff;background:#fff;color:#0068ff;border-radius:10px;padding:8px 6px;font:800 13px/1.2 inherit;cursor:pointer}
-.xem .c.het .hoi{border-color:#e5e7eb;color:#9ca3af}
-.xem .pkl{display:flex;flex-direction:column;gap:8px}
-.xem .pkr{background:#fff;border:1px solid #eef0f3;border-radius:14px;padding:12px 14px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.xem .c>span{display:block}
+.xem .c .anh{height:50px;display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:3px;overflow:hidden}
+.xem .c .anh img{width:100%;height:100%;object-fit:contain}
+.xem .c .anh .noimg{width:100%;height:100%;font-size:26px;background:#f3f4f6;border-radius:8px;display:grid;place-items:center}
+.xem .c .pc{position:absolute;top:0;left:0;background:var(--do2);color:#fff;font-weight:800;border-radius:5px;padding:0 4px;font-size:10px;line-height:15px;z-index:1}
+.xem .c .kmb{position:absolute;top:0;right:0;font-size:12px;line-height:15px;z-index:1}
+.xem .c .hh{position:absolute;left:0;right:0;bottom:2px;text-align:center;background:rgba(17,24,39,.72);color:#fff;font-size:10px;font-weight:700;border-radius:5px;padding:1px 0;z-index:1}
+.xem .c .n{font-weight:700;font-size:11px;line-height:1.2;height:2.4em;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.xem .c .g{font-size:13px;font-weight:900;color:var(--do2);line-height:1.2;margin-top:2px;white-space:nowrap}
+.xem .c .ny{font-size:10px;color:var(--xam2);line-height:1.2;min-height:12px;white-space:nowrap}
+.xem .pkl{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.xem .tieu{font-weight:900;font-size:15px;padding:8px 4px 0}.xem .tieu small{color:var(--xam2);font-weight:600;font-size:12.5px;margin-left:4px}
+.xem .pkr{background:#fff;border:1px solid #eef0f3;border-radius:12px;padding:10px 12px;display:flex;justify-content:space-between;gap:10px;align-items:center}
 .xem .pkr b{font-size:14px}.xem .pkr small{display:block;color:#c2410c;font-weight:700;font-size:12px;margin-top:2px}.xem .pkr .g{font-weight:900;color:var(--do2);white-space:nowrap}
 .xem .trong{color:var(--xam2);padding:24px 0;text-align:center}
-.xem .cuoi{text-align:center;font-size:11.5px;color:#9ca3af;padding:8px 16px}
-.xem .goi{position:fixed;left:0;right:0;bottom:0;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));background:#fff;border-top:1px solid var(--vien2);display:flex;gap:8px;max-width:640px;margin:0 auto;z-index:6}
-.xem .goi a,.xem .goi button{flex:1;padding:12px 6px;font-size:15px;border-radius:12px}
+.xem .cuoi{text-align:center;font-size:11px;color:#9ca3af;padding:6px 16px}
+.xem .goi{position:fixed;left:0;right:0;bottom:0;padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px));background:#fff;border-top:1px solid var(--vien2);display:flex;gap:8px;max-width:640px;margin:0 auto;z-index:6}
+.xem .goi a,.xem .goi button{flex:1;padding:10px 6px;font-size:14.5px;border-radius:12px}
 .xem .goi .goi1{background:#16a34a}
+.xem .bs{position:fixed;inset:0;z-index:20;display:flex;align-items:flex-end;justify-content:center;background:rgba(17,24,39,.5)}
+.xem .bs[hidden]{display:none}
+.xem .bsc{background:#fff;width:100%;max-width:640px;border-radius:20px 20px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px));max-height:84vh;overflow:auto;position:relative}
+.xem .bsx{position:absolute;top:10px;right:12px;border:0;background:#f3f4f6;border-radius:50%;width:30px;height:30px;font-size:15px;color:#374151;cursor:pointer}
+.xem .bsh{display:flex;gap:12px;align-items:center;padding-right:30px}
+.xem .bsh .im{flex:none;width:92px;height:104px;display:grid;place-items:center}.xem .bsh .im img{max-width:100%;max-height:100%;object-fit:contain}.xem .bsh .im .noimg{width:92px;height:104px;font-size:38px;background:#f3f4f6;border-radius:12px}
+.xem .bsh .t{font-weight:800;font-size:15.5px;line-height:1.3}
+.xem .bsh .dl{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}.xem .bsh .dl span{font-size:11.5px;font-weight:700;color:#374151;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:6px;padding:1px 7px}
+.xem .bsh .g{font-size:22px;font-weight:900;color:var(--do2);line-height:1.2;margin-top:6px}
+.xem .bsh .ny{font-size:13px;color:var(--xam2)}.xem .bsh .ny b{color:#16a34a}
+.xem .bsk{margin-top:12px;background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:10px 12px}
+.xem .bsk h5{margin:0 0 6px;font-size:13.5px;font-weight:900;color:#c2410c}
+.xem .bsk div{font-size:13.5px;font-weight:600;color:#374151;line-height:1.4;padding:2px 0}
+.xem .bsk.khong{background:#f9fafb;border-color:#e5e7eb;color:var(--xam2);font-size:13px}
+.xem .bss{margin-top:10px;font-size:13px;font-weight:700;color:#16a34a}.xem .bss.het{color:#9ca3af}
+.xem .bsz{margin-top:12px;display:flex;gap:8px}.xem .bsz .hoi{flex:1;border:0;background:#0068ff;color:#fff;border-radius:12px;padding:12px 8px;font:800 15px/1.2 inherit;cursor:pointer}
 .xem .toast{position:fixed;left:50%;bottom:84px;transform:translate(-50%,20px);background:#111827;color:#fff;font-size:14px;font-weight:600;padding:10px 16px;border-radius:12px;opacity:0;transition:.2s;pointer-events:none;z-index:60;max-width:92vw;text-align:center}
 .xem .toast.on{opacity:1;transform:translate(-50%,0)}
 .xem .chu{position:relative;z-index:7;display:flex;align-items:center;gap:8px;padding:8px 12px;background:#111827;color:#fff;font-size:12.5px}
@@ -199,49 +197,49 @@ function veXem(d) {
   $('sua').hidden = true; var x = $('xem'); x.hidden = false; document.title = (d.s || 'Shop') + ' · Bảng giá'; window.scrollTo(0, 0);
   var HANGS = ['OPPO', 'Samsung', 'Apple', 'Xiaomi', 'Khac'].filter(function (h) { return d.m.some(function (m) { return m.h === h; }); });
   var NB = d.m.filter(function (m) { return m.f && m.q !== 0; });
-  if (!NB.length) HANGS.forEach(function (h) { d.m.filter(function (m) { return m.h === h && m.q !== 0; }).sort(function (a, b) { return (b.q || 0) - (a.q || 0); }).slice(0, 2).forEach(function (m) { NB.push(m); }); });
-  var tabs = (NB.length ? ['NB'] : []).concat(HANGS); if ((d.k || []).length) tabs.push('PK');
-  var KHUC = [['all', 'Mọi mức giá', 0, 1e13], ['a', 'Dưới 5 triệu', 1, 5e6], ['b', '5 – 10 triệu', 5e6, 1e7], ['c', '10 – 20 triệu', 1e7, 2e7], ['e', 'Trên 20 triệu', 2e7, 1e13]];
-  var tab = tabs[0], khuc = 'all', tu = '';
-  var conHang = d.m.filter(function (m) { return m.q !== 0; }), tongMay = d.m.reduce(function (s, m) { return s + (m.q > 0 ? m.q : 0); }, 0);
-  function trongKhuc(m, k) { var g = giaSP(m).gb, r = KHUC.find(function (z) { return z[0] === k; }); return k === 'all' || (g >= r[2] && g < r[3]); }
+  var KMS = d.m.filter(function (m) { return m.q !== 0 && kmList(m).length; });
+  var tabs = ['ALL']; if (KMS.length) tabs.push('KM'); if (NB.length) tabs.push('NB'); tabs = tabs.concat(HANGS); if ((d.k || []).length) tabs.push('PK');
+  var TABN = { ALL: 'Tất cả', KM: '🎁 Khuyến mãi', NB: '🔥 Bán chạy', PK: '🎧 Phụ kiện' };
+  var tab = 'ALL', tu = '';
+  var conHang = d.m.filter(function (m) { return m.q !== 0; });
   function kmIcon(t) { return /trả góp/i.test(t) ? '💳' : /tặng/i.test(t) ? '🎁' : /giảm/i.test(t) ? '🔻' : '✨'; }
+  function tenMay(m) { return (TEN[m.h] && m.h !== 'Khac' && m.t.toLowerCase().indexOf(TEN[m.h].toLowerCase()) < 0 ? TEN[m.h] + ' ' : '') + m.t; }
+  /* thẻ gọn: ảnh + tên + giá + giá niêm yết gạch ngang. Khuyến mãi xem khi bấm vào máy */
   function the(m) {
-    var g = giaSP(m), het = m.q === 0, K = kmList(m), dau = K.find(function (t) { return /giảm|trả góp/i.test(t); });
-    return '<div class="c' + (het ? ' het' : '') + '"><div class="anh">' + (dau ? '<span class="tag">' + esc(dau) + '</span>' : '') + (m.f ? '<span class="sao">🔥 Bán chạy</span>' : '') +
-      (m.i ? '<img src="' + esc(anhUrl(m.i)) + '" alt="" loading="lazy">' : '<div class="noimg">📱</div>') + '</div>' +
-      '<div class="n">' + esc((TEN[m.h] && m.h !== 'Khac' && m.t.toLowerCase().indexOf(TEN[m.h].toLowerCase()) < 0 ? TEN[m.h] + ' ' : '') + m.t) + '</div>' +
-      '<div class="dl">' + [m.d, m.c].filter(Boolean).map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('') + '</div>' +
-      '<div class="gia"><div class="g">' + (g.gb ? vnd(g.gb) : 'Liên hệ') + '</div>' + (g.giam ? '<div class="ny">Niêm yết <s>' + vnd(g.ny) + '</s></div>' : '') + '</div>' +
-      (K.length ? '<div class="kms">' + K.slice(0, 4).map(function (t) { return '<div class="km">' + kmIcon(t) + ' ' + esc(t) + '</div>'; }).join('') + '</div>' : '') +
-      '<div class="sl">' + (het ? 'Tạm hết hàng' : '✓ Còn hàng') + '</div>' +
-      (d.p ? '<button type="button" class="hoi" data-hoi="' + d.m.indexOf(m) + '">💬 Hỏi shop qua Zalo</button>' : '') + '</div>';
+    var g = giaSP(m), het = m.q === 0, K = kmList(m), pc = g.giam && g.ny ? Math.round(g.giam / g.ny * 100) : 0;
+    return '<button type="button" class="c' + (het ? ' het' : '') + '" data-ct="' + d.m.indexOf(m) + '"><span class="anh">' + (pc >= 1 ? '<span class="pc">-' + pc + '%</span>' : '') + (K.length ? '<span class="kmb">🎁</span>' : '') +
+      (m.i ? '<img src="' + esc(anhUrl(m.i)) + '" alt="" loading="lazy">' : '<span class="noimg">📱</span>') + (het ? '<span class="hh">Hết hàng</span>' : '') + '</span>' +
+      '<span class="n">' + esc(tenMay(m)) + (m.d ? ' ' + esc(m.d) : '') + '</span>' +
+      '<span class="g">' + (g.gb ? vnd(g.gb) : 'Liên hệ') + '</span><span class="ny">' + (g.giam ? '<s>' + vnd(g.ny) + '</s>' : '') + '</span></button>';
   }
-  function hotCard(m) { var g = giaSP(m), K = kmList(m); return '<div class="hc" data-hoi="' + d.m.indexOf(m) + '">' + (m.i ? '<img src="' + esc(anhUrl(m.i)) + '" alt="">' : '<div class="noimg" style="width:74px;height:84px">📱</div>') +
-    '<div><div class="n">' + esc(m.t) + (m.d ? ' ' + esc(m.d) : '') + '</div><div class="g">' + (g.gb ? vnd(g.gb) : 'Liên hệ') + '</div>' + (K.length ? '<div class="k">' + esc(K.join(' · ')) + '</div>' : '') + '</div></div>'; }
+  function moMay(i) {
+    var m = d.m[i], bs = x.querySelector('.bs'); if (!m || !bs) return;
+    var g = giaSP(m), het = m.q === 0, K = kmList(m);
+    bs.querySelector('.bsc').innerHTML = '<button type="button" class="bsx" data-bsx="1" aria-label="Đóng">✕</button>' +
+      '<div class="bsh"><div class="im">' + (m.i ? '<img src="' + esc(anhUrl(m.i)) + '" alt="">' : '<div class="noimg">📱</div>') + '</div><div><div class="t">' + esc(tenMay(m)) + '</div>' +
+      '<div class="dl">' + [m.d, m.c].filter(Boolean).map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('') + '</div>' +
+      '<div class="g">' + (g.gb ? vnd(g.gb) : 'Liên hệ') + '</div>' + (g.giam ? '<div class="ny">Niêm yết <s>' + vnd(g.ny) + '</s> · giảm <b>' + vnd(g.giam) + '</b></div>' : '') + '</div></div>' +
+      (K.length ? '<div class="bsk"><h5>🎁 Khuyến mãi</h5>' + K.map(function (t) { return '<div>' + kmIcon(t) + ' ' + esc(t) + '</div>'; }).join('') + '</div>' : '<div class="bsk khong">Hiện chưa có khuyến mãi riêng — liên hệ shop để có giá tốt nhất.</div>') +
+      '<div class="bss' + (het ? ' het' : '') + '">' + (het ? 'Tạm hết hàng' : '✓ Còn hàng') + '</div>' +
+      (d.p ? '<div class="bsz"><button type="button" class="hoi" data-hoi="' + i + '">💬 Hỏi shop qua Zalo</button></div>' : '');
+    bs.hidden = false;
+  }
   function bangPK(L) { return '<div class="tieu">🎧 Phụ kiện · linh kiện <small>' + L.length + ' món</small></div><div class="pkl">' + L.map(function (r) { return '<div class="pkr"><div><b>' + esc(r.t) + '</b>' + (r.k ? '<small>🎁 ' + esc(r.k) + '</small>' : '') + '</div><span class="g">' + (r.g ? vnd(r.g) : 'Liên hệ') + '</span></div>'; }).join('') + '</div>'; }
   function ve() {
-    var ds = x.querySelector('.ds'), kh = x.querySelector('.khuc'), q = tu.trim().toLowerCase();
+    var ds = x.querySelector('.ds'), q = tu.trim().toLowerCase();
     [].forEach.call(x.querySelectorAll('.tabs button'), function (b) { b.classList.toggle('on', !q && b.dataset.t === tab); });
-    if (!q && tab === 'PK') { kh.hidden = true; ds.innerHTML = bangPK(d.k); return; }
-    var goc = q ? d.m.filter(function (m) { return (m.t + ' ' + (TEN[m.h] || '') + ' ' + (m.d || '')).toLowerCase().indexOf(q) >= 0; }) : tab === 'NB' ? NB : d.m.filter(function (m) { return m.h === tab; });
-    kh.hidden = false;
-    kh.innerHTML = KHUC.map(function (z) { var n = goc.filter(function (m) { return trongKhuc(m, z[0]); }).length; return (z[0] === 'all' || n) ? '<button data-k="' + z[0] + '" class="' + (z[0] === khuc ? 'on' : '') + '">' + z[1] + ' <small>' + n + '</small></button>' : ''; }).join('');
-    [].forEach.call(kh.querySelectorAll('button'), function (b) { b.onclick = function () { khuc = b.dataset.k; ve(); }; });
-    var L = goc.filter(function (m) { return trongKhuc(m, khuc); }).sort(function (a, b) { return ((b.q !== 0) - (a.q !== 0)) || (giaSP(a).gb - giaSP(b).gb); });
-    var tieu = q ? 'Kết quả cho “' + esc(tu.trim()) + '”' : tab === 'NB' ? '🔥 Máy bán chạy của shop' : 'Điện thoại ' + esc(TEN[tab]);
+    if (!q && tab === 'PK') { ds.innerHTML = bangPK(d.k); return; }
+    var goc = q ? d.m.filter(function (m) { return (m.t + ' ' + (TEN[m.h] || '') + ' ' + (m.d || '')).toLowerCase().indexOf(q) >= 0; }) : tab === 'ALL' ? d.m : tab === 'KM' ? KMS : tab === 'NB' ? NB : d.m.filter(function (m) { return m.h === tab; });
+    var L = goc.slice().sort(function (a, b) { return ((b.q !== 0) - (a.q !== 0)) || (giaSP(a).gb - giaSP(b).gb); });
     var pk = q ? (d.k || []).filter(function (r) { return r.t.toLowerCase().indexOf(q) >= 0; }) : [];
-    ds.innerHTML = '<div class="tieu">' + tieu + ' <small>' + L.length + ' mẫu</small></div>' +
-      (L.length ? '<div class="luoi">' + L.map(the).join('') + '</div>' : '<div class="trong">Chưa có máy trong mức giá này.</div>') + (pk.length ? bangPK(pk) : '');
+    ds.innerHTML = (L.length ? '<div class="luoi">' + L.map(the).join('') + '</div>' : (pk.length ? '' : '<div class="trong">Chưa có máy phù hợp.</div>')) + (pk.length ? bangPK(pk) : '');
   }
-  var HOT = d.m.filter(function (m) { return m.q !== 0 && kmList(m).length; }).sort(function (a, b) { return kmList(b).length - kmList(a).length; }).slice(0, 8);
-  x.innerHTML = '<div class="xem"><div class="top"><div class="hang1"><div class="logo">' + esc(String(d.s || 'S').replace(/^(cửa hàng|shop|điện thoại|đtdđ)\s+/i, '').charAt(0).toUpperCase()) + '</div><div><b>' + esc(d.s || '') + '</b><span class="dc">' + esc([d.a, d.p].filter(Boolean).join(' · ')) + '</span></div></div>' +
-    '<div class="so"><span><b>' + conHang.length + '</b> mẫu còn hàng</span><span><b>' + HANGS.length + '</b> hãng</span>' + (HOT.length ? '<span>🎁 <b>' + HOT.length + '</b> máy có khuyến mãi</span>' : '') + '<span>Cập nhật ' + esc(d.n || '') + '</span>' + '</div>' +
+  x.innerHTML = '<div class="xem"><div class="top"><div class="hang1"><div class="logo">' + esc(String(d.s || 'S').replace(/^(cửa hàng|shop|điện thoại|đtdđ)\s+/i, '').charAt(0).toUpperCase()) + '</div><div class="tt"><b>' + esc(d.s || '') + '</b><span class="dc">' + esc([d.a, d.p].filter(Boolean).join(' · ')) + '</span></div><span class="cnt"><b>' + conHang.length + '</b> mẫu còn hàng</span></div>' +
     '<input class="timx" placeholder="🔍 Tìm máy: Reno, A17, iPhone 17…" autocomplete="off"></div>' +
-    (HOT.length ? '<div class="hot"><h4>🎁 Đang có khuyến mãi</h4><div class="ngang">' + HOT.map(hotCard).join('') + '</div></div>' : '') +
-    '<div class="tabs">' + tabs.map(function (h) { return '<button data-t="' + h + '">' + (h === 'PK' ? '🎧 Phụ kiện' : h === 'NB' ? '🔥 Bán chạy' : TEN[h]) + '</button>'; }).join('') + '</div>' +
-    '<div class="khuc"></div><div class="ds"></div><div class="cuoi">Giá có thể thay đổi theo ngày · liên hệ shop để có giá tốt nhất<br>Bảng giá tạo bằng Shop Gọn · shopgon.vn</div>' +
-    (d.p ? '<div class="goi"><a class="nut goi1" href="tel:' + esc(d.p.replace(/\s/g, '')) + '">📞 Gọi shop</a><a class="nut zalo" href="https://zalo.me/' + esc(d.p.replace(/\D/g, '')) + '" target="_blank">💬 Zalo</a><button class="nut phu" id="xcopy">🔗 Gửi bạn</button></div>' : '') + '</div>';
+    '<div class="tabs">' + tabs.map(function (h) { return '<button data-t="' + h + '">' + (TABN[h] || TEN[h]) + '</button>'; }).join('') + '</div>' +
+    '<div class="ds"></div><div class="cuoi">Giá có thể thay đổi theo ngày · cập nhật ' + esc(d.n || '') + ' · Shop Gọn</div>' +
+    (d.p ? '<div class="goi"><a class="nut goi1" href="tel:' + esc(d.p.replace(/\s/g, '')) + '">📞 Gọi shop</a><a class="nut zalo" href="https://zalo.me/' + esc(d.p.replace(/\D/g, '')) + '" target="_blank">💬 Zalo</a><button class="nut phu" id="xcopy">🔗 Gửi bạn</button></div>' : '') +
+    '<div class="bs" hidden><div class="bsc"></div></div></div>';
   /* 29/10: chủ shop mở từ app (Kho › Khuyến mãi) → vào thẳng trang khách, có thanh nhỏ Về app + Gửi link */
   if (/[?&]tu=app/.test(location.search) && !new URLSearchParams(location.search).get('d')) {
     var ob = document.createElement('div'); ob.className = 'chu';
@@ -249,11 +247,13 @@ function veXem(d) {
     x.firstChild.insertBefore(ob, x.firstChild.firstChild);
     ob.querySelector('#chuGui').onclick = function () { var L = (function () { try { var x = localStorage.getItem('sg_web_link'); return x && x.indexOf('/s/') > 0 ? x : ''; } catch (e) { return ''; } })() || LINK || location.href; if (navigator.share) navigator.share({ title: d.s || 'Bảng giá', url: L }).catch(function () { }); else copyLink(L, ob.querySelector('#chuGui')); };
   }
-  [].forEach.call(x.querySelectorAll('.tabs button'), function (b) { b.onclick = function () { tab = b.dataset.t; khuc = 'all'; tu = ''; x.querySelector('.timx').value = ''; ve(); window.scrollTo(0, x.querySelector('.tabs').offsetTop - 1 > window.scrollY ? window.scrollY : x.querySelector('.tabs').offsetTop); }; });
-  x.querySelector('.timx').oninput = function (e) { tu = e.target.value; khuc = 'all'; ve(); };
+  [].forEach.call(x.querySelectorAll('.tabs button'), function (b) { b.onclick = function () { tab = b.dataset.t; tu = ''; x.querySelector('.timx').value = ''; ve(); window.scrollTo(0, x.querySelector('.tabs').offsetTop - 1 > window.scrollY ? window.scrollY : x.querySelector('.tabs').offsetTop); }; });
+  x.querySelector('.timx').oninput = function (e) { tu = e.target.value; ve(); };
   var sMa = new URLSearchParams(location.search).get('s'), linkGui = sMa ? location.origin + '/s/' + sMa : (LINK || location.href);
   var xc = $('xcopy'); if (xc) xc.onclick = function () { copyLink(linkGui, xc); };
   x.addEventListener('click', function (e) {
+    var ct = e.target.closest && e.target.closest('[data-ct]'); if (ct) { moMay(+ct.dataset.ct); return; }
+    var bs = x.querySelector('.bs'); if (bs && !bs.hidden && e.target.closest && (e.target.closest('[data-bsx]') || e.target === bs)) { bs.hidden = true; return; }
     var b = e.target.closest && e.target.closest('[data-hoi]'); if (!b || !d.p) return;
     var m = d.m[+b.dataset.hoi]; if (!m) return; var g = giaSP(m);
     var cau = 'Shop ơi, em hỏi máy ' + [m.t, m.d, m.c].filter(Boolean).join(' ') + (g.gb ? ', giá ' + vnd(g.gb) : '') + ' trên bảng giá của shop. Máy còn không ạ?';

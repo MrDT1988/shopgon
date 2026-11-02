@@ -200,3 +200,10 @@ Việc treo (theo thứ tự):
 5. Đồng bộ ô tìm các màn còn lại (Kho, Lịch sử) sang ô xám bo tròn; kiểm các màu theme còn sót hard-code.
 6. Giá bán Shop Gọn trong so-sanh.html còn lệch (xem mục treo 24/10).
 Quy tắc: sửa app thì đổi BUILD trong index.html và app/ver.json cùng giá trị (hiện 20261102-0400); chạy `python3 _tam/test-toan-bo.py` (cần `python3 -m http.server 8765` ở gốc repo) phải 62/62 trước khi đẩy.
+
+## 24. (02/11 sáng) Website 1 khung hình · Bán 3 tab · đồng bộ giao diện Bán/Nhập
+- **Trang chủ:** bỏ "Việc cần làm" (trùng Kho hàng). Thẻ Website & truyền thông có 4 nút: 👁 Xem website shop (`data-webview` → `/bg/?tu=app&xem=1`) · 📤 Gửi link khách · 📋 Copy link (`data-webcopy`, luôn copy) · 🖼 Sửa ảnh · bài đăng. Đã gỡ chỗ web trùng: dòng "Bảng giá online" ở Kho hàng, thẻ "Website bảng giá" ở Kho, mục "Bảng giá online" ở Thêm, hộp link + nút Copy link ở Kho › Khuyến mãi (giữ nút "Copy bài đăng khuyến mãi").
+- **Website khách (`bg/index.html`, `veXem`):** lưới 3 cột (≥560px: 4 cột), thẻ gọn ảnh + tên + giá + niêm yết gạch ngang + nhãn −x%, 4 hàng vừa 1 màn hình 390×750. Bấm máy → bảng dưới (`.bs`, `moMay`) có giá niêm yết, tiết kiệm, danh sách khuyến mãi, nút Hỏi Zalo. Tab: Tất cả · 🎁 Khuyến mãi · 🔥 Bán chạy · hãng · Phụ kiện. Bỏ dải KM cuộn ngang và chip mức giá.
+- **Màn Bán:** 3 tab Điện thoại · Phụ kiện (pk, sim) · Dịch vụ khác (sửa chữa, thu hộ, chuyển tiền, khác) — `sellMode` 'may'|'pk'|'dv', `nhomMode()`. Bỏ "Tồn N ngày" và chip "Tồn lâu" ở màn Bán, chỉ hiện "Trong kho: N".
+- **Giao diện:** `.seg.top` gọn lại (cao 50px) dùng chung Bán/Nhập/Kho/Báo cáo; màn Bán không còn kiểu phẳng, lưới máy/phụ kiện nằm trong thẻ trắng bo góc; Nhập hàng dùng chip (Điện thoại · Hàng khác · Ảnh hóa đơn) trong thẻ như Bán. CSS khối "02/11 (4)" cuối `<style>`.
+- BUILD 20261102-0830. Test 62/62.
