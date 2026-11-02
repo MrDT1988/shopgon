@@ -189,3 +189,14 @@ App quản lý bán hàng cho shop điện thoại (shopgon.vn), chạy trên đ
 - `openReceipt` mặc định `rcPay='ck'` (hiện QR VietQR khi shop có tài khoản); bỏ nút Tiền mặt/Chuyển khoản. Nút dưới: In hóa đơn · Ghi nợ (`data-rcpay="no"`, bấm lại "Bỏ ghi nợ") · Xong. Đơn lưu `tt='Đã thanh toán'` hoặc 'Ghi nợ'. Hóa đơn thêm địa chỉ/SĐT shop.
 - Tài khoản test/demo (`sampleDb`): LK Mobile Store (mẫu), MB Bank STK 0123456789 (SỐ GIẢ để xem giao diện — shop thật nhập ở Thêm → Cài đặt). QR dùng CDN cdnjs nên môi trường không có mạng sẽ báo "không tải được".
 BUILD 20261102-0400.
+
+## 23. CHỐT PHIÊN 02/11/2026 — việc treo cho phiên sau
+Đã xong phiên này: trang chủ gọn · Báo cáo · Kho hub · Thu chi · màn Bán kiểu Sổ (lưới 3 cột, stepper, thanh Số lượng, màn Xác nhận) · 8 màu theme (Thêm → Màu giao diện) · KM gộp 1 kiểu · Trả hàng gom 1 chỗ · hóa đơn có QR mặc định, Ghi nợ · tài khoản test = LK Mobile Store (mẫu).
+Việc treo (theo thứ tự):
+1. Anh Thái xem trên điện thoại thật: QR có hiện không (cdnjs), màu theme, màn Bán/Xác nhận; báo lỗi/ý chỉnh.
+2. Số TK thật của LK thay số giả 0123456789 (MB Bank) trong `sampleDb`.
+3. Chưa làm từ Sổ: "Bán nhanh" (máy tính bấm số) · lên đơn bằng giọng nói · giá lẻ/sỉ · tab trạng thái đơn có Xác nhận/Từ chối · in mã vạch · lối tắt tùy chỉnh. Chờ anh chọn.
+4. Dọn code chết: luồng `traId` trong Lịch sử đơn; cân nhắc bỏ nút "Xóa đơn" (trùng Hủy).
+5. Đồng bộ ô tìm các màn còn lại (Kho, Lịch sử) sang ô xám bo tròn; kiểm các màu theme còn sót hard-code.
+6. Giá bán Shop Gọn trong so-sanh.html còn lệch (xem mục treo 24/10).
+Quy tắc: sửa app thì đổi BUILD trong index.html và app/ver.json cùng giá trị (hiện 20261102-0400); chạy `python3 _tam/test-toan-bo.py` (cần `python3 -m http.server 8765` ở gốc repo) phải 62/62 trước khi đẩy.
