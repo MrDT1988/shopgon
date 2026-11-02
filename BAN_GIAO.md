@@ -211,3 +211,8 @@ Quy tắc: sửa app thì đổi BUILD trong index.html và app/ver.json cùng g
 ## 25. (02/11 8h30) Tab Khuyến mãi thay Báo cáo · trang chủ mới
 - Thanh dưới: Trang chủ · Bán · Kho hàng · **Khuyến mãi** · Thêm. View `km` = `renderKmTab` (ghi KM từng máy, Copy bài đăng). Đã bỏ tab KM trong Kho và dòng "Giá bán & khuyến mãi" ở Kho hàng (giá vẫn sửa ở Kho › tồn kho). View `rpt` (Báo cáo) còn, vào từ thẻ doanh thu/lối tắt trang chủ.
 - Trang chủ từ trên xuống: Doanh thu tháng + Lợi nhuận tháng · tab Hôm nay/Hôm qua/7 ngày (`homeD`) · ô tìm IMEI · phần còn lại giữ nguyên. BUILD 20261102-0900. Test 62/62.
+
+## 26. (02/11 9h30) Sửa lỗi giao diện trên máy thật (anh Thái báo: lợi nhuận tràn khung, chữ xuống dòng)
+- Trang chủ: 1 thẻ tháng 2 cột (Doanh thu | Lợi nhuận, cỡ chữ co theo màn), thẻ ngày số lớn + 1 dòng phụ dưới. Bỏ thanh vàng "Đang xem dữ liệu mẫu" khi là demo/test (trùng thanh test). Bỏ nút nổi "＋ Bán hàng" (che nội dung, trùng tab Bán). Ô tìm rút gọn chữ gợi ý.
+- Thanh dưới: chữ 11px không xuống dòng. Tab Khuyến mãi: đầu trang thành thẻ trắng gọn, thẻ máy trắng bo góc. Thêm: nhóm Truyền thông 1 cột. Giá trong lưới Bán co chữ, không tràn.
+- **BẮT BUỘC trước khi báo anh:** chạy `python3 _tam/kiem-giao-dien.py` (kiểm 15 màn app + web ở 320/340/360/412px: tràn màn, tràn khung, nhãn thanh dưới 2 dòng) phải "TONG LOI: 0", rồi xem ảnh 360px bằng mắt. BUILD 20261102-0930. Test 62/62.
