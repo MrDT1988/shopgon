@@ -267,3 +267,13 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - **Máy chủ "Shop Gọn - Máy chủ bản quyền" Phiên bản 20 (04/11 21:19), 78 hàm:** `nvNhap_` (kiểm phiên, ghi NhanVienDon `kind:'nhap'` trạng thái `moi`, không trừ tồn, không giá) · `nvNhapDs_` (15 phiếu gần nhất) · `nvApi_` thêm `nvNhap` · `nvLogin_` trả `nhap` · `nvSync_` nhận `nhapKq` → cột 7 `ok`/`tra`. Trạng thái: moi → da (chủ nhận) → ok | tra. Đã gọi thử route sống.
 - BUILD 20261104-2100. Test 75/75. Kiểm giao diện 0 lỗi.
 - **Anh Thái cần thử máy thật:** NV gửi phiếu nhập → chủ duyệt → kho tăng; NV tab Truyền thông thấy link (chủ mở app 1 lần trước).
+
+## 35. (05/11 đêm) SỔ THEO NĂM · SỐ DƯ · SAO LƯU/KHÔI PHỤC · TRA IMEI CÁC NĂM CŨ (anh Thái OK 5 điểm)
+- **Mỗi năm 1 file Google** (`appProperties shopgon='2', nam='YYYY'`), trang: `Số dư` · `Cài đặt` · `Hàng hóa` · `IMEI` · `Năm trước` · `T01…T12` (đơn/phiếu nhập/chi theo tháng, cột `bang` = Đơn/Phiếu nhập/Chi, cột `them` = JSON trường phụ → không còn mất tgTT/cty… khi đồng bộ). Ghi chỉ trang thay đổi.
+- **12 tháng liền kề:** app đọc sổ năm nay + các tháng của sổ năm trước còn trong 12 tháng (`GG.winStart()`); sổ năm cũ **đã chốt, chỉ đọc** — đơn năm cũ bị sửa sau khi chốt thì ghi bản mới vào trang `Năm trước` của sổ năm nay (đè lên bản cũ khi đọc).
+- **01/01 (`GG.chuyenNam`):** gộp nốt dữ liệu máy này vào sổ năm cũ → tính số dư (máy tồn + chờ BH theo IMEI, phụ kiện, khách nợ, trả góp chờ giải ngân, nợ NCC) → tạo sổ năm mới, ghi `Số dư` + mang khoản còn mở sang `Năm trước` → đọc lại kiểm tra → dòng `KIỂM TRA | KHỚP 100%`, lưu `shop.soNam`; sao lưu sổ năm cũ 1 bản. 2 máy cùng chuyển → giữ file tạo trước, file sau tự vào thùng rác.
+- **Sổ cũ 1 file (`GG.tachSoCu`):** tự tách 1 lần, kiểm không mất dòng nào rồi mới đổi tên file cũ "(sổ cũ – bản lưu dd/mm/yyyy)" + `shopgon='cu'`.
+- **Sao lưu:** `GG.tuSaoLuu` sau mỗi lần đồng bộ nếu `shop.saoLuu` cũ ≥7 ngày → chép sổ năm nay vào thư mục "Shop Gọn – Sao lưu" (`shopgon='bk'`), giữ 8 bản. Thêm › Cài đặt › "Sổ dữ liệu · Sao lưu": Sao lưu ngay · Khôi phục… (tự sao lưu bản hiện tại trước, chỉ khôi phục bản cùng năm).
+- **Tra IMEI:** đơn bán trong 12 tháng hiện từ đơn; không thấy → nút "🔎 Tìm trong sổ các năm trước" (`GG.timImei`).
+- Test mới `_tam/test-luu-tru.py` (Drive/Sheets **giả lập**, có giả ngày 02/01/2027): 32/32. test-toan-bo 75/75. Kiểm giao diện 0 lỗi. BUILD 20261105-1200.
+- **CHƯA chạy trên Google thật** — phiên sau: tài khoản test Google thật trước, rồi mới để shop thật mở app (shop thật mở bản mới là tự tách sổ).
