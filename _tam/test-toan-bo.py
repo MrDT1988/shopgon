@@ -295,12 +295,64 @@ async def main():
         ok('Tờ rơi: 9 máy theo tồn kho, 6 máy theo hãng đúng hãng', n9 == 9 and len(n6) == 6 and all('Samsung' in x for x in n6) and not errs, (n9, n6, errs))
         # 12f. (04/11) 5 mẫu tờ rơi: chọn mẫu đổi lớp, nhớ mẫu, mở lại vẫn mẫu đó
         mau = []
-        for m in ['xanh', 'do', 'toi', 'trang', 'cam']:
+        for m in ['xanh', 'do', 'toi', 'trang', 'tim']:
             await pg.click(f'[data-trm="{m}"]'); await pg.wait_for_timeout(150)
             mau.append(await pg.evaluate("document.querySelector('#trPv .trp').classList.contains('m-'+TR.mau)&&document.querySelector('[data-trm][aria-pressed=true]').dataset.trm===TR.mau"))
         await pg.click('[data-trm="toi"]'); await pg.evaluate("TR=null;render()"); await pg.click('[data-trnew]'); await pg.wait_for_timeout(300)
         nho = await pg.evaluate("TR.mau==='toi'&&!!document.querySelector('#trPv .m-toi')")
         ok('Tờ rơi: 5 mẫu chọn được, nhớ mẫu đã chọn', all(mau) and nho and not errs, (mau, nho, errs))
+        await ctx.close()
+
+        # 12g. (04/11) Nhân viên nhập hàng (không giá) → gửi phiếu (máy chủ giả) → chủ nhận → duyệt → kho tăng đúng, giá đúng; trả lại → nhapKq
+        ctx, pg, errs = await trang(b, '/app/?demo=1&test=1')
+        r = await pg.evaluate("""(async()=>{const OWNX=JSON.parse(JSON.stringify(db));const SENT=[];let RESP={ok:true};window.fetch=async(u,o)=>{const x=o&&o.body?JSON.parse(o.body):{};SENT.push(x);return {ok:true,json:async()=>RESP}};
+          const w=ms=>new Promise(r=>setTimeout(r,ms));
+          NV={sdt:'0911222333',ten:'Lan',phien:'P1'};db=nvDb({shop:OWNX.shop,may:OWNX.may.filter(m=>m.tt==='ton').map(m=>({imei:m.imei,ten:m.ten,hang:m.hang,giaBan:m.giaBan})),hang:OWNX.hang.filter(h=>h.sl>0)});
+          localStorage.removeItem('shopgon_nvp');localStorage.removeItem('shopgon_nvpq');localStorage.removeItem('shopgon_nvpds');render();
+          const nut=getComputedStyle(document.querySelector('nav.tabs button[data-v=stock]')).display!=='none'&&document.querySelector('nav.tabs button[data-v=stock]').textContent.includes('Nhập hàng');
+          document.querySelector('nav.tabs button[data-v=stock]').click();await w(100);
+          const tenMay=OWNX.may.find(m=>m.tt==='ton').ten;const a=$('aTen');a.value=tenMay;a.dispatchEvent(new Event('input',{bubbles:true}));
+          $('aImei').value='356938035643809\\n490154203237518';document.querySelector('#fNvpMay button[type=submit]').click();await w(100);
+          nvpMode='hang';render();const h0=OWNX.hang.find(x=>x.sl>0);$('hTen').value=h0.ten;$('hSl').value='4';document.querySelector('#fNvpHang button[type=submit]').click();await w(100);
+          const chu=document.getElementById('v-add').innerText;const khongGia=!/giá nhập|giá bán|giá vốn/i.test(chu);
+          $('nvpNcc').value='NPP Mekong';$('nvpNcc').dispatchEvent(new Event('input',{bubbles:true}));document.querySelector('[data-nvpgui]').click();await w(300);
+          const g=SENT.find(x=>x.act==='nvNhap');const daGui=g&&g.phien==='P1'&&g.phieu.kind==='nhap'&&g.phieu.lines.length===2&&!JSON.stringify(g.phieu).match(/"(giaNhap|giaBan|gn|gb)"/);
+          const ds=nvpDs();const coDs=ds.length===1&&ds[0].tt==='moi'&&document.getElementById('v-add').innerText.includes('chờ chủ shop');
+          /* chủ shop nhận qua nvSync */
+          NV=null;db=JSON.parse(JSON.stringify(OWNX));db.sample=false;XEM=false;GG.token='t'.repeat(40);db.shop.nv=[{sdt:'0911222333',ten:'Lan'}];
+          RESP={ok:true,don:[{...g.phieu,nv:'0911222333'}],nv:[]};nvBusy=false;await nvSync();
+          const nhan=pnCho().length===1&&!db.don.some(d=>d.bill===g.phieu.id)&&nvAck.includes(g.phieu.id);
+          go('home');const bar=!!document.querySelector('#v-home [data-pncho]');document.querySelector('#v-home [data-pncho]').click();await w(100);
+          const gnMay=OWNX.may.filter(m=>m.ten===tenMay).pop().giaNhap,gnPk=h0.giaNhap;
+          const dien=parseMoney(document.querySelector('[data-pcgn$="|0"]').value)===gnMay&&parseMoney(document.querySelector('[data-pcgn$="|1"]').value)===gnPk;
+          document.querySelector('[data-pcgb$="|0"]').value='9.990.000';const ton0=stock().length,sl0=db.hang.find(x=>x.id===h0.id).sl,PN0=JSON.stringify(PN);
+          document.querySelector('[data-pcok]').click();await w(150);
+          const m1=db.may.find(m=>m.imei==='356938035643809');const vao=stock().length===ton0+2&&db.hang.find(x=>x.id===h0.id).sl===sl0+4&&m1&&m1.giaNhap===gnMay&&m1.giaBan===9990000&&/NV Lan/.test(m1.ncc);
+          const giuPN=JSON.stringify(PN)===PN0;const kq=(db.shop.nhapKq||[])[0];const hetCho=!pnCho().length;
+          RESP={ok:true,don:[],nv:[]};nvBusy=false;await nvSync();const gk2=SENT.filter(x=>x.act==='nvSync').pop().nhapKq;const daGuiKq=gk2.length===1&&gk2[0].kq==='ok'&&!(db.shop.nhapKq||[]).length;
+          /* nhận lại lần 2 (máy chủ gửi trùng) không tạo phiếu chờ mới */
+          RESP={ok:true,don:[{...g.phieu}],nv:[]};nvBusy=false;await nvSync();const khongTrung=!pnCho().length;
+          /* trả lại */
+          RESP={ok:true,don:[{...g.phieu,id:'P2'}],nv:[]};nvBusy=false;await nvSync();addTab='cho';go('add');window.confirm=()=>true;document.querySelector('[data-pctra]').click();await w(50);
+          const tra=!pnCho().length&&(db.shop.nhapKq||[]).some(x=>x.id==='P2'&&x.kq==='tra');
+          return JSON.stringify({nut,khongGia,daGui,coDs,nhan,bar,dien,vao,giuPN,kq:!!kq,hetCho,daGuiKq,khongTrung,tra})})()""")
+        try: r = json.loads(r)
+        except Exception: r = {'loi': r}
+        ok('NV nhập hàng: nút Nhập hàng, KHÔNG thấy giá, gửi phiếu có phiên, không kèm giá', r.get('nut') and r.get('khongGia') and r.get('daGui') and r.get('coDs') and not errs, (r, errs))
+        ok('Chủ duyệt phiếu NV: nhận qua nvSync, giá lần trước điền sẵn, vào kho đúng SL + giá, gửi kết quả', all(r.get(k) for k in ['nhan','bar','dien','vao','giuPN','kq','hetCho','daGuiKq','khongTrung','tra']) and not errs, (r, errs))
+        await pg.screenshot(path='/tmp/pncho.png')
+        await ctx.close()
+
+        # 12h. NV test: nhập hàng giả lập gửi
+        ctx, pg, errs = await trang(b, '/app/?demo=1')
+        await pg.evaluate("localStorage.setItem('shopgon_nv',JSON.stringify({sdt:'0900000000',ten:'NV test',phien:'TEST',test:1}));['shopgon_nvp','shopgon_nvpq','shopgon_nvpds'].forEach(k=>localStorage.removeItem(k))")
+        await pg.goto(URL + '/app/'); await pg.wait_for_timeout(1200)
+        await pg.click('nav.tabs button[data-v=stock]'); await pg.wait_for_timeout(200)
+        await pg.evaluate("nvpMode='hang';render()"); await pg.fill('#hTen', 'Cường lực test'); await pg.click('#fNvpHang button[type=submit]'); await pg.wait_for_timeout(150)
+        await pg.click('[data-nvpgui]'); await pg.wait_for_timeout(300)
+        t = await pg.evaluate("document.getElementById('v-add').innerText")
+        ok('Tài khoản test NV: nhập hàng gửi phiếu giả lập, hiện trạng thái', 'chờ chủ shop' in t and 'giá nhập' not in t.lower() and 'giá bán' not in t.lower() and not errs, (t[:200], errs))
+        await pg.screenshot(path='/tmp/nvnhap.png')
         await ctx.close()
 
         # 13. Các trang khác + cài app
