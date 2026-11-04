@@ -2146,7 +2146,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261104-1240';let verLuc=0;
+const BUILD='20261104-1320';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
@@ -2392,8 +2392,8 @@ function loadH2i(){return window.htmlToImage?Promise.resolve():new Promise((ok,b
 const trHang=x=>BRANDS.includes(x.hang)?x.hang:'Khác';
 function trDs(){const L=ttqMau().map(x=>{const km=kmCua('g|'+x.k),tg=TG?tgCua(x.k):null,ny=tg&&tg.ny>x.gb?tg.ny:0;return {...x,km,ny}}).filter(x=>x.gb>0);
   let D=TR.kieu==='hang'?L.filter(x=>trHang(x)===TR.hang):L.slice();
-  /* 04/11 anh Thái: ưu tiên OPPO — máy OPPO lên đầu (máy nổi bật + đầu lưới), hãng khác lấp chỗ còn trống */
-  const uo=x=>TR.kieu==='ton'&&TR.oppo!==false&&trHang(x)==='OPPO'?1:0;
+  /* 04/11 anh Thái: ưu tiên OPPO (chạy ngầm, không hiện nút) — máy OPPO lên đầu (máy nổi bật + đầu lưới), hãng khác lấp chỗ còn trống */
+  const uo=x=>TR.kieu==='ton'&&trHang(x)==='OPPO'?1:0;
   D.sort((a,b)=>(uo(b)-uo(a))||(TR.kieu==='ton'?((b.km.length>0)-(a.km.length>0))||b.ms.length-a.ms.length:b.ms.length-a.ms.length)||a.gb-b.gb);
   return D.slice(0,TR.n)}
 const trSo=v=>(Math.round(v/1000)*1000).toLocaleString('vi-VN')+'đ';
@@ -2418,7 +2418,6 @@ function renderTr(){const L=ttqMau().filter(x=>x.gb>0),HB=BRANDS.filter(b=>L.som
   setTimeout(trVe,30);
   return `<div class="wsheet" data-trx="1"><div class="wsbox trbox"><h3>🗞 Tờ rơi theo tồn kho</h3>
     <div class="wtypes">${opt('k','ton','🔥 Tồn nhiều + KM')}${opt('k','hang','🏷 Theo hãng')}</div>
-    ${TR.kieu==='ton'&&L.some(x=>trHang(x)==='OPPO')?`<div class="schips" style="flex:none"><button type="button" class="chip" data-tro="1" aria-pressed="${TR.oppo!==false}">⭐ Ưu tiên OPPO</button></div>`:''}
     ${TR.kieu==='hang'?`<div class="schips">${HB.map(b=>`<button type="button" class="chip" data-trh="${esc(b)}" aria-pressed="${TR.hang===b}">${esc(b)} · ${L.filter(x=>trHang(x)===b).length}</button>`).join('')}</div>`:''}
     <div class="wtypes t3">${[6,9,12].map(n=>opt('n',n,n+' máy')).join('')}</div>
     <div class="trmau">${TR_MAU.map(([k,t,c])=>`<button type="button" data-trm="${k}" aria-pressed="${(TR.mau||'xanh')===k}"><i style="background:${c}"></i>${t}</button>`).join('')}</div>
@@ -2437,10 +2436,10 @@ async function trXuat(cach){const pv=$('trPv');if(!pv)return;const el=pv.firstEl
     if(cach==='share'&&navigator.canShare){const bl=await (await fetch(url)).blob(),f=new File([bl],ten,{type:'image/jpeg'});if(navigator.canShare({files:[f]})){await navigator.share({files:[f],text:trCap()}).catch(()=>{});return}}
     const a=document.createElement('a');a.href=url;a.download=ten;document.body.appendChild(a);a.click();a.remove();toast('Đã tải tờ rơi · bài đăng đã copy sẵn')}
   catch(e){pv.style.transform=pv.style.transform||'';toast('Chưa tạo được ảnh, kiểm tra mạng rồi thử lại')}}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-trnew],[data-trx],[data-trk],[data-trh],[data-trn],[data-trm],[data-tro],[data-trsave],[data-trcap]');if(!b)return;const d=b.dataset;
-  if(d.trnew!==undefined){if(!stock().length){toast('Kho chưa có máy — nhập hàng trước');return}if(!KM)kmLoad().then(()=>{if(TR)trVe()});TR={kieu:'ton',hang:'OPPO',n:9,oppo:(()=>{try{return localStorage.getItem('sg_tr_oppo')!=='0'}catch(_){return true}})(),mau:(()=>{try{const m=localStorage.getItem('sg_tr_mau');return TR_MAU.some(x=>x[0]===m)?m:'xanh'}catch(_){return 'xanh'}})()};render();return}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-trnew],[data-trx],[data-trk],[data-trh],[data-trn],[data-trm],[data-trsave],[data-trcap]');if(!b)return;const d=b.dataset;
+  if(d.trnew!==undefined){if(!stock().length){toast('Kho chưa có máy — nhập hàng trước');return}if(!KM)kmLoad().then(()=>{if(TR)trVe()});TR={kieu:'ton',hang:'OPPO',n:9,mau:(()=>{try{const m=localStorage.getItem('sg_tr_mau');return TR_MAU.some(x=>x[0]===m)?m:'xanh'}catch(_){return 'xanh'}})()};render();return}
   if(d.trx!==undefined){if(b.classList.contains('wsheet')&&e.target!==b)return;TR=null;render();return}
-  if(d.trk){TR.kieu=d.trk;render();return}if(d.trh){TR.hang=d.trh;render();return}if(d.trn){TR.n=+d.trn;render();return}if(d.tro){TR.oppo=TR.oppo===false;try{localStorage.setItem('sg_tr_oppo',TR.oppo?'1':'0')}catch(_){}render();return}if(d.trm){TR.mau=d.trm;try{localStorage.setItem('sg_tr_mau',d.trm)}catch(_){}render();return}
+  if(d.trk){TR.kieu=d.trk;render();return}if(d.trh){TR.hang=d.trh;render();return}if(d.trn){TR.n=+d.trn;render();return}if(d.trm){TR.mau=d.trm;try{localStorage.setItem('sg_tr_mau',d.trm)}catch(_){}render();return}
   if(d.trsave){trXuat(d.trsave);return}if(d.trcap!==undefined){chepText(trCap(),b,'✓ Đã copy bài đăng');return}});
 /* mẫu máy trong kho (gộp màu) */
 function ttqMau(){const G={};stock().forEach(m=>{const k=gk(m.ten);const x=G[k]=G[k]||{k,ms:[],hang:m.hang||''};x.ms.push(m)});
