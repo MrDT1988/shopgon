@@ -2146,7 +2146,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261104-2100';let verLuc=0;
+const BUILD='20261105-0010';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
@@ -2391,7 +2391,7 @@ function renderPnCho(){const L=pnCho();
     <div class="list">${(o.lines||[]).map((d,i)=>{const g=pnChoGia(d),n=nvpSl(d);return `<div class="row pnl" style="flex-wrap:wrap"><div class="n"><b>${d.t==='may'?'📱':'📦'} ${esc(d.ten)}</b><small class="num">${n} ${d.t==='may'?'máy':'cái'}${d.t==='may'?' · …'+(d.imeis||[]).map(x=>String(x).slice(-6)).join(', …'):''}</small></div>
       <div class="pned"><div class="two"><label>Giá nhập / ${d.t==='may'?'máy':'cái'}<input data-pcgn="${esc(o.id)}|${i}" inputmode="numeric" class="num" value="${g.gn?(+g.gn).toLocaleString('vi-VN'):''}" placeholder="Giá nhập"></label><label>Giá bán / ${d.t==='may'?'máy':'cái'}<input data-pcgb="${esc(o.id)}|${i}" inputmode="numeric" class="num" value="${g.gb?(+g.gb).toLocaleString('vi-VN'):''}" placeholder="Giá bán"></label></div></div></div>`}).join('')}</div>
     <div class="err" id="pcErr_${esc(o.id)}"></div>
-    <div class="trbt"><button class="btn" data-pcok="${esc(o.id)}">✅ Duyệt · vào kho</button><button class="ghost" data-pctra="${esc(o.id)}">↩ Trả lại</button></div></div>`).join(''):`<div class="panel"><div class="empty">Không còn phiếu nào chờ duyệt.</div></div>`)}
+    <div class="trbt"><button class="btn" data-pcok="${esc(o.id)}" style="white-space:nowrap">✅ Duyệt</button><button class="ghost" data-pctra="${esc(o.id)}">↩ Trả lại</button></div></div>`).join(''):`<div class="panel"><div class="empty">Không còn phiếu nào chờ duyệt.</div></div>`)}
 function pnChoKq(id,kq){db.shop.pnCho=pnCho().filter(x=>x.id!==id);(db.shop.nhapKq=db.shop.nhapKq||[]).push({id,kq});save();nvQueue(300)}
 function pnChoDuyet(id){const o=pnCho().find(x=>x.id===id);if(!o)return;const err=$('pcErr_'+id),val=a=>parseMoney((document.querySelector(`[${a}="${id}|${i}"]`)||{}).value||'');let i=0;
   const dong=[];for(i=0;i<(o.lines||[]).length;i++){const d=o.lines[i],gn=val('data-pcgn'),gb=val('data-pcgb');if(!gn){if(err)err.textContent='Nhập giá nhập cho '+d.ten+'.';return}
