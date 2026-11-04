@@ -300,6 +300,10 @@ async def main():
             mau.append(await pg.evaluate("document.querySelector('#trPv .trp').classList.contains('m-'+TR.mau)&&document.querySelector('[data-trm][aria-pressed=true]').dataset.trm===TR.mau"))
         await pg.click('[data-trm="toi"]'); await pg.evaluate("TR=null;render()"); await pg.click('[data-trnew]'); await pg.wait_for_timeout(300)
         nho = await pg.evaluate("TR.mau==='toi'&&!!document.querySelector('#trPv .m-toi')")
+        r = json.loads(await pg.evaluate("""JSON.stringify((()=>{TR.kieu='ton';TR.n=9;TR.oppo=true;render();const ds=trDs(),no=ds.filter(x=>trHang(x)==='OPPO').length,dau=ds.slice(0,no).every(x=>trHang(x)==='OPPO');
+          const tong=ttqMau().filter(x=>x.gb>0&&trHang(x)==='OPPO').length;document.querySelector('[data-tro]').click();const tat=TR.oppo===false&&localStorage.getItem('sg_tr_oppo')==='0';TR.oppo=true;render();
+          return {no,tong,dau,tat}})())"""))
+        ok('Tờ rơi: ưu tiên OPPO — máy OPPO đứng đầu, tắt được', r['no'] == min(9, r['tong']) and r['tong'] > 0 and r['dau'] and r['tat'] and not errs, r)
         ok('Tờ rơi: 5 mẫu chọn được, nhớ mẫu đã chọn', all(mau) and nho and not errs, (mau, nho, errs))
         await ctx.close()
 
