@@ -2146,7 +2146,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261104-1130';let verLuc=0;
+const BUILD='20261104-1230';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
@@ -2398,14 +2398,16 @@ const trSo=v=>(Math.round(v/1000)*1000).toLocaleString('vi-VN')+'đ';
 function trHtml(D){const sh=db.shop||{},n=D.length,link=(linkNgan()||'').replace(/^https?:\/\//,'');
   /* bố cục: 1–2 máy nổi bật + lưới; 11–12 máy thì toàn lưới */
   const nh=({12:0,11:0,10:2,9:1,8:2,7:1,6:2,5:2,4:1,3:1,2:2,1:1})[n]||0,H=D.slice(0,nh),R=D.slice(nh),cols=R.length%4===0?4:R.length%3===0?3:Math.min(4,R.length)||1,rows=Math.ceil(R.length/cols);
-  const big=TR.kieu==='hang'?TR.hang:D.some(x=>x.km.length)?'SIÊU SALE':'MÁY HOT',sub=TR.tieu||'Giá tốt hôm nay';
+  const big=TR.kieu==='hang'?TR.hang:D.some(x=>x.km.length)?'SIÊU SALE':'MÁY HOT',sub=TR.tieu||'Giá tốt tại shop';
+  /* 04/11 anh Thái: không in ngày (tờ rơi dùng được nhiều ngày) — có KM hết hạn thì ghi "Đến dd/mm" theo hạn KM sớm nhất, không thì nhãn GIÁ SỐC */
+  const den=D.flatMap(x=>x.km).map(k=>k.den).filter(Boolean).sort()[0],nhan=den?`<small>Đến</small><b>${esc(den.slice(8,10)+'/'+den.slice(5,7))}</b>`:'<small>Giá</small><b>SỐC</b>';
   const pc=x=>{const p=x.ny>x.gb?Math.round((x.ny-x.gb)/x.ny*100):0;return p>=5?p:0};
   const img=x=>{const im=imgCua(x.ms[0].ten);return `<div class="tri">${im?`<img src="${esc(im)}" alt="">`:'<span>📱</span>'}</div>`};
   const cell=x=>{const k=x.km[0],p=pc(x);return `<div class="trc">${p?`<span class="trpc">-${p}%</span>`:''}${k?`<span class="trk">${esc(kmChip(k))}</span>`:''}${img(x)}<div class="trx"><b class="trn">${esc(x.k)}</b>${x.ny?`<s>${trSo(x.ny)}</s>`:'<s></s>'}<em>${trSo(x.gb)}</em></div></div>`};
   const hero=x=>{const p=pc(x);return `<div class="trc big">${p?`<span class="trpc">-${p}%</span>`:''}${img(x)}<div class="trx">${x.km[0]?`<span class="trk">🎁 ${esc(kmChip(x.km[0]))}</span>`:''}<b class="trn">${esc(x.k)}</b>${x.ny?`<s>${trSo(x.ny)}</s>`:''}<em>${trSo(x.gb)}</em>${x.km.length>1?`<div class="trkm">${x.km.slice(1,4).map(k=>`<i>${esc(kmChip(k))}</i>`).join('')}</div>`:''}</div></div>`};
   const hh=nh===1?(rows<=1?440:310):(rows<=1?480:360);
   return `<div class="trp m-${TR.mau||'xanh'}"><div class="trh"><div class="trs">${esc(sh.ten||'Cửa hàng điện thoại')}</div><div class="trt"><b>${esc(big)}</b><span>${esc(sub)}</span></div>
-    <div class="trd"><small>Hôm nay</small><b>${esc(new Date().toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit'}))}</b></div></div>
+    <div class="trd">${nhan}</div></div>
     <div class="trbody">${nh?`<div class="trhero n${nh}" style="height:${hh}px">${H.map(hero).join('')}</div>`:''}${R.length?`<div class="trg${rows>=3?' r3':''}" style="grid-template-columns:repeat(${cols},1fr);grid-template-rows:repeat(${rows},1fr)">${R.map(cell).join('')}</div>`:''}</div>
     <div class="trperk"><span>💳 Trả góp 0%</span><span>🛡 Bảo hành chính hãng</span><span>🔁 Thu cũ đổi mới</span></div>
     <div class="trf"><div><b>📍 ${esc(sh.dc||'')}</b><b>📞 ${esc(sh.dt||'')}</b>${link?`<span>Xem đủ giá + khuyến mãi: ${esc(link)}</span>`:'<span>Gọi ngay để giữ máy giá tốt</span>'}</div>${link?'<div class="trq" id="trQr"></div>':''}</div></div>`}
