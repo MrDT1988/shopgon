@@ -87,6 +87,8 @@ async def main():
             if 'ver.json' in u: return await r.fulfill(body='{}', content_type='application/json')
             if 'localhost' in u: return await r.continue_()
             if 'script.google.com' in u: return await r.fulfill(body='{"status":"active","shop":"Shop Test"}', content_type='application/json')
+            if 'googleapis.com' in u and '/export' in u:
+                return await r.fulfill(body=b'PK\x03\x04 gia-lap-xlsx', content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
             if 'googleapis.com' in u:
                 try:
                     body = json.loads(r.request.post_data or '{}')
@@ -115,7 +117,7 @@ async def main():
           const sh=await GG.api('https://sheets.googleapis.com/v4/spreadsheets',{method:'POST',body:JSON.stringify({properties:{title:'Shop Gọn - Shop Test'},sheets:['May','Don','Hang','CaiDat','Phieu','Chi'].map(t=>({properties:{title:t}}))})});
           const id=sh.spreadsheetId;await GG.api('https://www.googleapis.com/drive/v3/files/'+id,{method:'PATCH',body:JSON.stringify({appProperties:{shopgon:'1'}})});
           const tbl={May:db.may,Don:db.don,Hang:db.hang,Phieu:db.pn,Chi:db.chi};const data=[];
-          for(const [t,c] of Object.entries(GG.cols)){data.push({range:t+'!A1',values:[c,...tbl[t].map(o=>{const x=t==='Phieu'?{...o,dong:JSON.stringify(o.dong||[])}:o;return c.map(k=>x[k]??'')})]})}
+          for(const [t,c] of Object.entries(GG.cols)){if(!tbl[t])continue;data.push({range:t+'!A1',values:[c,...tbl[t].map(o=>{const x=t==='Phieu'?{...o,dong:JSON.stringify(o.dong||[])}:o;return c.map(k=>x[k]??'')})]})}
           data.push({range:'CaiDat!A1',values:[['shop'],[JSON.stringify(db.shop)]]});
           await GG.api('https://sheets.googleapis.com/v4/spreadsheets/'+id+'/values:batchUpdate',{method:'POST',body:JSON.stringify({valueInputOption:'RAW',data})});
           const n={may:db.may.length,don:db.don.length,hang:db.hang.length,pn:db.pn.length,chi:db.chi.length};
@@ -143,6 +145,40 @@ async def main():
         r = await J("db=emptyDb();Object.keys(localStorage).filter(k=>k.startsWith('shopgon_base')).forEach(k=>localStorage.removeItem(k));await GG.pull();const d=db.don.find(x=>x.id==='moi1');return {n:db.don.length,tg:d&&d.tgTT,cty:d&&d.cty}")
         ok('Máy thứ 2 mở sổ: đọc đủ, không mất trường phụ', r['tg'] == 'Chờ duyệt' and r['cty'] == 'X' and r['n'] == seed['n']['don'] + 1, r)
 
+        # ---------- 2b. Nhật ký thay đổi ----------
+        r = await J("""NV=null;XEM=false;NK.chup();const n0=(db.nk||[]).length;const d=db.don.find(x=>x.id==='n1');d.giaBan=450000;save();
+          const m=db.may.find(x=>x.tt==='ton');const im=m.imei;db.may=db.may.filter(x=>x.imei!==im);save();
+          const m2=db.may.find(x=>x.tt==='ton');m2.tt='ban';db.don.push({id:'bt1',bill:'bt1',ngay:todayIso(),gio:'12:00',loai:'may',imei:m2.imei,ten:m2.ten,giaBan:5000000,giaVon:4000000,tt:'Tiền mặt',huy:null});save();
+          const t3=db.may.filter(x=>x.tt==='ton'&&x.ten===db.may.find(y=>y.tt==='ton').ten);t3.forEach(x=>x.giaBan=9990000);save();
+          await GG.push();return {nk:db.nk.slice(n0).map(x=>x.viec+'|'+x.ma+'|'+x.ct+'|'+x.ai+'|'+x.may),nlo:t3.length}""")
+        nk = r['nk']
+        ok('Nhật ký: sửa giá đơn → "Sửa đơn", ghi giá trước → sau, ai, máy nào', any(x.startswith('Sửa đơn|') and 'Giá bán' in x and '→' in x and '|Chủ shop|' in x for x in nk), nk)
+        ok('Nhật ký: xóa IMEI khỏi kho có ghi', any(x.startswith('Xóa IMEI khỏi kho|') for x in nk), nk)
+        ok('Nhật ký: bán hàng bình thường KHÔNG sinh dòng (không rác)', not any('bt1' in x or (x.startswith('Sửa máy') and 'Trạng thái' in x) for x in nk), nk)
+        ok('Nhật ký: đổi giá cả lô máy cùng tên → gộp 1 dòng', r['nlo'] < 2 or sum(1 for x in nk if x.startswith('Sửa máy trong kho|')) == 1, nk)
+        nks = sheets(f26)['Nhật ký']
+        ok('Nhật ký lên trang "Nhật ký" của sổ năm', len(nks) - 1 >= len(nk) and nks[0][:3] == ['id', 't', 'ai'], len(nks))
+        r = await J("const keep=db.nk.length;db=emptyDb();Object.keys(localStorage).filter(k=>k.startsWith('shopgon_base')).forEach(k=>localStorage.removeItem(k));await GG.pull();return {a:keep,b:db.nk.length}")
+        ok('Máy thứ 2 mở sổ: thấy đủ nhật ký', r['a'] == r['b'] and r['b'] > 0, r)
+
+        # ---------- 2c. IMEI bán 2 lần khi 2 máy cùng mất mạng ----------
+        r = await J("""NK.chup();const X=db.may.find(x=>x.tt==='ton');const im=X.imei;
+          /* máy B (mất mạng) bán X rồi có mạng đẩy lên sổ */
+          const B=JSON.parse(JSON.stringify(db));B.may.find(x=>x.imei===im).tt='ban';B.don.push({id:'b2',bill:'b2',ngay:todayIso(),gio:'10:05',loai:'may',imei:im,ten:X.ten,giaBan:5100000,giaVon:4000000,tt:'Tiền mặt',khach:'Khách máy B',nvTen:'Lan',huy:null});
+          await GG.readRemote();await GG.ghiFile(GG.sheetId,GG.dungSheet(B,GG.nam));
+          /* máy A (cũng mất mạng) bán đúng máy đó */
+          X.tt='ban';db.don.push({id:'a2',bill:'a2',ngay:todayIso(),gio:'10:07',loai:'may',imei:im,ten:X.ten,giaBan:5200000,giaVon:4000000,tt:'Tiền mặt',khach:'Khách máy A',huy:null});save();
+          await GG.push();const T=imeiTrung();return {im,n:T.length,ids:T.length?T[0].L.map(d=>d.id):[]}""")
+        ok('Gộp đồng bộ phát hiện IMEI bán 2 lần (giữ cả 2 đơn, không mất)', r['n'] == 1 and sorted(r['ids']) == ['a2', 'b2'], r)
+        await E("closeWelcome&&closeWelcome();go('home')"); await pg.wait_for_timeout(250)
+        t = await pg.inner_text('#v-home')
+        ok('Trang chủ báo đỏ "máy đang bị bán 2 lần" kèm 2 đơn', 'bán 2 lần' in t and 'Khách máy A' in t and 'Khách máy B' in t, t[:300])
+        await pg.screenshot(path='/tmp/sg_trung_imei.png')
+        await pg.click('[data-trung="b2"]'); await pg.wait_for_timeout(250)
+        ok('Bấm "Mở đơn" → mở đúng đơn trong Đơn đã bán', await E("more==='hist'&&histOpen==='b2'"))
+        r = await J("NK.chup();db.don.find(x=>x.id==='b2').huy='Bán trùng máy B';save();await GG.push();return {n:imeiTrung().length,nk:db.nk.at(-1).viec}")
+        ok('Hủy đơn bán nhầm → hết báo đỏ, nhật ký ghi "Hủy đơn"', r['n'] == 0 and r['nk'] == 'Hủy đơn', r)
+
         # ---------- 3. Sao lưu + Khôi phục thật ----------
         r = await J("const id=await GG.saoLuu('Test');const L=await GG.dsSaoLuu();return {id,L:L.map(x=>x.name),tm:GG._tm}")
         bk1 = r['id']
@@ -153,8 +189,9 @@ async def main():
         ok('Sau sao lưu: sổ đã thay đổi (thêm 1 đơn, xóa 1 đơn)', json.dumps(sheets(f26), sort_keys=True) != snap_bk)
         r = await J(f"await GG.khoiPhuc('{bk1}');const L=await GG.dsSaoLuu();return {{sau:!!db.don.find(x=>x.id==='sau1'),n1:!!db.don.find(x=>x.id==='n1'),L:L.map(x=>x.appProperties.ly)}}")
         tw = lambda V: [r[:max([i + 1 for i, v in enumerate(r) if v != ''] or [0])] for r in V if any(v != '' for v in r)]
-        same = all(tw(sheets(f26)[n]) == tw(sheets(bk1)[n]) for n in sheets(bk1))
-        ok('KHÔI PHỤC THẬT: sổ năm nay trở về đúng bản sao lưu (từng trang giống hệt)', same, [(n, sheets(f26)[n][:3], sheets(bk1)[n][:3]) for n in sheets(bk1) if tw(sheets(f26)[n]) != tw(sheets(bk1)[n])][:2])
+        same = all(tw(sheets(f26)[n]) == tw(sheets(bk1)[n]) for n in sheets(bk1) if n != 'Nhật ký')
+        ok('KHÔI PHỤC THẬT: sổ năm nay trở về đúng bản sao lưu (từng trang giống hệt)', same, [(n, sheets(f26)[n][:3], sheets(bk1)[n][:3]) for n in sheets(bk1) if n != 'Nhật ký' and tw(sheets(f26)[n]) != tw(sheets(bk1)[n])][:2])
+        ok('Khôi phục KHÔNG xóa nhật ký, ghi thêm dòng "Khôi phục dữ liệu"', await E("db.nk.some(x=>x.viec==='Hủy đơn')&&db.nk.at(-1).viec==='Khôi phục dữ liệu'"))
         ok('Khôi phục: app bỏ đơn sau sao lưu, có lại đơn đã xóa', not r['sau'] and r['n1'], r)
         tr = [x for x in D.f.values() if x['ap'].get('ly') == 'Trước khi khôi phục']
         ok('Trước khi khôi phục tự sao lưu bản hiện tại (không mất gì)', tr and any(len(row) > 1 and row[1] == 'sau1' for n in tr[0]['sheets'] for row in tr[0]['sheets'][n]))
@@ -208,6 +245,14 @@ async def main():
         t = await pg.inner_text('#pSoNam')
         ok('Cài đặt: khung "Sổ dữ liệu · Sao lưu" hiện sổ 2026/2027, kết quả chốt số dư, danh sách khôi phục', 'Sổ năm 2027' in t and 'Sổ năm 2026' in t and 'khớp 100%' in t and 'Năm 2026' in t and 'Đã chốt' in t, t)
         await pg.evaluate("document.getElementById('pSoNam').scrollIntoView({block:'start'});scrollBy(0,-130)"); await pg.wait_for_timeout(200); await pg.screenshot(path='/tmp/sg_so_nam.png')
+        async with pg.expect_download() as dl:
+            await pg.click('[data-xls="2027"]')
+        fn = (await dl.value).suggested_filename; await pg.wait_for_timeout(300)
+        ok('Nút ⬇️ Excel tải cả sổ năm về máy (.xlsx) + ghi nhật ký', fn.endswith('.xlsx') and 'nam2027' in fn and await E("db.nk.at(-1).viec==='Tải dữ liệu Excel'"), fn)
+        await E("more='nk';go('more')"); await pg.wait_for_timeout(200)
+        t = await pg.inner_text('#v-more')
+        ok('Màn Nhật ký thay đổi hiện đủ dòng (Tải Excel, Chốt sổ…)', 'Tải dữ liệu Excel' in t and 'Chốt sổ năm 2026' in t, t[:300])
+        await pg.screenshot(path='/tmp/sg_nhat_ky.png')
         ok('Không lỗi JS', not errs, errs)
         await b.close()
     dat = sum(1 for k in KQ if k[1]); print(f'\nKẾT QUẢ: {dat}/{len(KQ)} đạt')

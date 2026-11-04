@@ -277,3 +277,9 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - **Tra IMEI:** đơn bán trong 12 tháng hiện từ đơn; không thấy → nút "🔎 Tìm trong sổ các năm trước" (`GG.timImei`).
 - Test mới `_tam/test-luu-tru.py` (Drive/Sheets **giả lập**, có giả ngày 02/01/2027): 32/32. test-toan-bo 75/75. Kiểm giao diện 0 lỗi. BUILD 20261105-1200.
 - **CHƯA chạy trên Google thật** — phiên sau: tài khoản test Google thật trước, rồi mới để shop thật mở app (shop thật mở bản mới là tự tách sổ).
+
+## 36. (05/11 01h–02h) NHẬT KÝ THAY ĐỔI · IMEI BÁN 2 LẦN · TẢI EXCEL (anh Thái "làm đi"; sao lưu ngoài Gmail = chủ shop tự tải Excel)
+- **Nhật ký (`NK`)**: `save()` → `NK.ghi()` so ảnh chụp trước (`NK.chup`, tự chụp lại ở mọi `Store.save`) → ghi Sửa/Hủy/Xóa đơn, Xóa IMEI, Sửa máy/hàng/phiếu/chi, Khách trả nợ, Trả hàng, Đổi máy, Khôi phục, Chốt sổ, Tải Excel: giờ · ai · máy (`sg_may`) · trước → sau. Bán/nhập bình thường không ghi. Đổi giá cả lô → gộp 1 dòng. `db.nk` → trang **"Nhật ký"** sổ năm; gộp đồng bộ chỉ CỘNG (không xóa theo máy khác); khôi phục không đụng nhật ký. Thêm › "Nhật ký thay đổi" (lọc Đơn/Kho/Khác). `var NK` (không `const` — Store.save chạy trước khi khai báo).
+- **IMEI bán 2 lần**: `imeiTrung()` (đơn máy/đổi còn hiệu lực, chưa trả/đổi, ≥2 đơn cùng IMEI) → dải đỏ đầu Trang chủ, nút "Mở đơn" mở đúng đơn ở Đơn đã bán; hủy 1 đơn là hết báo. Chưa làm lớp giữ chỗ IMEI qua máy chủ khi có mạng.
+- **Tải Excel**: Cài đặt › Sổ dữ liệu · Sao lưu › "⬇️ Excel" mỗi năm = Drive export .xlsx cả sổ (đồng bộ trước khi tải).
+- Test `_tam/test-luu-tru.py` 45/45 (thêm nhật ký, 2 máy bán trùng, tải Excel), test-toan-bo 75/75, giao diện 0 lỗi. BUILD 20261105-0200.
