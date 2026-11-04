@@ -75,6 +75,7 @@ class Drive:
         raise KeyError('Chưa giả lập: ' + method + ' ' + url)
 
 D = Drive()
+GIU = {}
 
 async def main():
     async with async_playwright() as p:
@@ -86,7 +87,20 @@ async def main():
             u = r.request.url
             if 'ver.json' in u: return await r.fulfill(body='{}', content_type='application/json')
             if 'localhost' in u: return await r.continue_()
-            if 'script.google.com' in u: return await r.fulfill(body='{"status":"active","shop":"Shop Test"}', content_type='application/json')
+            if 'script.google.com' in u:
+                bd = json.loads(r.request.post_data or '{}') if r.request.method == 'POST' else {}
+                if bd.get('act') == 'nvGiu':   # giả lập máy chủ v21 giuImei_
+                    ai = 'Chủ shop' if bd.get('token') else 'NV ' + str(bd.get('sdt')); may = bd.get('may'); out = []
+                    for im in bd.get('imei', []):
+                        o = GIU.get(im); lo = bd.get('loai')
+                        if lo == 'mo': GIU.pop(im, None); continue
+                        if lo == 'bo':
+                            if o and o['may'] == may and not o['ban']: GIU.pop(im, None)
+                            continue
+                        if o and o['may'] != may: out.append({'imei': im, 'ai': o['ai'], 'luc': o['luc'], 'ban': o['ban']}); continue
+                        GIU[im] = {'ai': ai, 'may': may, 'luc': '10:05', 'ban': lo == 'ban'}
+                    return await r.fulfill(body=json.dumps({'ok': True, 'trung': out}), content_type='application/json')
+                return await r.fulfill(body='{"status":"active","shop":"Shop Test"}', content_type='application/json')
             if 'googleapis.com' in u and '/export' in u:
                 return await r.fulfill(body=b'PK\x03\x04 gia-lap-xlsx', content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
             if 'googleapis.com' in u:
@@ -178,6 +192,23 @@ async def main():
         ok('Bấm "Mở đơn" → mở đúng đơn trong Đơn đã bán', await E("more==='hist'&&histOpen==='b2'"))
         r = await J("NK.chup();db.don.find(x=>x.id==='b2').huy='Bán trùng máy B';save();await GG.push();return {n:imeiTrung().length,nk:db.nk.at(-1).viec}")
         ok('Hủy đơn bán nhầm → hết báo đỏ, nhật ký ghi "Hủy đơn"', r['n'] == 0 and r['nk'] == 'Hủy đơn', r)
+
+        # ---------- 2d. Giữ chỗ IMEI khi có mạng (máy chủ giả lập) ----------
+        r = await J("""cart=[];const X=db.may.find(x=>x.tt==='ton');window.__X=X.imei;
+          /* máy khác (NV Lan) đang giữ máy này */
+          await nvPost({act:'nvGiu',sdt:'0911',phien:'p',imei:[X.imei],loai:'giu',may:'NVLAN'});
+          window.alert=m=>{window.__al=m};go('sell');sellMode='may';sellImei=X.imei;render();return X.imei""")
+        await pg.fill('#sGia', '5.000.000'); await pg.click('#fSell button[type=submit]'); await pg.wait_for_timeout(600)
+        r = await J("cartOpen=true;render();await new Promise(r=>setTimeout(r,200));return {al:window.__al||'',tr:!!(cart[0]&&cart[0].trung),txt:document.body.innerText}")
+        ok('Giữ chỗ IMEI: máy khác đang bán → báo ngay khi thêm vào đơn (hộp báo + dòng đỏ)', 'NV 0911' in r['al'] and r['tr'] and 'đang bán máy này' in r['txt'], (r['al'], r['tr']))
+        await pg.screenshot(path='/tmp/sg_giu_imei.png')
+        r = await J("const im=window.__X;cart=[];cartOpen=false;render();await nvPost({act:'nvGiu',sdt:'0911',phien:'p',imei:[im],loai:'bo',may:'NVLAN'});cart=[];const Y=db.may.find(x=>x.tt==='ton'&&x.imei!==im);sellImei=Y.imei;render();return Y.imei")
+        await pg.fill('#sGia', '5.000.000'); await pg.click('#fSell button[type=submit]'); await pg.wait_for_timeout(500)
+        r2 = await J("cartOpen=true;render();await new Promise(r=>setTimeout(r,200));window.__al='';const im=cart[0].imei;document.querySelector('[data-checkout]').click();await new Promise(r=>setTimeout(r,600));const t=await nvPost({act:'nvGiu',sdt:'0911',phien:'p',imei:[im],loai:'giu',may:'NVLAN'});document.getElementById('rc').hidden=true;return {t:t.trung,al:window.__al}")
+        ok('Bán xong → máy chủ ghi "đã bán": máy khác quét lại được báo "đã bán lúc …"', r2['t'] and r2['t'][0]['ban'] and r2['t'][0]['ai'] == 'Chủ shop', r2)
+        ok('Máy không bị ai giữ → thêm vào đơn bình thường, không báo', r2['al'] == '', r2)
+        r = await J("const im=db.don.at(-1).imei;cancelId=null;const d=db.don.at(-1);d.huy='thu';await giuImei([im],'mo');const t=await nvPost({act:'nvGiu',sdt:'0911',phien:'p',imei:[im],loai:'giu',may:'NVLAN'});return t.trung.length")
+        ok('Hủy/trả máy → mở lại, máy khác bán được', r == 0, r)
 
         # ---------- 3. Sao lưu + Khôi phục thật ----------
         r = await J("const id=await GG.saoLuu('Test');const L=await GG.dsSaoLuu();return {id,L:L.map(x=>x.name),tm:GG._tm}")

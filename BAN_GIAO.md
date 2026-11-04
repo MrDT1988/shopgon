@@ -283,3 +283,8 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - **IMEI bán 2 lần**: `imeiTrung()` (đơn máy/đổi còn hiệu lực, chưa trả/đổi, ≥2 đơn cùng IMEI) → dải đỏ đầu Trang chủ, nút "Mở đơn" mở đúng đơn ở Đơn đã bán; hủy 1 đơn là hết báo. Chưa làm lớp giữ chỗ IMEI qua máy chủ khi có mạng.
 - **Tải Excel**: Cài đặt › Sổ dữ liệu · Sao lưu › "⬇️ Excel" mỗi năm = Drive export .xlsx cả sổ (đồng bộ trước khi tải).
 - Test `_tam/test-luu-tru.py` 45/45 (thêm nhật ký, 2 máy bán trùng, tải Excel), test-toan-bo 75/75, giao diện 0 lỗi. BUILD 20261105-0200.
+
+## 37. (05/11 02h30) GIỮ CHỖ IMEI khi có mạng (lớp 2 chống bán trùng)
+- App: thêm máy vào đơn → `giuImei([imei],'giu')` gửi `act:'nvGiu'` (chủ: `token`; NV: `sdt`+`phien`; kèm `may` = mã máy `sg_may`), chờ tối đa 4 giây; máy khác đang giữ / đã bán → hộp báo + dòng đỏ trên đơn ("NV Lan đang bán máy này từ 10:05"). Bỏ khỏi đơn → `bo`; bán xong (cả NV gửi đơn) → `ban`; hủy đơn / trả hàng → `mo`. Mất mạng hoặc máy chủ chưa có lệnh → bỏ qua êm (lớp 1 báo sau đồng bộ vẫn chạy).
+- **Máy chủ CHƯA nâng lên v21** (bộ lọc chặn thao tác sửa Apps Script tự động 05/11 02h): mã `giuImei_` + 1 dòng route trong `nvApi_` để trong Project `claude/shopgon/GiuImei_v21.gs`. Dán xong triển khai bản mới (giữ URL) là chạy.
+- Test 49/49 (máy chủ giả lập), test toàn bộ 75/75, giao diện 0 lỗi. BUILD 20261105-0230.

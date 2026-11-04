@@ -959,7 +959,7 @@ async function nvLoad(quiet){if(NV&&NV.test)return;try{const r=await nvPost({act
     if(Array.isArray(r.nhap)){const loc=nvpDs();nvpSet('shopgon_nvpds',r.nhap.map(o=>({...(loc.find(x=>x.id===o.id)||{}),...o})).slice(0,15))}
     const seen={},ds=[...(r.homNay||[]).filter(o=>o.kind!=='nhap'),...nvHomNay()].filter(o=>seen[o.id]?0:(seen[o.id]=1));nvHomNaySet(ds);render();if(!quiet)toast('Đã tải tồn kho mới')}
   catch(e){if(!quiet)toast('Chưa tải được, kiểm tra mạng')}}
-async function nvFlush(){const q=nvQ();if(!q.length)return;if(NV&&NV.test){/* test: không gửi đi, bỏ máy đã bán khỏi kho trên máy */const im={};q.forEach(o=>(o.lines||[]).forEach(c=>{if(c.imei)im[c.imei]=1;if(c.hangId){const h=db.hang.find(x=>x.id===c.hangId);if(h)h.sl-=(+c.sl||1)}}));db.may=db.may.filter(m=>!im[m.imei]);nvQSet([]);toast('Tài khoản test: đơn chỉ lưu trên máy này');if(view==='home')render();return}const left=[];for(const o of q){try{const r=await nvPost({act:'nvBan',sdt:NV.sdt,phien:NV.phien||'',don:o});if(!r.ok){left.push(o);if(r.dangXuat){nvQSet([...left,...q.slice(q.indexOf(o)+1)]);toast(r.msg);setTimeout(nvLogout,1500);return}if(/không còn|hết hạn/.test(r.msg||''))toast(r.msg)}}catch(e){left.push(o)}}nvQSet(left);if(view==='home')render()}
+async function nvFlush(){const q=nvQ();if(!q.length)return;if(NV&&NV.test){/* test: không gửi đi, bỏ máy đã bán khỏi kho trên máy */const im={};q.forEach(o=>(o.lines||[]).forEach(c=>{if(c.imei)im[c.imei]=1;if(c.hangId){const h=db.hang.find(x=>x.id===c.hangId);if(h)h.sl-=(+c.sl||1)}}));db.may=db.may.filter(m=>!im[m.imei]);nvQSet([]);toast('Tài khoản test: đơn chỉ lưu trên máy này');if(view==='home')render();return}const left=[];for(const o of q){try{const r=await nvPost({act:'nvBan',sdt:NV.sdt,phien:NV.phien||'',don:o});if(r.ok){const ims=(o.lines||[]).filter(c=>c.imei&&c.loai!=='thu').map(c=>c.imei);if(ims.length)giuImei(ims,'ban')}if(!r.ok){left.push(o);if(r.dangXuat){nvQSet([...left,...q.slice(q.indexOf(o)+1)]);toast(r.msg);setTimeout(nvLogout,1500);return}if(/không còn|hết hạn/.test(r.msg||''))toast(r.msg)}}catch(e){left.push(o)}}nvQSet(left);if(view==='home')render()}
 function nvClose(){const lines=db.don.filter(x=>x.bill===rcId||x.id===rcId);const tra=rcPay==='no'&&$('rcTra')?parseMoney($('rcTra').value):0;const tt=rcPay==='no'?'Ghi nợ':'Đã thanh toán';
   const tot=lines.reduce((a,x)=>a+x.giaBan,0);$('rc').hidden=true;
   if(lines.length){const d0=lines[0];const o={id:d0.bill||d0.id,ngay:d0.ngay,gio:d0.gio,tt,no:rcPay==='no'?Math.max(0,tot-tra):0,khach:d0.khach||'',sdtKh:d0.sdt||'',
@@ -1163,7 +1163,7 @@ function renderKm(){const tab=(k,t)=>`<button type="button" data-kmtab="${k}" ar
     <button type="button" class="btn" data-kmqua="1" style="margin-top:8px;width:100%">＋ Thêm quà vào đơn</button>`}
   <button type="button" class="ghost" data-kmx="1">Đóng</button></div></div>`}
 function renderCart(){if(!cart.length)return '';
-  return `<div class="panel cartp"><h2>Đơn đang bán · ${cart.length} món</h2><div class="list">${cart.map((c,i)=>`<div class="row${isKm(c)?' kmline':''}"><div class="n"><b>${esc(c.ten)}${c.sl>1?' ×'+c.sl:''}</b>${c.imei?`<small class="num">IMEI …${c.imei.slice(-6)}${c.bh?' · BH '+c.bh+' tháng':''}</small>`:''}</div><div class="right" style="flex-direction:row;align-items:center"><b class="num">${isKm(c)&&!c.gia?'Tặng':money(c.gia*(c.sl||1))}</b><button class="xbtn" data-cartdel="${i}" aria-label="Bỏ món này">✕</button></div></div>`).join('')}</div>
+  return `<div class="panel cartp"><h2>Đơn đang bán · ${cart.length} món</h2><div class="list">${cart.map((c,i)=>`<div class="row${isKm(c)?' kmline':''}"><div class="n"><b>${esc(c.ten)}${c.sl>1?' ×'+c.sl:''}</b>${c.imei?`<small class="num">IMEI …${c.imei.slice(-6)}${c.bh?' · BH '+c.bh+' tháng':''}</small>`:''}${c.trung?`<small style="color:var(--red);font-weight:700">⚠️ ${c.trung.ban?'Máy này '+esc(c.trung.ai)+' đã bán lúc '+esc(c.trung.luc):esc(c.trung.ai)+' đang bán máy này (từ '+esc(c.trung.luc)+')'} — kiểm tra trước khi giao máy</small>`:''}</div><div class="right" style="flex-direction:row;align-items:center"><b class="num">${isKm(c)&&!c.gia?'Tặng':money(c.gia*(c.sl||1))}</b><button class="xbtn" data-cartdel="${i}" aria-label="Bỏ món này">✕</button></div></div>`).join('')}</div>
     ${kmOpen?renderKm():`<button type="button" class="ghost kmplus" data-kmo="1" style="width:100%;margin-top:8px">🎁 Khuyến mãi cho khách${cart.some(isKm)?' · '+cart.filter(isKm).length+' mục':''}</button>`}
     ${cart.some(isKm)&&!NV?`<div style="display:flex;justify-content:space-between;color:#9a3412;font-size:12px;margin-top:6px"><span>Đơn này khuyến mãi (giảm + vốn quà)</span><b class="num">${money(cartKm())}</b></div>`:''}
     <div class="ctot"><span>${cartTotal()<0?'Shop trả khách':'Khách trả'}</span><b class="num">${money(Math.abs(cartTotal()))}</b></div>
@@ -1448,6 +1448,14 @@ function kmGan(c,sp){const L=kmCua(sp);if(!L.length)return;c.kid=c.kid||uid();co
 /* ===== THÊM ===== */
 let tgOpen=null, tgReject=null;
 let delImei='', lookQ='', cancelId=null, resetAsk=false, histDays=1, doiId=null, traId=null, suaId=null, xoaBill=null;
+/* ===== 05/11 anh Thái: GIỮ CHỖ IMEI qua máy chủ khi có mạng — máy khác đang bán / đã bán thì báo ngay trên dòng đơn ===== */
+async function giuImei(ims,loai){try{if(XEM||(db&&db.sample)||!navigator.onLine||!GG.LICENSE_URL)return null;if(NV&&NV.test)return null;
+    const o=NV?{act:'nvGiu',sdt:NV.sdt,phien:NV.phien||''}:GG.token?{act:'nvGiu',token:GG.token}:null;if(!o)return null;
+    const r=await Promise.race([nvPost({...o,imei:ims,loai,may:NK.may()}),new Promise(ok=>setTimeout(()=>ok(null),4000))]);
+    if(!r||!r.ok||!Array.isArray(r.trung))return null;
+    if(r.trung.length&&loai==='giu'){r.trung.forEach(t=>{const c=cart.find(x=>x.imei===t.imei);if(c)c.trung=t});render();
+      const t=r.trung[0];alert('⚠️ Máy IMEI …'+String(t.imei).slice(-6)+(t.ban?' đã được '+t.ai+' bán lúc '+t.luc:' đang được '+t.ai+' bán (từ '+t.luc+')')+'.\n\nKiểm tra lại với người đó trước khi giao máy cho khách. Không phải máy này thì bấm ✕ bỏ khỏi đơn.')}
+    return r.trung}catch(_){return null}}
 /* ===== 05/11 anh Thái: NHẬT KÝ THAY ĐỔI — tự ghi mọi lần sửa / hủy / xóa trên máy chủ shop; chỉ cộng thêm, app không có nút xóa ===== */
 var NK={snap:null,B:[['Don','don'],['May','may'],['Hang','hang'],['Phieu','pn'],['Chi','chi']],
   TEN:{giaBan:'Giá bán',giaVon:'Giá vốn',giaNhap:'Giá nhập',no:'Còn nợ',huy:'Hủy',tt:'Trạng thái',sl:'Số lượng',khach:'Khách',sdt:'SĐT',note:'Ghi chú',tien:'Số tiền',tong:'Tổng phiếu',ncc:'Nhà cung cấp',ten:'Tên',imei:'IMEI',soTien:'Tiền thu hộ',bh:'Bảo hành',ngay:'Ngày',gio:'Giờ',loai:'Loại',tgTT:'Trả góp',min:'Tồn tối thiểu',tra:'Trả hàng',doi:'Đổi máy',traSl:'SL trả',dong:'Dòng phiếu',ngayNhap:'Ngày nhập',hang:'Hãng',cty:'Công ty TC',traTruoc:'Trả trước',kyHan:'Kỳ hạn',maHS:'Mã hồ sơ'},
@@ -1689,7 +1697,7 @@ document.addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;
   if(b.dataset.delimei!==undefined){delImei=delImei===b.dataset.delimei?'':b.dataset.delimei;render();return}
   if(b.dataset.delimeiok){const im=b.dataset.delimeiok,n0=db.may.length;db.may=db.may.filter(m=>!(m.imei===im&&m.tt==='ton'));delImei='';if(db.may.length<n0){save();toast('Đã xóa IMEI …'+im.slice(-6)+' khỏi kho')}else toast('Không tìm thấy máy tồn với IMEI này');render();return}
-  if(b.dataset.cartdel){const c=cart[+b.dataset.cartdel];cart.splice(+b.dataset.cartdel,1);if(c&&c.kid)cart=cart.filter(x=>x.kmOf!==c.kid);render();return}
+  if(b.dataset.cartdel){const c=cart[+b.dataset.cartdel];cart.splice(+b.dataset.cartdel,1);if(c&&c.imei&&c.type==='may')giuImei([c.imei],'bo');if(c&&c.kid)cart=cart.filter(x=>x.kmOf!==c.kid);render();return}
   if(b.dataset.kmo){kmOpen=true;render();return}
   if(b.dataset.kmx){kmOpen=false;render();return}
   if(b.dataset.kmtab){kmTab=b.dataset.kmtab;render();return}
@@ -1700,7 +1708,7 @@ document.addEventListener('click',e=>{
     if(ex)ex.sl++;else cart.push({type:'hang',hangId:h.id,ten:'🎁 Tặng: '+h.ten,nhom:'km',gia:0,von:h.giaNhap,sl:1});render();toast('Đã thêm quà tặng: '+h.ten);return}
   if(b.dataset.kmqua){const t=($('kmQua')||{}).value||'';if(!t.trim()){toast('Nhập tên quà');return}const v=$('kmVon')?parseMoney($('kmVon').value):0;
     cart.push({type:'free',nhom:'km',ten:'🎁 Tặng: '+t.trim(),gia:0,von:v,sl:1});kmOpen=false;render();toast('Đã thêm quà vào đơn');return}
-  if(b.dataset.checkout){if(!cart.length)return;const bill=uid();const n0=new Date();const gio=n0.getHours()+':'+String(n0.getMinutes()).padStart(2,'0');
+  if(b.dataset.checkout){if(!cart.length)return;{const ims=cart.filter(c=>c.type==='may'&&c.imei).map(c=>c.imei);if(ims.length)giuImei(ims,'ban')}const bill=uid();const n0=new Date();const gio=n0.getHours()+':'+String(n0.getMinutes()).padStart(2,'0');
     cart.forEach(c=>{const base={id:uid(),bill,ngay:todayIso(),gio,khach:cartKhach.trim(),sdt:cartSdt.trim(),tt:'Tiền mặt',huy:null};
       if(c.type==='may'){const m=db.may.find(x=>x.imei===c.imei);if(m)m.tt='ban';db.don.push({...base,loai:'may',imei:c.imei,ten:c.ten,hang:c.hang,giaBan:c.gia,giaVon:c.von,bh:c.bh})}
       else if(c.type==='hang'){const h=db.hang.find(x=>x.id===c.hangId);if(h)h.sl-=c.sl;db.don.push({...base,loai:c.nhom,ten:c.ten+(c.sl>1?' ×'+c.sl:''),hangId:c.hangId,sl:c.sl,giaBan:c.gia*c.sl,giaVon:c.von*c.sl})}
@@ -1754,7 +1762,7 @@ document.addEventListener('click',e=>{
   if(b.dataset.tgnext){const d=db.don.find(x=>x.id===b.dataset.tgnext);d.tgTT=TG_STEPS[TG_STEPS.indexOf(d.tgTT)+1];const n0=new Date();(d.tgLog=d.tgLog||[{tt:'Chờ duyệt',ngay:d.ngay,gio:d.gio}]).push({tt:d.tgTT,ngay:todayIso(),gio:n0.getHours()+':'+String(n0.getMinutes()).padStart(2,'0')});save();render();toast('Đã chuyển: '+d.tgTT);return}
   if(b.dataset.cancel){cancelId=b.dataset.cancel;render();setTimeout(()=>$('cReason')&&$('cReason').focus(),0);return}
   if(b.dataset.cancelok){const r=$('cReason').value.trim();if(!r){$('cReason').focus();toast('Ghi lý do hủy trước');return}
-    const d=db.don.find(x=>x.id===b.dataset.cancelok);if(d.loai==='thu'){const m=db.may.find(x=>x.imei===d.imei);if(m&&m.tt!=='ton'){toast('Máy cũ này đã bán lại, không hủy được');return}db.may=db.may.filter(x=>!(x.imei===d.imei&&x.tt==='ton'))}d.huy=r;if(d.loai==='may'){const m=db.may.find(x=>x.imei===d.imei);if(m)m.tt='ton'}if(d.hangId){const h=db.hang.find(x=>x.id===d.hangId);if(h)h.sl+=d.sl||1}cancelId=null;save();render();toast('Đã hủy đơn');return}
+    const d=db.don.find(x=>x.id===b.dataset.cancelok);if(d.loai==='thu'){const m=db.may.find(x=>x.imei===d.imei);if(m&&m.tt!=='ton'){toast('Máy cũ này đã bán lại, không hủy được');return}db.may=db.may.filter(x=>!(x.imei===d.imei&&x.tt==='ton'))}d.huy=r;if(d.loai==='may'){const m=db.may.find(x=>x.imei===d.imei);if(m)m.tt='ton';if(d.imei)giuImei([d.imei],'mo')}if(d.hangId){const h=db.hang.find(x=>x.id===d.hangId);if(h)h.sl+=d.sl||1}cancelId=null;save();render();toast('Đã hủy đơn');return}
   if(b.dataset.reset){const k=b.dataset.reset;if(k==='ask'){resetAsk=true;render();return}if(k==='no'){resetAsk=false;render();return}
     if(k==='ok'){const shop=db.sample?{...emptyDb().shop}:db.shop;db=emptyDb();db.shop=shop;resetAsk=false;save();toast('Đã sẵn sàng dùng thật');go('add');return}
     if(k==='sample'){db=sampleDb();save();resetAsk=false;toast('Đã nạp dữ liệu mẫu');go('home');return}}
@@ -1772,7 +1780,7 @@ document.addEventListener('click',e=>{
     d.doi=m2.imei;doiId=null;save();render();toast('Đã đổi sang '+m2.ten+(bu?' · khách bù '+money(bu):''));return}
   if(b.dataset.traok){const d=db.don.find(x=>x.id===b.dataset.traok);const hoan=parseMoney($('rHoan').value);const loi=$('rLoi').checked;const m=db.may.find(x=>x.imei===d.imei);if(m)m.tt=loi?'loi':'ton';
     const n0=new Date();db.don.push({id:uid(),bill:uid(),ngay:todayIso(),gio:n0.getHours()+':'+String(n0.getMinutes()).padStart(2,'0'),loai:'tra',imei:d.imei,ten:'Trả hàng: '+d.ten,hang:d.hang,giaBan:-hoan,giaVon:-(+d.giaVon||0),khach:d.khach,sdt:d.sdt,tt:'Tiền mặt',huy:null});
-    d.tra=1;traId=null;save();render();toast('Đã nhận trả hàng · hoàn khách '+money(hoan)+(loi?' · máy vào mục chờ bảo hành':' · máy về kho'));return}
+    d.tra=1;traId=null;if(d.imei)giuImei([d.imei],'mo');save();render();toast('Đã nhận trả hàng · hoàn khách '+money(hoan)+(loi?' · máy vào mục chờ bảo hành':' · máy về kho'));return}
   if(b.dataset.loiok){const m=db.may.find(x=>x.imei===b.dataset.loiok);if(m)m.tt='ton';save();render();toast('Máy đã về kho');return}
   if(b.dataset.pinlock){ownerOn=false;try{sessionStorage.removeItem('shopgon_owner')}catch(_){}more='menu';render();toast('Đã khóa — chế độ nhân viên');return}
 });
@@ -1815,7 +1823,7 @@ document.addEventListener('submit',e=>{
     if(NV&&!m.giaBan){$('sErr').textContent='Máy này chưa có giá bán — nhờ chủ shop đặt giá ở tab Kho.';return}
     if(!g){$('sErr').textContent='Nhập giá bán.';return}
     cart.push({type:'may',imei:m.imei,ten:m.ten,hang:m.hang,gia:g,von:m.giaNhap,bh:$('sBh')?parseMoney($('sBh').value):0,sl:1});kmGan(cart[cart.length-1],'m|'+m.ten);
-    sellImei='';render();window.scrollTo(0,0);toast('Đã thêm '+m.ten+' vào đơn');return}
+    sellImei='';render();window.scrollTo(0,0);toast('Đã thêm '+m.ten+' vào đơn');giuImei([m.imei],'giu');return}
   if(f.id==='fPk'){const it=pkPick&&db.hang.find(h=>h.id===pkPick);const g=NV&&it&&it.giaBan?it.giaBan:parseMoney($('pGia').value);if(!g&&!isDv(pkNhom)){$('pErr').textContent='Nhập giá bán.';return}
     if(it){const sl=Math.max(1,parseMoney($('pSl').value));const left=it.sl-cartQty(it.id);if(sl>left){$('pErr').textContent='Kho chỉ còn '+left+'.';return}
       cart.push({type:'hang',hangId:it.id,ten:it.ten,nhom:it.nhom,gia:g,von:it.giaNhap,sl});kmGan(cart[cart.length-1],'h|'+it.id);
@@ -2381,7 +2389,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261105-0200';let verLuc=0;
+const BUILD='20261105-0230';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
