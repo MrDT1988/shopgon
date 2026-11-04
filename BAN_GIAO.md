@@ -247,3 +247,10 @@ Quy tắc: sửa app thì đổi BUILD trong index.html và app/ver.json cùng g
 - Lưu phiếu (`pnCommit`): dòng máy có giá bán → áp cho MỌI máy tồn cùng mẫu (mọi màu) + đánh dấu `db.shop.giaTay[mẫu]=1` (không bị giá niêm yết tự động đè). Phụ kiện → `h.giaBan`. Kho vẫn sửa giá được như cũ.
 - Sửa kèm: trước đây chọn máy đã có trong ô tên bị lỗi ngầm (`$('aGB')` null) — nay hết.
 - BUILD 20261104-0900. Test 67/67 (thay test "không còn ô giá bán" bằng test có ô + test nhập kèm giá bán). Kiểm giao diện 0 lỗi.
+
+## 32. (04/11) Tài khoản test NHÂN VIÊN + TỜ RƠI theo tồn kho (anh Thái)
+- Màn đăng nhập › Tài khoản test: thêm nút **"👤 Vào thử tài khoản nhân viên"** (`data-gg="testnv"`) → `shopgon_nv={…,test:1}` → `nvBoot` nhánh test: dữ liệu mẫu `sampleDb()` (không giá vốn), không gọi máy chủ (`nvLoad`/`nvFlush` bỏ qua), bán xong trừ kho trên máy; thanh "🧪 Nhân viên test · Thoát" (`thoatnv`).
+- Ảnh truyền thông: 2 nút **🗞 Tạo tờ rơi** (mới) · 🖼 Ảnh 1 máy (robot cũ). Tờ rơi (`TR`, `renderTr`, `trHtml`, `trXuat`): kiểu **Tồn nhiều + KM** (máy có KM lên trước, rồi tồn nhiều) hoặc **Theo hãng** (chip hãng); **6 / 9 / 12 máy** lưới 3 cột; ảnh 1080×1350: tên shop + tiêu đề, mỗi máy ảnh + giá niêm yết gạch + giá bán + chip KM, chân: địa chỉ, SĐT, link web ngắn + mã QR. Dựng ngay trên máy bằng html-to-image (jsdelivr 1.11.11), KHÔNG qua robot, KHÔNG trừ lượt. Nút Chia sẻ (file ảnh + bài đăng) · Tải ảnh · Copy bài đăng (tự copy khi xuất).
+- Chỉ dùng ảnh máy cùng nguồn shopgon.vn (ảnh TGDĐ ngoài miền bỏ để không lỗi xuất ảnh). Kho thiếu mẫu thì tờ rơi hiện ít hơn + ghi chú.
+- BUILD 20261104-1000. Test 69/69 (thêm test NV test + tờ rơi). Kiểm giao diện 0 lỗi.
+- Đề xuất đang chờ anh duyệt: nhân viên nhập hàng không thấy giá → gửi phiếu → chủ shop duyệt điền giá (đã gửi ảnh vẽ thử).

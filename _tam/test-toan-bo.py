@@ -275,6 +275,26 @@ async def main():
         ok('Nhân viên: mở lại app vẫn đăng nhập, vào thẳng màn Bán, không lỗi', r['nv'] == '0911222333' and r['ban'] and not r['login'] and r['ls'] and not errs, (r, errs))
         await ctx.close()
 
+        # 12d. (04/11) Tài khoản test nhân viên: vào thẳng màn Bán nhân viên bằng dữ liệu mẫu, bán được, không gọi máy chủ
+        ctx, pg, errs = await trang(b, '/app/')
+        await pg.evaluate("localStorage.setItem('shopgon_nv',JSON.stringify({sdt:'0900000000',ten:'Nhân viên test',phien:'TEST',test:1}))"); await pg.reload(); await pg.wait_for_timeout(900)
+        r = json.loads(await pg.evaluate("JSON.stringify({nv:!!(NV&&NV.test),may:db.may.length,ban:!$('v-sell').hidden,vonAn:db.may.every(m=>!m.giaNhap)})"))
+        n0 = r['may']
+        await pg.evaluate("const m=db.may[0];cart=[{type:'may',imei:m.imei,ten:m.ten,hang:m.hang,gia:m.giaBan,von:0,bh:12,sl:1}];cartOpen=true;render();document.querySelector('[data-checkout]').click()"); await pg.wait_for_timeout(200)
+        await pg.evaluate("nvClose()"); await pg.wait_for_timeout(300)
+        r2 = await pg.evaluate("db.may.length")
+        ok('Tài khoản test nhân viên: vào màn Bán, không thấy giá vốn, bán trừ kho trên máy', r['nv'] and r['ban'] and r['vonAn'] and n0 > 0 and r2 == n0 - 1 and not errs, (r, r2, errs))
+        await ctx.close()
+
+        # 12e. (04/11) Tờ rơi: tồn nhiều 9 máy · theo hãng 6 máy
+        ctx, pg, errs = await trang(b, '/app/?demo=1&test=1')
+        await pg.evaluate("more='ttq';go('more')"); await pg.wait_for_timeout(200); await pg.click('[data-trnew]'); await pg.wait_for_timeout(800)
+        n9 = await pg.evaluate("document.querySelectorAll('#trPv .trc').length")
+        await pg.evaluate("TR.kieu='hang';TR.hang='Samsung';TR.n=6;render()"); await pg.wait_for_timeout(300)
+        n6 = await pg.evaluate("[...document.querySelectorAll('#trPv .trn')].map(x=>x.textContent)")
+        ok('Tờ rơi: 9 máy theo tồn kho, 6 máy theo hãng đúng hãng', n9 == 9 and len(n6) == 6 and all('Samsung' in x for x in n6) and not errs, (n9, n6, errs))
+        await ctx.close()
+
         # 13. Các trang khác + cài app
         for path, ten in [('/', 'Trang chủ'), ('/so-sanh.html', 'So sánh giá'), ('/bg/?demo=1&xem=1', 'Bảng giá online (khách)'), ('/tt/', 'Thiết kế hình'), ('/setup/', 'Trang hướng dẫn Sale'), ('/quantri/', 'Trang quản trị')]:
             c2, p2, e2 = await trang(b, path); await p2.wait_for_timeout(600)

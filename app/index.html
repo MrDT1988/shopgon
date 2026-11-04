@@ -376,6 +376,17 @@ body.nv .hmg>div.own{display:none}body.nv .hmg{grid-template-columns:1fr}
 .pt .pp,.sc .spr{font-size:clamp(11.5px,3.6vw,13.5px)!important;white-space:nowrap;letter-spacing:-.01em}.pt b,.sc b{overflow-wrap:anywhere}
 .nvok,.nvno{display:block;font-size:12px;margin-top:2px}.nvok{color:var(--good,#15803d)}.nvno{color:#b45309;font-weight:700}.nvmkb{flex:none;padding:7px 10px;font-size:12.5px;margin-right:4px}.nvmkrow{margin:6px 0 2px}.nvmkrow input{flex:1;min-width:0}.nvmkh{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
 .nvdem{margin-top:12px;font-size:13px;font-weight:700;color:var(--muted)}
+.ttbtn2{display:grid;grid-template-columns:1.2fr 1fr;gap:8px;margin-top:10px}.ttbtn2 button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 6px}.ttbtn2 small{font-size:11.5px;font-weight:600;opacity:.85}
+.trbox{max-width:560px}.trwrap{flex:none;width:100%;aspect-ratio:1080/1350;overflow:hidden;border-radius:12px;background:#eee;position:relative}.trscale{width:1080px;height:1350px;transform-origin:0 0;position:absolute;left:0;top:0}.trnote{color:var(--muted);font-size:12.5px}.trbt{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.trp{width:1080px;height:1350px;background:linear-gradient(170deg,#fff7ed 0,#ffffff 40%);display:flex;flex-direction:column;font-family:"Be Vietnam Pro",system-ui,sans-serif;color:#111827;box-sizing:border-box}
+.trh{background:linear-gradient(135deg,var(--pen-hi),var(--pen-dk));color:#fff;padding:34px 48px 30px;display:flex;justify-content:space-between;align-items:flex-end}.trh b{display:block;font-size:56px;font-weight:900;line-height:1.05;letter-spacing:-.01em}.trh span{display:block;margin-top:10px;font-size:32px;font-weight:800;color:#fde047}.trh i{font-style:normal;font-size:28px;font-weight:800;background:rgba(255,255,255,.18);border-radius:14px;padding:8px 16px}
+.trg{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;padding:26px 36px;min-height:0}.trp.r2 .trg{grid-template-rows:repeat(2,1fr)}.trp.r3 .trg{grid-template-rows:repeat(3,1fr)}.trp.r4 .trg{grid-template-rows:repeat(4,1fr);gap:14px;padding:20px 36px}
+.trc{position:relative;background:#fff;border:2px solid #f1e4d4;border-radius:22px;padding:12px 12px 10px;display:flex;flex-direction:column;align-items:center;text-align:center;min-height:0;box-shadow:0 4px 12px rgba(0,0,0,.05)}
+.tri{flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center}.tri img{max-width:100%;max-height:100%;object-fit:contain}.tri span{font-size:70px}
+.trn{font-size:24px;font-weight:800;line-height:1.15;margin-top:6px;max-height:2.3em;overflow:hidden}.trc s{font-size:20px;color:#9ca3af;min-height:24px;margin-top:2px}.trc em{font-style:normal;font-size:34px;font-weight:900;color:#dc2626;line-height:1.1}
+.trk{position:absolute;top:10px;left:10px;right:10px;background:#dc2626;color:#fff;font-size:18px;font-weight:800;border-radius:10px;padding:3px 8px;z-index:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.trp.r4 .trn{font-size:21px}.trp.r4 .trc em{font-size:29px}.trp.r4 .trc s{font-size:18px;min-height:20px}.trp.r4 .trk{font-size:16px}
+.trf{background:#111827;color:#fff;padding:22px 40px;display:flex;justify-content:space-between;align-items:center;gap:20px}.trf b{display:block;font-size:27px;font-weight:800;line-height:1.35}.trf span{display:block;font-size:22px;color:#fde047;margin-top:6px;font-weight:700}.trq{background:#fff;padding:8px;border-radius:12px;line-height:0}.trq img,.trq canvas{width:150px!important;height:150px!important}
 /* 02/11 (4) Bán + Nhập đồng bộ với Kho/Báo cáo: thẻ trắng bo góc, thanh tab chung, chip chung */
 .seg.top{padding:5px;border-radius:16px;margin-bottom:12px}
 .seg.top button{font-size:16px;padding:13px 4px;min-height:50px;border-radius:12px}
@@ -649,7 +660,7 @@ function welcomeMsg(t){const w=document.getElementById('welcome');const m=docume
 function lockApp(){document.body.classList.add('locked')}
 function unlockApp(){document.body.classList.remove('locked')}
 function closeWelcome(){unlockApp();document.getElementById('welcome').hidden=true;try{localStorage.setItem('shopgon_seen','1')}catch(e){}}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-gg]');if(!b)return;const k=b.dataset.gg;if(k==='login')ggConnect();else if(k==='demo'){closeWelcome();Store.save(db)}else if(k==='logout')ggLogout();else if(k==='request')sendRequest();else if(k==='recheck')afterLogin().catch(()=>welcomeMsg('Chưa kiểm tra được, thử lại.'));else if(k==='out')openOut();else if(k==='other'){GG.token=null;GG.email='';XLIC=null;try{localStorage.removeItem('shopgon_gg');localStorage.removeItem('shopgon_tk')}catch(e){}if(GG.ready()){if(!XEM)xemMode();xemBar();LGTAB='dn';showLogin()}else showWelcome()}else if(k==='open'){if(GG.ready()){LGTAB='dn';showLogin()}else showWelcome()}else if(k==='test'){location.href='/app/?demo=1&test=1'}else if(k==='thoattest'){try{localStorage.removeItem('shopgon_test')}catch(_){}location.href='/app/'}else if(k==='dk'){ggConnect()}else if(k==='nv'){xemMode();closeWelcome();more='nvlogin';go('more')}else if(k==='kh')showKh();else if(k==='xem'){closeWelcome();xemBar()}});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-gg]');if(!b)return;const k=b.dataset.gg;if(k==='login')ggConnect();else if(k==='demo'){closeWelcome();Store.save(db)}else if(k==='logout')ggLogout();else if(k==='request')sendRequest();else if(k==='recheck')afterLogin().catch(()=>welcomeMsg('Chưa kiểm tra được, thử lại.'));else if(k==='out')openOut();else if(k==='other'){GG.token=null;GG.email='';XLIC=null;try{localStorage.removeItem('shopgon_gg');localStorage.removeItem('shopgon_tk')}catch(e){}if(GG.ready()){if(!XEM)xemMode();xemBar();LGTAB='dn';showLogin()}else showWelcome()}else if(k==='open'){if(GG.ready()){LGTAB='dn';showLogin()}else showWelcome()}else if(k==='test'){location.href='/app/?demo=1&test=1'}else if(k==='testnv'){try{localStorage.setItem('shopgon_nv',JSON.stringify({sdt:'0900000000',ten:'Nhân viên test',phien:'TEST',test:1}))}catch(_){}location.href='/app/'}else if(k==='thoatnv'){nvLogout()}else if(k==='thoattest'){try{localStorage.removeItem('shopgon_test')}catch(_){}location.href='/app/'}else if(k==='dk'){ggConnect()}else if(k==='nv'){xemMode();closeWelcome();more='nvlogin';go('more')}else if(k==='kh')showKh();else if(k==='xem'){closeWelcome();xemBar()}});
 
 
 /* ===== Tính toán ===== */
@@ -740,12 +751,12 @@ function nvQ(){try{return JSON.parse(localStorage.getItem('shopgon_nvq')||'[]')}
 function nvQSet(q){try{localStorage.setItem('shopgon_nvq',JSON.stringify(q))}catch(_){}}
 function nvHomNay(){let L=[];try{L=JSON.parse(localStorage.getItem('shopgon_nvhn')||'{}')}catch(_){}return L.ngay===todayIso()?L.ds||[]:[]}
 function nvHomNaySet(ds){try{localStorage.setItem('shopgon_nvhn',JSON.stringify({ngay:todayIso(),ds}))}catch(_){}}
-async function nvLoad(quiet){try{const r=await nvPost({act:'nvLogin',sdt:NV.sdt,phien:NV.phien||''});if(!r.ok){if(!quiet||r.dangXuat||r.canMk)toast(r.msg||'Không tải được');if(r.dangXuat||r.canMk||/chưa được chủ shop/.test(r.msg||'')){setTimeout(nvLogout,1500);}return}
+async function nvLoad(quiet){if(NV&&NV.test)return;try{const r=await nvPost({act:'nvLogin',sdt:NV.sdt,phien:NV.phien||''});if(!r.ok){if(!quiet||r.dangXuat||r.canMk)toast(r.msg||'Không tải được');if(r.dangXuat||r.canMk||/chưa được chủ shop/.test(r.msg||'')){setTimeout(nvLogout,1500);}return}
     const keepCart=cart.slice();db=nvDb(r);const q=nvQ(),bq={};q.forEach(o=>(o.lines||[]).forEach(c=>{if(c.imei)bq[c.imei]=1}));db.may=db.may.filter(m=>!bq[m.imei]);cart=keepCart.filter(c=>!c.imei||db.may.some(m=>m.imei===c.imei)||c.type==='thu');
     NV.ten=r.ten;NV.luc=r.luc;try{localStorage.setItem('shopgon_nv',JSON.stringify({sdt:NV.sdt,ten:NV.ten,phien:NV.phien}))}catch(_){}
     const seen={},ds=[...(r.homNay||[]),...nvHomNay()].filter(o=>seen[o.id]?0:(seen[o.id]=1));nvHomNaySet(ds);render();if(!quiet)toast('Đã tải tồn kho mới')}
   catch(e){if(!quiet)toast('Chưa tải được, kiểm tra mạng')}}
-async function nvFlush(){const q=nvQ();if(!q.length)return;const left=[];for(const o of q){try{const r=await nvPost({act:'nvBan',sdt:NV.sdt,phien:NV.phien||'',don:o});if(!r.ok){left.push(o);if(r.dangXuat){nvQSet([...left,...q.slice(q.indexOf(o)+1)]);toast(r.msg);setTimeout(nvLogout,1500);return}if(/không còn|hết hạn/.test(r.msg||''))toast(r.msg)}}catch(e){left.push(o)}}nvQSet(left);if(view==='home')render()}
+async function nvFlush(){const q=nvQ();if(!q.length)return;if(NV&&NV.test){/* test: không gửi đi, bỏ máy đã bán khỏi kho trên máy */const im={};q.forEach(o=>(o.lines||[]).forEach(c=>{if(c.imei)im[c.imei]=1;if(c.hangId){const h=db.hang.find(x=>x.id===c.hangId);if(h)h.sl-=(+c.sl||1)}}));db.may=db.may.filter(m=>!im[m.imei]);nvQSet([]);toast('Tài khoản test: đơn chỉ lưu trên máy này');if(view==='home')render();return}const left=[];for(const o of q){try{const r=await nvPost({act:'nvBan',sdt:NV.sdt,phien:NV.phien||'',don:o});if(!r.ok){left.push(o);if(r.dangXuat){nvQSet([...left,...q.slice(q.indexOf(o)+1)]);toast(r.msg);setTimeout(nvLogout,1500);return}if(/không còn|hết hạn/.test(r.msg||''))toast(r.msg)}}catch(e){left.push(o)}}nvQSet(left);if(view==='home')render()}
 function nvClose(){const lines=db.don.filter(x=>x.bill===rcId||x.id===rcId);const tra=rcPay==='no'&&$('rcTra')?parseMoney($('rcTra').value):0;const tt=rcPay==='no'?'Ghi nợ':'Đã thanh toán';
   const tot=lines.reduce((a,x)=>a+x.giaBan,0);$('rc').hidden=true;
   if(lines.length){const d0=lines[0];const o={id:d0.bill||d0.id,ngay:d0.ngay,gio:d0.gio,tt,no:rcPay==='no'?Math.max(0,tot-tra):0,khach:d0.khach||'',sdtKh:d0.sdt||'',
@@ -767,6 +778,11 @@ function nvLogout(){try{['shopgon_nv','shopgon_nvhn'].forEach(k=>localStorage.re
 function nvBoot(){let s=null;try{s=JSON.parse(localStorage.getItem('shopgon_nv')||'null')}catch(_){}
   if(!s||!s.sdt){if(/[?&]nv=1/.test(location.search)){xemMode();more='nvlogin';go('more')}return false}
   if(!s.phien){nvLogout();return true}
+  if(s.test){/* 04/11 anh Thái: tài khoản test nhân viên — dữ liệu mẫu trên máy, không gọi máy chủ */
+    NV={sdt:s.sdt,ten:s.ten||'Nhân viên test',phien:'TEST',test:1,luc:0};XEM=false;const sd=sampleDb(),bq={};nvQ().forEach(o=>(o.lines||[]).forEach(c=>{if(c.imei)bq[c.imei]=1}));
+    db=nvDb({shop:sd.shop,may:sd.may.filter(m=>m.tt==='ton'&&!bq[m.imei]).map(m=>({imei:m.imei,ten:m.ten,hang:m.hang,giaBan:m.giaBan})),hang:sd.hang.filter(h=>h.sl>0)});
+    unlockApp();const b=$('xbar');if(b){b.hidden=false;b.className='ok';b.innerHTML='<span class="t">🧪 <b>Nhân viên test</b> · xem app nhân viên thấy gì, đơn không gửi về shop.</span><button data-gg="thoatnv">Thoát</button>'}
+    render();go('sell');return true}
   NV={sdt:s.sdt,ten:s.ten||'',phien:s.phien,luc:0};XEM=false;db=nvDb({});unlockApp();render();go('sell');nvLoad(true);nvFlush();
   setInterval(()=>{nvFlush();nvLoad(true)},120000);return true}
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
@@ -1974,7 +1990,8 @@ function showLogin(email,msg){lockApp();const w=$('welcome');w.hidden=false;if(e
     <button class="lgdk" data-gg="dk">Đăng ký tài khoản mới</button>
     <small>Đăng ký bằng Gmail của shop → điền tên shop, SĐT → Shop Gọn kích hoạt sau khi nhận thanh toán.</small></div>`
   :`<div class="lgpane"><div class="lgtest">🧪 <b>Shop test</b> có sẵn hàng, đơn, khách mẫu — <b>dùng được đủ mọi tính năng</b> (bán, nhập, kho, khuyến mãi, website…). Dữ liệu lưu trên máy này, không cần Gmail.</div>
-    <button class="btn" style="width:100%;padding:14px;font-size:14.5px" data-gg="test">Vào shop test</button>
+    <button class="btn" style="width:100%;padding:14px;font-size:14.5px" data-gg="test">Vào shop test (chủ shop)</button>
+    <button class="ghost" style="width:100%;padding:13px;font-size:14.5px;margin-top:8px" data-gg="testnv">👤 Vào thử tài khoản nhân viên</button>
     <small>Muốn dùng thật: quay lại mục <b>Đăng nhập</b> → Đăng ký tài khoản mới.</small></div>`}
   </div>`}
 /* 28/10 anh Thái: bán hàng — giá shop mặc định (nhân viên không sửa giá), nút ＋ Khuyến mãi = thêm món vào đơn rồi mở ngay bảng khuyến mãi */
@@ -2078,7 +2095,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261104-0900';let verLuc=0;
+const BUILD='20261104-1000';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
@@ -2233,6 +2250,49 @@ async function ttqTai(quiet){if(XEM||NV||TTQ.busy||!GG.LICENSE_URL)return;if(!tt
 setTimeout(()=>ttqTai(true),6000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&Date.now()-TTQ.luc>60000)ttqTai(true)});
 
+
+/* ===== 04/11 anh Thái: TỜ RƠI — 6/9/12 máy trên 1 tờ, theo tồn kho (tồn nhiều + KM) hoặc theo hãng. Dựng ngay trên máy (html-to-image), không qua robot, không trừ lượt ===== */
+let TR=null;
+function loadH2i(){return window.htmlToImage?Promise.resolve():new Promise((ok,bad)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js';s.onload=ok;s.onerror=bad;document.head.appendChild(s)})}
+const trHang=x=>BRANDS.includes(x.hang)?x.hang:'Khác';
+function trDs(){const L=ttqMau().map(x=>{const km=kmCua('g|'+x.k),tg=TG?tgCua(x.k):null,ny=tg&&tg.ny>x.gb?tg.ny:0;return {...x,km,ny}}).filter(x=>x.gb>0);
+  let D=TR.kieu==='hang'?L.filter(x=>trHang(x)===TR.hang):L.slice();
+  D.sort((a,b)=>(TR.kieu==='ton'?((b.km.length>0)-(a.km.length>0))||b.ms.length-a.ms.length:b.ms.length-a.ms.length)||a.gb-b.gb);
+  return D.slice(0,TR.n)}
+const trSo=v=>(Math.round(v/1000)*1000).toLocaleString('vi-VN')+'đ';
+function trHtml(D){const sh=db.shop||{},n=D.length,cols=3,rows=Math.max(1,Math.ceil(n/cols)),link=(linkNgan()||'').replace(/^https?:\/\//,'');
+  const tieu=TR.tieu||(TR.kieu==='hang'?TR.hang.toUpperCase()+' GIÁ TỐT HÔM NAY':'MÁY HOT · GIÁ TỐT HÔM NAY');
+  const cell=x=>{const im=imgCua(x.ms[0].ten),k=x.km[0];return `<div class="trc">${k?`<span class="trk">${esc(kmChip(k))}</span>`:''}<div class="tri">${im?`<img src="${esc(im)}" alt="">`:'<span>📱</span>'}</div><b class="trn">${esc(x.k)}</b>${x.ny?`<s>${trSo(x.ny)}</s>`:'<s></s>'}<em>${trSo(x.gb)}</em></div>`};
+  return `<div class="trp r${rows}"><div class="trh"><div><b>${esc(sh.ten||'Cửa hàng điện thoại')}</b><span>${esc(tieu)}</span></div><i>${esc(new Date().toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit'}))}</i></div>
+    <div class="trg">${D.map(cell).join('')}</div>
+    <div class="trf"><div><b>📍 ${esc(sh.dc||'')}</b><b>📞 ${esc(sh.dt||'')}</b>${link?`<span>Xem đủ giá + khuyến mãi: ${esc(link)}</span>`:'<span>Trả góp 0% · Bảo hành chính hãng · Thu cũ đổi mới</span>'}</div>${link?'<div class="trq" id="trQr"></div>':''}</div></div>`}
+function renderTr(){const L=ttqMau().filter(x=>x.gb>0),HB=BRANDS.filter(b=>L.some(x=>trHang(x)===b));if(TR.kieu==='hang'&&!HB.includes(TR.hang))TR.hang=HB[0]||'OPPO';
+  const D=trDs(),opt=(k,v,t)=>`<button type="button" data-tr${k}="${esc(v)}" aria-pressed="${String(TR[k==='k'?'kieu':k==='h'?'hang':'n'])===String(v)}">${t}</button>`;
+  setTimeout(trVe,30);
+  return `<div class="wsheet" data-trx="1"><div class="wsbox trbox"><h3>🗞 Tờ rơi theo tồn kho</h3>
+    <div class="wtypes">${opt('k','ton','🔥 Tồn nhiều + KM')}${opt('k','hang','🏷 Theo hãng')}</div>
+    ${TR.kieu==='hang'?`<div class="schips">${HB.map(b=>`<button type="button" class="chip" data-trh="${esc(b)}" aria-pressed="${TR.hang===b}">${esc(b)} · ${L.filter(x=>trHang(x)===b).length}</button>`).join('')}</div>`:''}
+    <div class="wtypes t3">${[6,9,12].map(n=>opt('n',n,n+' máy')).join('')}</div>
+    <div class="trwrap"><div class="trscale" id="trPv"></div></div>
+    <small class="trnote">${D.length<TR.n?`Kho chỉ có ${D.length} mẫu có giá phù hợp — tờ rơi hiện ${D.length} máy.`:`${D.length} máy · giá lấy từ Kho, khuyến mãi lấy từ tab Khuyến mãi.`}</small>
+    <div class="trbt"><button type="button" class="btn" data-trsave="share">📤 Chia sẻ</button><button type="button" class="ghost" data-trsave="tai">⬇ Tải ảnh</button></div>
+    <button type="button" class="ghost" data-trcap="1">📋 Copy bài đăng kèm tờ rơi</button>
+    <button type="button" class="wlink" data-trx="1">Đóng</button></div></div>`}
+function trVe(){const pv=$('trPv');if(!pv||!TR)return;const D=trDs();pv.innerHTML=trHtml(D);const fit=()=>{const w=pv.parentElement.getBoundingClientRect().width||320;pv.style.transform='scale('+(w/1080)+')'};fit();requestAnimationFrame(fit);
+  const q=$('trQr');if(q){const L=linkNgan();loadQr().then(()=>{q.innerHTML='';new QRCode(q,{text:L,width:150,height:150,correctLevel:QRCode.CorrectLevel.M})}).catch(()=>{q.remove()})}}
+function trCap(){const D=trDs(),sh=db.shop||{},L=linkNgan()||'https://shopgon.vn';
+  return ['🔥 '+(TR.kieu==='hang'?TR.hang.toUpperCase()+' GIÁ TỐT TẠI '+(sh.ten||'SHOP').toUpperCase():'MÁY HOT GIÁ TỐT TẠI '+(sh.ten||'SHOP').toUpperCase()),'',...D.map(x=>'📱 '+x.k+' – '+trSo(x.gb)+(x.km[0]?' ('+kmChip(x.km[0])+')':'')),'',(sh.dc?'📍 '+sh.dc+'\n':'')+(sh.dt?'📞 '+sh.dt:''),CTA(L)].join('\n')}
+async function trXuat(cach){const pv=$('trPv');if(!pv)return;const el=pv.firstElementChild;if(!el)return;toast('Đang tạo ảnh…');
+  try{await loadH2i();const keep=pv.style.transform;pv.style.transform='none';const url=await htmlToImage.toJpeg(el,{quality:.92,width:1080,height:1350,pixelRatio:1,cacheBust:true});pv.style.transform=keep;
+    const ten='to-roi-'+(TR.kieu==='hang'?TR.hang:'hot')+'-'+todayIso()+'.jpg';chepText(trCap());
+    if(cach==='share'&&navigator.canShare){const bl=await (await fetch(url)).blob(),f=new File([bl],ten,{type:'image/jpeg'});if(navigator.canShare({files:[f]})){await navigator.share({files:[f],text:trCap()}).catch(()=>{});return}}
+    const a=document.createElement('a');a.href=url;a.download=ten;document.body.appendChild(a);a.click();a.remove();toast('Đã tải tờ rơi · bài đăng đã copy sẵn')}
+  catch(e){pv.style.transform=pv.style.transform||'';toast('Chưa tạo được ảnh, kiểm tra mạng rồi thử lại')}}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-trnew],[data-trx],[data-trk],[data-trh],[data-trn],[data-trsave],[data-trcap]');if(!b)return;const d=b.dataset;
+  if(d.trnew!==undefined){if(!stock().length){toast('Kho chưa có máy — nhập hàng trước');return}if(!KM)kmLoad().then(()=>{if(TR)trVe()});TR={kieu:'ton',hang:'OPPO',n:9};render();return}
+  if(d.trx!==undefined){if(b.classList.contains('wsheet')&&e.target!==b)return;TR=null;render();return}
+  if(d.trk){TR.kieu=d.trk;render();return}if(d.trh){TR.hang=d.trh;render();return}if(d.trn){TR.n=+d.trn;render();return}
+  if(d.trsave){trXuat(d.trsave);return}if(d.trcap!==undefined){chepText(trCap(),b,'✓ Đã copy bài đăng');return}});
 /* mẫu máy trong kho (gộp màu) */
 function ttqMau(){const G={};stock().forEach(m=>{const k=gk(m.ten);const x=G[k]=G[k]||{k,ms:[],hang:m.hang||''};x.ms.push(m)});
   return Object.values(G).map(x=>{const tg=TG?tgCua(x.k):null;return {...x,gb:Math.max(0,...x.ms.map(m=>m.giaBan||0)),img:imgCua(x.ms[0].ten)||(tg&&tg.a)||''}}).sort((a,b)=>b.ms.length-a.ms.length||a.k.localeCompare(b.k))}
@@ -2240,7 +2300,7 @@ const absUrl=u=>!u?'':/^https?:/.test(u)?u:'https://shopgon.vn'+(u.startsWith('/
 function ttqMuaHtml(){const m=typeof muaHienTai==='function'?muaHienTai():null,s=!m&&typeof muaSap==='function'?muaSap():null;const d=n=>String(n).slice(6,8)+'/'+String(n).slice(4,6);
   return m?`<div class="ttmua">${esc(m.nhan)} Đang mùa <b>${esc(m.ten)}</b>${m.co?' · ảnh tự có hiệu ứng':''}</div>`:s?`<div class="ttmua sap">Hiệu ứng mùa tự đổi theo ngày · sắp tới: ${esc(s.nhan)} từ ${d(s.tu)}</div>`:''}
 function renderTtq(){
-  if(XEM)return `<div class="panel"><h2>🖼 Ảnh truyền thông</h2><p>Kích hoạt Shop Gọn để dùng: mỗi tuần 2 bài, robot tự thiết kế ảnh đăng Facebook/Zalo.</p><button class="btn" data-gg="kh">Kích hoạt</button></div>`;
+  if(XEM&&!DEMO)return `<div class="panel"><h2>🖼 Ảnh truyền thông</h2><p>Kích hoạt Shop Gọn để dùng: mỗi tuần 2 bài, robot tự thiết kế ảnh đăng Facebook/Zalo.</p><button class="btn" data-gg="kh">Kích hoạt</button></div>`;
   if(!TTQ.ds&&!TTQ.busy&&!TTQ.loi)ttqTai();
   const han=TTQ.han||2,con=TTQ.con==null?'…':TTQ.con,st={cho:'⏳ Đang chờ',dang:'⚙️ Robot đang dựng',xong:'✅ Xong',loi:'⚠️ Chưa dựng được'};
   const the=x=>`<div class="ttcard ${x.tt}"><div class="tth"><b>${esc(x.ten||'Bài truyền thông')}</b><span class="ttst">${st[x.tt]||esc(x.tt)}${(x.tt==='cho'||x.tt==='dang')&&x.viTri?` · vị trí ${x.viTri}`:''}</span></div>
@@ -2254,9 +2314,9 @@ function renderTtq(){
   return `<div class="panel"><h2>🖼 Ảnh truyền thông</h2>
     <p class="ttsub">Shop chọn máy + khuyến mãi → robot thiết kế <b>đủ 15 mẫu</b> + viết sẵn bài đăng có link web của shop. Shop chỉ việc chọn mẫu ưng ý → Chia sẻ.</p>
     <div class="ttquota"><span>Tuần này còn <b>${con}/${han}</b> bài</span><small>Lượt mới mỗi thứ Hai</small></div>${ttqMuaHtml()}
-    <button class="btn" data-ttnew="1" style="width:100%;margin-top:10px"${TTQ.con===0?' disabled':''}>＋ Tạo bài mới</button>
+    <div class="ttbtn2"><button class="btn" data-trnew="1">🗞 Tạo tờ rơi<small>6–12 máy · có ngay, không trừ lượt</small></button><button class="ghost" data-ttnew="1"${TTQ.con===0?' disabled':''}>🖼 Ảnh 1 máy<small>Robot làm 15 mẫu</small></button></div>
     ${TTQ.loi?`<div class="alert amber" style="margin-top:10px"><b>${esc(TTQ.loi)}</b><span><button class="ghost" data-ttreload="1">Thử lại</button></span></div>`:''}</div>
-    ${ttqNew?renderTtqNew():''}
+    ${ttqNew?renderTtqNew():''}${TR?renderTr():''}
     <div class="ttlist">${TTQ.ds?(TTQ.ds.length?TTQ.ds.map(the).join(''):'<div class="empty">Chưa có bài nào. Bấm <b>＋ Tạo bài mới</b> để robot thiết kế ảnh cho shop.</div>'):'<div class="empty sm">Đang tải…</div>'}</div>
     <p class="kgnote" style="margin:10px 4px">Ảnh lưu 60 ngày. Muốn sửa giá/KM thì sửa ở <b>Kho</b> rồi tạo bài mới.</p>`}
 function renderTtqNew(){
