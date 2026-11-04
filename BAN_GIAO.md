@@ -254,3 +254,8 @@ Quy tắc: sửa app thì đổi BUILD trong index.html và app/ver.json cùng g
 - Chỉ dùng ảnh máy cùng nguồn shopgon.vn (ảnh TGDĐ ngoài miền bỏ để không lỗi xuất ảnh). Kho thiếu mẫu thì tờ rơi hiện ít hơn + ghi chú.
 - BUILD 20261104-1000. Test 69/69 (thêm test NV test + tờ rơi). Kiểm giao diện 0 lỗi.
 - Đề xuất đang chờ anh duyệt: nhân viên nhập hàng không thấy giá → gửi phiếu → chủ shop duyệt điền giá (đã gửi ảnh vẽ thử).
+
+## 33. CHỐT PHIÊN 04/11 09h30 — việc tiếp (anh đã duyệt)
+Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.md` (thiết kế đủ 2 việc dưới).
+1. **5 mẫu tờ rơi** (Xanh shop · Đỏ sale · Sang trọng · Tối giản · Cam tươi): code viết sẵn CHƯA test, lưu ở Project `claude/shopgon/patch_5_mau_to_roi_04-11.diff` → `git apply` → test + `_tam/kiem-giao-dien.py` → xuất 5 ảnh gửi anh chọn.
+2. **Nhân viên nhập hàng chỉ số lượng (không giá) → chủ shop duyệt là tự vào kho:** máy chủ v20 (`nvNhap_`, trạng thái phiếu trong `nvLogin_`, `nhapKq` trong `nvSync_`) + app NV (tab Nhập hàng) + app chủ (Phiếu nhân viên chờ duyệt ở Kho hàng/trang chủ, Duyệt · vào kho / Trả lại).
