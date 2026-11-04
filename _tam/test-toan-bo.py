@@ -347,6 +347,21 @@ async def main():
         await pg.screenshot(path='/tmp/pncho.png')
         await ctx.close()
 
+        # 12i. (04/11 20h45) NV: tab Truyền thông — link web của chủ (qua nvSync shop.web), copy được, xem KM, không sửa KM
+        ctx, pg, errs = await trang(b, '/app/?demo=1&test=1')
+        r = json.loads(await pg.evaluate("""(async()=>{const OWNX=JSON.parse(JSON.stringify(db));let SENT=[];window.fetch=async(u,o)=>{SENT.push(o&&o.body?JSON.parse(o.body):{});return {ok:true,json:async()=>({ok:true,don:[],nv:[]})}};
+          localStorage.setItem('sg_web_link','https://shopgon.vn/s/abc123');const k0=[...new Set(stock().map(m=>gk(m.ten)))][0];db.shop.km=[{id:'q1',sp:'g|'+k0,loai:'giam',gt:500000}];
+          db.sample=false;XEM=false;GG.token='t'.repeat(40);db.shop.nv=[{sdt:'0911',ten:'Lan'}];nvBusy=false;await nvSync();const gui=SENT.find(x=>x.act==='nvSync');const coWeb=gui&&gui.ton.shop.web==='https://shopgon.vn/s/abc123';
+          NV={sdt:'0911',ten:'Lan',phien:'P'};db=nvDb({shop:gui.ton.shop,may:gui.ton.may,hang:gui.ton.hang});render();
+          const kb=document.querySelector('nav.tabs button[data-v=km]');const nut=getComputedStyle(kb).display!=='none'&&kb.textContent.includes('Truyền thông');kb.click();await new Promise(r=>setTimeout(r,100));
+          const t=$('v-km').innerText;const hien=t.includes('shopgon.vn/s/abc123')&&t.includes(k0)&&t.includes('Giảm');const khongSua=!document.querySelector('#v-km [data-kmadd],#v-km [data-kmdel]');
+          let chep='';navigator.clipboard.writeText=async x=>{chep=x};document.querySelector('[data-nvweb=copy]').click();await new Promise(r=>setTimeout(r,50));
+          document.querySelector('[data-nvweb=bai]').click();await new Promise(r=>setTimeout(r,50));const bai=chep.includes('abc123')&&chep.includes(k0);
+          return JSON.stringify({coWeb,nut,hien,khongSua,bai})})()"""))
+        ok('NV Truyền thông: có link web của shop, copy link + bài đăng, xem KM (không sửa được)', all(r.values()) and not errs, (r, errs))
+        await pg.screenshot(path='/tmp/nvtt.png')
+        await ctx.close()
+
         # 12h. NV test: nhập hàng giả lập gửi
         ctx, pg, errs = await trang(b, '/app/?demo=1')
         await pg.evaluate("localStorage.setItem('shopgon_nv',JSON.stringify({sdt:'0900000000',ten:'NV test',phien:'TEST',test:1}));['shopgon_nvp','shopgon_nvpq','shopgon_nvpds'].forEach(k=>localStorage.removeItem(k))")

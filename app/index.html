@@ -276,7 +276,7 @@ body.nv .own,body.nv #sLoi,body.nv #pLoi{display:none!important}
 .nvbar{background:#eef2ff;border:1px solid #c7d2fe;color:#3730a3;border-radius:12px;padding:8px 12px;font-size:13px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:8px}
 .ketcard{background:linear-gradient(180deg,#fffaf0,#fff);border:2px solid #f0d08a}
 .ketrow{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed var(--line);font-size:14px}.ketrow:last-child{border:0}.ketbig{display:flex;justify-content:space-between;align-items:baseline;margin-top:8px;padding-top:10px;border-top:2px solid var(--ink)}.ketbig b{font-size:24px}
-body.nvmode nav.tabs button[data-v=add],body.nvmode nav.tabs button[data-v=rpt],body.nvmode nav.tabs button[data-v=km]{display:none}
+body.nvmode nav.tabs button[data-v=add],body.nvmode nav.tabs button[data-v=rpt]{display:none}
 .nbg{display:grid;grid-template-columns:1.1fr 1fr 1.2fr;gap:6px;align-items:start;padding:8px 0;border-bottom:1px solid var(--line)}.nbg:last-child{border:0}.nbg>span{display:flex;flex-direction:column;text-align:right}.nbg>span b{font-size:14.5px}.nbg small{color:#46506b;font-size:12px}.nbg i{font-style:normal}.nbh{padding:0 0 4px;font-size:12px;font-weight:700;color:#46506b;text-transform:uppercase}.nbbar{grid-column:1/-1;height:6px;background:#e4ecee;border-radius:4px}.nbbar i{display:block;height:100%;border-radius:4px}
 .pnhint{background:#f0faf7;border:1px dashed #9fd4c8;border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.45;margin-bottom:12px}
 .pncard{border:2px solid var(--pen)}.sug{border:1px solid var(--pen-line);border-radius:12px;background:#fff;margin:-4px 0 10px;overflow:auto;max-height:380px}.sug button{display:flex;align-items:center;gap:10px;width:100%;border:0;border-bottom:1px solid #eef3f2;background:#fff;padding:8px 10px;text-align:left;font-size:14px}.sug button:last-child{border-bottom:0}.sug img{width:40px;height:40px;object-fit:contain;flex:none;background:#f6faf9;border-radius:8px}.sug .t{flex:1;min-width:0}.sug .t b{font-weight:700}.sug .t small{display:block;color:#46506b;font-size:12px}.sug .sugngoai{background:#fffaf0}.sug .sugngoai b{color:#9a3412}.sug .dot{width:40px;height:40px;flex:none;border-radius:8px;background:#eef6f4;display:flex;align-items:center;justify-content:center}.pned{flex-basis:100%;display:flex;flex-direction:column;gap:6px;padding:6px 0 4px}.pnsl{display:flex;align-items:center;gap:6px}.pnsl span{flex:1;font-size:13px;color:#46506b}.pnsl input{width:70px;text-align:center}.pnsl .ghost{width:42px;font-size:18.5px;padding:6px 0}.pnims{display:flex;flex-wrap:wrap;gap:6px}.pnim{background:#eef6f4;border-radius:999px;padding:4px 6px 4px 10px;font-size:12px;display:inline-flex;align-items:center;gap:4px}.pnim button{border:0;background:var(--red-soft);color:var(--red);border-radius:999px;width:22px;height:22px;font-weight:800}.pnim.sold{background:#f1f1f1;color:#777;padding-right:10px}
@@ -778,7 +778,7 @@ function nvApply(o){if(o&&o.kind==='nhap'){/* 04/11 phiếu nhập của nhân v
   if(tr.length){const f=db.don.find(x=>x.bill===o.id);if(f)f.note=(f.note?f.note+' · ':'')+'⚠ IMEI đã bán trước đó: '+tr.join(', ')}
   return 1}
 async function nvSync(){if(nvBusy||NV||XEM||!GG.token||db.sample)return;nvBusy=true;
-  try{const ton={shop:{ten:db.shop.ten,bh:db.shop.bh,pct:db.shop.pct,mod:db.shop.mod,brands:db.shop.brands,bank:db.shop.bank,kho:db.shop.kho,km:kmChay()},
+  try{const ton={shop:{ten:db.shop.ten,bh:db.shop.bh,pct:db.shop.pct,mod:db.shop.mod,brands:db.shop.brands,bank:db.shop.bank,kho:db.shop.kho,km:kmChay(),web:linkNgan()},
       may:stock().map(m=>({imei:m.imei,ten:m.ten,hang:m.hang,giaBan:m.giaBan||0})),hang:db.hang.filter(h=>h.sl>0).map(h=>({id:h.id,ten:h.ten,nhom:h.nhom,loai:h.loai,sl:h.sl,giaBan:h.giaBan||0,min:h.min}))};
     const mq=nvMkQ(),gui=Object.keys(mq),kq=(db.shop.nhapKq||[]).slice();const r=await nvPost({act:'nvSync',token:GG.token,nv:(db.shop.nv||[]).map(x=>mq[x.sdt]?{...x,mk:mq[x.sdt]}:x),ton,ack:nvAck,nhapKq:kq});
     if(!r.ok){nvLastMsg='Chưa đồng bộ được: '+(r.msg||'lỗi máy chủ');return}
@@ -1231,7 +1231,7 @@ function mkIndex(){if(MKI||!KM)return MKI;MKI=new Map();KM.forEach(z=>{if(!z.img
 const imgCua=ten=>{if(!KM)return '';const I=mkIndex();const k=mKey(ten),mau=(/\s+-\s+([^-]+)$/.exec(ten)||[])[1];let L=I.get(k);
   if(!L){let best='';for(const kk of I.keys())if(kk.length>best.length&&(k.startsWith(kk)||kk.startsWith(k))&&Math.min(k.length,kk.length)>=4)best=kk;L=best?I.get(best):null}
   if(!L)return '';const x=mau&&L.find(z=>z.mau&&z.mau.toLowerCase()===mau.trim().toLowerCase());return (x||L[0]).img||''};
-function renderKmTab(){
+function renderKmTab(){if(NV){renderNvTT();return}
   if(!TG)tgLoad().then(()=>{if(view==='km')render()});
   if(!KM)kmLoad().then(()=>{if(view==='km')render()});
   const G={};stock().forEach(m=>{const k=gk(m.ten);const x=G[k]=G[k]||{k,ms:[],hang:m.hang||''};x.ms.push(m)});
@@ -1441,11 +1441,11 @@ function renderMore(){
 
 function render(){
   if(TG)giaTuDong();else if(!TGload&&!NV)tgLoad().then(()=>{if(giaTuDong())render()});
-  document.body.classList.toggle('nv',!OWN()||!!NV);document.body.classList.toggle('nvmode',!!NV);{const sb=document.querySelector('nav.tabs button[data-v=stock]'),tn=sb&&[...sb.childNodes].find(n=>n.nodeType===3&&n.nodeValue.trim());if(tn)tn.nodeValue=NV?'Nhập hàng':'Kho hàng'}if(!OWN()&&(more==='set'||more==='tien'))more='pin';
+  document.body.classList.toggle('nv',!OWN()||!!NV);document.body.classList.toggle('nvmode',!!NV);{const sb=document.querySelector('nav.tabs button[data-v=stock]'),tn=sb&&[...sb.childNodes].find(n=>n.nodeType===3&&n.nodeValue.trim());if(tn)tn.nodeValue=NV?'Nhập hàng':'Kho hàng'}{const kb=document.querySelector('nav.tabs button[data-v=km]'),tk=kb&&[...kb.childNodes].find(n=>n.nodeType===3&&n.nodeValue.trim());if(tk)tk.nodeValue=NV?'Truyền thông':'Khuyến mãi'}if(!OWN()&&(more==='set'||more==='tien'))more='pin';
   $('shopName').textContent=db.shop.ten||'Chưa đặt tên shop';
   $('today').textContent=['Chủ nhật','Thứ hai','Thứ ba','Thứ tư','Thứ năm','Thứ sáu','Thứ bảy'][new Date().getDay()]+', '+dmy(todayIso());
   $('mode').textContent=NV?'NV: '+(NV.ten||NV.sdt):DEMO?(TEST?'Tài khoản test':'Bản demo'):XEM?'Xem thử':db.sample?'Dữ liệu mẫu':GG.email?'Đã kích hoạt':'Trên máy này';
-  const old=stock().filter(m=>ageDays(m)>45).length;$('dotStock').textContent=old;$('dotStock').hidden=!old;
+  const old=NV?0:stock().filter(m=>ageDays(m)>45).length;$('dotStock').textContent=old;$('dotStock').hidden=!old;
   ({home:renderHome,sell:renderSell,add:renderAdd,stock:renderStock,rpt:renderRpt,km:renderKmTab,more:renderMore})[view]();
 }
 
@@ -2146,7 +2146,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261104-1320';let verLuc=0;
+const BUILD='20261104-2100';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
@@ -2302,6 +2302,28 @@ setTimeout(()=>ttqTai(true),6000);
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&Date.now()-TTQ.luc>60000)ttqTai(true)});
 
 
+/* ===== 04/11 20h45 anh Thái: TRUYỀN THÔNG cho nhân viên — link website cửa hàng (copy / gửi khách / xem) + xem khuyến mãi đang chạy (chỉ xem, không sửa) =====
+   Link web lấy từ chủ shop: nvSync gửi ton.shop.web = linkNgan() → máy chủ trả lại trong nvLogin.shop.web */
+const nvWeb=()=>{const w=(db.shop&&db.shop.web)||'';if(w)return w;return NV&&NV.test?location.origin+'/bg/?demo=1&xem=1':''};
+function renderNvTT(){const W=nvWeb(),G={};stock().forEach(m=>{const k=gk(m.ten);const x=G[k]=G[k]||{k,n:0,gb:0};x.n++;x.gb=Math.max(x.gb,m.giaBan||0)});
+  const L=Object.values(G).map(x=>({...x,km:kmCua('g|'+x.k)})).filter(x=>x.km.length).sort((a,b)=>b.n-a.n),H=db.hang.filter(h=>h.sl>0).map(h=>({h,km:kmCua('h|'+h.id)})).filter(x=>x.km.length);
+  const chip=k=>`<span class="wchip">🎁 ${esc(kmChip(k))}${k.den?` <i>đến ${esc(dmy(k.den).slice(0,5))}</i>`:''}</span>`;
+  $('v-km').innerHTML=`<div class="panel qa hw2 nvtt"><div class="qh"><b>🌐 Website cửa hàng</b></div>
+    ${W?`<div class="wl"><span>Link web bảng giá của shop</span><b>${esc(W.replace(/^https?:\/\//,''))}</b></div>
+      <div class="wb"><button type="button" class="wopen" data-nvweb="copy">📋 Copy link</button><button type="button" class="wopen" data-nvweb="gui">📤 Gửi link khách</button><button type="button" class="wopen" data-nvweb="xem">👁 Xem website</button><button type="button" class="wopen" data-nvweb="bai">📝 Copy bài đăng KM</button></div>`
+      :`<div class="pnhint">Chưa có link website. Nhờ chủ shop mở app Shop Gọn 1 lần để cập nhật link, rồi bấm <b>Tải lại</b>.</div><button class="ghost" data-nvreload="1">🔄 Tải lại</button>`}</div>
+  <div class="panel"><h2>🎁 Khuyến mãi đang chạy · ${L.length+H.length}</h2><small style="color:var(--muted)">Chỉ xem — chủ shop đặt khuyến mãi. Khi bán, khuyến mãi tự gắn vào đơn.</small>
+    <div class="list" style="margin-top:8px">${L.map(x=>`<div class="row" style="flex-wrap:wrap"><div class="n"><b>📱 ${esc(x.k)}</b><small class="num">${x.gb?money(x.gb)+' · ':''}còn ${x.n} máy</small></div><div class="wkm" style="width:100%">${x.km.map(chip).join('')}</div></div>`).join('')}
+    ${H.map(x=>`<div class="row" style="flex-wrap:wrap"><div class="n"><b>📦 ${esc(x.h.ten)}</b><small class="num">${x.h.giaBan?money(x.h.giaBan)+' · ':''}còn ${x.h.sl}</small></div><div class="wkm" style="width:100%">${x.km.map(chip).join('')}</div></div>`).join('')}
+    ${L.length+H.length?'':'<div class="empty">Hiện chưa có khuyến mãi nào.</div>'}</div></div>`}
+function nvBai(W){const G={};stock().forEach(m=>{const k=gk(m.ten);(G[k]=G[k]||{k,gb:0,n:0}).n++;G[k].gb=Math.max(G[k].gb,m.giaBan||0)});
+  const L=Object.values(G).filter(x=>kmCua('g|'+x.k).length).sort((a,b)=>b.n-a.n).slice(0,8),D=L.length?L:Object.values(G).sort((a,b)=>b.n-a.n).slice(0,6);
+  return ['🔥 '+(db.shop.ten||'Shop')+' — '+(L.length?'KHUYẾN MÃI HÔM NAY':'BẢNG GIÁ HÔM NAY')+' 🔥','',...D.map(x=>'📱 '+x.k+(x.gb?' — '+money(x.gb):'')+(kmCua('g|'+x.k).length?'\n   🎁 '+kmCua('g|'+x.k).map(kmChip).join(' · '):'')),'',CTA(W)].join('\n')}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-nvweb]');if(!b||!NV)return;const W=nvWeb(),a=b.dataset.nvweb;if(!W)return;
+  if(a==='copy'){chepText(W,b,'✓ Đã copy link');toast('Đã copy link — dán vào Zalo gửi khách');return}
+  if(a==='gui'){if(navigator.share&&/Android|iPhone|iPad/i.test(navigator.userAgent)){navigator.share({title:db.shop.ten||'Bảng giá',text:CTA(''),url:W}).catch(()=>{});return}chepText(W,b,'✓ Đã copy link');toast('Đã copy link — dán vào Zalo gửi khách');return}
+  if(a==='xem'){window.open(W,'_blank');return}
+  if(a==='bai'){chepText(nvBai(W),b,'✓ Đã copy bài');toast('Đã copy bài đăng — dán lên Zalo/Facebook')}});
 /* ===== 04/11 anh Thái: NHÂN VIÊN NHẬP HÀNG — NV chỉ chọn sản phẩm + số lượng/IMEI (KHÔNG thấy giá) → gửi phiếu → chủ shop duyệt là vào kho =====
    NV: tab dưới "Nhập hàng" → renderNvNhap · phiếu nháp localStorage shopgon_nvp · phiếu chờ gửi shopgon_nvpq · phiếu đã gửi + trạng thái shopgon_nvpds (máy chủ trả trong nvLogin.nhap)
    Chủ: nvApply gặp kind:'nhap' → db.shop.pnCho · duyệt dựng PN tạm rồi pnCommit · kết quả (ok/tra) xếp db.shop.nhapKq gửi kèm nvSync */
