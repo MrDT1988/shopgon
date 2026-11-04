@@ -387,6 +387,11 @@ body.nv .hmg>div.own{display:none}body.nv .hmg{grid-template-columns:1fr}
 .trk{position:absolute;top:10px;left:10px;right:10px;background:#dc2626;color:#fff;font-size:18px;font-weight:800;border-radius:10px;padding:3px 8px;z-index:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .trp.r4 .trn{font-size:21px}.trp.r4 .trc em{font-size:29px}.trp.r4 .trc s{font-size:18px;min-height:20px}.trp.r4 .trk{font-size:16px}
 .trf{background:#111827;color:#fff;padding:22px 40px;display:flex;justify-content:space-between;align-items:center;gap:20px}.trf b{display:block;font-size:27px;font-weight:800;line-height:1.35}.trf span{display:block;font-size:22px;color:#fde047;margin-top:6px;font-weight:700}.trq{background:#fff;padding:8px;border-radius:12px;line-height:0}.trq img,.trq canvas{width:150px!important;height:150px!important}
+.trmau{flex:none;display:flex;flex-wrap:wrap;gap:6px}.trmau::-webkit-scrollbar{display:none}.trmau button{flex:none;display:flex;align-items:center;gap:6px;border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px 6px 6px;font:inherit;font-size:13px;font-weight:700}.trmau button i{width:22px;height:22px;border-radius:50%;border:1px solid rgba(0,0,0,.1)}.trmau button[aria-pressed=true]{border-color:var(--pen);background:var(--pen-bg);color:var(--pen)}
+.trp.m-do{background:linear-gradient(180deg,#fff1f2,#fff 45%)}.m-do .trh{background:linear-gradient(135deg,#ef4444,#b91c1c)}.m-do .trh span{color:#fde047}.m-do .trc{border-color:#fecaca}.m-do .trc em{background:#fde047;color:#b91c1c;border-radius:12px;padding:2px 12px}.m-do .trk{background:#111827}.m-do .trf{background:#b91c1c}
+.trp.m-toi{background:#0b0f19;color:#f9fafb}.m-toi .trh{background:linear-gradient(135deg,#1f2937,#0b0f19);border-bottom:3px solid #d4a64a}.m-toi .trh span{color:#d4a64a;letter-spacing:.04em}.m-toi .trh i{background:rgba(212,166,74,.18);color:#f5d68a}.m-toi .trc{background:#151b2b;border-color:#2a3247;box-shadow:none}.m-toi .trn{color:#f9fafb}.m-toi .trc s{color:#6b7280}.m-toi .trc em{color:#f5d68a}.m-toi .trk{background:#d4a64a;color:#111827}.m-toi .trf{background:#000;border-top:3px solid #d4a64a}.m-toi .trf span{color:#f5d68a}
+.trp.m-trang{background:#fff}.m-trang .trh{background:#fff;color:#111827;border-bottom:4px solid #111827}.m-trang .trh span{color:#dc2626}.m-trang .trh i{background:#111827;color:#fff}.m-trang .trc{border:1.5px solid #e5e7eb;border-radius:16px;box-shadow:none}.m-trang .trc em{color:#111827}.m-trang .trk{background:#fff;color:#dc2626;border:2px solid #dc2626}.m-trang .trf{background:#f3f4f6;color:#111827}.m-trang .trf span{color:#dc2626}
+.trp.m-cam{background:linear-gradient(180deg,#fff7ed,#ffedd5)}.m-cam .trh{background:linear-gradient(135deg,#fb923c,#ea580c)}.m-cam .trh span{color:#fff;background:rgba(0,0,0,.18);display:inline-block;border-radius:12px;padding:4px 14px}.m-cam .trc{border:3px solid #fdba74;border-radius:26px}.m-cam .trc em{color:#ea580c}.m-cam .trk{background:#16a34a}.m-cam .trf{background:#7c2d12}.m-cam .trf span{color:#fed7aa}
 /* 02/11 (4) Bán + Nhập đồng bộ với Kho/Báo cáo: thẻ trắng bo góc, thanh tab chung, chip chung */
 .seg.top{padding:5px;border-radius:16px;margin-bottom:12px}
 .seg.top button{font-size:16px;padding:13px 4px;min-height:50px;border-radius:12px}
@@ -2095,7 +2100,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261104-1000';let verLuc=0;
+const BUILD='20261104-1100';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
@@ -2253,6 +2258,7 @@ document.addEventListener('visibilitychange',()=>{if(!document.hidden&&Date.now(
 
 /* ===== 04/11 anh Thái: TỜ RƠI — 6/9/12 máy trên 1 tờ, theo tồn kho (tồn nhiều + KM) hoặc theo hãng. Dựng ngay trên máy (html-to-image), không qua robot, không trừ lượt ===== */
 let TR=null;
+const TR_MAU=[['xanh','Xanh shop','linear-gradient(135deg,var(--pen-hi),var(--pen-dk))'],['do','Đỏ sale','linear-gradient(135deg,#ef4444,#b91c1c)'],['toi','Sang trọng','linear-gradient(135deg,#1f2937,#0b0f19)'],['trang','Tối giản','#f3f4f6'],['cam','Cam tươi','linear-gradient(135deg,#fb923c,#ea580c)']];
 function loadH2i(){return window.htmlToImage?Promise.resolve():new Promise((ok,bad)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js';s.onload=ok;s.onerror=bad;document.head.appendChild(s)})}
 const trHang=x=>BRANDS.includes(x.hang)?x.hang:'Khác';
 function trDs(){const L=ttqMau().map(x=>{const km=kmCua('g|'+x.k),tg=TG?tgCua(x.k):null,ny=tg&&tg.ny>x.gb?tg.ny:0;return {...x,km,ny}}).filter(x=>x.gb>0);
@@ -2263,7 +2269,7 @@ const trSo=v=>(Math.round(v/1000)*1000).toLocaleString('vi-VN')+'đ';
 function trHtml(D){const sh=db.shop||{},n=D.length,cols=3,rows=Math.max(1,Math.ceil(n/cols)),link=(linkNgan()||'').replace(/^https?:\/\//,'');
   const tieu=TR.tieu||(TR.kieu==='hang'?TR.hang.toUpperCase()+' GIÁ TỐT HÔM NAY':'MÁY HOT · GIÁ TỐT HÔM NAY');
   const cell=x=>{const im=imgCua(x.ms[0].ten),k=x.km[0];return `<div class="trc">${k?`<span class="trk">${esc(kmChip(k))}</span>`:''}<div class="tri">${im?`<img src="${esc(im)}" alt="">`:'<span>📱</span>'}</div><b class="trn">${esc(x.k)}</b>${x.ny?`<s>${trSo(x.ny)}</s>`:'<s></s>'}<em>${trSo(x.gb)}</em></div>`};
-  return `<div class="trp r${rows}"><div class="trh"><div><b>${esc(sh.ten||'Cửa hàng điện thoại')}</b><span>${esc(tieu)}</span></div><i>${esc(new Date().toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit'}))}</i></div>
+  return `<div class="trp r${rows} m-${TR.mau||'xanh'}"><div class="trh"><div><b>${esc(sh.ten||'Cửa hàng điện thoại')}</b><span>${esc(tieu)}</span></div><i>${esc(new Date().toLocaleDateString('vi-VN',{day:'2-digit',month:'2-digit'}))}</i></div>
     <div class="trg">${D.map(cell).join('')}</div>
     <div class="trf"><div><b>📍 ${esc(sh.dc||'')}</b><b>📞 ${esc(sh.dt||'')}</b>${link?`<span>Xem đủ giá + khuyến mãi: ${esc(link)}</span>`:'<span>Trả góp 0% · Bảo hành chính hãng · Thu cũ đổi mới</span>'}</div>${link?'<div class="trq" id="trQr"></div>':''}</div></div>`}
 function renderTr(){const L=ttqMau().filter(x=>x.gb>0),HB=BRANDS.filter(b=>L.some(x=>trHang(x)===b));if(TR.kieu==='hang'&&!HB.includes(TR.hang))TR.hang=HB[0]||'OPPO';
@@ -2273,6 +2279,7 @@ function renderTr(){const L=ttqMau().filter(x=>x.gb>0),HB=BRANDS.filter(b=>L.som
     <div class="wtypes">${opt('k','ton','🔥 Tồn nhiều + KM')}${opt('k','hang','🏷 Theo hãng')}</div>
     ${TR.kieu==='hang'?`<div class="schips">${HB.map(b=>`<button type="button" class="chip" data-trh="${esc(b)}" aria-pressed="${TR.hang===b}">${esc(b)} · ${L.filter(x=>trHang(x)===b).length}</button>`).join('')}</div>`:''}
     <div class="wtypes t3">${[6,9,12].map(n=>opt('n',n,n+' máy')).join('')}</div>
+    <div class="trmau">${TR_MAU.map(([k,t,c])=>`<button type="button" data-trm="${k}" aria-pressed="${(TR.mau||'xanh')===k}"><i style="background:${c}"></i>${t}</button>`).join('')}</div>
     <div class="trwrap"><div class="trscale" id="trPv"></div></div>
     <small class="trnote">${D.length<TR.n?`Kho chỉ có ${D.length} mẫu có giá phù hợp — tờ rơi hiện ${D.length} máy.`:`${D.length} máy · giá lấy từ Kho, khuyến mãi lấy từ tab Khuyến mãi.`}</small>
     <div class="trbt"><button type="button" class="btn" data-trsave="share">📤 Chia sẻ</button><button type="button" class="ghost" data-trsave="tai">⬇ Tải ảnh</button></div>
@@ -2288,10 +2295,10 @@ async function trXuat(cach){const pv=$('trPv');if(!pv)return;const el=pv.firstEl
     if(cach==='share'&&navigator.canShare){const bl=await (await fetch(url)).blob(),f=new File([bl],ten,{type:'image/jpeg'});if(navigator.canShare({files:[f]})){await navigator.share({files:[f],text:trCap()}).catch(()=>{});return}}
     const a=document.createElement('a');a.href=url;a.download=ten;document.body.appendChild(a);a.click();a.remove();toast('Đã tải tờ rơi · bài đăng đã copy sẵn')}
   catch(e){pv.style.transform=pv.style.transform||'';toast('Chưa tạo được ảnh, kiểm tra mạng rồi thử lại')}}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-trnew],[data-trx],[data-trk],[data-trh],[data-trn],[data-trsave],[data-trcap]');if(!b)return;const d=b.dataset;
-  if(d.trnew!==undefined){if(!stock().length){toast('Kho chưa có máy — nhập hàng trước');return}if(!KM)kmLoad().then(()=>{if(TR)trVe()});TR={kieu:'ton',hang:'OPPO',n:9};render();return}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-trnew],[data-trx],[data-trk],[data-trh],[data-trn],[data-trm],[data-trsave],[data-trcap]');if(!b)return;const d=b.dataset;
+  if(d.trnew!==undefined){if(!stock().length){toast('Kho chưa có máy — nhập hàng trước');return}if(!KM)kmLoad().then(()=>{if(TR)trVe()});TR={kieu:'ton',hang:'OPPO',n:9,mau:(()=>{try{return localStorage.getItem('sg_tr_mau')||'xanh'}catch(_){return 'xanh'}})()};render();return}
   if(d.trx!==undefined){if(b.classList.contains('wsheet')&&e.target!==b)return;TR=null;render();return}
-  if(d.trk){TR.kieu=d.trk;render();return}if(d.trh){TR.hang=d.trh;render();return}if(d.trn){TR.n=+d.trn;render();return}
+  if(d.trk){TR.kieu=d.trk;render();return}if(d.trh){TR.hang=d.trh;render();return}if(d.trn){TR.n=+d.trn;render();return}if(d.trm){TR.mau=d.trm;try{localStorage.setItem('sg_tr_mau',d.trm)}catch(_){}render();return}
   if(d.trsave){trXuat(d.trsave);return}if(d.trcap!==undefined){chepText(trCap(),b,'✓ Đã copy bài đăng');return}});
 /* mẫu máy trong kho (gộp màu) */
 function ttqMau(){const G={};stock().forEach(m=>{const k=gk(m.ten);const x=G[k]=G[k]||{k,ms:[],hang:m.hang||''};x.ms.push(m)});

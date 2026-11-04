@@ -293,6 +293,14 @@ async def main():
         await pg.evaluate("TR.kieu='hang';TR.hang='Samsung';TR.n=6;render()"); await pg.wait_for_timeout(300)
         n6 = await pg.evaluate("[...document.querySelectorAll('#trPv .trn')].map(x=>x.textContent)")
         ok('Tờ rơi: 9 máy theo tồn kho, 6 máy theo hãng đúng hãng', n9 == 9 and len(n6) == 6 and all('Samsung' in x for x in n6) and not errs, (n9, n6, errs))
+        # 12f. (04/11) 5 mẫu tờ rơi: chọn mẫu đổi lớp, nhớ mẫu, mở lại vẫn mẫu đó
+        mau = []
+        for m in ['xanh', 'do', 'toi', 'trang', 'cam']:
+            await pg.click(f'[data-trm="{m}"]'); await pg.wait_for_timeout(150)
+            mau.append(await pg.evaluate("document.querySelector('#trPv .trp').classList.contains('m-'+TR.mau)&&document.querySelector('[data-trm][aria-pressed=true]').dataset.trm===TR.mau"))
+        await pg.click('[data-trm="toi"]'); await pg.evaluate("TR=null;render()"); await pg.click('[data-trnew]'); await pg.wait_for_timeout(300)
+        nho = await pg.evaluate("TR.mau==='toi'&&!!document.querySelector('#trPv .m-toi')")
+        ok('Tờ rơi: 5 mẫu chọn được, nhớ mẫu đã chọn', all(mau) and nho and not errs, (mau, nho, errs))
         await ctx.close()
 
         # 13. Các trang khác + cài app
