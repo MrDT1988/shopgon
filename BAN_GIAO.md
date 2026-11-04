@@ -286,5 +286,9 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 
 ## 37. (05/11 02h30) GIỮ CHỖ IMEI khi có mạng (lớp 2 chống bán trùng)
 - App: thêm máy vào đơn → `giuImei([imei],'giu')` gửi `act:'nvGiu'` (chủ: `token`; NV: `sdt`+`phien`; kèm `may` = mã máy `sg_may`), chờ tối đa 4 giây; máy khác đang giữ / đã bán → hộp báo + dòng đỏ trên đơn ("NV Lan đang bán máy này từ 10:05"). Bỏ khỏi đơn → `bo`; bán xong (cả NV gửi đơn) → `ban`; hủy đơn / trả hàng → `mo`. Mất mạng hoặc máy chủ chưa có lệnh → bỏ qua êm (lớp 1 báo sau đồng bộ vẫn chạy).
-- **Máy chủ CHƯA nâng lên v21** (bộ lọc chặn thao tác sửa Apps Script tự động 05/11 02h): mã `giuImei_` + 1 dòng route trong `nvApi_` để trong Project `claude/shopgon/GiuImei_v21.gs`. Dán xong triển khai bản mới (giữ URL) là chạy.
+- **Máy chủ v21 ĐÃ TRIỂN KHAI 05/11 01h40** (giữ URL /exec, `giuImei_` + route `nvGiu` trong `nvApi_`, 79 hàm). Gọi thử route sống: trả đúng "Phien dang nhap het han" với phiên giả.
 - Test 49/49 (máy chủ giả lập), test toàn bộ 75/75, giao diện 0 lỗi. BUILD 20261105-0230.
+
+## 38. (05/11 02h45) Gọn menu Thêm (anh Thái: trùng Kho + Truy cập nhanh)
+- `MENU_TRUNG` = hist, kh, chi (đã ở Truy cập nhanh Trang chủ) · kk, ncc, look (đã ở Kho hàng) → không hiện ở Thêm. Nhóm mới "🗂 Dữ liệu & sao lưu": **Sổ dữ liệu · Sao lưu** (`more='solieu'`, chuyển khỏi Cài đặt — anh không tìm thấy khi để trong Cài đặt) + Nhật ký thay đổi. Chưa mở được sổ → nút "Mở lại sổ dữ liệu".
+- Test 50/50, test toàn bộ 75/75, giao diện 0 lỗi. BUILD 20261105-0245.
