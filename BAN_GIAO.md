@@ -240,3 +240,10 @@ Quy tắc: sửa app thì đổi BUILD trong index.html và app/ver.json cùng g
 - Lỗi phụ: ở màn đăng nhập (chế độ xem thử) bấm nút "Vào bán hàng" bị chặn bởi bộ chặn XEM → mở bảng Kích hoạt (chỉ bấm Enter trên bàn phím mới vào được). Đã cho `#fNvLogin` qua.
 - Test mới: mở lại app 2 lần vẫn đăng nhập, vào thẳng màn Bán, không lỗi. BUILD 20261102-1530. Test 66/66.
 - Lưu ý iPhone: Safari và app "Thêm vào MH chính" giữ đăng nhập RIÊNG — nhân viên đăng nhập trong cái nào thì dùng cái đó (cài app xong đăng nhập lại 1 lần trong app).
+
+## 31. (04/11) Nhập hàng có lại ô GIÁ BÁN (anh Thái: nhập giá nhập + giá bán 1 lần cho dễ)
+- Form máy: 2 ô **Giá nhập / máy** + **Giá bán / máy** (`aGB`); chọn máy đã có thì tự điền giá đang bán; máy mới thì gợi ý giá niêm yết (`aGBh`). Bỏ trống = giữ giá đang bán / lấy giá niêm yết tự cập nhật như cũ.
+- Form phụ kiện: **Giá nhập / cái** + **Giá bán / cái** (`hGB`, món đã có thì điền sẵn). Dòng phiếu nhập: thêm ô Giá bán (`data-pngb`, sửa trước khi lưu).
+- Lưu phiếu (`pnCommit`): dòng máy có giá bán → áp cho MỌI máy tồn cùng mẫu (mọi màu) + đánh dấu `db.shop.giaTay[mẫu]=1` (không bị giá niêm yết tự động đè). Phụ kiện → `h.giaBan`. Kho vẫn sửa giá được như cũ.
+- Sửa kèm: trước đây chọn máy đã có trong ô tên bị lỗi ngầm (`$('aGB')` null) — nay hết.
+- BUILD 20261104-0900. Test 67/67 (thay test "không còn ô giá bán" bằng test có ô + test nhập kèm giá bán). Kiểm giao diện 0 lỗi.

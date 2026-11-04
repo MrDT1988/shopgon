@@ -52,7 +52,7 @@ async def main():
         ok('Lưu phiếu: 2 máy vào kho', len(r['may']) == 2 and all(x.endswith('|ton') for x in r['may']), r)
         ok('Lưu phiếu: phụ kiện vào kho đúng SL', r['op'] == 10, r)
         ten_may = r['may'][0].split('|')[0]
-        ok('Nhập hàng không còn ô giá bán', await E("go('add');addMode='may';render();!document.getElementById('aGB')&&!document.getElementById('hGB')"))
+        ok('Nhập hàng có ô giá nhập + giá bán (máy, phụ kiện, dòng phiếu)', await E("go('add');addMode='may';render();const a=!!document.getElementById('aGB');addMode='hang';render();const b=!!document.getElementById('hGB');addMode='may';render();a&&b"))
         # 2b. Giá bán đặt 1 chỗ ở Kho
         hid = await E("db.hang.find(h=>h.ten==='Ốp test').id")
         await E("go('stock');khoTab='kho';stockMode='hang';render()"); await pg.fill(f'[data-kgh="{hid}"]', '50.000'); await pg.press(f'[data-kgh="{hid}"]', 'Tab'); await pg.wait_for_timeout(150)
@@ -83,6 +83,16 @@ async def main():
         await pg.click(f'[data-pnsl="{i_pk}"][data-dx="1"]'); await pg.click(f'[data-pnimx="{i_m}"][data-k="1"]'); await pg.click('[data-pnsave]'); await pg.wait_for_timeout(200)
         r = json.loads(await S("{op:db.hang.find(h=>h.ten==='Ốp test').sl,n:db.may.filter(m=>m.imei.startsWith('8600000000010')).length,id:db.pn[db.pn.length-1].id}"))
         ok('Sửa phiếu: +1 phụ kiện, bỏ 1 IMEI, giữ mã phiếu', r['op'] == 11 and r['n'] == 1 and r['id'] == pid, r)
+        # 2a2. (04/11) Nhập kèm giá bán → áp mọi máy cùng mẫu + phụ kiện
+        await E("PN={dong:[],ncc:'',ngay:''};pnSave();go('add');addTab='moi';addMode='may';render()")
+        await pg.fill('#aTen', ten_may); await pg.dispatch_event('#aTen','input'); await E("$('aSug')&&($('aSug').hidden=true)")
+        await pg.fill('#aImei', '860000000002009'); await pg.fill('#aGN', '9.000.000'); await pg.fill('#aGB', '13.500.000')
+        await pg.click('#fAdd button[type=submit]'); await pg.wait_for_timeout(150)
+        await E("addMode='hang';render()"); await pg.fill('#hTen', 'Kính test'); await pg.fill('#hSl', '2'); await pg.fill('#hGN', '20.000'); await pg.fill('#hGB', '45.000')
+        await pg.click('#fAddH button[type=submit]'); await pg.wait_for_timeout(150)
+        await pg.click('[data-pnsave]'); await pg.wait_for_timeout(300)
+        r = json.loads(await S(f"{{may:db.may.filter(m=>m.ten==={ten_may!r}&&m.tt==='ton').map(m=>m.giaBan),op:db.hang.find(h=>h.ten==='Kính test').giaBan,tay:!!(db.shop.giaTay||{{}})[gk({ten_may!r})]}}"))
+        ok('Nhập kèm giá bán: áp mọi máy cùng mẫu + phụ kiện, giữ giá shop', len(r['may']) >= 2 and all(x == 13500000 for x in r['may']) and r['op'] == 45000 and r['tay'], r)
 
         # 4. Bán: máy + 2 ốp + KM giảm + tặng
         await E("go('sell')"); await pg.fill('#sImei', '860000000001001'); await pg.wait_for_timeout(150)
