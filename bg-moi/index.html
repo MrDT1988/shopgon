@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bảng giá online · Shop Gọn</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js"></script>
+<style>
+:root{--ngoc:#0f766e;--ngoc2:#e6f4f1;--muc:#10201e;--xam:#5d6f6c;--vien:#d5e4e1;--nen:#f6faf9;--do:#d61f1a;--vang:#ffd23f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--nen);color:var(--muc);font:15px/1.45 "Be Vietnam Pro",system-ui,sans-serif}
+header{background:var(--ngoc);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:5}
+header b{font-size:17px}header small{opacity:.8;margin-left:auto;font-size:12px}
+.bao{max-width:1150px;margin:0 auto;padding:14px 16px 40px;display:grid;grid-template-columns:minmax(0,520px) minmax(0,1fr);gap:20px}
+@media(max-width:940px){.bao{grid-template-columns:1fr}}
+.the{background:#fff;border:1px solid var(--vien);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.the h3{margin:0;font-size:15px;color:var(--ngoc);text-transform:uppercase;letter-spacing:.06em}
+label{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:var(--xam)}
+input,select{font:inherit;font-size:16px;padding:9px 11px;border:1px solid var(--vien);border-radius:10px;background:#fff;color:var(--muc);width:100%}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.tabs button{flex:1 0 auto;border:1.5px solid var(--vien);background:#fff;border-radius:999px;padding:8px 14px;font:inherit;font-weight:700;color:var(--xam);white-space:nowrap}
+.tabs button.on{border-color:var(--ngoc);background:var(--ngoc);color:#fff}
+.goiy{max-height:220px;overflow:auto;border:1px solid var(--vien);border-radius:10px;display:none}
+.goiy div{padding:9px 12px;border-bottom:1px solid #eef3f2;cursor:pointer}
+.goiy div:hover{background:var(--ngoc2)}
+.dong{border:1px solid var(--vien);border-radius:12px;padding:10px;display:grid;grid-template-columns:52px minmax(0,1fr) 26px;gap:10px;align-items:start}
+.dong img{width:52px;height:66px;object-fit:contain}
+.dong .t{font-weight:700}.dong .t small{font-weight:600;color:var(--ngoc);margin-left:6px}
+.dong .o{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+.dong .o .rong{grid-column:1/-1}
+.dong .o input,.dong .o select{font-size:14px;padding:7px 8px}
+.pk{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) minmax(0,1.2fr) 26px;gap:6px;align-items:center}
+.pk input{font-size:14px;padding:7px 8px}
+.xoa{border:0;background:none;font-size:18px;color:var(--xam);cursor:pointer}
+.nut{border:0;border-radius:12px;padding:13px;font:inherit;font-weight:800;font-size:16px;background:var(--ngoc);color:#fff;cursor:pointer;text-align:center;text-decoration:none;display:block}
+.nut.phu{background:#fff;color:var(--ngoc);border:1.5px solid var(--ngoc);padding:10px}
+.nut.zalo{background:#0068ff}
+.khung{width:100%;max-width:520px;aspect-ratio:1080/1350;overflow:hidden;border-radius:10px;position:relative;background:#eee;margin:0 auto}
+.khung>div{position:absolute;left:0;top:0;transform-origin:0 0}
+.ghi{font-size:12px;color:var(--xam)}
+#cho{position:fixed;left:-99999px;top:0}
+.p{width:1080px;height:1350px;position:relative;overflow:hidden;background:linear-gradient(170deg,#0b3f7c 0,#06223f 60%);font-family:"Be Vietnam Pro",sans-serif;color:#fff}
+.p .dau{padding:50px 60px 24px;display:flex;justify-content:space-between;align-items:flex-end}
+.p .dau b{font-size:72px;font-weight:900;letter-spacing:-.02em;line-height:1}
+.p .dau span{font-size:26px;opacity:.85}
+.p .luoi{position:absolute;left:50px;right:50px;top:200px;bottom:170px;display:grid;gap:18px}
+.p .c{background:#fff;color:#10201e;border-radius:24px;padding:16px;display:flex;flex-direction:column;align-items:center;text-align:center;position:relative;min-height:0}
+.p .c img{flex:1;min-height:0;width:100%;object-fit:contain}
+.p .c .n{font-weight:800;line-height:1.15;margin-top:8px}
+.p .c .dl{color:#5d6f6c}
+.p .c .g{font-weight:900;color:#d61f1a;line-height:1.1}
+.p .c .cu{text-decoration:line-through;color:#8a9a97}
+.p .c .tag{position:absolute;top:12px;left:12px;background:#ffd23f;color:#3a2a00;font-weight:900;border-radius:10px;padding:4px 10px}
+.p .chan{position:absolute;left:0;right:0;bottom:0;height:150px;background:#ffd23f;color:#06223f;display:flex;justify-content:space-between;align-items:center;padding:0 60px;font-size:26px}
+.p .chan b{font-size:36px;display:block}.p .chan .dt{font-size:46px;font-weight:900}
+.noimg{display:grid;place-items:center;background:var(--ngoc2);border-radius:10px;flex:none}
+.dong .sao{color:#c9d6d3}.dong .sao.on{color:#e0a400}
+/* ===== 02/11 TRANG KHÁCH gọn — 1 khung hình: 3 máy ngang × 4 máy dọc, giá + giá niêm yết gạch ngang; khuyến mãi xem khi bấm vào máy ===== */
+.xem{--ch:#0f766e;--ch2:#e7f6f3;--do2:#d7263d;--muc2:#111827;--xam2:#6b7280;--vien2:#e5e7eb;max-width:640px;margin:0 auto;padding:0 0 76px;background:#f5f6f8;min-height:100vh;color:var(--muc2)}
+.xem .top{background:#fff;padding:8px 12px 7px;border-bottom:1px solid var(--vien2)}
+.xem .top .hang1{display:flex;align-items:center;gap:10px}
+.xem .top .logo{flex:none;width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#14b8a6,#0f766e);color:#fff;display:grid;place-items:center;font-weight:900;font-size:17px}
+.xem .top .tt{flex:1;min-width:0}.xem .top .tt b{font-size:16px;font-weight:900;display:block;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.xem .top .dc{display:block;color:var(--xam2);font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.xem .top .cnt{flex:none;background:var(--ch2);color:var(--ch);border-radius:999px;padding:3px 9px;font-size:11.5px;font-weight:700;white-space:nowrap}
+.xem .timx{margin-top:6px;width:100%;border:1.5px solid var(--vien2);background:#f9fafb;border-radius:10px;padding:6px 12px;font-size:15px}
+.xem .timx:focus{outline:0;border-color:var(--ch);background:#fff}
+.xem .tabs{position:sticky;top:0;z-index:4;background:#fff;padding:5px 10px;gap:6px;border-bottom:1px solid var(--vien2);box-shadow:0 2px 6px rgba(0,0,0,.03);overflow-x:auto;scrollbar-width:none}.xem .tabs::-webkit-scrollbar{display:none}
+.xem .tabs button{flex:0 0 auto;border:1.5px solid var(--vien2);background:#fff;color:#374151;border-radius:999px;padding:5px 12px;font-weight:800;font-size:13px}
+.xem .tabs button.on{border-color:var(--ch);background:var(--ch);color:#fff}
+.xem .ds{padding:6px 8px 6px}
+.xem .luoi{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+@media(min-width:560px){.xem .luoi{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.xem .c{background:#fff;border:1px solid #eef0f3;border-radius:12px;padding:4px 5px 5px;display:flex;flex-direction:column;min-width:0;position:relative;font:inherit;color:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.xem .c:active{background:#f3f4f6}
+.xem .c.het{opacity:.55}
+.xem .c>span{display:block}
+.xem .c .anh{height:50px;display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:3px;overflow:hidden}
+.xem .c .anh img{width:100%;height:100%;object-fit:contain}
+.xem .c .anh .noimg{width:100%;height:100%;font-size:26px;background:#f3f4f6;border-radius:8px;display:grid;place-items:center}
+.xem .c .pc{position:absolute;top:0;left:0;background:var(--do2);color:#fff;font-weight:800;border-radius:5px;padding:0 4px;font-size:10px;line-height:15px;z-index:1}
+.xem .c .kmb{position:absolute;top:0;right:0;font-size:12px;line-height:15px;z-index:1}
+.xem .c .hh{position:absolute;left:0;right:0;bottom:2px;text-align:center;background:rgba(17,24,39,.72);color:#fff;font-size:10px;font-weight:700;border-radius:5px;padding:1px 0;z-index:1}
+.xem .c .n{font-weight:700;font-size:11px;line-height:1.2;height:2.4em;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.xem .c .g{font-size:13px;font-weight:900;color:var(--do2);line-height:1.2;margin-top:2px;white-space:nowrap}
+.xem .c .ny{font-size:10px;color:var(--xam2);line-height:1.2;min-height:12px;white-space:nowrap}
+.xem .pkl{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.xem .tieu{font-weight:900;font-size:15px;padding:8px 4px 0}.xem .tieu small{color:var(--xam2);font-weight:600;font-size:12.5px;margin-left:4px}
+.xem .pkr{background:#fff;border:1px solid #eef0f3;border-radius:12px;padding:10px 12px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.xem .pkr b{font-size:14px}.xem .pkr small{display:block;color:#c2410c;font-weight:700;font-size:12px;margin-top:2px}.xem .pkr .g{font-weight:900;color:var(--do2);white-space:nowrap}
+.xem .trong{color:var(--xam2);padding:24px 0;text-align:center}
+.xem .cuoi{text-align:center;font-size:11px;color:#9ca3af;padding:6px 16px}
+.xem .goi{position:fixed;left:0;right:0;bottom:0;padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px));background:#fff;border-top:1px solid var(--vien2);display:flex;gap:8px;max-width:640px;margin:0 auto;z-index:6}
+.xem .goi a,.xem .goi button{flex:1;padding:10px 6px;font-size:14.5px;border-radius:12px}
+.xem .goi .goi1{background:#16a34a}
+.xem .bs{position:fixed;inset:0;z-index:20;display:flex;align-items:flex-end;justify-content:center;background:rgba(17,24,39,.5)}
+.xem .bs[hidden]{display:none}
+.xem .bsc{background:#fff;width:100%;max-width:640px;border-radius:20px 20px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px));max-height:84vh;overflow:auto;position:relative}
+.xem .bsx{position:absolute;top:10px;right:12px;border:0;background:#f3f4f6;border-radius:50%;width:30px;height:30px;font-size:15px;color:#374151;cursor:pointer}
+.xem .bsh{display:flex;gap:12px;align-items:center;padding-right:30px}
+.xem .bsh .im{flex:none;width:92px;height:104px;display:grid;place-items:center}.xem .bsh .im img{max-width:100%;max-height:100%;object-fit:contain}.xem .bsh .im .noimg{width:92px;height:104px;font-size:38px;background:#f3f4f6;border-radius:12px}
+.xem .bsh .t{font-weight:800;font-size:15.5px;line-height:1.3}
+.xem .bsh .dl{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}.xem .bsh .dl span{font-size:11.5px;font-weight:700;color:#374151;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:6px;padding:1px 7px}
+.xem .bsh .g{font-size:22px;font-weight:900;color:var(--do2);line-height:1.2;margin-top:6px}
+.xem .bsh .ny{font-size:13px;color:var(--xam2)}.xem .bsh .ny b{color:#16a34a}
+.xem .bsk{margin-top:12px;background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:10px 12px}
+.xem .bsk h5{margin:0 0 6px;font-size:13.5px;font-weight:900;color:#c2410c}
+.xem .bsk div{font-size:13.5px;font-weight:600;color:#374151;line-height:1.4;padding:2px 0}
+.xem .bsk.khong{background:#f9fafb;border-color:#e5e7eb;color:var(--xam2);font-size:13px}
+.xem .bss{margin-top:10px;font-size:13px;font-weight:700;color:#16a34a}.xem .bss.het{color:#9ca3af}
+.xem .bsz{margin-top:12px;display:flex;gap:8px}.xem .bsz .hoi{flex:1;border:0;background:#0068ff;color:#fff;border-radius:12px;padding:12px 8px;font:800 15px/1.2 inherit;cursor:pointer}
+.xem .toast{position:fixed;left:50%;bottom:84px;transform:translate(-50%,20px);background:#111827;color:#fff;font-size:14px;font-weight:600;padding:10px 16px;border-radius:12px;opacity:0;transition:.2s;pointer-events:none;z-index:60;max-width:92vw;text-align:center}
+.xem .toast.on{opacity:1;transform:translate(-50%,0)}
+.xem .chu{position:relative;z-index:7;display:flex;align-items:center;gap:8px;padding:8px 12px;background:#111827;color:#fff;font-size:12.5px}
+.xem .chu a{color:#fff;text-decoration:none;font-weight:800}.xem .chu span{flex:1;opacity:.7;text-align:center}
+.xem .chu button{border:0;background:#ffd400;color:#111827;font-weight:800;border-radius:999px;padding:6px 11px;font-size:12.5px}
+
+/* 05/11 thẻ máy chung tỉ lệ với app (2 cột, ảnh 1:1, nhãn KM, dòng quà, Còn hàng) */
+.xem .luoi.luoi{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (min-width:640px){.xem .luoi.luoi{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (min-width:960px){.xem .luoi.luoi{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.xem .c.c{border-radius:16px;padding:0 0 10px;border:1px solid #e1e9e9;overflow:hidden;text-align:left}
+.xem .c.c .anh{height:auto;aspect-ratio:1/1;background:linear-gradient(180deg,#f3f6f8,#e9eef1);margin-bottom:8px}
+.xem .c.c .anh img{width:80%;height:80%;object-fit:contain}
+.xem .c.c .pc{top:8px;left:8px;border-radius:8px;padding:4px 8px;font-size:12px;line-height:1.2}
+.xem .c.c .pc.qua{background:#fff3dc;color:#b45309}
+.xem .c.c .n{font-size:14px;line-height:1.3;height:2.6em;padding:0 10px}
+.xem .c.c .g{font-size:17px;font-weight:800;padding:4px 10px 0}
+.xem .c.c .ny{font-size:12.5px;padding:0 10px}
+.xem .c .kml{font-size:12.5px;color:#b45309;padding:4px 10px 0;line-height:1.35}
+.xem .c .okh{font-size:12px;font-weight:700;color:#15803d;padding:4px 10px 0}
+.xem .kmt{margin:12px 2px 8px;font-size:16px;font-weight:800;display:flex;align-items:baseline;gap:8px}
+.xem .kmt small{font-size:12.5px;color:#6b7280;font-weight:600}
+.xem .tabs button{min-height:44px}
+.eic{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.2em;margin-right:.3em}
+</style></head><body>
+<div id="sua">
+<header><a id="veapp" hidden style="color:inherit;font-size:13px;text-decoration:none;opacity:.85">‹ Về app</a><b>🏷 Bảng giá online</b><small>Bản demo · bản thật tự lấy từ tồn kho · ảnh máy cập nhật ngày 10, ngày 20 và ngày cuối tháng</small></header>
+<div class="bao">
+<section style="display:flex;flex-direction:column;gap:14px">
+ <button class="nut" id="layton" style="background:#b45309">📦 Lấy từ tồn kho app Shop Gọn</button>
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><button class="nut" id="xemnhanh">👁 Xem trang khách</button><button class="nut zalo" id="copynhanh">📋 Copy link Zalo</button></div>
+ <div class="ghi" id="laytonG" style="margin-top:-6px">Tự lấy máy còn tồn + số lượng + giá bán trong app (trên máy này). Shop chỉ cần điền giá niêm yết + khuyến mãi.</div>
+ <div class="the"><h3>1 · Điện thoại theo hãng</h3>
+  <div class="tabs" id="hang"></div>
+  <input id="tim" placeholder="Gõ tên máy rồi bấm để thêm…" autocomplete="off">
+  <div class="goiy" id="goiy"></div>
+  <div id="ds" style="display:flex;flex-direction:column;gap:8px"></div>
+ </div>
+ <div class="the"><h3>2 · Phụ kiện &amp; linh kiện (1 bảng chung)</h3>
+  <div class="pk ghi"><span>Tên</span><span>Giá bán</span><span>Khuyến mãi</span><span></span></div>
+  <div id="pkds" style="display:flex;flex-direction:column;gap:6px"></div>
+  <button class="nut phu" id="thempk">＋ Thêm dòng phụ kiện</button>
+ </div>
+ <div class="the"><h3>3 · Thông tin shop</h3>
+  <label>Tiêu đề<input id="tieude" value="BẢNG GIÁ HÔM NAY"></label>
+  <label>Tên shop<input id="shop" placeholder="Minh Phát Mobile"></label>
+  <label>Địa chỉ<input id="dc" placeholder="123 Ấp Bắc, TP. Mỹ Tho"></label>
+  <label>Số điện thoại / Zalo<input id="dt" inputmode="tel" placeholder="0909 123 456"></label>
+ </div>
+</section>
+<section style="display:flex;flex-direction:column;gap:14px;min-width:0">
+ <div class="the"><h3>Gửi khách</h3>
+  <div class="ghi" id="tomtat">Chưa có sản phẩm.</div>
+  <button class="nut zalo" id="copy">📋 Copy link gửi Zalo khách</button>
+  <button class="nut phu" id="chiase" hidden>📤 Chia sẻ (Zalo, Messenger…)</button>
+  <a class="nut phu" id="mo" target="_blank">👁 Xem thử như khách</a>
+ </div>
+ <div class="the"><h3>Poster đăng Facebook / Zalo</h3>
+  <div class="tabs" id="phang"></div>
+  <div class="khung" id="khung"><div id="pv"></div></div>
+  <button class="nut" id="tai">⬇ Tải poster</button>
+  <div class="ghi">Poster lấy tối đa 9 máy còn hàng của hãng đang chọn.</div>
+ </div>
+</section>
+</div>
+</div>
+<div id="xem" hidden></div>
+<div id="cho"></div>
+<script>
+var LINK = '', HEN = 0, LINK_HUA = null, DEMO = /[?&]demo=1/.test(location.search), XEM_NGAY = /[?&]xem=1/.test(location.search), DEMO_TON = null;
+var KHO = null, HANG = 'OPPO', PH = 'OPPO', DS = [], PK = [];
+var TEN = { OPPO: 'OPPO', Samsung: 'Samsung', Apple: 'iPhone', Xiaomi: 'Xiaomi', Khac: 'Hãng khác' };
+var $ = function (id) { return document.getElementById(id); };
+var so = function (s) { return +String(s || '').replace(/[^\d]/g, '') || 0; };
+var vnd = function (n) { return (n || 0).toLocaleString('vi-VN') + 'đ'; };
+var gon = function (n) { return n >= 1e6 ? (Math.round(n / 1e5) / 10 + '').replace('.', ',') + 'tr' : Math.round(n / 1000) + 'k'; };
+var esc = function (s) { return String(s || '').replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+var anhCua = function (m) { return m ? (m.file ? '/' + m.file : (m.anh || '')) : ''; };
+var anhId = function (i) { var r = /^\/kho\/anh\/(.+)\.webp$/.exec(i || ''); return r ? r[1] : i; };
+var anhUrl = function (i) { return !i ? '' : /^(https?:|\/)/.test(i) ? i : '/kho/anh/' + i + '.webp'; };
+function giaSP(x) { var gb = x.gb || x.ny || 0, ny = Math.max(x.ny || 0, x.goc || 0); if (ny <= gb) ny = gb; return { ny: ny, gb: gb, giam: Math.max(0, ny - gb) }; }
+function kmList(x) { return x.km && x.km.length ? x.km : x.k ? String(x.k).split(/\s*·\s*/).filter(Boolean) : []; }
+/* 29/10: giá niêm yết theo Thế Giới Di Động (robot 6h sáng → kho/gia-tgdd.json) — khóa khớp tên giữ y hệt app */
+var TGJ = null, TG2 = {};
+function tgKey(s) { s = String(s || '').toLowerCase().replace(/^điện thoại\s+/, '').replace(/^samsung\s+(?=galaxy)/, '').replace(/^xiaomi\s+(?=redmi|poco)/, '').replace(/\bmoto\s+/g, '').replace(/\s+-\s+.*$/, '').replace(/(\d)\+(\d)/g, '$1/$2').replace(/\+/g, 'plus'); var m = s.match(/\d+\s*(?:gb|tb)?\s*\/\s*\d+\s*(?:gb|tb)?|\d+\s*(?:gb|tb)/); if (m) s = s.slice(0, m.index + m[0].length); return s.replace(/\b[45]g\b/g, '').replace(/gb/g, '').replace(/[^a-z0-9/]/g, ''); }
+function tgNap(j) { TGJ = j || { gia: {} }; var c = {}; Object.keys(TGJ.gia || {}).forEach(function (k) { var k2 = k.replace(/(\d+)\/(\d+)$/, '$2'); (c[k2] = c[k2] || []).push(TGJ.gia[k]); }); Object.keys(c).forEach(function (k) { if (c[k].length === 1) TG2[k] = c[k][0]; }); }
+function tgCua(ten) { if (!TGJ) return null; var k = tgKey(ten); return (TGJ.gia || {})[k] || TG2[k] || TG2[k.replace(/(\d+)\/(\d+)$/, '$2')] || null; }
+var gk = function (t) { return String(t || '').replace(/\s+-\s+[^-]+$/, '').trim(); };
+function u8b64(u) { var s = ''; for (var i = 0; i < u.length; i++) s += String.fromCharCode(u[i]); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
+function b64u8(s) { s = s.replace(/-/g, '+').replace(/_/g, '/'); var b = atob(s), u = new Uint8Array(b.length); for (var i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; }
+function nen(o) {
+  var raw = new TextEncoder().encode(JSON.stringify(o));
+  if (!window.CompressionStream) return Promise.resolve('0' + u8b64(raw));
+  return new Response(new Blob([raw]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer().then(function (b) { return '1' + u8b64(new Uint8Array(b)); });
+}
+function giaiNen(s) {
+  var u = b64u8(s.slice(1));
+  if (s[0] === '0') return Promise.resolve(JSON.parse(new TextDecoder().decode(u)));
+  return new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).text().then(JSON.parse);
+}
+
+var q = new URLSearchParams(location.search).get('d');
+if (q) giaiNen(q).then(function (d) { return fetch('/kho/kho-may.json?v=' + Date.now()).then(function (r) { return r.json(); }).then(function (j) { KHO = j; vaAnh(d.m); }).catch(function () { }).then(function () { veXem(d); }); }).catch(function () { document.body.innerHTML = '<p style="padding:20px">Link bảng giá bị lỗi — nhờ shop gửi lại nhé.</p>'; });
+else batDau();
+
+function veXem(d) {
+  $('sua').hidden = true; var x = $('xem'); x.hidden = false; document.title = (d.s || 'Shop') + ' · Bảng giá'; window.scrollTo(0, 0);
+  var HANGS = ['OPPO', 'Samsung', 'Apple', 'Xiaomi', 'Khac'].filter(function (h) { return d.m.some(function (m) { return m.h === h; }); });
+  var NB = d.m.filter(function (m) { return m.f && m.q !== 0; });
+  var KMS = d.m.filter(function (m) { return m.q !== 0 && kmList(m).length; });
+  var tabs = ['ALL']; if (KMS.length) tabs.push('KM'); if (NB.length) tabs.push('NB'); tabs = tabs.concat(HANGS); if ((d.k || []).length) tabs.push('PK');
+  var TABN = { ALL: 'Tất cả', KM: '🎁 Khuyến mãi', NB: '🔥 Bán chạy', PK: '🎧 Phụ kiện' };
+  var tab = 'ALL', tu = '';
+  var conHang = d.m.filter(function (m) { return m.q !== 0; });
+  function kmIcon(t) { return /trả góp/i.test(t) ? '💳' : /tặng/i.test(t) ? '🎁' : /giảm/i.test(t) ? '🔻' : '✨'; }
+  function tenMay(m) { return (TEN[m.h] && m.h !== 'Khac' && m.t.toLowerCase().indexOf(TEN[m.h].toLowerCase()) < 0 ? TEN[m.h] + ' ' : '') + m.t; }
+  /* thẻ gọn: ảnh + tên + giá + giá niêm yết gạch ngang. Khuyến mãi xem khi bấm vào máy */
+  function the(m) {
+    var g = giaSP(m), het = m.q === 0, K = kmList(m), pc = g.giam && g.ny ? Math.round(g.giam / g.ny * 100) : 0;
+    return '<button type="button" class="c' + (het ? ' het' : '') + '" data-ct="' + d.m.indexOf(m) + '"><span class="anh">' + (pc >= 1 ? '<span class="pc">-' + pc + '%</span>' : '') + (K.length && pc < 1 ? '<span class="pc qua">Quà tặng</span>' : '') +
+      (m.i ? '<img src="' + esc(anhUrl(m.i)) + '" alt="" loading="lazy">' : '<span class="noimg">📱</span>') + (het ? '<span class="hh">Hết hàng</span>' : '') + '</span>' +
+      '<span class="n">' + esc(tenMay(m)) + (m.d ? ' ' + esc(m.d) : '') + '</span>' +
+      '<span class="g">' + (g.gb ? vnd(g.gb) : 'Liên hệ') + '</span><span class="ny">' + (g.giam ? '<s>' + vnd(g.ny) + '</s>' : '') + '</span>' + (K.length ? '<span class="kml">' + esc(typeof K[0] === 'string' ? K[0] : kmChip(K[0])) + (K.length > 1 ? ' · +' + (K.length - 1) + ' ưu đãi' : '') + '</span>' : '') + (het ? '' : '<span class="okh">Còn hàng</span>') + '</button>';
+  }
+  function moMay(i) {
+    var m = d.m[i], bs = x.querySelector('.bs'); if (!m || !bs) return;
+    var g = giaSP(m), het = m.q === 0, K = kmList(m);
+    bs.querySelector('.bsc').innerHTML = '<button type="button" class="bsx" data-bsx="1" aria-label="Đóng">✕</button>' +
+      '<div class="bsh"><div class="im">' + (m.i ? '<img src="' + esc(anhUrl(m.i)) + '" alt="">' : '<div class="noimg">📱</div>') + '</div><div><div class="t">' + esc(tenMay(m)) + '</div>' +
+      '<div class="dl">' + [m.d, m.c].filter(Boolean).map(function (t) { return '<span>' + esc(t) + '</span>'; }).join('') + '</div>' +
+      '<div class="g">' + (g.gb ? vnd(g.gb) : 'Liên hệ') + '</div>' + (g.giam ? '<div class="ny">Niêm yết <s>' + vnd(g.ny) + '</s> · giảm <b>' + vnd(g.giam) + '</b></div>' : '') + '</div></div>' +
+      (K.length ? '<div class="bsk"><h5>🎁 Khuyến mãi</h5>' + K.map(function (t) { return '<div>' + kmIcon(t) + ' ' + esc(t) + '</div>'; }).join('') + '</div>' : '<div class="bsk khong">Hiện chưa có khuyến mãi riêng — liên hệ shop để có giá tốt nhất.</div>') +
+      '<div class="bss' + (het ? ' het' : '') + '">' + (het ? 'Tạm hết hàng' : '✓ Còn hàng') + '</div>' +
+      (d.p ? '<div class="bsz"><button type="button" class="hoi" data-hoi="' + i + '">💬 Hỏi shop qua Zalo</button></div>' : '');
+    bs.hidden = false;
+  }
+  function bangPK(L) { return '<div class="tieu">🎧 Phụ kiện · linh kiện <small>' + L.length + ' món</small></div><div class="pkl">' + L.map(function (r) { return '<div class="pkr"><div><b>' + esc(r.t) + '</b>' + (r.k ? '<small>🎁 ' + esc(r.k) + '</small>' : '') + '</div><span class="g">' + (r.g ? vnd(r.g) : 'Liên hệ') + '</span></div>'; }).join('') + '</div>'; }
+  function ve() {
+    var ds = x.querySelector('.ds'), q = tu.trim().toLowerCase();
+    [].forEach.call(x.querySelectorAll('.tabs button'), function (b) { b.classList.toggle('on', !q && b.dataset.t === tab); });
+    if (!q && tab === 'PK') { ds.innerHTML = bangPK(d.k); return; }
+    var goc = q ? d.m.filter(function (m) { return (m.t + ' ' + (TEN[m.h] || '') + ' ' + (m.d || '')).toLowerCase().indexOf(q) >= 0; }) : tab === 'ALL' ? d.m : tab === 'KM' ? KMS : tab === 'NB' ? NB : d.m.filter(function (m) { return m.h === tab; });
+    var L = goc.slice().sort(function (a, b) { return ((b.q !== 0) - (a.q !== 0)) || (giaSP(a).gb - giaSP(b).gb); });
+    var pk = q ? (d.k || []).filter(function (r) { return r.t.toLowerCase().indexOf(q) >= 0; }) : [];
+    /* 05/11 anh Thái: tab Tất cả có dải Đang khuyến mãi ở đầu */
+    var kmTop = (!q && tab === 'ALL' && KMS.length) ? KMS.slice().sort(function (a, b) { return giaSP(a).gb - giaSP(b).gb; }) : [];
+    if (kmTop.length) L = L.filter(function (m) { return kmTop.indexOf(m) < 0; });
+    ds.innerHTML = (kmTop.length ? '<h3 class="kmt">Đang khuyến mãi <small>' + kmTop.length + ' máy</small></h3><div class="luoi">' + kmTop.map(the).join('') + '</div><h3 class="kmt">Tất cả máy</h3>' : '') + (L.length ? '<div class="luoi">' + L.map(the).join('') + '</div>' : (pk.length ? '' : '<div class="trong">Chưa có máy phù hợp.</div>')) + (pk.length ? bangPK(pk) : '');
+  }
+  x.innerHTML = '<div class="xem"><div class="top"><div class="hang1"><div class="logo">' + esc(String(d.s || 'S').replace(/^(cửa hàng|shop|điện thoại|đtdđ)\s+/i, '').charAt(0).toUpperCase()) + '</div><div class="tt"><b>' + esc(d.s || '') + '</b><span class="dc">' + esc([d.a, d.p].filter(Boolean).join(' · ')) + '</span></div><span class="cnt"><b>' + conHang.length + '</b> mẫu còn hàng</span></div>' +
+    '<input class="timx" placeholder="🔍 Tìm máy: Reno, A17, iPhone 17…" autocomplete="off"></div>' +
+    '<div class="tabs">' + tabs.map(function (h) { return '<button data-t="' + h + '">' + (TABN[h] || TEN[h]) + '</button>'; }).join('') + '</div>' +
+    '<div class="ds"></div><div class="cuoi">Giá có thể thay đổi theo ngày · cập nhật ' + esc(d.n || '') + ' · Shop Gọn</div>' +
+    (d.p ? '<div class="goi"><a class="nut goi1" href="tel:' + esc(d.p.replace(/\s/g, '')) + '">📞 Gọi shop</a><a class="nut zalo" href="https://zalo.me/' + esc(d.p.replace(/\D/g, '')) + '" target="_blank">💬 Zalo</a><button class="nut phu" id="xcopy">🔗 Gửi bạn</button></div>' : '') +
+    '<div class="bs" hidden><div class="bsc"></div></div></div>';
+  /* 29/10: chủ shop mở từ app (Kho › Khuyến mãi) → vào thẳng trang khách, có thanh nhỏ Về app + Gửi link */
+  if (/[?&]tu=app/.test(location.search) && !new URLSearchParams(location.search).get('d')) {
+    var ob = document.createElement('div'); ob.className = 'chu';
+    ob.innerHTML = '<a href="/app/' + (DEMO ? '?demo=1' : '') + '">‹ Về app</a><span>Bạn đang xem như khách</span><button type="button" id="chuGui">📤 Gửi link khách</button>';
+    x.firstChild.insertBefore(ob, x.firstChild.firstChild);
+    ob.querySelector('#chuGui').onclick = function () { var L = (function () { try { var x = localStorage.getItem('sg_web_link'); return x && x.indexOf('/s/') > 0 ? x : ''; } catch (e) { return ''; } })() || LINK || location.href; if (navigator.share) navigator.share({ title: d.s || 'Bảng giá', url: L }).catch(function () { }); else copyLink(L, ob.querySelector('#chuGui')); };
+  }
+  [].forEach.call(x.querySelectorAll('.tabs button'), function (b) { b.onclick = function () { tab = b.dataset.t; tu = ''; x.querySelector('.timx').value = ''; ve(); window.scrollTo(0, x.querySelector('.tabs').offsetTop - 1 > window.scrollY ? window.scrollY : x.querySelector('.tabs').offsetTop); }; });
+  x.querySelector('.timx').oninput = function (e) { tu = e.target.value; ve(); };
+  var sMa = new URLSearchParams(location.search).get('s'), linkGui = sMa ? location.origin + '/s/' + sMa : (LINK || location.href);
+  var xc = $('xcopy'); if (xc) xc.onclick = function () { copyLink(linkGui, xc); };
+  x.addEventListener('click', function (e) {
+    var ct = e.target.closest && e.target.closest('[data-ct]'); if (ct) { moMay(+ct.dataset.ct); return; }
+    var bs = x.querySelector('.bs'); if (bs && !bs.hidden && e.target.closest && (e.target.closest('[data-bsx]') || e.target === bs)) { bs.hidden = true; return; }
+    var b = e.target.closest && e.target.closest('[data-hoi]'); if (!b || !d.p) return;
+    var m = d.m[+b.dataset.hoi]; if (!m) return; var g = giaSP(m);
+    var cau = 'Shop ơi, em hỏi máy ' + [m.t, m.d, m.c].filter(Boolean).join(' ') + (g.gb ? ', giá ' + vnd(g.gb) : '') + ' trên bảng giá của shop. Máy còn không ạ?';
+    try { if (navigator.clipboard) navigator.clipboard.writeText(cau); } catch (z) { }
+    window.open('https://zalo.me/' + d.p.replace(/\D/g, ''), '_blank');
+    var t = x.querySelector('.toast'); if (!t) { t = document.createElement('div'); t.className = 'toast'; x.appendChild(t); }
+    t.textContent = '✓ Đã chép câu hỏi — dán vào Zalo là gửi được'; t.classList.add('on'); clearTimeout(t._h); t._h = setTimeout(function () { t.classList.remove('on'); }, 3500);
+  });
+  ve();
+}
+function copyLink(t, b) {
+  var cu = b.textContent;
+  (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function () { b.textContent = '✓ Đã copy link'; setTimeout(function () { b.textContent = cu; }, 1800); })
+    .catch(function () { window.prompt('Copy link này:', t); });
+}
+
+function batDau() {
+  try { var o = JSON.parse(localStorage.getItem('sg_bg2') || '{}'); ['shop', 'dc', 'dt', 'tieude'].forEach(function (k) { if (o[k]) $(k).value = o[k]; }); DS = o.ds || []; PK = o.pk || []; } catch (e) { }
+  if (!PK.length) PK = [{ t: 'Ốp lưng + cường lực', g: 150000, k: 'Tặng khi mua máy' }, { t: 'Củ sạc nhanh 45W', g: 350000, k: '' }, { t: 'Thay pin (công)', g: 300000, k: 'Bảo hành 6 tháng' }];
+  ['shop', 'dc', 'dt', 'tieude'].forEach(function (k) { $(k).oninput = capNhat; });
+  var tuDongLay = /[?&]tu=app/.test(location.search) || ((DEMO || XEM_NGAY) && !DS.length) || XEM_NGAY;
+  Promise.all([
+    fetch('/kho/kho-may.json?v=' + Date.now()).then(function (r) { return r.json(); }).then(function (j) { KHO = j; }).catch(function () { }),
+    fetch('/kho/demo-ton.json?v=' + Date.now()).then(function (r) { return r.json(); }).then(function (j) { DEMO_TON = j; }).catch(function () { }),
+    fetch('/kho/gia-tgdd.json?v=' + new Date().toISOString().slice(0, 13)).then(function (r) { return r.json(); }).then(tgNap).catch(function () { tgNap(null); })
+  ]).then(function () { vaAnh(DS); veHang(); veDS(); if (tuDongLay && KHO) layTon(true); else if (XEM_NGAY) capNhat(); });
+  veHang(); vePK();
+  $('tim').oninput = goiY; $('tim').onfocus = goiY;
+  document.addEventListener('click', function (e) { if (!e.target.closest('#goiy') && e.target.id !== 'tim') $('goiy').style.display = 'none'; });
+  $('layton').onclick = function () { layTon(); };
+  var TU_APP = /[?&]tu=app/.test(location.search);
+  if (TU_APP) { var va = $('veapp'); va.hidden = false; va.href = '/app/' + (/[?&]demo=1/.test(location.search) ? '?demo=1' : ''); }
+  $('thempk').onclick = function () { PK.push({ t: '', g: 0, k: '' }); vePK(); };
+  $('tai').onclick = taiPoster;
+  $('xemnhanh').onclick = function () { if (LINK) location.href = LINK; else $('mo').click(); };
+  $('copynhanh').onclick = function () { if (LINK) copyLink(LINK, $('copynhanh')); };
+  $('mo').onclick = function (e) { if (LINK) return; e.preventDefault(); capNhat(); setTimeout(function () { if (LINK_HUA) LINK_HUA.then(function (L) { if (L) location.href = L; }); }, 300); };
+  $('copy').onclick = function () { if (!LINK) return; copyLink(LINK, $('copy')); };
+  if (navigator.share) { $('chiase').hidden = false; $('chiase').onclick = function () { if (LINK) navigator.share({ title: $('tieude').value, text: 'Bảng giá ' + ($('shop').value || ''), url: LINK }).catch(function () { }); }; }
+  window.addEventListener('resize', coGian);
+}
+function veHang() {
+  $('hang').innerHTML = Object.keys(TEN).map(function (h) { var n = DS.filter(function (x) { return x.h === h; }).length; return '<button data-h="' + h + '" class="' + (h === HANG ? 'on' : '') + '">' + TEN[h] + (n ? ' · ' + n : '') + '</button>'; }).join('');
+  [].forEach.call($('hang').children, function (b) { b.onclick = function () { HANG = b.dataset.h; veHang(); veDS(); goiY(); }; });
+  $('phang').innerHTML = Object.keys(TEN).map(function (h) { return '<button data-h="' + h + '" class="' + (h === PH ? 'on' : '') + '">' + TEN[h] + '</button>'; }).join('');
+  [].forEach.call($('phang').children, function (b) { b.onclick = function () { PH = b.dataset.h; veHang(); capNhat(); }; });
+}
+function goiY() {
+  var qq = $('tim').value.toLowerCase().replace(/\s/g, ''), ds = dsKho(HANG);
+  var kq = ds.filter(function (s) { return !qq || s.ten.toLowerCase().replace(/\s/g, '').indexOf(qq) >= 0; }).slice(0, 30);
+  $('goiy').style.display = 'block';
+  $('goiy').innerHTML = kq.map(function (s) { return '<div data-i="' + ds.indexOf(s) + '">＋ ' + esc(s.ten) + '</div>'; }).join('') || '<div>Không có trong kho</div>';
+  [].forEach.call($('goiy').querySelectorAll('[data-i]'), function (d) { d.onclick = function () { them(ds[+d.dataset.i]); }; });
+}
+function them(s) {
+  var m = (s.mau || [])[0] || {}, b = (s.bienThe || [])[0] || {};
+  DS.push({ h: TEN[s.hang] ? s.hang : 'Khac', t: s.ten, d: b.dl || '', c: m.ten || '', i: anhCua(m), ny: 0, gb: 0, q: 1, k: '' });
+  $('tim').value = ''; $('goiy').style.display = 'none'; veHang(); veDS();
+}
+function tim(x) { var ds = dsKho(x.h); return ds.find(function (s) { return s.ten === x.t; }); }
+function veDS() {
+  var L = DS.map(function (x, i) { return [x, i]; }).filter(function (a) { return a[0].h === HANG; });
+  $('ds').innerHTML = L.length ? L.map(function (a) {
+    var x = a[0], i = a[1], s = tim(x) || { bienThe: [], mau: [] };
+    var dl = (s.bienThe || []).map(function (b) { return '<option' + (b.dl === x.d ? ' selected' : '') + '>' + esc(b.dl || 'Tiêu chuẩn') + '</option>'; }).join('');
+    var mau = (s.mau || []).map(function (m, k) { return '<option value="' + k + '"' + (m.ten === x.c ? ' selected' : '') + '>' + esc(m.ten || 'Màu ' + (k + 1)) + '</option>'; }).join('');
+    return '<div class="dong">' + (x.i ? '<img src="' + esc(x.i) + '" alt="">' : '<div class="noimg" style="width:52px;height:64px;font-size:24px">📱</div>') + '<div><div class="t">' + esc(x.t) + '</div><div class="o">' +
+      '<select data-i="' + i + '" data-k="d">' + (dl || '<option>Tiêu chuẩn</option>') + '</select><select data-i="' + i + '" data-k="c">' + (mau || '<option>—</option>') + '</select>' +
+      '<input data-i="' + i + '" data-k="ny" inputmode="numeric" placeholder="Giá niêm yết" value="' + (x.ny ? x.ny.toLocaleString('vi-VN') : '') + '">' +
+      '<input data-i="' + i + '" data-k="gb" inputmode="numeric" placeholder="Giá bán" value="' + (x.gb ? x.gb.toLocaleString('vi-VN') : '') + '">' +
+      '<input data-i="' + i + '" data-k="q" inputmode="numeric" placeholder="Số lượng tồn" value="' + (x.q || x.q === 0 ? x.q : '') + '">' +
+      '<input data-i="' + i + '" data-k="k" placeholder="Khuyến mãi (VD: tặng ốp + cường lực)" value="' + esc(x.k) + '" class="rong" style="grid-column:auto">' +
+      '</div></div><div style="display:flex;flex-direction:column;gap:8px"><button class="xoa" data-x="' + i + '" title="Bỏ">✕</button><button class="xoa sao' + (x.f ? ' on' : '') + '" data-f="' + i + '" title="Máy bán chạy (hiện ở tab Bán chạy)">★</button></div></div>';
+  }).join('') : '<div class="ghi">Chưa có máy ' + TEN[HANG] + ' — gõ tên máy ở trên để thêm.</div>';
+  [].forEach.call($('ds').querySelectorAll('[data-k]'), function (el) {
+    el.oninput = el.onchange = function () {
+      var x = DS[+el.dataset.i], k = el.dataset.k;
+      if (k === 'ny' || k === 'gb') { x[k] = so(el.value); el.value = x[k] ? x[k].toLocaleString('vi-VN') : ''; }
+      else if (k === 'q') { x.q = el.value === '' ? null : so(el.value); }
+      else if (k === 'k') { x.k = el.value; x.km = null; }
+      else if (k === 'd') x.d = el.value;
+      else { var s = tim(x), m = s && s.mau[+el.value]; if (m) { x.c = m.ten; x.i = anhCua(m); el.closest('.dong').querySelector('img').src = x.i; } }
+      capNhat();
+    };
+  });
+  [].forEach.call($('ds').querySelectorAll('[data-f]'), function (b) { b.onclick = function () { var x = DS[+b.dataset.f]; x.f = !x.f; b.classList.toggle('on', !!x.f); capNhat(); }; });
+  [].forEach.call($('ds').querySelectorAll('[data-x]'), function (b) { b.onclick = function () { DS.splice(+b.dataset.x, 1); veHang(); veDS(); }; });
+  capNhat();
+}
+function vePK() {
+  $('pkds').innerHTML = PK.map(function (r, i) {
+    return '<div class="pk"><input data-p="' + i + '" data-k="t" placeholder="Tên phụ kiện / linh kiện" value="' + esc(r.t) + '"><input data-p="' + i + '" data-k="g" inputmode="numeric" placeholder="Giá" value="' + (r.g ? r.g.toLocaleString('vi-VN') : '') + '"><input data-p="' + i + '" data-k="k" placeholder="KM" value="' + esc(r.k) + '"><button class="xoa" data-px="' + i + '">✕</button></div>';
+  }).join('');
+  [].forEach.call($('pkds').querySelectorAll('[data-p]'), function (el) {
+    el.oninput = function () { var r = PK[+el.dataset.p], k = el.dataset.k; if (k === 'g') { r.g = so(el.value); el.value = r.g ? r.g.toLocaleString('vi-VN') : ''; } else r[k] = el.value; capNhat(); };
+  });
+  [].forEach.call($('pkds').querySelectorAll('[data-px]'), function (b) { b.onclick = function () { PK.splice(+b.dataset.px, 1); vePK(); }; });
+  capNhat();
+}
+function docDb() {
+  var ks = /[?&]demo=1/.test(location.search) ? ['shopgon_demo3', 'shopgon_demo2'] : ['shopgon_v1', 'shopgon_demo3', 'shopgon_demo2'];
+  for (var i = 0; i < ks.length; i++) { try { var o = JSON.parse(localStorage.getItem(ks[i]) || 'null'); if (o && o.may && o.may.some(function (m) { return m.tt === 'ton'; })) return { db: o, key: ks[i] }; } catch (e) { } }
+  if (DEMO_TON && (DEMO || /[?&]tu=app/.test(location.search))) {
+    var may = []; DEMO_TON.may.forEach(function (r) { for (var j = 0; j < r[2]; j++) may.push({ ten: r[0], giaBan: r[1], tt: 'ton' }); });
+    return { db: { may: may, hang: DEMO_TON.pk.map(function (r) { return { ten: r[0], giaBan: r[1], nhom: 'pk', sl: 1 }; }), shop: DEMO_TON.shop }, key: 'demo' };
+  }
+  return null;
+}
+function hangCua(m) { var s = (m.hang || '') + ' ' + m.ten; return /iphone|apple/i.test(s) ? 'Apple' : /samsung|galaxy/i.test(s) ? 'Samsung' : /xiaomi|redmi|poco/i.test(s) ? 'Xiaomi' : /oppo/i.test(s) ? 'OPPO' : 'Khac'; }
+var BO_HIEU = /oppo|samsung|galaxy|xiaomi|apple|vivo|realme|honor|motorola|moto|nubia|nothing|masstel|mobell|tecno|infinix|itel|nokia|\s|-/g;
+function vaAnh(L) { if (!KHO) return; (L || []).forEach(function (x) { if (x.i) return; var s = khopKho(x.h, x.t).sp, m = s && s.mau && s.mau[0]; if (m) x.i = anhCua(m); }); }
+function chuan(s) { return String(s || '').toLowerCase().replace(/5g/g, '').replace(BO_HIEU, ''); }
+function chuan5g(s) { return String(s || '').toLowerCase().replace(BO_HIEU, ''); }
+function dsKho(h) { if (!KHO) return []; if (h !== 'Khac') return KHO.hang[h] || []; return Object.keys(KHO.hang).filter(function (k) { return ['OPPO', 'Samsung', 'Xiaomi', 'Apple'].indexOf(k) < 0; }).reduce(function (a, k) { return a.concat(KHO.hang[k]); }, []); }
+function khopKho(h, ten) {
+  var goc = ten.replace(/\s+\d+\s*\/\s*\d+.*$/, '').replace(/\s+\d+\s*(gb|tb).*$/i, '');
+  var n = chuan(goc), n5 = chuan5g(goc), ds = dsKho(h), tot = null;
+  ds.forEach(function (s) { if (!tot && chuan5g(s.ten) === n5) tot = s; });
+  if (!tot) ds.forEach(function (s) { var k = chuan(s.ten); if (k === n) tot = s; });
+  if (!tot) ds.forEach(function (s) { var k = chuan(s.ten); if (k.indexOf(n) === 0 && (!tot || Math.abs(chuan(tot.ten).length - n.length) > Math.abs(k.length - n.length))) tot = s; });
+  var m = /(\d+)\s*\/\s*(\d+)/.exec(ten), g = /(\d+)\s*(GB|TB)/i.exec(ten);
+  var dl = m ? m[1] + '+' + m[2] + 'GB' : g ? g[1] + g[2].toUpperCase() : '';
+  if (tot && dl) { var b = (tot.bienThe || []).find(function (x) { return x.dl.replace(/GB/gi, '').indexOf(dl.replace(/GB/gi, '')) >= 0; }); if (b) dl = b.dl; }
+  return { sp: tot, ten: tot ? tot.ten : goc, dl: dl };
+}
+function layTon(tuDong) {
+  var r = docDb(); if (!r) { if (tuDong) return; alert('Trên máy này chưa có tồn kho app Shop Gọn. Mở app (hoặc app demo) trước rồi quay lại.'); return; }
+  if (!KHO) { alert('Kho máy chưa tải xong, đợi 2 giây rồi bấm lại.'); return; }
+  if (!tuDong && (DS.length || PK.some(function (x) { return x.t; })) && !confirm('Thay bảng hiện tại bằng tồn kho trong app?')) return;
+  var nhom = {};
+  /* 29/10: gộp mọi màu của 1 mẫu (Tên - Màu) thành 1 thẻ; giá gốc = giá shop, giá khách trả = sau giảm; giá niêm yết = TGDD, không có thì giá shop tự điền */
+  r.db.may.filter(function (m) { return m.tt === 'ton'; }).forEach(function (m) { var h = hangCua(m); if (!h) return; var g = gk(m.ten), k = h + '|' + g; var x = (nhom[k] = nhom[k] || { h: h, ten: g, q: 0, gb: 0, mau: [], ds: [] }); x.q++; x.gb = Math.max(x.gb, m.giaBan || 0); if (x.ds.indexOf(m.ten) < 0) x.ds.push(m.ten); var c = /\s+-\s+([^-]+)$/.exec(m.ten); if (c && x.mau.indexOf(c[1].trim()) < 0) x.mau.push(c[1].trim()); });
+  var homNay = new Date(Date.now() + 7 * 36e5).toISOString().slice(0, 10);
+  var KMA = ((r.db.shop && r.db.shop.km) || []).filter(function (k) { return !k.den || k.den >= homNay; });
+  function kmCua(sps) { return KMA.filter(function (k) { return sps.indexOf(k.sp) >= 0 || (k.sp.indexOf('m|') === 0 && sps.indexOf('g|' + gk(k.sp.slice(2))) >= 0); }); }
+  function kmGia(L, g) { L.forEach(function (k) { if (!g) return; if (k.loai === 'giam') g -= k.gt; else if (k.loai === 'pct') g -= Math.round(g * k.gt / 100 / 1000) * 1000; }); return Math.max(0, g); }
+  function kmChip(k) { return k.loai === 'giam' ? 'Giảm ' + gon(k.gt) : k.loai === 'pct' ? 'Giảm ' + k.gt + '%' : k.loai === 'tg' ? 'Trả góp 0%' : k.loai === 'txt' ? (k.txt || '') : 'Tặng ' + (k.tangTen || 'quà'); }
+  var NYS = (r.db.shop && r.db.shop.ny) || {};
+  DS = Object.keys(nhom).map(function (k) { var x = nhom[k], kk = khopKho(x.h, x.ten), mau = kk.sp && kk.sp.mau && kk.sp.mau[0];
+      var L = kmCua(['g|' + x.ten].concat(x.ds.map(function (t) { return 'm|' + t; }))), cuoi = kmGia(L, x.gb), tg = tgCua(x.ten), ny = NYS[x.ten] || (tg && tg.ny ? tg.ny : 0);
+      /* 29/10 22h anh Thái chốt: giá trên web = GIÁ Ở TAB KHO của shop (1 giá duy nhất), máy chưa có giá mới lấy giá tự cập nhật; KHÔNG trừ khuyến mãi — KM chỉ liệt kê */
+      return { h: x.h, t: kk.ten, d: kk.dl, c: x.mau.length > 1 ? x.mau.length + ' màu' : (x.mau[0] || (mau ? mau.ten : '')), i: anhCua(mau) || (tg && tg.a) || '', ny: 0, gb: x.gb || (tg && tg.ny) || 0, q: x.q, km: L.map(kmChip).filter(Boolean), k: L.map(kmChip).filter(Boolean).join(' · '), tg: tg && tg.ny ? 1 : 0 }; })
+    .sort(function (a, b) { return b.q - a.q; });
+  var dem = {}; DS.forEach(function (x) { dem[x.h] = (dem[x.h] || 0) + 1; if (dem[x.h] <= 2) x.f = true; });
+  if (r.key !== 'shopgon_v1' && DEMO_TON && DEMO_TON.km) { var tenG = {}; Object.keys(nhom).forEach(function (k, i) { tenG[k] = 1; }); DS.forEach(function (x) { Object.keys(DEMO_TON.km).forEach(function (t) { var kk = khopKho(x.h, t); if (kk.ten === x.t && (!kk.dl || kk.dl === x.d)) { if (!x.tg && !NYS[x.t]) x.gb = DEMO_TON.km[t][0] || x.gb; if (!x.km.length) { x.k = DEMO_TON.km[t][1]; x.km = kmList({ k: x.k }); } } }); }); }
+  PK = (r.db.hang || []).filter(function (x) { return /pk|sua/.test(x.nhom) && (x.sl || 0) > 0; }).map(function (x) { var L = kmCua(['h|' + x.id]); return { t: x.ten, g: x.giaBan || 0, k: L.map(kmChip).filter(Boolean).join(' · ') }; });
+  if (r.db.shop && r.db.shop.ten && !$('shop').value) $('shop').value = r.db.shop.ten;
+  if (r.key !== 'shopgon_v1' && r.db.shop) { if (!$('dc').value && r.db.shop.dc) $('dc').value = r.db.shop.dc; if (!$('dt').value && r.db.shop.dt) $('dt').value = r.db.shop.dt; }
+  var tong = DS.reduce(function (s, x) { return s + x.q; }, 0);
+  $('laytonG').textContent = '✓ Đã lấy ' + tong + ' máy (' + DS.length + ' mẫu) + ' + PK.length + ' phụ kiện/linh kiện từ ' + (r.key === 'shopgon_v1' ? 'app của shop' : 'app demo') + '. Giờ điền giá niêm yết + KM cho từng máy.';
+  HANG = (DS[0] && DS[0].h) || 'OPPO'; veHang(); veDS(); vePK();
+}
+function thongTin() { return { t: $('tieude').value || 'BẢNG GIÁ HÔM NAY', s: $('shop').value || 'Tên shop', a: $('dc').value || '', p: $('dt').value || '' }; }
+
+function capNhat() {
+  var tt = thongTin();
+  try { localStorage.setItem('sg_bg2', JSON.stringify({ shop: $('shop').value, dc: $('dc').value, dt: $('dt').value, tieude: $('tieude').value, ds: DS, pk: PK })); } catch (e) { }
+  $('pv').innerHTML = poster(tt); coGian();
+  var pk = PK.filter(function (r) { return r.t; });
+  var dem = Object.keys(TEN).map(function (h) { var n = DS.filter(function (x) { return x.h === h; }).length; return n ? TEN[h] + ' ' + n : ''; }).filter(Boolean);
+  if (pk.length) dem.push('Phụ kiện ' + pk.length);
+  $('tomtat').textContent = dem.length ? 'Bảng giá gồm: ' + dem.join(' · ') + '. Khách mở link sẽ thấy từng tab theo hãng.' : 'Chưa có sản phẩm.';
+  clearTimeout(HEN);
+  HEN = setTimeout(function () {
+    var d = { t: tt.t, s: tt.s, a: tt.a, p: tt.p, n: new Date().toLocaleDateString('vi-VN'),
+      m: DS.map(function (x) { var o = { h: x.h, t: x.t, d: x.d, c: x.c, i: anhId(x.i), ny: x.ny, gb: x.gb }; if (x.goc) o.goc = x.goc; if (x.km && x.km.length) o.km = x.km; if (x.q !== null && x.q !== undefined) o.q = x.q > 0 ? 1 : 0; /* khach chi biet con/het, khong lo so ton */ if (x.k) o.k = x.k; if (x.f) o.f = 1; return o; }),
+      k: pk.map(function (r) { var o = { t: r.t, g: r.g }; if (r.k) o.k = r.k; return o; }) };
+    LINK_HUA = nen(d).then(function (z) { LINK = (DS.length || pk.length) ? location.origin + location.pathname + '?d=' + z : ''; try { if (LINK && /[?&]tu=app/.test(location.search) && !/\/s\//.test(localStorage.getItem('sg_web_link') || '')) localStorage.setItem('sg_web_link', LINK); } catch (e) { } $('mo').href = LINK || '#'; if (XEM_NGAY && DS.length) { XEM_NGAY = false; veXem(d); } return LINK; });
+  }, 250);
+}
+function coGian() { var k = $('khung'); $('pv').style.transform = 'scale(' + (k.clientWidth / 1080) + ')'; }
+function poster(tt) {
+  var L = DS.filter(function (x) { return x.h === PH && x.q !== 0; }).slice(0, 9);
+  var n = L.length || 1, cot = n <= 1 ? 1 : n <= 4 ? 2 : 3, hang = Math.ceil(n / cot);
+  var co = { 1: [60, 40, 90], 2: [36, 26, 54], 3: [26, 20, 40] }[cot];
+  return '<div class="p"><div class="dau"><div><span>' + esc(tt.s) + ' · ' + TEN[PH] + '</span><br><b>' + esc(tt.t) + '</b></div><span>' + new Date().toLocaleDateString('vi-VN') + '</span></div>' +
+    '<div class="luoi" style="grid-template-columns:repeat(' + cot + ',1fr);grid-template-rows:repeat(' + hang + ',1fr)">' +
+    (L.length ? L.map(function (x) { var g = giaSP(x); return '<div class="c">' + (g.giam ? '<div class="tag" style="font-size:' + co[1] + 'px">−' + gon(g.giam) + '</div>' : '') + (x.i ? '<img src="' + esc(x.i) + '">' : '<div class="noimg" style="height:140px;font-size:48px">📱</div>') + '<div class="n" style="font-size:' + co[0] + 'px">' + esc(x.t) + '</div><div class="dl" style="font-size:' + co[1] + 'px">' + esc(x.d) + '</div>' + (g.giam ? '<div class="cu" style="font-size:' + co[1] + 'px">' + vnd(g.ny) + '</div>' : '') + '<div class="g" style="font-size:' + co[2] + 'px">' + (g.gb ? vnd(g.gb) : 'Liên hệ') + '</div></div>'; }).join('')
+      : '<div class="c" style="justify-content:center;font-size:34px;color:#5d6f6c">Thêm máy ' + TEN[PH] + ' để xem poster</div>') +
+    '</div><div class="chan"><div><b>' + esc(tt.s) + '</b>' + esc(tt.a) + '</div><div style="text-align:right"><span style="font-size:22px">Gọi / Zalo</span><div class="dt">' + esc(tt.p) + '</div></div></div></div>';
+}
+function taiPoster() {
+  $('cho').innerHTML = poster(thongTin()); var b = $('tai'), cu = b.textContent; b.textContent = 'Đang xuất…';
+  htmlToImage.toPng($('cho').firstChild, { width: 1080, height: 1350, pixelRatio: 1 }).then(function (u) {
+    var a = document.createElement('a'); a.href = u; a.download = 'Bang_gia_' + TEN[PH] + '_' + new Date().toISOString().slice(0, 10) + '.png'; a.click(); b.textContent = cu;
+  }).catch(function (e) { b.textContent = cu; alert('Chưa xuất được: ' + (e && e.message || e)); });
+}
+</script>
+<script>
+/* 05/11/2026 anh Thái (skill thiet-ke-giao-dien): emoji đầu nút/tiêu đề → icon nét SVG cùng bộ. Không đụng ô nhập, bài đăng, tờ rơi. */
+(function(){const P={"gift":"M3 9h18v4H3zM5 13v8h14v-8M12 9v12M12 9c-2-4-6-4-6-1s6 1 6 1 6 2 6-1-4-3-6 1","phone":"M7 2h10v20H7zM11 18h2","check":"M20 6L9 17l-5-5","alert":"M12 3l10 18H2zM12 10v5M12 18h.01","user":"M20 21a8 8 0 0 0-16 0M12 13a5 5 0 1 0 0-10 5 5 0 0 0 0 10","receipt":"M5 2h14v20l-3-2-2 2-2-2-2 2-2-2-3 2zM9 7h6M9 11h6M9 15h4","box":"M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4M12 11v10","camera":"M3 7h4l2-3h6l2 3h4v13H3zM12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8","call":"M5 4h4l2 5-3 2a11 11 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 6a2 2 0 0 1 2-2","fire":"M12 22a7 7 0 0 0 7-7c0-5-7-13-7-13S5 10 5 15a7 7 0 0 0 7 7","down":"M12 3v13M6 11l6 6 6-6M4 21h16","head":"M4 15v-3a8 8 0 0 1 16 0v3M4 15h3v5H4zM17 15h3v5h-3z","money":"M2 6h20v12H2zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6M6 9v.01M18 15v.01","clip":"M9 3h6v3H9zM6 5h12v17H6zM9 11h6M9 15h6","img":"M3 5h18v14H3zM3 16l5-5 4 4 3-3 6 6M15 9h.01","undo":"M9 14L4 9l5-5M4 9h11a5 5 0 0 1 0 10h-3","globe":"M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18","send":"M22 2L11 13M22 2l-7 20-4-9-9-4z","pen":"M4 20h4L19 9l-4-4L4 16zM14 6l4 4","pin":"M12 22s7-7 7-12a7 7 0 0 0-14 0c0 5 7 12 7 12M12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4","search":"M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14M20 20l-4-4","lock":"M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4","unlock":"M5 11h14v10H5zM8 11V7a4 4 0 0 1 7.5-2","clock":"M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18M12 7v5l3 2","inbox":"M3 13h5l2 3h4l2-3h5M5 5h14l2 8v6H3v-6z","cart":"M3 4h2l2.4 11.2a1 1 0 0 0 1 .8h9.2a1 1 0 0 0 1-.8L20 8H6M9 20h.01M17 20h.01","flask":"M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3M7.5 14h9","users":"M16 19v-1a4 4 0 0 0-8 0v1M12 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6M20 19v-1a3 3 0 0 0-2-2.8M4 19v-1a3 3 0 0 1 2-2.8","card":"M2 5h20v14H2zM2 10h20M6 15h4","sync":"M20 11a8 8 0 0 0-14.9-3M4 4v4h4M4 13a8 8 0 0 0 14.9 3M20 20v-4h-4","out":"M15 3h5v18h-5M10 17l5-5-5-5M15 12H3","spark":"M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z","truck":"M2 6h12v10H2zM14 9h4l4 4v3h-8zM6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4M18 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4","up":"M12 21V8M6 13l6-6 6 6M4 3h16","eye":"M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6","gear":"M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6M19 12l2-1-1-3-2 .3-1.4-1.4L17 5l-3-1-1 2h-2l-1-2-3 1 .3 2L5.9 6.9 4 7l-1 3 2 1v2l-2 1 1 3 2-.3 1.4 1.4L7 19l3 1 1-2h2l1 2 3-1-.3-2 1.4-1.4 1.9.3 1-3-2-1z","key":"M15 7a4 4 0 1 1-3.5 6L4 20.5V22h3v-2h2v-2h2l1.5-1.5A4 4 0 0 1 15 7","trash":"M4 7h16M10 11v6M14 11v6M6 7l1 14h10l1-14M9 7V4h6v3","chat":"M21 12a8 8 0 0 1-12 7l-6 2 2-6A8 8 0 1 1 21 12","mail":"M3 5h18v14H3zM3 6l9 7 9-7","doc":"M6 2h9l5 5v15H6zM14 2v6h6M9 13h7M9 17h7","zap":"M13 2L4 14h7l-1 8 9-12h-7z","home":"M3 11l9-8 9 8M5 9.5V21h5v-6h4v6h5V9.5","folder":"M3 6h6l2 2h10v12H3z","bulb":"M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5V16h8v-2.5A6 6 0 0 0 12 3","palette":"M12 21a9 9 0 1 1 9-9c0 2-2 3-4 3h-2a2 2 0 0 0-1 3.7c.5.5.3 2.3-2 2.3M7.5 11h.01M10 7h.01M15 7h.01","print":"M6 9V3h12v6M6 17H3v-8h18v8h-3M6 14h12v7H6z","shield":"M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z","tag":"M3 12V3h9l9 9-9 9zM7.5 7.5h.01","film":"M3 4h18v16H3zM7 4v16M17 4v16M3 9h4M3 15h4M17 9h4M17 15h4","rocket":"M5 15c-1 1-1 4-1 4s3 0 4-1M9 13l2 2M14 4c3-1 6-1 6-1s0 3-1 6l-7 7-5-5z"},M={"🎁":"gift","📱":"phone","✅":"check","⚠":"alert","👤":"user","🧾":"receipt","📦":"box","📷":"camera","📸":"camera","📞":"call","🔥":"fire","⬇":"down","🎧":"head","💵":"money","💸":"money","💰":"money","📋":"clip","🖼":"img","↩":"undo","🌐":"globe","📤":"send","✏":"pen","📝":"pen","📍":"pin","🔎":"search","🔒":"lock","🔓":"unlock","⏳":"clock","⌛":"clock","⏰":"clock","📥":"inbox","🛒":"cart","🧪":"flask","👥":"users","💳":"card","🔄":"sync","🔁":"sync","♻":"sync","🚪":"out","✨":"spark","🚚":"truck","⬆":"up","👁":"eye","👀":"eye","⚙":"gear","🔧":"gear","🛠":"gear","🔑":"key","🗑":"trash","💬":"chat","📨":"mail","🗞":"doc","📜":"doc","📒":"doc","⚡":"zap","🏠":"home","🗂":"folder","💡":"bulb","📲":"phone","🎨":"palette","🖨":"print","🛡":"shield","🏷":"tag","🎬":"film","🚀":"rocket","🔗":"send"};
+const SEL='.xem .tabs button,.bsk h5,.bs button';
+const RE=/^(\s*)(\p{Extended_Pictographic})\uFE0F?\s*/u;
+function doi(root){try{(root||document).querySelectorAll(SEL).forEach(el=>{if(el.closest('textarea,[contenteditable],.post,.bai,.trc,.tr,.p,.no-eic'))return;const n=[...el.childNodes].find(x=>x.nodeType===3?x.textContent.trim():x.nodeType===1);if(!n||n.nodeType!==3)return;const m=n.textContent.match(RE);if(!m)return;const k=M[m[2]];if(!k)return;n.textContent=n.textContent.slice(m[0].length);el.insertAdjacentHTML('afterbegin','<svg class="eic" viewBox="0 0 24 24" aria-hidden="true"><path d="'+P[k]+'"/></svg>')})}catch(e){}}
+let h=0;const ob=new MutationObserver(()=>{if(h)return;h=requestAnimationFrame(()=>{h=0;ob.disconnect();doi();ob.observe(document.body,{childList:true,subtree:true,characterData:true})})});
+function bat(){doi();ob.observe(document.body,{childList:true,subtree:true,characterData:true})}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bat);else bat();})();
+</script>
+</body></html>
