@@ -316,3 +316,14 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 
 ## 39. (05/11 13h30) Tài khoản test thấy "Sổ dữ liệu · Sao lưu" + "Nhật ký"
 - Anh Thái báo không thấy phần dữ liệu: anh thử bằng **tài khoản test** (`?demo=1&test=1` → DEMO) mà 2 mục chỉ hiện cho shop thật. Nay hiện cho mọi chủ shop (ẩn với NV); test/xem thử → `soNamMau()` / `nkMau()` dữ liệu mẫu, nút báo "đây là mẫu". Test 52/52, test toàn bộ 75/75, giao diện 0 lỗi. BUILD 20261105-1330.
+
+## 43. (05/11 21h30) Review theo skill `giao-dien` — sửa 6 lỗi + bảng Tồn kho máy (anh Thái duyệt qua demo)
+- Demo duyệt: artifact "Demo Shop Gọn 05/11" (Trang chủ, Bán, Kho, Tồn kho máy dạng bảng, Khuyến mãi).
+- **Tài khoản test:** `#xbar.strip` 1 dải mỏng 44px, ẩn nhãn `#mode` "TÀI KHOẢN TEST" khi DEMO&&TEST (trước bị 2 lớp).
+- **Kho hàng:** ô icon `.hubl .hi` đưa vào `SEL` của script đổi emoji → icon nét (hết ⬇️📱🎧🧾✅🚚🔎).
+- **Màn Bán:** `tachCf(k)` tách cấu hình (8/128, 256GB) khỏi tên → thẻ máy ghi tên 2 dòng + dòng `.scfg` cấu hình; "Trong kho: n" → "Còn n"; ô ảnh trống dùng icon SVG (không emoji). ⚠ KHÔNG dùng class `.scf` (đã là khung quét camera, có box-shadow tối toàn màn).
+- **Khuyến mãi:** 3 ô `.kmsum` thành nút lọc (data-kmf, bấm lại = all), bỏ hàng chip "Tất cả/Có KM/Chưa có/Sắp" lặp lại; giá `.wpr2`/`.wred` trong app đổi đỏ → `--pen-dk` (đỏ chỉ cho việc xấu). Web khách `bg/` giữ nguyên.
+- **Thêm:** "Nhân viên cửa hàng" → **Quản lý nhân viên**; "Nhân viên cửa hàng đăng nhập" → **Đăng nhập cho nhân viên** (icon riêng).
+- **Tồn kho máy = BẢNG** `tkBang()`: Hãng · Model · SL · Giá vốn (cột vốn class `own`); gom theo `m.hang` thật (tổng khớp ô 73 máy / 844,1tr); bấm hãng (`tr[data-tkmo]`, biến `tkMo`, phím Enter/Space) xổ model (gk + tachCf, nhãn đỏ "n tồn lâu") + nút "Xem từng máy … sửa giá, IMEI ›" → màn chi tiết cũ (`data-brand`). Dòng Tổng cuối bảng.
+- CSS khối "05/11 tối anh Thái" cuối style lớn. BUILD 20261105-2130. Test 75/75, lưu trữ 52/52, kiểm giao diện 0 lỗi.
+- Việc treo: anh chưa chốt cột hãng bên trái cho KM/Bán (demo có 2 kiểu: cột trái cố định / ngăn kéo) · khối "Việc cần làm" + thanh kỳ trượt #047 ở Trang chủ (đã demo, chưa gắn) · xoá demo `app-moi/`, `bg-moi/`.
