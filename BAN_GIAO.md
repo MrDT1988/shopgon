@@ -327,3 +327,9 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - **Tồn kho máy = BẢNG** `tkBang()`: Hãng · Model · SL · Giá vốn (cột vốn class `own`); gom theo `m.hang` thật (tổng khớp ô 73 máy / 844,1tr); bấm hãng (`tr[data-tkmo]`, biến `tkMo`, phím Enter/Space) xổ model (gk + tachCf, nhãn đỏ "n tồn lâu") + nút "Xem từng máy … sửa giá, IMEI ›" → màn chi tiết cũ (`data-brand`). Dòng Tổng cuối bảng.
 - CSS khối "05/11 tối anh Thái" cuối style lớn. BUILD 20261105-2130. Test 75/75, lưu trữ 52/52, kiểm giao diện 0 lỗi.
 - **Anh DUYỆT 05/11 21h30 — làm đầu phiên sau:** cột hãng bên trái cao kín (từ dưới ô tìm tới thanh đáy), đứng yên, các hãng chia đều (min 44px) cho màn Bán (bên phải dạng hàng: ảnh 56px · tên · cấu hình · Còn n · giá) + Khuyến mãi (đầu cột phải: tên hãng + n mẫu chưa KM + nút "＋ KM cả hãng" — làm luôn tính năng). Việc treo khác · khối "Việc cần làm" + thanh kỳ trượt #047 ở Trang chủ (đã demo, chưa gắn) · xoá demo `app-moi/`, `bg-moi/`.
+
+## 44. (05/11 22h) Cột hãng bên trái — màn Bán + Khuyến mãi (anh Thái duyệt theo demo)
+- `.hsplit` = cột `.hrail` 78px + `.hpane` cuộn riêng; `hsFit()` (gọi cuối `render()`/`renderSell()` + khi resize) tính chiều cao kín tới thanh đáy, `body.hsfit main{padding-bottom:0}`; có `.cbar` thì pane chừa đáy. Hãng chia đều, min 44px/hãng.
+- Bán `sellGrid()`: hàng `.hit` (ảnh 56 · tên · cấu hình · Còn n · tồn lâu · giá); "＋ Thu máy cũ" đầu pane; lọc tồn >45 ngày hiện đầu pane + Bỏ lọc. Tổng cột khớp 73 máy.
+- KM `renderKmTab()`: cột có Tất cả (khi >1 hãng) + hãng + "Phụ kiện"; mặc định hãng đầu; đầu pane = hãng + "n mẫu chưa có KM" + **＋ KM cả hãng** (`data-kmhang`): 1 phiếu → ghi KM riêng cho từng mẫu đang có của hãng (Trả góp 0% bỏ qua mẫu đã có). Nút "＋ KM" nhỏ cạnh giá, chip KM dưới hàng.
+- Test 75/75, lưu trữ 52/52, giao diện 0 lỗi; 390px không tràn, cột kín tới đáy (775/776), KM cả hãng OPPO → +5 KM. BUILD 20261105-2200.

@@ -522,6 +522,40 @@ nav.tabs button{font-size:12px}
 .tkb tr.tot td{font-weight:800;background:var(--bg)}
 .tkhint{display:block;text-align:center;font-size:12px;color:var(--muted);margin:8px 0 4px}
 @media (prefers-reduced-motion:reduce){.tkb .cv{transition:none}}
+
+/* 05/11/2026 tối — cột hãng bên trái (Bán + Khuyến mãi), anh Thái duyệt theo demo: cột cao kín tới thanh đáy, đứng yên; bên phải cuộn riêng */
+body.hsfit main{padding-bottom:0}
+.hsplit{display:grid;grid-template-columns:78px minmax(0,1fr);gap:8px;margin-top:10px;height:var(--hsH,60vh);min-height:300px}
+.hrail{display:flex;flex-direction:column;gap:2px;background:var(--card);border:1px solid var(--line);border-radius:14px 14px 0 0;border-bottom:0;padding:4px;overflow-y:auto;scrollbar-width:none;min-height:0}
+.hrail::-webkit-scrollbar{display:none}
+.hrail button{flex:1 1 0;min-height:44px;position:relative;border:0;border-radius:10px;background:none;font:600 13px var(--font);color:var(--muted);display:grid;align-content:center;gap:1px;text-align:center;padding:4px 2px;cursor:pointer;overflow-wrap:anywhere;line-height:1.25;transition:background .25s cubic-bezier(.2,.8,.2,1),color .25s}
+.hrail button small{font-size:12px;font-weight:600;opacity:.85}
+.hrail button[aria-pressed="true"]{background:var(--pen-bg);color:var(--pen-dk)}
+.hrail button[aria-pressed="true"]::before{content:"";position:absolute;left:0;top:14%;bottom:14%;width:3px;border-radius:3px;background:var(--pen)}
+.hrail button:focus-visible{outline:2px solid var(--pen);outline-offset:-2px}
+.hpane{min-height:0;overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:8px;padding-bottom:12px;scrollbar-width:thin}
+.hph{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:44px;flex:none}
+.hph b{font-size:15px;display:block}.hph small{display:block;font-size:12px;color:var(--muted);font-weight:500}
+.hph .btn,.hph .ghost{min-height:44px;padding:0 12px;font-size:13px;white-space:nowrap;flex:none;width:auto}
+.hit{display:grid;grid-template-columns:56px minmax(0,1fr);gap:10px;align-items:start;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px;text-align:left;font:inherit;color:var(--ink);width:100%;flex:none}
+button.hit{cursor:pointer}button.hit:active{background:var(--pen-bg)}
+.himg{width:56px;height:56px;border-radius:9px;background:#f6f8f9;display:grid;place-items:center;overflow:hidden}
+.himg img{width:90%;height:90%;object-fit:contain}
+.himg svg{width:44%;height:44%;fill:none;stroke:#9aa6b2;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.hx{display:grid;gap:2px;min-width:0}
+.hx b{font-size:13.5px;font-weight:700;line-height:1.3;overflow-wrap:anywhere}
+.hcf{font-size:12px;color:var(--muted)}
+.hft{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap}
+.hpr{font-size:14px;font-weight:800;color:var(--pen-dk);font-variant-numeric:tabular-nums}
+.hlz{font-style:normal;font-weight:700;color:var(--red)}
+.hit .wkm{grid-column:1/-1;margin-top:2px}
+.hthu{min-height:44px;width:100%;flex:none}
+.hadd{min-height:36px;border:1px dashed var(--pen-line,#b9e3da);border-radius:9px;background:none;color:var(--pen);font-weight:700;font-size:12.5px;padding:0 10px;white-space:nowrap;cursor:pointer}
+.hit .hkm{grid-column:1/-1;margin:0}
+#v-km .kmh{padding:10px 12px}#v-km .kmh h2{margin:0}#v-km .kmsum{margin-top:8px;gap:6px}
+#v-km .kmsum button{min-height:52px;padding:6px 8px}#v-km .kmsum button b{font-size:17px;line-height:1.2}
+.hnote{font-size:12px;color:var(--muted);margin:4px 2px 0}
+@media (prefers-reduced-motion:reduce){.hrail button{transition:none}}
 </style>
 
 <header><div class="hw">
@@ -1244,6 +1278,14 @@ function renderCart(){if(!cart.length)return '';
     <button class="btn" data-checkout="1" style="margin-top:10px">${cartTotal()<0?'Hoàn tất · shop trả khách '+money(-cartTotal()):'In hóa đơn · '+money(cartTotal())}</button></div>`}
 /* 02/11 học màn Bán hàng của Sổ: ô tìm + quét · chip hãng · lưới máy có ảnh · giỏ hàng cố định dưới đáy */
 let sellBrand='all', sellOld=false, sellGrp='';
+/* cột hãng trái: [key,tên,số] */
+const hRail=(L,cur,attr)=>`<div class="hrail" role="group" aria-label="Hãng">${L.map(([k,t,n])=>`<button type="button" ${attr}="${esc(k)}" aria-pressed="${k===cur}">${esc(t)}<small>${n}</small></button>`).join('')}</div>`;
+const hNoImg='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.2"/><path d="M11 18.5h2"/></svg>';
+function hsFit(){const sp=document.querySelector('.view:not([hidden]) .hsplit');document.body.classList.toggle('hsfit',!!sp);if(!sp)return;
+  const nv=document.querySelector('nav.tabs'),nh=nv?nv.getBoundingClientRect().height:70,top=sp.getBoundingClientRect().top+window.scrollY;
+  sp.style.setProperty('--hsH',Math.max(300,Math.floor(window.innerHeight-nh-top))+'px');
+  const cb=document.querySelector('.cbar'),pn=sp.querySelector('.hpane');if(pn)pn.style.paddingBottom=cb?(cb.getBoundingClientRect().height+20)+'px':''}
+window.addEventListener('resize',()=>requestAnimationFrame(hsFit));
 let cartOpen=false;
 function cartBar(){if(!cart.length||sellMode==='tra')return '';const n=cart.filter(c=>!isKm(c)).reduce((a,c)=>a+(c.sl||1),0);
   return `<div class="cbarp"></div><button type="button" class="cbar2" data-copen="1"><span>Số lượng <i class="cn">${n}</i></span><b class="num">${money(Math.abs(cartTotal()))}</b><span class="ar">›</span></button>`}
@@ -1267,10 +1309,13 @@ function sellGrid(cand){if(sellMode!=='may')return '';
   if(sellOld)L=L.filter(g=>g.old>45);
   if(q)L=L.filter(g=>nv0(g.k).includes(q));
   L.sort(sellOld?(a,b)=>b.old-a.old:(a,b)=>b.ms.length-a.ms.length||a.k.localeCompare(b.k,'vi'));
-  const chip=(a,t,on_)=>`<button type="button" class="chip" ${a} aria-pressed="${on_}">${t}</button>`;
-  const chips=`<div class="schips">${chip('data-sbrand="all"','Tất cả · '+st.length,sellBrand==='all'&&!sellOld)}${[...brands].sort((a,b)=>b[1]-a[1]).map(([h,n])=>chip('data-sbrand="'+esc(h)+'"',esc(h)+' · '+n,sellBrand===h)).join('')}${on('thucu')?`<button type="button" class="chip thuc" data-thu="1">♻️ Thu máy cũ</button>`:''}</div>`;
-  if(!st.length)return chips+`<div class="panel"><div class="empty">Kho chưa có máy để bán.<br><button type="button" class="ghost" data-go="add" style="margin-top:10px">Nhập hàng ngay</button></div></div>`;
-  return `<div class="panel sellp">`+chips+(L.length?`<div class="sgrid">${L.map(g=>{const im=imgCua(g.ms[0].ten);return `<button type="button" class="sc" data-sgrp="${esc(g.k)}"><span class="simg">${im?`<img src="${esc(im)}" alt="" loading="lazy">`:'<svg class="fe2" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.2"/><path d="M11 18.5h2"/></svg>'}</span>${(()=>{const [tn,cf]=tachCf(g.k);return `<b>${esc(tn)}</b>${cf?`<span class="scfg">${esc(cf)}</span>`:''}`})()}<span class="spr num">${g.gia?money(g.gia):'Chưa đặt giá'}</span><small>Còn ${g.ms.length}</small></button>`}).join('')}</div>`:`<div class="empty">Không có máy nào khớp.<br><small>Thử gõ tên khác hoặc bỏ lọc hãng.</small></div>`)+`</div>`}
+  /* 05/11 anh Thái duyệt: cột hãng bên trái cao kín, bên phải dạng hàng (ảnh 56 · tên · cấu hình · Còn n · giá) */
+  const rail=hRail([['all','Tất cả',st.length],...[...brands].sort((a,b)=>b[1]-a[1]).map(([h,n])=>[h,h,n])],sellOld?'':sellBrand,'data-sbrand');
+  const thu=on('thucu')?`<button type="button" class="ghost hthu" data-thu="1">＋ Thu máy cũ của khách</button>`:'';
+  if(!st.length)return (thu?`<div class="panel">${thu}</div>`:'')+`<div class="panel"><div class="empty">Kho chưa có máy để bán.<br><button type="button" class="ghost" data-go="add" style="margin-top:10px">Nhập hàng ngay</button></div></div>`;
+  const hd=sellOld?`<div class="hph"><div><b>Tồn trên 45 ngày</b><small>${L.length} mẫu · ưu tiên bán trước</small></div><button type="button" class="ghost" data-sold="1">Bỏ lọc</button></div>`:'';
+  const rows=L.map(g=>{const im=imgCua(g.ms[0].ten),[tn,cf]=tachCf(g.k);return `<button type="button" class="hit" data-sgrp="${esc(g.k)}"><span class="himg">${im?`<img src="${esc(im)}" alt="" loading="lazy">`:hNoImg}</span><span class="hx"><b>${esc(tn)}</b><span class="hcf">${cf?esc(cf)+' · ':''}Còn ${g.ms.length}${g.old>45?` · <i class="hlz">tồn ${g.old} ngày</i>`:''}</span><span class="hft"><span class="hpr num">${g.gia?money(g.gia):'Chưa đặt giá'}</span></span></span></button>`}).join('');
+  return `<div class="hsplit">${rail}<div class="hpane">${hd}${thu}${L.length?rows:`<div class="empty">Không có máy nào khớp.<br><small>Thử gõ tên khác hoặc chọn Tất cả.</small></div>`}</div></div>`}
 function renderSell(){
   const m0=db.may.find(x=>x.imei===sellImei&&x.tt==='ton');const m=m0&&!inCart(m0.imei)?m0:null;
   const soldM=!m0&&sellImei.length>=6?db.may.find(x=>x.imei===sellImei&&x.tt==='ban'):null;
@@ -1306,6 +1351,7 @@ function renderSell(){
   if(m)updSellProfit();
   if(sellMode==='may'&&!KM)kmLoad().then(()=>{if(view==='sell')renderSell()}).catch(()=>{});
   if(sellMode==='pk'||sellMode==='dv')updPkProfit();
+  hsFit();
 }
 let pkNhom='pk', pkPick=null, pkQ='', thuOpen=false, chiLoai='';
 const isStockNhom=k=>k==='pk'||k==='sim'||k==='sua';
@@ -1462,7 +1508,7 @@ const kmCua=sp=>{const g=sp.startsWith('m|')?'g|'+gk(sp.slice(2)):sp.startsWith(
 const kmTxt=k=>k.loai==='giam'?'giảm '+money(k.gt):k.loai==='pct'?'giảm '+k.gt+'%':k.loai==='tg'?'trả góp 0%':k.loai==='txt'?(k.txt||''):'tặng '+(k.tangTen||'quà');
 const kmChip=k=>k.loai==='giam'?'Giảm '+short(k.gt):k.loai==='pct'?'Giảm '+k.gt+'%':k.loai==='tg'?'Trả góp 0%':k.loai==='txt'?(k.txt||''):'Tặng '+(k.tangTen||'quà');
 const kmTru=(L,g)=>L.reduce((t,k)=>t+(k.loai==='giam'?+k.gt||0:k.loai==='pct'?Math.round(g*k.gt/100/1000)*1000:0),0);
-let kmLoai='giam',kmSheet=null,kmBrand='Tất cả',nyEdit=null;
+let kmLoai='giam',kmSheet=null,kmBrand='',nyEdit=null;
 /* 29/10: khớp ẢNH theo mẫu máy, bỏ tên hãng/5G/dung lượng/màu (VD "Xiaomi Redmi Note 17 5G 6/256" = "REDMI Note 17") */
 function mKey(n){let s=String(n||'').toLowerCase().replace(/^điện thoại\s+/,'').replace(/\s+-\s+[^-]+$/,'').replace(/(\d)\+(\d)/g,'$1/$2').replace(/\+/g,'plus').replace(/\(([^)]*)\)/g,'$1');
   const m=s.match(/\d+\s*(?:gb|tb)\b|\d+\s*\/\s*\d+/);if(m)s=s.slice(0,m.index);
@@ -1489,15 +1535,22 @@ function renderKmTab(){if(NV){renderNvTT();return}
       <div class="wpr2">${gb?money(gb):`<button type="button" class="wlink2" data-kt="kho">Chưa có giá · đặt ở Kho hàng</button>`}</div>${chips('g|'+x.k,x.k)}</div>`};
   const nCo=LA.filter(x=>kmX(x).length).length,nSap=LA.filter(x=>kmX(x).some(k=>k.den&&k.den<=hanSap)).length;
   /* 05/11 anh Thái: 3 ô số chính là bộ lọc (bấm lại để bỏ lọc) — bỏ hàng chip lặp lại */
-  const kmFc=`<div class="kmsum" role="group" aria-label="Lọc khuyến mãi">${[['co',nCo,'Đang có KM'],['chua',LA.length-nCo,'Chưa có KM'],['sap',nSap,'Hết hạn trong 10 ngày']].map(([k,n,s])=>`<button type="button" data-kmf="${kmF===k?'all':k}" aria-pressed="${kmF===k}"><b>${n}</b><small>${s}</small></button>`).join('')}</div>${kmF!=='all'?`<small class="kmfnote">Đang lọc: ${kmF==='co'?'đang có KM':kmF==='chua'?'chưa có KM':'hết hạn trong 10 ngày'} · bấm lại ô để xem tất cả</small>`:''}`;
+  const kmFc=`<div class="kmsum" role="group" aria-label="Lọc khuyến mãi">${[['co',nCo,'Đang có KM'],['chua',LA.length-nCo,'Chưa có KM'],['sap',nSap,'Hết hạn 10 ngày']].map(([k,n,s])=>`<button type="button" data-kmf="${kmF===k?'all':k}" aria-pressed="${kmF===k}"><b>${n}</b><small>${s}</small></button>`).join('')}</div>${kmF!=='all'?`<small class="kmfnote">Đang lọc: ${kmF==='co'?'đang có KM':kmF==='chua'?'chưa có KM':'hết hạn trong 10 ngày'} · bấm lại ô để xem tất cả</small>`:''}`;
   const tgLuc=TG&&TG.capNhat?new Date(TG.capNhat):null;
-  $('v-km').innerHTML=`<div class="panel kmh"><div class="kmh1"><div><h2>🎁 Khuyến mãi</h2><span>${LA.length} mẫu còn hàng · bấm <b>Thêm KM</b> trên từng máy</span></div><button type="button" class="ghost" data-webpost="1">📝 Copy bài đăng</button></div>${LA.length?kmFc:''}</div>
-    ${(()=>{if(!L.length)return '<div class="empty">Kho chưa có máy. Nhập hàng trước, rồi quay lại đây ghi khuyến mãi.</div>';
-      const hb=x=>BRANDS.includes(x.hang)?x.hang:'Khác',BB=BRANDS.filter(b=>L.some(x=>hb(x)===b));if(kmBrand!=='Tất cả'&&!BB.includes(kmBrand))kmBrand='Tất cả';
-      const chipsB=`<div class="wbr">${['Tất cả',...BB].map(b=>`<button type="button" data-kmb="${esc(b)}" aria-pressed="${kmBrand===b}">${esc(b)} <small>${b==='Tất cả'?L.length:L.filter(x=>hb(x)===b).length}</small></button>`).join('')}</div>`;
-      return chipsB+(kmBrand==='Tất cả'?BB:[kmBrand]).map(b=>`<h3 class="wsec">${esc(b)} <small>${L.filter(x=>hb(x)===b).length} mẫu</small></h3><div class="wgrid">${L.filter(x=>hb(x)===b).map(the).join('')}</div>`).join('')})()}
-    ${H.length?`<div class="panel" style="margin-top:12px"><h2>🎧 Phụ kiện · hàng khác</h2><div class="list">${H.map(h=>{return `<div class="wrow"><div class="n"><b>${esc(h.ten)}</b><small><b class="wred">${h.giaBan?money(h.giaBan):'Chưa có giá'}</b> · <span class="wown">Tồn ${h.sl}</span></small>${chips('h|'+h.id,h.ten)}</div></div>`}).join('')}</div></div>`:''}
-    <p class="kgnote" style="margin:12px 4px">Khuyến mãi lưu là app <b>tự gắn vào đơn khi bán</b> (cả nhân viên). "Tồn" chỉ shop thấy — khách chỉ thấy Còn hàng / Hết hàng.</p>
+  /* 05/11 anh Thái duyệt: cột hãng bên trái cao kín; đầu cột phải = tên hãng + "n mẫu chưa có KM" + nút KM cả hãng; Phụ kiện là 1 mục trong cột */
+  const hAdd=(sp,ten)=>`<button type="button" class="hadd" data-kmadd="${esc(sp)}" data-kmten="${esc(ten)}">＋ KM</button>`,hKm=sp=>{const K=kmCua(sp);return K.length?`<div class="wkm hkm">${K.map(k=>`<span class="wchip">${esc(kmChip(k))}${k.den?` <i>đến ${esc(dmy(k.den).slice(0,5))}</i>`:''}<button type="button" data-kmdel="${k.id}" aria-label="Xóa khuyến mãi">✕</button></span>`).join('')}</div>`:''};
+  const hb=x=>BRANDS.includes(x.hang)?x.hang:'Khác',BB=BRANDS.filter(b=>L.some(x=>hb(x)===b)),PK='__pk';
+  if(kmBrand!=='Tất cả'&&kmBrand!==PK&&!BB.includes(kmBrand))kmBrand=BB[0]||(H.length?PK:'Tất cả');
+  if(kmBrand===PK&&!H.length)kmBrand=BB[0]||'Tất cả';
+  const rail=hRail([...(BB.length>1?[['Tất cả','Tất cả',L.length]]:[]),...BB.map(b=>[b,b,L.filter(x=>hb(x)===b).length]),...(H.length?[[PK,'Phụ kiện',H.length]]:[])],kmBrand,'data-kmb');
+  const row=x=>{const gb=Math.max(...x.ms.map(m=>m.giaBan||0)),tg=tgCua(x.k),img=imgCua(x.ms[0].ten)||(tg&&tg.a)||'',mau=new Set(x.ms.map(m=>m.ten)).size,[tn,cf]=tachCf(x.k);
+    return `<div class="hit"><span class="himg">${img?`<img src="${esc(img)}" alt="" loading="lazy">`:hNoImg}</span><span class="hx"><b>${esc(tn)}</b><span class="hcf">${cf?esc(cf)+' · ':''}<span class="wown" title="Chỉ shop thấy">Tồn ${x.ms.length}${mau>1?' · '+mau+' màu':''}</span></span><span class="hft">${gb?`<span class="hpr num">${money(gb)}</span>`:`<button type="button" class="wlink2" data-kt="kho">Chưa có giá · đặt ở Kho</button>`}${hAdd('g|'+x.k,x.k)}</span></span>${hKm('g|'+x.k)}</div>`};
+  const pane=(()=>{if(kmBrand===PK)return `<div class="hph"><div><b>Phụ kiện · hàng khác</b><small>${H.filter(h=>!kmCua('h|'+h.id).length).length} món chưa có KM</small></div></div>`+H.map(h=>`<div class="hit"><span class="himg">${hNoImg}</span><span class="hx"><b>${esc(h.ten)}</b><span class="hcf"><span class="wown">Tồn ${h.sl}</span></span><span class="hft"><span class="hpr num">${h.giaBan?money(h.giaBan):'Chưa có giá'}</span>${hAdd('h|'+h.id,h.ten)}</span></span>${hKm('h|'+h.id)}</div>`).join('');
+    if(!L.length)return `<div class="empty">${LA.length?'Không có mẫu nào khớp bộ lọc.':'Kho chưa có máy. Nhập hàng trước, rồi quay lại đây ghi khuyến mãi.'}</div>`;
+    const M=kmBrand==='Tất cả'?L:L.filter(x=>hb(x)===kmBrand),MA=kmBrand==='Tất cả'?LA:LA.filter(x=>hb(x)===kmBrand),nChua=MA.filter(x=>!kmX(x).length).length;
+    return `<div class="hph"><div><b>${esc(kmBrand)}</b><small>${nChua} mẫu chưa có KM</small></div>${kmBrand!=='Tất cả'&&MA.length?`<button type="button" class="btn" data-kmhang="${esc(kmBrand)}">＋ KM cả hãng</button>`:''}</div>`+M.map(row).join('')})();
+  $('v-km').innerHTML=`<div class="panel kmh"><div class="kmh1"><div><h2>Khuyến mãi</h2><span>${LA.length} mẫu còn hàng</span></div><button type="button" class="ghost" data-webpost="1">Copy bài đăng</button></div>${LA.length?kmFc:''}</div>
+    ${LA.length||H.length?`<div class="hsplit">${rail}<div class="hpane">${pane}<p class="hnote">KM lưu là app <b>tự gắn vào đơn khi bán</b> (cả nhân viên). "Tồn" chỉ shop thấy.</p></div></div>`:'<div class="empty">Kho chưa có máy. Nhập hàng trước, rồi quay lại đây ghi khuyến mãi.</div>'}
     ${kmSheet?renderKmSheet():''}`}
 function renderKmSheet(){const hg=db.hang.filter(h=>h.sl>0).sort((a,b)=>a.ten.localeCompare(b.ten));const T=[['giam','💸 Giảm tiền'],['pct','％ Giảm %'],['tang','🎧 Tặng phụ kiện'],['tg','💳 Trả góp 0%'],['txt','✏️ Khác']];
   return `<div class="wsheet" data-kmx="1"><form id="fKm" class="wsbox" autocomplete="off"><h3>Thêm khuyến mãi</h3><p class="wst">${esc(kmSheet.ten)}</p>
@@ -1509,8 +1562,9 @@ function renderKmSheet(){const hg=db.hang.filter(h=>h.sl>0).sort((a,b)=>a.ten.lo
      :`<label>Nội dung khuyến mãi<input id="kmTxt" maxlength="40" placeholder="VD: Bảo hành 18 tháng, Thu cũ +500K"></label>`}
     <label>Áp dụng đến ngày<small>Bỏ trống = chạy tới khi xóa</small><input id="kmDen" type="date"></label>
     <div class="err" id="kmErr"></div><div class="inrow"><button class="btn" type="submit" style="flex:1">Lưu khuyến mãi</button><button type="button" class="ghost" data-kmx="1">Thôi</button></div></form></div>`}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-kt],[data-kml],[data-kmdel],[data-kmadd],[data-kmx],[data-kmq],[data-kmb]');if(!b)return;const d=b.dataset;
-  if(d.kmb){kmBrand=d.kmb;render();const c=document.querySelector('.wbr [aria-pressed=true]');if(c)c.scrollIntoView({inline:'center',block:'nearest'});const h=document.querySelector('.wbr');if(h)window.scrollTo(0,h.getBoundingClientRect().top+window.scrollY-70);return}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-kt],[data-kml],[data-kmdel],[data-kmadd],[data-kmx],[data-kmq],[data-kmb],[data-kmhang]');if(!b)return;const d=b.dataset;
+  if(d.kmb){kmBrand=d.kmb;render();return}
+  if(d.kmhang){if(XEM){showKh();return}const G={};stock().forEach(m=>{if((BRANDS.includes(m.hang)?m.hang:'Khác')===d.kmhang)G[gk(m.ten)]=1});const ks=Object.keys(G);if(!ks.length)return;kmSheet={sp:'',ten:'Cả hãng '+d.kmhang+' · '+ks.length+' mẫu đang có',list:ks.map(k=>'g|'+k)};kmLoai='giam';render();setTimeout(()=>{const i=$('kmGt');if(i)i.focus()},60);return}
   if(d.kmx!==undefined){if(b.classList.contains('wsheet')&&e.target!==b)return;kmSheet=null;render();return}
   if(d.kt){khoTab='kho';khoHub=false;kmSheet=null;go('stock');return}
   if(d.kmadd){if(XEM){showKh();return}kmSheet={sp:d.kmadd,ten:d.kmten||''};kmLoai='giam';render();setTimeout(()=>{const i=$('kmGt');if(i)i.focus()},60);return}
@@ -1520,9 +1574,12 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-kt],[data-
 document.addEventListener('submit',e=>{if(e.target.id!=='fKm')return;e.preventDefault();const er=$('kmErr');if(!kmSheet){return}
   const k={id:uid(),sp:kmSheet.sp,ten:kmSheet.ten,loai:kmLoai,den:$('kmDen').value||''};
   if(kmLoai==='tang'){const h=db.hang.find(x=>x.id===$('kmTang').value);if(!h){er.textContent='Chọn món tặng.';return}k.tang=h.id;k.tangTen=h.ten}
-  else if(kmLoai==='tg'){if(kmCua(k.sp).some(x=>x.loai==='tg')){er.textContent='Máy này đã có Trả góp 0%.';return}}
+  else if(kmLoai==='tg'){if(!kmSheet.list&&kmCua(k.sp).some(x=>x.loai==='tg')){er.textContent='Máy này đã có Trả góp 0%.';return}}
   else if(kmLoai==='txt'){const t=$('kmTxt').value.trim();if(!t){er.textContent='Nhập nội dung khuyến mãi.';return}k.txt=t}
   else{const v=parseMoney($('kmGt').value);if(!(v>0)){er.textContent='Nhập số giảm.';return}if(kmLoai==='pct'&&v>=100){er.textContent='Giảm % phải nhỏ hơn 100.';return}k.gt=v}
+  if(kmSheet.list){let c=0;
+    kmSheet.list.forEach(sp=>{if(k.loai==='tg'&&kmCua(sp).some(x=>x.loai==='tg'))return;kmDs().push(Object.assign({},k,{id:uid(),sp,ten:sp.slice(2)}));c++});
+    if(!c){er.textContent='Các mẫu này đã có Trả góp 0% hết rồi.';return}kmSheet=null;save();render();toast('Đã thêm '+kmChip(k)+' cho '+c+' mẫu');return}
   kmDs().push(k);kmSheet=null;save();render();toast('Đã thêm khuyến mãi: '+kmChip(k))});
 /* giá niêm yết shop tự điền (máy TGDD không có) */
 function nyDat(k,v){nyEdit=null;db.shop.ny=db.shop.ny||{};const t=tgCua(k);if(v>0&&!(t&&t.ny===v))db.shop.ny[k]=v;else delete db.shop.ny[k];save();render()}
@@ -1800,6 +1857,7 @@ function render(){
   $('mode').textContent=NV?'NV: '+(NV.ten||NV.sdt):DEMO?(TEST?'Tài khoản test':'Bản demo'):XEM?'Xem thử':db.sample?'Dữ liệu mẫu':GG.email?'Đã kích hoạt':'Trên máy này';
   const old=NV?0:stock().filter(m=>ageDays(m)>45).length;$('dotStock').textContent=old;$('dotStock').hidden=!old;
   ({home:renderHome,sell:renderSell,add:renderAdd,stock:renderStock,rpt:renderRpt,km:renderKmTab,more:renderMore})[view]();
+  hsFit();
 }
 
 /* ===== Sự kiện ===== */
@@ -2500,7 +2558,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261105-2130';let verLuc=0;
+const BUILD='20261105-2200';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
