@@ -333,3 +333,10 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - Bán `sellGrid()`: hàng `.hit` (ảnh 56 · tên · cấu hình · Còn n · tồn lâu · giá); "＋ Thu máy cũ" đầu pane; lọc tồn >45 ngày hiện đầu pane + Bỏ lọc. Tổng cột khớp 73 máy.
 - KM `renderKmTab()`: cột có Tất cả (khi >1 hãng) + hãng + "Phụ kiện"; mặc định hãng đầu; đầu pane = hãng + "n mẫu chưa có KM" + **＋ KM cả hãng** (`data-kmhang`): 1 phiếu → ghi KM riêng cho từng mẫu đang có của hãng (Trả góp 0% bỏ qua mẫu đã có). Nút "＋ KM" nhỏ cạnh giá, chip KM dưới hàng.
 - Test 75/75, lưu trữ 52/52, giao diện 0 lỗi; 390px không tràn, cột kín tới đáy (775/776), KM cả hãng OPPO → +5 KM. BUILD 20261105-2200.
+
+## 45. (05/11 22h30) Cột bên trái cho mọi danh sách theo nhóm + màu nổi; xoá demo
+- Thêm `.hsplit` cho: **Kho › Điện thoại** (Tất cả = 2 ô tổng + cảnh báo + danh sách mẫu tồn lâu trước; bấm hãng = danh sách mẫu, đầu pane "n máy · n mẫu · vốn"; đang gõ tìm thì về danh sách thường; bảng `tkBang` chỉ còn khi không có cột), **Kho › Hàng khác** (nhóm hàng, khi >1 nhóm), **Bán › Phụ kiện / Dịch vụ** (`renderPkForm` bọc `pkFormIn`, cột = nhóm, lưới 2 cột).
+- Lọc theo thời gian (Hôm nay/7 ngày, Ngày/Tháng…) và tab 2–3 lựa chọn giữ thanh ngang — không phải danh mục.
+- Màu cột: nền pha 11% màu shop, chữ đậm màu shop, mục đang chọn nền màu shop chữ trắng (theo theme shop qua `color-mix`), ô tối đa 84px.
+- Xoá thư mục demo `app-moi/`, `bg-moi/`.
+- Test 75/75, lưu trữ 52/52, giao diện 0 lỗi; 6 màn có cột: kín đáy (775/776), không tràn. BUILD 20261105-2230.
