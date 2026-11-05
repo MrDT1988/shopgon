@@ -885,7 +885,7 @@ const tgPending=()=>live().filter(d=>d.tt==='Trả góp'&&d.tgTT!=='Đã giải 
 /* ===== Điều hướng ===== */
 let view='home', more='menu', showToday=false;
 function go(v){if(NV&&v==='stock')v='add';view=v;{const f=document.getElementById('fab');if(f)f.hidden=v!=='home'}document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.v===v||(v==='add'&&b.dataset.v==='stock')));['home','sell','add','stock','rpt','km','more'].forEach(x=>$('v-'+x).hidden=x!==v);render();window.scrollTo(0,0)}
-let tt;function toast(m){const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>t.hidden=true,2400)}
+let tt;function toast(m,ms){const t=$('toast');t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>t.hidden=true,ms||2400)}
 
 /* ===== HÔM NAY ===== */
 let rptMode='ngay', rptMonth=null, rptSel=null;
@@ -2391,7 +2391,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261105-1150';let verLuc=0;
+const BUILD='20261105-1210';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
@@ -2713,7 +2713,8 @@ function trKq(r,ghi){const o=document.createElement('div');o.className='trkq';o.
     if(b.dataset.trk2==='share'){if(!await trShare(r)){trTai(r);toast('Máy không cho chia sẻ ảnh — đã tải ảnh về')}}else{trTai(r);toast('Đang tải ảnh…')}});
   document.body.appendChild(o)}
 async function trXuat(cach){if(!$('trPv'))return;let r=TRB&&TRB.key===trKey()?TRB:null,lien=!!r;
-  if(!r){toast('Đang tạo ảnh…');try{r=await trTao();TRB=r}catch(e){toast('Chưa tạo được ảnh, kiểm tra mạng rồi thử lại');return}}
+  if(!r){toast('Đang tạo ảnh… (lần đầu có thể mất 10–20 giây)');const t0=Date.now();try{r=await trTao();TRB=r}catch(e){const m=e&&(e.message||e.type||e.name)||String(e);toast('Lỗi tạo ảnh ('+String(m).slice(0,60)+') — chụp màn hình gửi Sale/Admin',8000);return}}
+  try{window.__trLog=(window.__trLog||[]).concat([[cach,r.blob.size,TRB===r]])}catch(_){}
   if(cach==='share'){if(lien&&await trShare(r)){chepText(trCap());return}trKq(r,lien?'Máy không mở được khung chia sẻ — nhấn giữ ảnh để lưu, hoặc bấm Chia sẻ lại.':'Ảnh đã sẵn — bấm Chia sẻ để gửi Zalo/Facebook, hoặc nhấn giữ ảnh để lưu.');chepText(trCap());return}
   trTai(r);chepText(trCap());toast('Đã tải tờ rơi · bài đăng đã copy sẵn');trKq(r)}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-trnew],[data-trx],[data-trk],[data-trh],[data-trn],[data-trm],[data-trsave],[data-trcap]');if(!b)return;const d=b.dataset;
