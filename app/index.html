@@ -260,7 +260,7 @@ nav.tabs button{border:0;background:none;border-radius:12px;padding:6px 0;font-s
 nav.tabs svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 nav.tabs button[aria-selected="true"]{color:var(--pen);background:var(--pen-soft)}
 .dot{position:absolute;top:2px;right:calc(50% - 20px);min-width:18px;height:18px;border-radius:9px;background:var(--red);color:#fff;font-size:10.5px;display:grid;place-items:center;padding:0 4px}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(88px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:999px;font-weight:700;font-size:14px;z-index:9;max-width:calc(100% - 32px);text-align:center}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(88px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:999px;font-weight:700;font-size:14px;z-index:10001;max-width:calc(100% - 32px);text-align:center}
 .scan{position:fixed;inset:0;z-index:20;background:#0b1114;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));color:#fff}
 .scv{position:relative;width:100%;max-width:440px}.scan video{width:100%;max-width:440px;border-radius:16px;background:#000;display:block;aspect-ratio:4/3;object-fit:cover}
 .scf{position:absolute;left:8%;right:8%;top:34%;height:32%;border:3px solid #22c55e;border-radius:12px;box-shadow:0 0 0 999px rgba(0,0,0,.25);pointer-events:none}.scf.ok{border-color:#fde047}
@@ -2391,7 +2391,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261105-1210';let verLuc=0;
+const BUILD='20261105-1220';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
@@ -2712,7 +2712,7 @@ function trKq(r,ghi){const o=document.createElement('div');o.className='trkq';o.
   o.addEventListener('click',async e=>{const b=e.target.closest('[data-trk2]');if(e.target===o||(b&&b.dataset.trk2==='x')){o.remove();return}if(!b)return;
     if(b.dataset.trk2==='share'){if(!await trShare(r)){trTai(r);toast('Máy không cho chia sẻ ảnh — đã tải ảnh về')}}else{trTai(r);toast('Đang tải ảnh…')}});
   document.body.appendChild(o)}
-async function trXuat(cach){if(!$('trPv'))return;let r=TRB&&TRB.key===trKey()?TRB:null,lien=!!r;
+async function trXuat(cach){if(!$('trPv'))return;toast(cach==='share'?'Đang mở chia sẻ…':'Đang tải ảnh…');let r=TRB&&TRB.key===trKey()?TRB:null,lien=!!r;
   if(!r){toast('Đang tạo ảnh… (lần đầu có thể mất 10–20 giây)');const t0=Date.now();try{r=await trTao();TRB=r}catch(e){const m=e&&(e.message||e.type||e.name)||String(e);toast('Lỗi tạo ảnh ('+String(m).slice(0,60)+') — chụp màn hình gửi Sale/Admin',8000);return}}
   try{window.__trLog=(window.__trLog||[]).concat([[cach,r.blob.size,TRB===r]])}catch(_){}
   if(cach==='share'){if(lien&&await trShare(r)){chepText(trCap());return}trKq(r,lien?'Máy không mở được khung chia sẻ — nhấn giữ ảnh để lưu, hoặc bấm Chia sẻ lại.':'Ảnh đã sẵn — bấm Chia sẻ để gửi Zalo/Facebook, hoặc nhấn giữ ảnh để lưu.');chepText(trCap());return}
