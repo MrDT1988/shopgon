@@ -297,3 +297,9 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - Nguyên nhân: bấm Chia sẻ/Tải ảnh rồi mới dựng ảnh (vài giây) → điện thoại hết hiệu lực "lượt bấm" nên `navigator.share` bị chặn và bị nuốt lỗi im lặng; Tải ảnh dùng data-URL `<a download>` dễ bị app cài (PWA) / trình duyệt trong Zalo bỏ qua.
 - Sửa: `trTruoc()` dựng sẵn ảnh (`TRB`, khóa `trKey()`) 0,7 giây sau khi xem trước vẽ xong (sau QR) → bấm là chia sẻ/tải liền trong lượt bấm. Tải bằng blob (`trTai`). Luôn mở khung **"✅ Tờ rơi đã xong"** (`trKq`, lớp `.trkq`) có ảnh để **nhấn giữ → Tải xuống/Lưu ảnh** + nút Chia sẻ / Tải lại (lượt bấm mới). Chia sẻ lỗi (không phải bấm Hủy) → tự tải về. Bỏ `cacheBust` cho nhanh.
 - Test 75/75, lưu trữ 50/50, giao diện 0 lỗi; thử xuất thật bằng html-to-image: tải về file .jpg ~250KB, khung kết quả hiện đúng. BUILD 20261105-1150.
+
+## 40. (05/11 12h) Tờ rơi: thông báo bị che · nút COPY ẢNH
+- Video anh Thái (Xiaomi, app cài): bấm Tải ảnh không thấy gì → `.toast` z-index 9 nằm DƯỚI `.wsheet` (40) nên mọi thông báo/lỗi trong khung tờ rơi bị che. Đổi `.toast` z-index 10001; bấm là báo ngay. `toast(m,ms)` nhận thời gian hiện.
+- Lỗi tạo ảnh hiện lý do trong ngoặc (8 giây) để anh chụp gửi.
+- **📋 Copy ảnh** (nút chính, trên Chia sẻ/Tải ảnh; có cả trong khung "Tờ rơi đã xong"): `trCopyAnh` → `navigator.clipboard.write` với `ClipboardItem({'image/png': Promise})` (giữ lượt bấm khi ảnh chưa dựng xong; `trPng` đổi JPEG→PNG vì Android chỉ nhận PNG). Copy bài đăng đổi icon 📝.
+- Test 75/75, giao diện 0 lỗi, test copy: bộ nhớ tạm có image/png. BUILD 20261105-1235.

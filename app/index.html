@@ -2391,7 +2391,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261105-1220';let verLuc=0;
+const BUILD='20261105-1235';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
@@ -2690,8 +2690,8 @@ function renderTr(){const L=ttqMau().filter(x=>x.gb>0),HB=BRANDS.filter(b=>L.som
     <div class="trmau">${TR_MAU.map(([k,t,c])=>`<button type="button" data-trm="${k}" aria-pressed="${(TR.mau||'xanh')===k}"><i style="background:${c}"></i>${t}</button>`).join('')}</div>
     <div class="trwrap"><div class="trscale" id="trPv"></div></div>
     <small class="trnote">${D.length<TR.n?`Kho chỉ có ${D.length} mẫu có giá phù hợp — tờ rơi hiện ${D.length} máy.`:`${D.length} máy · giá lấy từ Kho, khuyến mãi lấy từ tab Khuyến mãi.`}</small>
-    <div class="trbt"><button type="button" class="btn" data-trsave="share">📤 Chia sẻ</button><button type="button" class="ghost" data-trsave="tai">⬇ Tải ảnh</button></div>
-    <button type="button" class="ghost" data-trcap="1">📋 Copy bài đăng kèm tờ rơi</button>
+    <button type="button" class="btn" data-trsave="copy">📋 Copy ảnh</button><div class="trbt"><button type="button" class="ghost" data-trsave="share">📤 Chia sẻ</button><button type="button" class="ghost" data-trsave="tai">⬇ Tải ảnh</button></div>
+    <button type="button" class="ghost" data-trcap="1">📝 Copy bài đăng kèm tờ rơi</button>
     <button type="button" class="wlink" data-trx="1">Đóng</button></div></div>`}
 function trVe(){const pv=$('trPv');if(!pv||!TR)return;const D=trDs();pv.innerHTML=trHtml(D);const fit=()=>{const w=pv.parentElement.getBoundingClientRect().width||320;pv.style.transform='scale('+(w/1080)+')'};fit();requestAnimationFrame(fit);
   const q=$('trQr');if(q){const L=linkNgan();loadQr().then(()=>{q.innerHTML='';new QRCode(q,{text:L,width:150,height:150,correctLevel:QRCode.CorrectLevel.M});trTruoc()}).catch(()=>{q.remove();trTruoc()})}else trTruoc()}
@@ -2708,11 +2708,20 @@ function trTruoc(){clearTimeout(trHen);TRB=null;trHen=setTimeout(async()=>{if(!T
 function trTai(r){const u=URL.createObjectURL(r.blob),a=document.createElement('a');a.href=u;a.download=r.ten;a.rel='noopener';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(u);a.remove()},8000)}
 async function trShare(r){if(!navigator.canShare)return false;const f=new File([r.blob],r.ten,{type:'image/jpeg'});if(!navigator.canShare({files:[f]}))return false;
   try{await navigator.share({files:[f],text:trCap()});return true}catch(e){return e&&e.name==='AbortError'}}
-function trKq(r,ghi){const o=document.createElement('div');o.className='trkq';o.innerHTML=`<div class="trkqbox"><b>✅ Tờ rơi đã xong</b><small>${esc(ghi||'Nếu máy chưa lưu: nhấn giữ vào ảnh → chọn "Tải xuống" / "Lưu ảnh".')}</small><img src="${r.url}" alt="Tờ rơi"><div class="trbt"><button type="button" class="btn" data-trk2="share">📤 Chia sẻ</button><button type="button" class="ghost" data-trk2="tai">⬇ Tải lại</button></div><button type="button" class="wlink" data-trk2="x">Đóng</button></div>`;
+function trKq(r,ghi){const o=document.createElement('div');o.className='trkq';o.innerHTML=`<div class="trkqbox"><b>✅ Tờ rơi đã xong</b><small>${esc(ghi||'Nếu máy chưa lưu: nhấn giữ vào ảnh → chọn "Tải xuống" / "Lưu ảnh".')}</small><img src="${r.url}" alt="Tờ rơi"><button type="button" class="btn" data-trk2="copy">📋 Copy ảnh</button><div class="trbt"><button type="button" class="ghost" data-trk2="share">📤 Chia sẻ</button><button type="button" class="ghost" data-trk2="tai">⬇ Tải lại</button></div><button type="button" class="wlink" data-trk2="x">Đóng</button></div>`;
   o.addEventListener('click',async e=>{const b=e.target.closest('[data-trk2]');if(e.target===o||(b&&b.dataset.trk2==='x')){o.remove();return}if(!b)return;
-    if(b.dataset.trk2==='share'){if(!await trShare(r)){trTai(r);toast('Máy không cho chia sẻ ảnh — đã tải ảnh về')}}else{trTai(r);toast('Đang tải ảnh…')}});
+    if(b.dataset.trk2==='copy'){trCopyAnh();return}if(b.dataset.trk2==='share'){if(!await trShare(r)){trTai(r);toast('Máy không cho chia sẻ ảnh — đã tải ảnh về')}}else{trTai(r);toast('Đang tải ảnh…')}});
   document.body.appendChild(o)}
-async function trXuat(cach){if(!$('trPv'))return;toast(cach==='share'?'Đang mở chia sẻ…':'Đang tải ảnh…');let r=TRB&&TRB.key===trKey()?TRB:null,lien=!!r;
+/* 05/11 anh Thái: "cho copy ảnh đi như mấy phần báo cáo" — bấm Copy ảnh là ảnh tờ rơi vào bộ nhớ tạm, dán thẳng vào Zalo/Facebook.
+   Ảnh đưa vào ClipboardItem dạng Promise để vẫn giữ lượt bấm khi ảnh chưa dựng xong; Android chỉ nhận PNG nên đổi JPEG → PNG. */
+async function trPng(r){if(r.png)return r.png;const bm=await createImageBitmap(r.blob),c=document.createElement('canvas');c.width=bm.width;c.height=bm.height;c.getContext('2d').drawImage(bm,0,0);
+  r.png=await new Promise((ok,bad)=>c.toBlob(b=>b?ok(b):bad(new Error('khong doi duoc PNG')),'image/png'));return r.png}
+async function trCopyAnh(){if(!navigator.clipboard||!window.ClipboardItem){toast('Máy này chưa cho copy ảnh — bấm Tải ảnh hoặc Chia sẻ',5000);return}
+  toast('Đang copy ảnh…');
+  const p=(async()=>{let r=TRB&&TRB.key===trKey()?TRB:null;if(!r){r=await trTao();TRB=r}return trPng(r)})();
+  try{await navigator.clipboard.write([new ClipboardItem({'image/png':p})]);toast('✓ Đã copy ảnh — mở Zalo/Facebook dán vào là xong',4000)}
+  catch(e){toast('Chưa copy được ảnh ('+String(e&&(e.message||e.name)||e).slice(0,50)+') — bấm Tải ảnh',7000)}}
+async function trXuat(cach){if(!$('trPv'))return;if(cach==='copy'){trCopyAnh();return}toast(cach==='share'?'Đang mở chia sẻ…':'Đang tải ảnh…');let r=TRB&&TRB.key===trKey()?TRB:null,lien=!!r;
   if(!r){toast('Đang tạo ảnh… (lần đầu có thể mất 10–20 giây)');const t0=Date.now();try{r=await trTao();TRB=r}catch(e){const m=e&&(e.message||e.type||e.name)||String(e);toast('Lỗi tạo ảnh ('+String(m).slice(0,60)+') — chụp màn hình gửi Sale/Admin',8000);return}}
   try{window.__trLog=(window.__trLog||[]).concat([[cach,r.blob.size,TRB===r]])}catch(_){}
   if(cach==='share'){if(lien&&await trShare(r)){chepText(trCap());return}trKq(r,lien?'Máy không mở được khung chia sẻ — nhấn giữ ảnh để lưu, hoặc bấm Chia sẻ lại.':'Ảnh đã sẵn — bấm Chia sẻ để gửi Zalo/Facebook, hoặc nhấn giữ ảnh để lưu.');chepText(trCap());return}
