@@ -392,7 +392,7 @@ body.nv .hmg>div.own{display:none}body.nv .hmg{grid-template-columns:1fr}
 .trg{flex:1;min-height:0;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
 .trc{position:relative;background:var(--card);border-radius:24px;padding:14px 12px 12px;display:flex;flex-direction:column;align-items:center;text-align:center;min-height:0;box-shadow:0 6px 18px rgba(15,23,42,.08);border:2px solid var(--line)}
 .tri{flex:1;min-height:0;width:100%;display:flex;align-items:center;justify-content:center;position:relative}.tri:before{content:"";position:absolute;width:78%;aspect-ratio:1;max-height:100%;border-radius:50%;background:radial-gradient(circle,var(--line),transparent 70%)}
-.tri img{position:relative;max-width:100%;max-height:100%;object-fit:contain;filter:drop-shadow(0 10px 12px rgba(0,0,0,.18))}.tri span{position:relative;font-size:70px}
+.tri img{position:relative;max-width:100%;max-height:100%;object-fit:contain;filter:drop-shadow(0 10px 12px rgba(0,0,0,.18))}.tri span{position:relative;font-size:70px}.h2c .trc,.h2c .trpc{box-shadow:none}.h2c .tri img{filter:none}
 .trn{font-size:22px;font-weight:800;line-height:1.15;margin-top:8px;max-height:2.3em;overflow:hidden;color:var(--ink)}
 .trc s{font-size:19px;color:var(--mut);min-height:23px;margin-top:2px;font-weight:600}
 .trc em{font-style:normal;display:inline-block;margin-top:4px;font-size:30px;font-weight:900;line-height:1.15;background:var(--tag);color:var(--tagt);border-radius:12px;padding:3px 14px;white-space:nowrap}
@@ -2391,7 +2391,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261105-1235';let verLuc=0;
+const BUILD='20261105-1240';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
@@ -2701,9 +2701,24 @@ function trCap(){const D=trDs(),sh=db.shop||{},L=linkNgan()||'https://shopgon.vn
    Sửa: dựng sẵn ảnh ngay khi xem trước (TRB) → bấm là chia sẻ/tải liền; tải bằng blob; luôn mở khung ảnh xong để nhấn giữ lưu ảnh nếu máy không tự tải. */
 let TRB=null,trHen=0;
 const trKey=()=>TR?JSON.stringify([TR.kieu,TR.hang,TR.n,TR.mau,KM?1:0,(db.shop||{}).ten||'',linkNgan()||'']):'';
-async function trTao(){const pv=$('trPv'),el=pv&&pv.firstElementChild;if(!el)throw new Error('khong co to roi');await loadH2i();
-  const url=await htmlToImage.toJpeg(el,{quality:.92,width:1080,height:1350,pixelRatio:1,backgroundColor:'#ffffff'});const blob=await (await fetch(url)).blob();
-  const ten='to-roi-'+(TR.kieu==='hang'?TR.hang:'hot')+'-'+todayIso()+'.jpg';return {url,blob,ten,key:trKey()}}
+/* 05/11 12h28 máy Xiaomi anh Thái báo "Lỗi tạo ảnh (error)" — html-to-image (vẽ qua SVG) hỏng trên máy đó. Thử lần lượt 3 cách, cách nào chạy được thì nhớ (sg_tr_cach) để lần sau dùng luôn:
+   a = html-to-image đủ font · b = html-to-image bỏ nhúng font · c = html2canvas (vẽ thẳng lên canvas, không qua SVG — chạy ổn trên Android) */
+function loadH2c(){return window.html2canvas?Promise.resolve():new Promise((ok,bad)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';s.onload=ok;s.onerror=()=>bad(new Error('khong tai duoc html2canvas'));document.head.appendChild(s)})}
+const trLoi=e=>e&&(e.message||(e.type?'su kien '+e.type:'')||e.name)||String(e);
+async function trCachA(el,skipFonts){await loadH2i();const url=await htmlToImage.toJpeg(el,{quality:.92,width:1080,height:1350,pixelRatio:1,backgroundColor:'#ffffff',skipFonts});return (await fetch(url)).blob()}
+async function trCachC(el){await loadH2c();const box=document.createElement('div');box.style.cssText='position:fixed;left:-30000px;top:0;width:1080px;height:1350px;overflow:hidden;pointer-events:none';
+  const cl=el.cloneNode(true);/* canvas không chép theo cloneNode — chép lại hình QR */el.querySelectorAll('canvas').forEach((c,i)=>{const d=cl.querySelectorAll('canvas')[i];if(d){d.width=c.width;d.height=c.height;d.getContext('2d').drawImage(c,0,0)}});
+  cl.classList.add('h2c');box.appendChild(cl);document.body.appendChild(box);
+  try{const c=await html2canvas(cl,{width:1080,height:1350,scale:1,useCORS:true,backgroundColor:'#ffffff',logging:false});
+    return await new Promise((ok,bad)=>c.toBlob(b=>b?ok(b):bad(new Error('canvas rong')),'image/jpeg',.92))}finally{box.remove()}}
+async function trTao(){const pv=$('trPv'),el=pv&&pv.firstElementChild;if(!el)throw new Error('khong co to roi');
+  let nho='';try{nho=localStorage.getItem('sg_tr_cach')||''}catch(_){}
+  const thu=['a','b','c'].sort((x,y)=>(y===nho)-(x===nho)),loi=[];let blob=null,cach='';
+  for(const k of thu){try{blob=k==='c'?await trCachC(el):await trCachA(el,k==='b');if(blob&&blob.size>20000){cach=k;break}loi.push(k+':anh rong');blob=null}catch(e){loi.push(k+':'+trLoi(e))}}
+  if(!blob)throw new Error(loi.join(' | '));
+  try{localStorage.setItem('sg_tr_cach',cach)}catch(_){}
+  const url=await new Promise(ok=>{const f=new FileReader();f.onload=()=>ok(f.result);f.readAsDataURL(blob)});
+  const ten='to-roi-'+(TR.kieu==='hang'?TR.hang:'hot')+'-'+todayIso()+'.jpg';return {url,blob,ten,cach,key:trKey()}}
 function trTruoc(){clearTimeout(trHen);TRB=null;trHen=setTimeout(async()=>{if(!TR)return;const k=trKey();try{const r=await trTao();if(TR&&r.key===k&&trKey()===k)TRB=r}catch(_){}},700)}
 function trTai(r){const u=URL.createObjectURL(r.blob),a=document.createElement('a');a.href=u;a.download=r.ten;a.rel='noopener';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(u);a.remove()},8000)}
 async function trShare(r){if(!navigator.canShare)return false;const f=new File([r.blob],r.ten,{type:'image/jpeg'});if(!navigator.canShare({files:[f]}))return false;
@@ -2720,9 +2735,9 @@ async function trCopyAnh(){if(!navigator.clipboard||!window.ClipboardItem){toast
   toast('Đang copy ảnh…');
   const p=(async()=>{let r=TRB&&TRB.key===trKey()?TRB:null;if(!r){r=await trTao();TRB=r}return trPng(r)})();
   try{await navigator.clipboard.write([new ClipboardItem({'image/png':p})]);toast('✓ Đã copy ảnh — mở Zalo/Facebook dán vào là xong',4000)}
-  catch(e){toast('Chưa copy được ảnh ('+String(e&&(e.message||e.name)||e).slice(0,50)+') — bấm Tải ảnh',7000)}}
+  catch(e){toast('Chưa copy được ảnh ('+String(trLoi(e)).slice(0,140)+') — bấm Tải ảnh',10000)}}
 async function trXuat(cach){if(!$('trPv'))return;if(cach==='copy'){trCopyAnh();return}toast(cach==='share'?'Đang mở chia sẻ…':'Đang tải ảnh…');let r=TRB&&TRB.key===trKey()?TRB:null,lien=!!r;
-  if(!r){toast('Đang tạo ảnh… (lần đầu có thể mất 10–20 giây)');const t0=Date.now();try{r=await trTao();TRB=r}catch(e){const m=e&&(e.message||e.type||e.name)||String(e);toast('Lỗi tạo ảnh ('+String(m).slice(0,60)+') — chụp màn hình gửi Sale/Admin',8000);return}}
+  if(!r){toast('Đang tạo ảnh… (lần đầu có thể mất 10–20 giây)');const t0=Date.now();try{r=await trTao();TRB=r}catch(e){const m=trLoi(e);toast('Lỗi tạo ảnh ('+String(m).slice(0,140)+') — chụp màn hình gửi Sale/Admin',10000);return}}
   try{window.__trLog=(window.__trLog||[]).concat([[cach,r.blob.size,TRB===r]])}catch(_){}
   if(cach==='share'){if(lien&&await trShare(r)){chepText(trCap());return}trKq(r,lien?'Máy không mở được khung chia sẻ — nhấn giữ ảnh để lưu, hoặc bấm Chia sẻ lại.':'Ảnh đã sẵn — bấm Chia sẻ để gửi Zalo/Facebook, hoặc nhấn giữ ảnh để lưu.');chepText(trCap());return}
   trTai(r);chepText(trCap());toast('Đã tải tờ rơi · bài đăng đã copy sẵn');trKq(r)}

@@ -303,3 +303,7 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - Lỗi tạo ảnh hiện lý do trong ngoặc (8 giây) để anh chụp gửi.
 - **📋 Copy ảnh** (nút chính, trên Chia sẻ/Tải ảnh; có cả trong khung "Tờ rơi đã xong"): `trCopyAnh` → `navigator.clipboard.write` với `ClipboardItem({'image/png': Promise})` (giữ lượt bấm khi ảnh chưa dựng xong; `trPng` đổi JPEG→PNG vì Android chỉ nhận PNG). Copy bài đăng đổi icon 📝.
 - Test 75/75, giao diện 0 lỗi, test copy: bộ nhớ tạm có image/png. BUILD 20261105-1235.
+
+## 41. (05/11 12h30) Tờ rơi: "Lỗi tạo ảnh (error)" trên Xiaomi → 3 cách dựng ảnh
+- Máy Xiaomi anh Thái: html-to-image (vẽ qua SVG foreignObject) báo sự kiện `error`. `trTao` giờ thử lần lượt: **a** html-to-image đủ font → **b** bỏ nhúng font → **c** html2canvas 1.4.1 (cdnjs, vẽ thẳng canvas; bản sao đặt ngoài màn hình, lớp `.h2c` bỏ box-shadow/drop-shadow vì html2canvas vẽ xấu, chép lại canvas QR). Cách chạy được nhớ ở `sg_tr_cach`. Lỗi cả 3 → thông báo ghi lý do từng cách.
+- Test giả lập html-to-image hỏng → tự sang cách c, ảnh đẹp, Copy ảnh ra image/png. Test 75/75, giao diện 0 lỗi. BUILD 20261105-1240.
