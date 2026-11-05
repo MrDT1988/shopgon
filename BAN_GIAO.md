@@ -340,3 +340,8 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - Màu cột: nền pha 11% màu shop, chữ đậm màu shop, mục đang chọn nền màu shop chữ trắng (theo theme shop qua `color-mix`), ô tối đa 84px.
 - Xoá thư mục demo `app-moi/`, `bg-moi/`.
 - Test 75/75, lưu trữ 52/52, giao diện 0 lỗi; 6 màn có cột: kín đáy (775/776), không tràn. BUILD 20261105-2230.
+
+## 46. (05/11 23h) Tab trên kiểu gạch chân + "Việc cần làm" ở Trang chủ
+- Anh Thái chọn kiểu A: mọi `.seg.top` (Bán, Kho, Báo cáo, Nhập hàng) = chữ trên nền + vạch màu shop 3px trượt (`segSlide()` gọi trong `hsFit()`, nhớ vị trí cũ theo bộ nút để trượt). Tab Bán/Kho có số: Điện thoại = máy tồn, Phụ kiện = món pk+sim còn hàng (khớp cột), Hàng khác = số món.
+- Trang chủ `homeTodo()`: 3 ô Việc cần làm — máy tồn >45 ngày (đỏ → Kho điện thoại lọc tồn lâu, đầu pane "Tồn trên 45 ngày · Bỏ lọc"), món sắp hết (vàng → Kho hàng khác), mẫu chưa có KM (xanh → tab KM lọc "chưa có KM"). Ẩn ở chế độ Xem thử và với NV.
+- Test 75/75, lưu trữ 52/52, giao diện 0 lỗi; 7 màn có cột kín đáy. BUILD 20261105-2300.
