@@ -112,6 +112,25 @@ input,select{font:inherit;font-size:16px;padding:9px 11px;border:1px solid var(-
 .xem .chu{position:relative;z-index:7;display:flex;align-items:center;gap:8px;padding:8px 12px;background:#111827;color:#fff;font-size:12.5px}
 .xem .chu a{color:#fff;text-decoration:none;font-weight:800}.xem .chu span{flex:1;opacity:.7;text-align:center}
 .xem .chu button{border:0;background:#ffd400;color:#111827;font-weight:800;border-radius:999px;padding:6px 11px;font-size:12.5px}
+
+/* 05/11 thẻ máy chung tỉ lệ với app (2 cột, ảnh 1:1, nhãn KM, dòng quà, Còn hàng) */
+.xem .luoi.luoi{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (min-width:640px){.xem .luoi.luoi{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (min-width:960px){.xem .luoi.luoi{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.xem .c.c{border-radius:16px;padding:0 0 10px;border:1px solid #e1e9e9;overflow:hidden;text-align:left}
+.xem .c.c .anh{height:auto;aspect-ratio:1/1;background:linear-gradient(180deg,#f3f6f8,#e9eef1);margin-bottom:8px}
+.xem .c.c .anh img{width:80%;height:80%;object-fit:contain}
+.xem .c.c .pc{top:8px;left:8px;border-radius:8px;padding:4px 8px;font-size:12px;line-height:1.2}
+.xem .c.c .pc.qua{background:#fff3dc;color:#b45309}
+.xem .c.c .n{font-size:14px;line-height:1.3;height:2.6em;padding:0 10px}
+.xem .c.c .g{font-size:17px;font-weight:800;padding:4px 10px 0}
+.xem .c.c .ny{font-size:12.5px;padding:0 10px}
+.xem .c .kml{font-size:12.5px;color:#b45309;padding:4px 10px 0;line-height:1.35}
+.xem .c .okh{font-size:12px;font-weight:700;color:#15803d;padding:4px 10px 0}
+.xem .kmt{margin:12px 2px 8px;font-size:16px;font-weight:800;display:flex;align-items:baseline;gap:8px}
+.xem .kmt small{font-size:12.5px;color:#6b7280;font-weight:600}
+.xem .tabs button{min-height:44px}
+.eic{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;vertical-align:-.2em;margin-right:.3em}
 </style></head><body>
 <div id="sua">
 <header><a id="veapp" hidden style="color:inherit;font-size:13px;text-decoration:none;opacity:.85">‹ Về app</a><b>🏷 Bảng giá online</b><small>Bản demo · bản thật tự lấy từ tồn kho · ảnh máy cập nhật ngày 10, ngày 20 và ngày cuối tháng</small></header>
@@ -207,10 +226,10 @@ function veXem(d) {
   /* thẻ gọn: ảnh + tên + giá + giá niêm yết gạch ngang. Khuyến mãi xem khi bấm vào máy */
   function the(m) {
     var g = giaSP(m), het = m.q === 0, K = kmList(m), pc = g.giam && g.ny ? Math.round(g.giam / g.ny * 100) : 0;
-    return '<button type="button" class="c' + (het ? ' het' : '') + '" data-ct="' + d.m.indexOf(m) + '"><span class="anh">' + (pc >= 1 ? '<span class="pc">-' + pc + '%</span>' : '') + (K.length ? '<span class="kmb">🎁</span>' : '') +
+    return '<button type="button" class="c' + (het ? ' het' : '') + '" data-ct="' + d.m.indexOf(m) + '"><span class="anh">' + (pc >= 1 ? '<span class="pc">-' + pc + '%</span>' : '') + (K.length && pc < 1 ? '<span class="pc qua">Quà tặng</span>' : '') +
       (m.i ? '<img src="' + esc(anhUrl(m.i)) + '" alt="" loading="lazy">' : '<span class="noimg">📱</span>') + (het ? '<span class="hh">Hết hàng</span>' : '') + '</span>' +
       '<span class="n">' + esc(tenMay(m)) + (m.d ? ' ' + esc(m.d) : '') + '</span>' +
-      '<span class="g">' + (g.gb ? vnd(g.gb) : 'Liên hệ') + '</span><span class="ny">' + (g.giam ? '<s>' + vnd(g.ny) + '</s>' : '') + '</span></button>';
+      '<span class="g">' + (g.gb ? vnd(g.gb) : 'Liên hệ') + '</span><span class="ny">' + (g.giam ? '<s>' + vnd(g.ny) + '</s>' : '') + '</span>' + (K.length ? '<span class="kml">' + esc(typeof K[0] === 'string' ? K[0] : kmChip(K[0])) + (K.length > 1 ? ' · +' + (K.length - 1) + ' ưu đãi' : '') + '</span>' : '') + (het ? '' : '<span class="okh">Còn hàng</span>') + '</button>';
   }
   function moMay(i) {
     var m = d.m[i], bs = x.querySelector('.bs'); if (!m || !bs) return;
@@ -232,7 +251,10 @@ function veXem(d) {
     var goc = q ? d.m.filter(function (m) { return (m.t + ' ' + (TEN[m.h] || '') + ' ' + (m.d || '')).toLowerCase().indexOf(q) >= 0; }) : tab === 'ALL' ? d.m : tab === 'KM' ? KMS : tab === 'NB' ? NB : d.m.filter(function (m) { return m.h === tab; });
     var L = goc.slice().sort(function (a, b) { return ((b.q !== 0) - (a.q !== 0)) || (giaSP(a).gb - giaSP(b).gb); });
     var pk = q ? (d.k || []).filter(function (r) { return r.t.toLowerCase().indexOf(q) >= 0; }) : [];
-    ds.innerHTML = (L.length ? '<div class="luoi">' + L.map(the).join('') + '</div>' : (pk.length ? '' : '<div class="trong">Chưa có máy phù hợp.</div>')) + (pk.length ? bangPK(pk) : '');
+    /* 05/11 anh Thái: tab Tất cả có dải Đang khuyến mãi ở đầu */
+    var kmTop = (!q && tab === 'ALL' && KMS.length) ? KMS.slice().sort(function (a, b) { return giaSP(a).gb - giaSP(b).gb; }) : [];
+    if (kmTop.length) L = L.filter(function (m) { return kmTop.indexOf(m) < 0; });
+    ds.innerHTML = (kmTop.length ? '<h3 class="kmt">Đang khuyến mãi <small>' + kmTop.length + ' máy</small></h3><div class="luoi">' + kmTop.map(the).join('') + '</div><h3 class="kmt">Tất cả máy</h3>' : '') + (L.length ? '<div class="luoi">' + L.map(the).join('') + '</div>' : (pk.length ? '' : '<div class="trong">Chưa có máy phù hợp.</div>')) + (pk.length ? bangPK(pk) : '');
   }
   x.innerHTML = '<div class="xem"><div class="top"><div class="hang1"><div class="logo">' + esc(String(d.s || 'S').replace(/^(cửa hàng|shop|điện thoại|đtdđ)\s+/i, '').charAt(0).toUpperCase()) + '</div><div class="tt"><b>' + esc(d.s || '') + '</b><span class="dc">' + esc([d.a, d.p].filter(Boolean).join(' · ')) + '</span></div><span class="cnt"><b>' + conHang.length + '</b> mẫu còn hàng</span></div>' +
     '<input class="timx" placeholder="🔍 Tìm máy: Reno, A17, iPhone 17…" autocomplete="off"></div>' +
@@ -441,5 +463,15 @@ function taiPoster() {
     var a = document.createElement('a'); a.href = u; a.download = 'Bang_gia_' + TEN[PH] + '_' + new Date().toISOString().slice(0, 10) + '.png'; a.click(); b.textContent = cu;
   }).catch(function (e) { b.textContent = cu; alert('Chưa xuất được: ' + (e && e.message || e)); });
 }
+</script>
+<script>
+/* 05/11/2026 anh Thái (skill thiet-ke-giao-dien): emoji đầu nút/tiêu đề → icon nét SVG cùng bộ. Không đụng ô nhập, bài đăng, tờ rơi. */
+(function(){const P={"gift":"M3 9h18v4H3zM5 13v8h14v-8M12 9v12M12 9c-2-4-6-4-6-1s6 1 6 1 6 2 6-1-4-3-6 1","phone":"M7 2h10v20H7zM11 18h2","check":"M20 6L9 17l-5-5","alert":"M12 3l10 18H2zM12 10v5M12 18h.01","user":"M20 21a8 8 0 0 0-16 0M12 13a5 5 0 1 0 0-10 5 5 0 0 0 0 10","receipt":"M5 2h14v20l-3-2-2 2-2-2-2 2-2-2-3 2zM9 7h6M9 11h6M9 15h4","box":"M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4M12 11v10","camera":"M3 7h4l2-3h6l2 3h4v13H3zM12 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8","call":"M5 4h4l2 5-3 2a11 11 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 3 6a2 2 0 0 1 2-2","fire":"M12 22a7 7 0 0 0 7-7c0-5-7-13-7-13S5 10 5 15a7 7 0 0 0 7 7","down":"M12 3v13M6 11l6 6 6-6M4 21h16","head":"M4 15v-3a8 8 0 0 1 16 0v3M4 15h3v5H4zM17 15h3v5h-3z","money":"M2 6h20v12H2zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6M6 9v.01M18 15v.01","clip":"M9 3h6v3H9zM6 5h12v17H6zM9 11h6M9 15h6","img":"M3 5h18v14H3zM3 16l5-5 4 4 3-3 6 6M15 9h.01","undo":"M9 14L4 9l5-5M4 9h11a5 5 0 0 1 0 10h-3","globe":"M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18","send":"M22 2L11 13M22 2l-7 20-4-9-9-4z","pen":"M4 20h4L19 9l-4-4L4 16zM14 6l4 4","pin":"M12 22s7-7 7-12a7 7 0 0 0-14 0c0 5 7 12 7 12M12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4","search":"M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14M20 20l-4-4","lock":"M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4","unlock":"M5 11h14v10H5zM8 11V7a4 4 0 0 1 7.5-2","clock":"M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18M12 7v5l3 2","inbox":"M3 13h5l2 3h4l2-3h5M5 5h14l2 8v6H3v-6z","cart":"M3 4h2l2.4 11.2a1 1 0 0 0 1 .8h9.2a1 1 0 0 0 1-.8L20 8H6M9 20h.01M17 20h.01","flask":"M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3M7.5 14h9","users":"M16 19v-1a4 4 0 0 0-8 0v1M12 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6M20 19v-1a3 3 0 0 0-2-2.8M4 19v-1a3 3 0 0 1 2-2.8","card":"M2 5h20v14H2zM2 10h20M6 15h4","sync":"M20 11a8 8 0 0 0-14.9-3M4 4v4h4M4 13a8 8 0 0 0 14.9 3M20 20v-4h-4","out":"M15 3h5v18h-5M10 17l5-5-5-5M15 12H3","spark":"M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z","truck":"M2 6h12v10H2zM14 9h4l4 4v3h-8zM6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4M18 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4","up":"M12 21V8M6 13l6-6 6 6M4 3h16","eye":"M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6","gear":"M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6M19 12l2-1-1-3-2 .3-1.4-1.4L17 5l-3-1-1 2h-2l-1-2-3 1 .3 2L5.9 6.9 4 7l-1 3 2 1v2l-2 1 1 3 2-.3 1.4 1.4L7 19l3 1 1-2h2l1 2 3-1-.3-2 1.4-1.4 1.9.3 1-3-2-1z","key":"M15 7a4 4 0 1 1-3.5 6L4 20.5V22h3v-2h2v-2h2l1.5-1.5A4 4 0 0 1 15 7","trash":"M4 7h16M10 11v6M14 11v6M6 7l1 14h10l1-14M9 7V4h6v3","chat":"M21 12a8 8 0 0 1-12 7l-6 2 2-6A8 8 0 1 1 21 12","mail":"M3 5h18v14H3zM3 6l9 7 9-7","doc":"M6 2h9l5 5v15H6zM14 2v6h6M9 13h7M9 17h7","zap":"M13 2L4 14h7l-1 8 9-12h-7z","home":"M3 11l9-8 9 8M5 9.5V21h5v-6h4v6h5V9.5","folder":"M3 6h6l2 2h10v12H3z","bulb":"M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5V16h8v-2.5A6 6 0 0 0 12 3","palette":"M12 21a9 9 0 1 1 9-9c0 2-2 3-4 3h-2a2 2 0 0 0-1 3.7c.5.5.3 2.3-2 2.3M7.5 11h.01M10 7h.01M15 7h.01","print":"M6 9V3h12v6M6 17H3v-8h18v8h-3M6 14h12v7H6z","shield":"M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z","tag":"M3 12V3h9l9 9-9 9zM7.5 7.5h.01","film":"M3 4h18v16H3zM7 4v16M17 4v16M3 9h4M3 15h4M17 9h4M17 15h4","rocket":"M5 15c-1 1-1 4-1 4s3 0 4-1M9 13l2 2M14 4c3-1 6-1 6-1s0 3-1 6l-7 7-5-5z"},M={"🎁":"gift","📱":"phone","✅":"check","⚠":"alert","👤":"user","🧾":"receipt","📦":"box","📷":"camera","📸":"camera","📞":"call","🔥":"fire","⬇":"down","🎧":"head","💵":"money","💸":"money","💰":"money","📋":"clip","🖼":"img","↩":"undo","🌐":"globe","📤":"send","✏":"pen","📝":"pen","📍":"pin","🔎":"search","🔒":"lock","🔓":"unlock","⏳":"clock","⌛":"clock","⏰":"clock","📥":"inbox","🛒":"cart","🧪":"flask","👥":"users","💳":"card","🔄":"sync","🔁":"sync","♻":"sync","🚪":"out","✨":"spark","🚚":"truck","⬆":"up","👁":"eye","👀":"eye","⚙":"gear","🔧":"gear","🛠":"gear","🔑":"key","🗑":"trash","💬":"chat","📨":"mail","🗞":"doc","📜":"doc","📒":"doc","⚡":"zap","🏠":"home","🗂":"folder","💡":"bulb","📲":"phone","🎨":"palette","🖨":"print","🛡":"shield","🏷":"tag","🎬":"film","🚀":"rocket","🔗":"send"};
+const SEL='.xem .tabs button,.bsk h5,.bs button';
+const RE=/^(\s*)(\p{Extended_Pictographic})\uFE0F?\s*/u;
+function doi(root){try{(root||document).querySelectorAll(SEL).forEach(el=>{if(el.closest('textarea,[contenteditable],.post,.bai,.trc,.tr,.p,.no-eic'))return;const n=[...el.childNodes].find(x=>x.nodeType===3?x.textContent.trim():x.nodeType===1);if(!n||n.nodeType!==3)return;const m=n.textContent.match(RE);if(!m)return;const k=M[m[2]];if(!k)return;n.textContent=n.textContent.slice(m[0].length);el.insertAdjacentHTML('afterbegin','<svg class="eic" viewBox="0 0 24 24" aria-hidden="true"><path d="'+P[k]+'"/></svg>')})}catch(e){}}
+let h=0;const ob=new MutationObserver(()=>{if(h)return;h=requestAnimationFrame(()=>{h=0;ob.disconnect();doi();ob.observe(document.body,{childList:true,subtree:true,characterData:true})})});
+function bat(){doi();ob.observe(document.body,{childList:true,subtree:true,characterData:true})}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bat);else bat();})();
 </script>
 </body></html>
