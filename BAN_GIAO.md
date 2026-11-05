@@ -292,3 +292,8 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 ## 38. (05/11 02h45) Gọn menu Thêm (anh Thái: trùng Kho + Truy cập nhanh)
 - `MENU_TRUNG` = hist, kh, chi (đã ở Truy cập nhanh Trang chủ) · kk, ncc, look (đã ở Kho hàng) → không hiện ở Thêm. Nhóm mới "🗂 Dữ liệu & sao lưu": **Sổ dữ liệu · Sao lưu** (`more='solieu'`, chuyển khỏi Cài đặt — anh không tìm thấy khi để trong Cài đặt) + Nhật ký thay đổi. Chưa mở được sổ → nút "Mở lại sổ dữ liệu".
 - Test 50/50, test toàn bộ 75/75, giao diện 0 lỗi. BUILD 20261105-0245.
+
+## 39. (05/11 11h45) SỬA LỖI TẢI TỜ RƠI (anh Thái: "tờ rơi không download về được")
+- Nguyên nhân: bấm Chia sẻ/Tải ảnh rồi mới dựng ảnh (vài giây) → điện thoại hết hiệu lực "lượt bấm" nên `navigator.share` bị chặn và bị nuốt lỗi im lặng; Tải ảnh dùng data-URL `<a download>` dễ bị app cài (PWA) / trình duyệt trong Zalo bỏ qua.
+- Sửa: `trTruoc()` dựng sẵn ảnh (`TRB`, khóa `trKey()`) 0,7 giây sau khi xem trước vẽ xong (sau QR) → bấm là chia sẻ/tải liền trong lượt bấm. Tải bằng blob (`trTai`). Luôn mở khung **"✅ Tờ rơi đã xong"** (`trKq`, lớp `.trkq`) có ảnh để **nhấn giữ → Tải xuống/Lưu ảnh** + nút Chia sẻ / Tải lại (lượt bấm mới). Chia sẻ lỗi (không phải bấm Hủy) → tự tải về. Bỏ `cacheBust` cho nhanh.
+- Test 75/75, lưu trữ 50/50, giao diện 0 lỗi; thử xuất thật bằng html-to-image: tải về file .jpg ~250KB, khung kết quả hiện đúng. BUILD 20261105-1150.

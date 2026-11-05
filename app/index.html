@@ -377,7 +377,7 @@ body.nv .hmg>div.own{display:none}body.nv .hmg{grid-template-columns:1fr}
 .nvok,.nvno{display:block;font-size:12px;margin-top:2px}.nvok{color:var(--good,#15803d)}.nvno{color:#b45309;font-weight:700}.nvmkb{flex:none;padding:7px 10px;font-size:12.5px;margin-right:4px}.nvmkrow{margin:6px 0 2px}.nvmkrow input{flex:1;min-width:0}.nvmkh{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
 .nvdem{margin-top:12px;font-size:13px;font-weight:700;color:var(--muted)}
 .ttbtn2{display:grid;grid-template-columns:1.2fr 1fr;gap:8px;margin-top:10px}.ttbtn2 button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 6px}.ttbtn2 small{font-size:11.5px;font-weight:600;opacity:.85}
-.trbox{max-width:560px}.trwrap{flex:none;width:100%;aspect-ratio:1080/1350;overflow:hidden;border-radius:12px;background:#eee;position:relative}.trscale{width:1080px;height:1350px;transform-origin:0 0;position:absolute;left:0;top:0}.trnote{color:var(--muted);font-size:12.5px}.trbt{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.trbox{max-width:560px}.trwrap{flex:none;width:100%;aspect-ratio:1080/1350;overflow:hidden;border-radius:12px;background:#eee;position:relative}.trscale{width:1080px;height:1350px;transform-origin:0 0;position:absolute;left:0;top:0}.trnote{color:var(--muted);font-size:12.5px}.trkq{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:16px}.trkqbox{background:var(--card,#fff);border-radius:16px;padding:14px;width:100%;max-width:420px;max-height:92vh;overflow:auto;display:flex;flex-direction:column;gap:10px}.trkqbox small{color:var(--muted);font-size:12.5px}.trkqbox img{width:100%;border-radius:10px;display:block;-webkit-touch-callout:default;user-select:auto}.trbt{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 /* 04/11 anh Thái: tờ rơi làm lại theo mẫu tờ rơi điện thoại đẹp — tiêu đề lớn + nhãn dán ngày, 1–2 máy nổi bật, băng giá, nhãn −%, dải quyền lợi; 5 mẫu khác nhau cả bố cục lẫn màu */
 .trp{--a:#0f766e;--a2:#064e3b;--bg:#ecfdf5;--card:#fff;--ink:#0f172a;--mut:#64748b;--tag:#0f766e;--tagt:#fff;--hot:#facc15;--hott:#7c2d12;--line:#d1fae5;width:1080px;height:1350px;background:var(--bg);display:flex;flex-direction:column;font-family:"Be Vietnam Pro",system-ui,sans-serif;color:var(--ink);box-sizing:border-box;position:relative;overflow:hidden}
 .trp *{box-sizing:border-box}
@@ -2391,7 +2391,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261105-0245';let verLuc=0;
+const BUILD='20261105-1150';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
@@ -2694,15 +2694,28 @@ function renderTr(){const L=ttqMau().filter(x=>x.gb>0),HB=BRANDS.filter(b=>L.som
     <button type="button" class="ghost" data-trcap="1">📋 Copy bài đăng kèm tờ rơi</button>
     <button type="button" class="wlink" data-trx="1">Đóng</button></div></div>`}
 function trVe(){const pv=$('trPv');if(!pv||!TR)return;const D=trDs();pv.innerHTML=trHtml(D);const fit=()=>{const w=pv.parentElement.getBoundingClientRect().width||320;pv.style.transform='scale('+(w/1080)+')'};fit();requestAnimationFrame(fit);
-  const q=$('trQr');if(q){const L=linkNgan();loadQr().then(()=>{q.innerHTML='';new QRCode(q,{text:L,width:150,height:150,correctLevel:QRCode.CorrectLevel.M})}).catch(()=>{q.remove()})}}
+  const q=$('trQr');if(q){const L=linkNgan();loadQr().then(()=>{q.innerHTML='';new QRCode(q,{text:L,width:150,height:150,correctLevel:QRCode.CorrectLevel.M});trTruoc()}).catch(()=>{q.remove();trTruoc()})}else trTruoc()}
 function trCap(){const D=trDs(),sh=db.shop||{},L=linkNgan()||'https://shopgon.vn';
   return ['🔥 '+(TR.kieu==='hang'?TR.hang.toUpperCase()+' GIÁ TỐT TẠI '+(sh.ten||'SHOP').toUpperCase():'MÁY HOT GIÁ TỐT TẠI '+(sh.ten||'SHOP').toUpperCase()),'',...D.map(x=>'📱 '+x.k+' – '+trSo(x.gb)+(x.km[0]?' ('+kmChip(x.km[0])+')':'')),'',(sh.dc?'📍 '+sh.dc+'\n':'')+(sh.dt?'📞 '+sh.dt:''),CTA(L)].join('\n')}
-async function trXuat(cach){const pv=$('trPv');if(!pv)return;const el=pv.firstElementChild;if(!el)return;toast('Đang tạo ảnh…');
-  try{await loadH2i();const keep=pv.style.transform;pv.style.transform='none';const url=await htmlToImage.toJpeg(el,{quality:.92,width:1080,height:1350,pixelRatio:1,cacheBust:true});pv.style.transform=keep;
-    const ten='to-roi-'+(TR.kieu==='hang'?TR.hang:'hot')+'-'+todayIso()+'.jpg';chepText(trCap());
-    if(cach==='share'&&navigator.canShare){const bl=await (await fetch(url)).blob(),f=new File([bl],ten,{type:'image/jpeg'});if(navigator.canShare({files:[f]})){await navigator.share({files:[f],text:trCap()}).catch(()=>{});return}}
-    const a=document.createElement('a');a.href=url;a.download=ten;document.body.appendChild(a);a.click();a.remove();toast('Đã tải tờ rơi · bài đăng đã copy sẵn')}
-  catch(e){pv.style.transform=pv.style.transform||'';toast('Chưa tạo được ảnh, kiểm tra mạng rồi thử lại')}}
+/* 05/11 anh Thái báo "tờ rơi không tải về được": trước đây bấm nút mới dựng ảnh (vài giây) → điện thoại hết "lượt bấm" nên Chia sẻ bị chặn im lặng, Tải ảnh bằng data-URL dễ bị app cài / trình duyệt trong Zalo bỏ qua.
+   Sửa: dựng sẵn ảnh ngay khi xem trước (TRB) → bấm là chia sẻ/tải liền; tải bằng blob; luôn mở khung ảnh xong để nhấn giữ lưu ảnh nếu máy không tự tải. */
+let TRB=null,trHen=0;
+const trKey=()=>TR?JSON.stringify([TR.kieu,TR.hang,TR.n,TR.mau,KM?1:0,(db.shop||{}).ten||'',linkNgan()||'']):'';
+async function trTao(){const pv=$('trPv'),el=pv&&pv.firstElementChild;if(!el)throw new Error('khong co to roi');await loadH2i();
+  const url=await htmlToImage.toJpeg(el,{quality:.92,width:1080,height:1350,pixelRatio:1,backgroundColor:'#ffffff'});const blob=await (await fetch(url)).blob();
+  const ten='to-roi-'+(TR.kieu==='hang'?TR.hang:'hot')+'-'+todayIso()+'.jpg';return {url,blob,ten,key:trKey()}}
+function trTruoc(){clearTimeout(trHen);TRB=null;trHen=setTimeout(async()=>{if(!TR)return;const k=trKey();try{const r=await trTao();if(TR&&r.key===k&&trKey()===k)TRB=r}catch(_){}},700)}
+function trTai(r){const u=URL.createObjectURL(r.blob),a=document.createElement('a');a.href=u;a.download=r.ten;a.rel='noopener';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(u);a.remove()},8000)}
+async function trShare(r){if(!navigator.canShare)return false;const f=new File([r.blob],r.ten,{type:'image/jpeg'});if(!navigator.canShare({files:[f]}))return false;
+  try{await navigator.share({files:[f],text:trCap()});return true}catch(e){return e&&e.name==='AbortError'}}
+function trKq(r,ghi){const o=document.createElement('div');o.className='trkq';o.innerHTML=`<div class="trkqbox"><b>✅ Tờ rơi đã xong</b><small>${esc(ghi||'Nếu máy chưa lưu: nhấn giữ vào ảnh → chọn "Tải xuống" / "Lưu ảnh".')}</small><img src="${r.url}" alt="Tờ rơi"><div class="trbt"><button type="button" class="btn" data-trk2="share">📤 Chia sẻ</button><button type="button" class="ghost" data-trk2="tai">⬇ Tải lại</button></div><button type="button" class="wlink" data-trk2="x">Đóng</button></div>`;
+  o.addEventListener('click',async e=>{const b=e.target.closest('[data-trk2]');if(e.target===o||(b&&b.dataset.trk2==='x')){o.remove();return}if(!b)return;
+    if(b.dataset.trk2==='share'){if(!await trShare(r)){trTai(r);toast('Máy không cho chia sẻ ảnh — đã tải ảnh về')}}else{trTai(r);toast('Đang tải ảnh…')}});
+  document.body.appendChild(o)}
+async function trXuat(cach){if(!$('trPv'))return;let r=TRB&&TRB.key===trKey()?TRB:null,lien=!!r;
+  if(!r){toast('Đang tạo ảnh…');try{r=await trTao();TRB=r}catch(e){toast('Chưa tạo được ảnh, kiểm tra mạng rồi thử lại');return}}
+  if(cach==='share'){if(lien&&await trShare(r)){chepText(trCap());return}trKq(r,lien?'Máy không mở được khung chia sẻ — nhấn giữ ảnh để lưu, hoặc bấm Chia sẻ lại.':'Ảnh đã sẵn — bấm Chia sẻ để gửi Zalo/Facebook, hoặc nhấn giữ ảnh để lưu.');chepText(trCap());return}
+  trTai(r);chepText(trCap());toast('Đã tải tờ rơi · bài đăng đã copy sẵn');trKq(r)}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-trnew],[data-trx],[data-trk],[data-trh],[data-trn],[data-trm],[data-trsave],[data-trcap]');if(!b)return;const d=b.dataset;
   if(d.trnew!==undefined){if(!stock().length){toast('Kho chưa có máy — nhập hàng trước');return}if(!KM)kmLoad().then(()=>{if(TR)trVe()});TR={kieu:'ton',hang:'OPPO',n:9,mau:(()=>{try{const m=localStorage.getItem('sg_tr_mau');return TR_MAU.some(x=>x[0]===m)?m:'xanh'}catch(_){return 'xanh'}})()};render();return}
   if(d.trx!==undefined){if(b.classList.contains('wsheet')&&e.target!==b)return;TR=null;render();return}
