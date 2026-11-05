@@ -345,3 +345,8 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - Anh Thái chọn kiểu A: mọi `.seg.top` (Bán, Kho, Báo cáo, Nhập hàng) = chữ trên nền + vạch màu shop 3px trượt (`segSlide()` gọi trong `hsFit()`, nhớ vị trí cũ theo bộ nút để trượt). Tab Bán/Kho có số: Điện thoại = máy tồn, Phụ kiện = món pk+sim còn hàng (khớp cột), Hàng khác = số món.
 - Trang chủ `homeTodo()`: 3 ô Việc cần làm — máy tồn >45 ngày (đỏ → Kho điện thoại lọc tồn lâu, đầu pane "Tồn trên 45 ngày · Bỏ lọc"), món sắp hết (vàng → Kho hàng khác), mẫu chưa có KM (xanh → tab KM lọc "chưa có KM"). Ẩn ở chế độ Xem thử và với NV.
 - Test 75/75, lưu trữ 52/52, giao diện 0 lỗi; 7 màn có cột kín đáy. BUILD 20261105-2300.
+
+## 47. (05/11 23h30) Lên đơn không hiện lời / giá nhập
+- Anh Thái: khách đứng cạnh lúc lên đơn → không hiện lợi nhuận; NV cũng không thấy lời từng máy. Lời vẫn tự tính vào Báo cáo như cũ.
+- `#sLoi,#pLoi{display:none}` cho mọi người (trước chỉ ẩn với NV); bỏ "Giá nhập" ở thẻ máy đã chọn (màn Bán) và "giá nhập" ở món phụ kiện đã chọn (trước NV vẫn thấy dòng này); ô "Giá vốn" khi bán món ngoài kho = `label.own` (NV không thấy, bỏ trống → ước tính %).
+- Test 75/75 (có "Bán: lời = …" vẫn đúng), lưu trữ 52/52, giao diện 0 lỗi. BUILD 20261105-2330.

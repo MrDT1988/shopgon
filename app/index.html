@@ -272,7 +272,9 @@ nav.tabs button[aria-selected="true"]{color:var(--pen);background:var(--pen-soft
 .seg button[aria-pressed=true] small{color:inherit;opacity:.9}
 /* 25/10: tab trên cùng của Nhập máy khác màu tab con cho nổi */
 .more{border:1px dashed var(--line);border-radius:12px;padding:4px 12px;margin:2px 0 4px}.more summary{cursor:pointer;font-weight:700;color:var(--pen);padding:10px 0;list-style:none}.more summary::-webkit-details-marker{display:none}.more summary small{font-weight:500;color:#46506b;font-size:12px;margin-left:4px}.more[open]{padding-bottom:10px}
-body.nv .own,body.nv #sLoi,body.nv #pLoi{display:none!important}
+body.nv .own{display:none!important}
+/* 05/11 anh Thái: lúc lên đơn KHÔNG hiện lời/lỗ, giá nhập (khách đứng cạnh) — lời tự tính vào Báo cáo */
+#sLoi,#pLoi{display:none!important}
 .nvbar{background:#eef2ff;border:1px solid #c7d2fe;color:#3730a3;border-radius:12px;padding:8px 12px;font-size:13px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:8px}
 .ketcard{background:linear-gradient(180deg,#fffaf0,#fff);border:2px solid #f0d08a}
 .ketrow{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed var(--line);font-size:14px}.ketrow:last-child{border:0}.ketbig{display:flex;justify-content:space-between;align-items:baseline;margin-top:8px;padding-top:10px;border-top:2px solid var(--ink)}.ketbig b{font-size:24px}
@@ -1362,7 +1364,7 @@ function renderSell(){
     ${cand.length?`<div class="list">${cand.map(x=>`<div class="row"><div class="n"><b>${esc(x.ten)}</b><small class="num">IMEI …${x.imei.slice(-6)}</small></div><button type="button" class="ghost" data-pick="${x.imei}">Chọn</button></div>`).join('')}</div>`:''}
     ${soldM?`<div class="err">Máy này đã bán rồi. Tra lịch sử ở Thêm → Tra IMEI.</div>`:''}
     ${m0&&!m?`<div class="err">Máy này đã có trong đơn đang bán.</div>`:''}
-    ${m?`<div class="found fi">${imgCua(m.ten)?`<img src="${esc(imgCua(m.ten))}" alt="">`:'<span class="fe">📱</span>'}<div class="fx"><b>${esc(m.ten)}</b><small class="num">IMEI ${m.imei} · Nhập ${dmy(m.ngayNhap)}<span class="own"> · Giá nhập ${money(m.giaNhap)}</span></small></div></div>
+    ${m?`<div class="found fi">${imgCua(m.ten)?`<img src="${esc(imgCua(m.ten))}" alt="">`:'<span class="fe">📱</span>'}<div class="fx"><b>${esc(m.ten)}</b><small class="num">IMEI ${m.imei} · Nhập ${dmy(m.ngayNhap)}</small></div></div>
     <label>${NV&&m.giaBan?'Giá bán (giá shop)':'Giá bán'}<input id="sGia" inputmode="numeric" class="num${NV&&m.giaBan?' gialock':''}" value="${(m.giaBan||'').toLocaleString('vi-VN')}"${NV&&m.giaBan?' readonly':''}></label>
     <div class="profit" id="sLoi"></div>
     ${on('baohanh')?`<label>Bảo hành (tháng)<input id="sBh" inputmode="numeric" value="${db.shop.bh}"></label>`:''}
@@ -1398,7 +1400,7 @@ function pkFormIn(){
       ${cand.length?`<div class="pgrid">${cand.map(h=>{const left=h.sl-cartQty(h.id),inC=cartQty(h.id),ic=h.nhom==='sua'?'🔧':h.nhom==='sim'?'📶':hIcon(h.ten);const body=`<span class="pi">${ic}</span><b>${esc(h.ten)}</b><span class="pp num">${h.giaBan?money(h.giaBan):'Nhập giá'}</span>`;
         return `<div class="pt${inC?' on':''}">${h.giaBan?`<button type="button" class="ptb" data-pkadd="${h.id}">${body}</button>`:`<button type="button" class="ptb" data-pkpick="${h.id}">${body}</button>`}${inC?`<span class="stp"><button type="button" data-pkdec="${h.id}" aria-label="Bớt">−</button><b class="num">${inC}</b><button type="button" data-pkadd="${h.id}" aria-label="Thêm">+</button></span>`:`<small>Trong kho: ${left}</small>`}</div>`}).join('')}</div><small style="display:block;color:var(--muted);margin-top:8px">Bấm vào món để thêm vào đơn, dùng − + để đổi số lượng.</small>`:`<div class="empty">${q?'Không có món nào khớp. Thử gõ tên khác.':'Kho chưa có món này.'}${q?'':'<br><button type="button" class="ghost" data-go="add" style="margin-top:10px">Nhập hàng ngay</button>'}</div>`}
       <div class="eyebrow" style="margin-top:4px">${pkNhom==='sua'?'Hoặc ghi đơn sửa không lấy linh kiện trong kho':'Hoặc bán món không có trong kho'}</div>`:''}
-    ${it?`<div class="found"><b>${esc(it.ten)}</b><small class="num">Còn ${it.sl-cartQty(it.id)} trong kho · giá nhập ${money(it.giaNhap)}</small></div><button type="button" class="back" data-pkpick="">‹ Chọn món khác</button>
+    ${it?`<div class="found"><b>${esc(it.ten)}</b><small class="num">Còn ${it.sl-cartQty(it.id)} trong kho</small></div><button type="button" class="back" data-pkpick="">‹ Chọn món khác</button>
       <div class="two"><label>Số lượng<input id="pSl" inputmode="numeric" value="1"></label><label>${pkNhom==='sua'?'Tiền sửa thu khách / cái':'Giá bán / cái'}<input id="pGia" inputmode="numeric" class="num${NV&&it.giaBan?' gialock':''}" value="${it.giaBan?it.giaBan.toLocaleString('vi-VN'):''}"${NV&&it.giaBan?' readonly':''}></label></div>`:`
 ${isDv(pkNhom)?`
       <label>Loại<select id="dLoai">${DV[pkNhom].map(x=>`<option>${x}</option>`).join('')}</select></label>
@@ -1406,7 +1408,7 @@ ${isDv(pkNhom)?`
       <div class="two"><label>Tên khách<input id="dKhach" placeholder="Không bắt buộc"></label><label>Ghi chú<input id="dNote" placeholder="Mã KH, số TK…"></label></div>
       <small style="color:var(--muted)">Doanh thu và lời chỉ tính phí. Số tiền giao dịch ghi riêng để đối chiếu tiền mặt cuối ngày.</small>`:`
       <label>Tên món<input id="pTen" placeholder="${pkNhom==='sua'?'VD: Thay pin iPhone 11':'VD: Cường lực + ốp'}"></label>
-      <div class="two"><label>Giá bán<input id="pGia" inputmode="numeric" class="num"></label><label>Giá vốn<small>Bỏ trống: tính lời ước tính</small><input id="pVon" inputmode="numeric" class="num"></label></div>`}`}
+      <div class="two"><label>Giá bán<input id="pGia" inputmode="numeric" class="num"></label><label class="own">Giá vốn<small>Bỏ trống: app tự ước tính</small><input id="pVon" inputmode="numeric" class="num"></label></div>`}`}
     <div class="profit" id="pLoi"></div>
     <div class="err" id="pErr"></div>
     ${isDv(pkNhom)?`<button class="btn" type="submit">Lưu giao dịch</button>`:`<div class="inrow"><button class="btn" type="submit" style="flex:1">Thêm vào đơn</button><button type="button" class="ghost kmplus" data-addkm="fPk">＋ Khuyến mãi</button></div>`}
@@ -2596,7 +2598,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261105-2300';let verLuc=0;
+const BUILD='20261105-2330';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
