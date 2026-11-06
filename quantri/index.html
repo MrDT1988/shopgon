@@ -174,6 +174,41 @@ input.f{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:
 .dv-ic{width:38px;height:38px;border-radius:11px;background:#0f8478;display:grid;place-items:center;flex:none}
 .dv-ic svg{width:21px;height:21px;stroke:#fff;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 @media (prefers-reduced-motion:reduce){.dv{animation:none}}
+/* 06/11 22h30 anh Thái: tab con CTV|Partner kiểu gạch chân, chọn tháng bất kỳ, Cửa hàng lọc bằng cột trái như kho app đại lý */
+.stab{display:grid;grid-template-columns:1fr 1fr;background:#fff;border-radius:16px;padding:0 6px;box-shadow:0 1px 2px rgba(16,42,52,.06),0 8px 20px rgba(16,42,52,.06)}
+.stab button{position:relative;border:0;background:none;padding:14px 6px 13px;font-weight:800;font-size:15px;color:var(--muted);display:flex;justify-content:center;align-items:center;gap:8px;min-height:50px}
+.stab button i{font-style:normal;font-size:12px;font-weight:800;min-width:22px;height:22px;border-radius:99px;display:grid;place-items:center;padding:0 6px;background:#e7eef0;color:var(--muted)}
+.stab button::after{content:"";position:absolute;left:18%;right:18%;bottom:0;height:3px;border-radius:3px 3px 0 0;background:var(--pen);transform:scaleX(0);transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.stab button[aria-selected="true"]{color:var(--pen)}
+.stab button[aria-selected="true"]::after{transform:none}
+.stab button[aria-selected="true"] i{background:var(--pen);color:#fff}
+.mp{display:flex;flex-direction:column;gap:8px}
+.mp-bar{display:grid;grid-template-columns:48px minmax(0,1fr) 48px;gap:6px}
+.mp-ar,.mp-t{border:1px solid var(--line);background:#fff;border-radius:14px;min-height:48px;font-weight:800;color:var(--pen);box-shadow:0 1px 2px rgba(16,42,52,.06)}
+.mp-ar{font-size:22px}.mp-ar:disabled{opacity:.35}
+.mp-t{display:flex;align-items:center;justify-content:center;gap:8px;font-size:16px}
+.mp-t em{font-style:normal;font-size:11.5px;font-weight:800;background:#e2f6f1;color:var(--pen);border-radius:99px;padding:2px 8px}
+.mp-t i{font-style:normal;font-size:12px;color:var(--muted);transition:transform .2s}.mp-t[aria-expanded="true"] i{transform:rotate(180deg)}
+.mp-g{background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px;animation:mpIn .2s ease-out}
+@keyframes mpIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.mp-y{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.mp-y button{border:0;background:#eef4f3;border-radius:10px;min-height:40px;padding:0 12px;font-weight:700;color:var(--pen)}.mp-y button:disabled{opacity:.35}
+.mp-m{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.mp-m button{border:1px solid var(--line);background:#f6f9f9;border-radius:10px;min-height:44px;font-weight:700;font-size:13.5px;color:var(--ink,#16323a)}
+.mp-m button[aria-pressed="true"]{background:var(--pen);border-color:var(--pen);color:#fff}
+.mp-m button:disabled{opacity:.35}
+.chsplit{display:grid;grid-template-columns:84px minmax(0,1fr);gap:10px;align-items:start}
+.chrail{position:sticky;top:8px;display:flex;flex-direction:column;gap:4px;background:#e2f1ee;border:1px solid #c9e4de;border-radius:16px;padding:4px}
+.chrail button{position:relative;border:0;background:none;border-radius:12px;min-height:66px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#2f5d58;font-weight:700;font-size:12.5px;line-height:1.25;text-align:center;transition:background .2s,color .2s}
+.chrail button b{font-size:20px;font-weight:800}
+.chrail button[aria-pressed="true"]{background:var(--pen);color:#fff;box-shadow:0 6px 14px -6px rgba(11,94,87,.6)}
+.chrail button.hot:not([aria-pressed="true"]) b{color:#c2410c}
+.chrail button.hot::before{content:"";position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:#dc2626}
+.chpane{min-width:0}.chpane>.card{margin:0}
+@media (min-width:900px){.chsplit{grid-template-columns:112px minmax(0,1fr)}.chrail button{font-size:13.5px}}
+@media (prefers-reduced-motion:reduce){.mp-g{animation:none}.stab button::after{transition:none}}
+.chpane .chip{white-space:normal;text-align:left;max-width:100%;line-height:1.3}
+.chpane .act{flex-wrap:wrap}
 </style></head>
 <body>
 <div class="app">
@@ -217,7 +252,7 @@ const days=(a,b)=>Math.round((pD(a)-pD(b))/864e5);
 const monday=s=>{const x=pD(s);const k=(x.getDay()+6)%7;x.setDate(x.getDate()-k);return fD(x)};
 const goiTen=m=>m%12===0?(m/12)+' năm':m+' tháng';
 const fmtSdt=s=>s?s.replace(/^(\d{4})(\d{3})(\d+)$/,'$1 $2 $3'):'';
-let uncImg=null, D=null, TAB='dt', KY='thang', CTV_KY='nay', CH_LOC='cho', Q='', pick={}, ask=null, ghOpen=null, openCtv=null, editShopCtv=null, addCtv=false, PT_KY='nay', CTV_SUB='doi', askDel=null, askXoa=null, addPt=false, openPt=null;
+let uncImg=null, D=null, TAB='dt', KY='thang', CTV_KY='',MP_O=false,MP_Y=0, CH_LOC='cho', Q='', pick={}, ask=null, ghOpen=null, openCtv=null, editShopCtv=null, addCtv=false, PT_KY='nay', CTV_SUB='doi', askDel=null, askXoa=null, addPt=false, openPt=null;
 
 /* ===== dữ liệu ===== */
 function sample(){const t=fD(new Date());const ago=n=>addD(t,-n);
@@ -301,8 +336,14 @@ function vDoanhThu(){const t=D.today,K=ky(KY,t),s=sumTT(K),p=sumTT(K.truoc);
   <div class="card"><h2>Giao dịch · ${esc(K.ten)}</h2>${s.L.length?[...s.L].reverse().map(x=>`<div class="row"><div class="n"><b>${esc(x.shop)}</b><small>${dmy(x.ngay)} · ${esc(x.loai||'')} gói ${goiTen(x.m)}${x.partner?' · Partner '+esc(ptInfo(x.partner).khuVuc||fmtSdt(x.partner)):x.ctv?' · CTV '+ctvLbl(x.ctv):''}</small></div><div class="r"><b class="num">${money(x.tien)}</b>${x.hhP?`<small class="num">Partner ${money(x.hhP)}</small>`:(x.hh||x.hhL)?`<small class="num">HH ${money((x.hh||0)+(x.hhL||0))}</small>`:''}</div></div>`).join(''):'<div class="empty">Chưa bán gói nào trong kỳ này.</div>'}</div>`}
 
 /* ===== TAB 2: CỘNG TÁC VIÊN ===== */
+/* 06/11 22h30 anh Thái: chọn tháng bất kỳ (‹ tháng › + bấm mở lưới 12 tháng) thay 2 nút Tháng này/Tháng trước */
+function kyM(){return /^\d{4}-\d\d$/.test(CTV_KY)?CTV_KY:D.today.slice(0,7)}
+function shiftM(m,n){const x=pD(m+'-15');x.setMonth(x.getMonth()+n);return fD(x).slice(0,7)}
+function mPick(){const mk=kyM(),cur=D.today.slice(0,7),y=MP_Y||+mk.slice(0,4),pv=shiftM(mk,-1),nx=shiftM(mk,1);
+  return `<div class="mp"><div class="mp-bar"><button class="mp-ar" data-ctvky="${pv}" aria-label="Tháng trước">‹</button><button class="mp-t" data-mpo="1" aria-expanded="${MP_O}"><span>Tháng ${+mk.slice(5)}/${mk.slice(0,4)}</span>${mk===cur?'<em>đang chạy</em>':''}<i>▾</i></button><button class="mp-ar" data-ctvky="${nx}" ${nx>cur?'disabled':''} aria-label="Tháng sau">›</button></div>
+  ${MP_O?`<div class="mp-g"><div class="mp-y"><button data-mpy="${y-1}">‹ ${y-1}</button><b>Năm ${y}</b><button data-mpy="${y+1}" ${y+1>+cur.slice(0,4)?'disabled':''}>${y+1} ›</button></div><div class="mp-m">${Array.from({length:12},(_,i)=>{const k=y+'-'+String(i+1).padStart(2,'0');return `<button data-ctvky="${k}" ${k>cur?'disabled':''} aria-pressed="${k===mk}">Tháng ${i+1}</button>`}).join('')}</div></div>`:''}</div>`}
 function vCtv(){const PT=vPartner();const t=D.today;const m0=t.slice(0,7);const p=pD(m0+'-01');p.setMonth(p.getMonth()-1);const pm=fD(p).slice(0,7);
-  const mk=CTV_KY==='nay'?m0:pm;const R={tu:mk+'-01',den:mk+'-31'};
+  const mk=kyM();const R={tu:mk+'-01',den:mk+'-31'};
   /* 23/10: tổ chức theo đội — mỗi Leader 1 khối, CTV của đội nằm dưới; số tổng đội ở đầu khối */
   const all=new Set([...D.ctv.map(c=>c.sdt),...D.kh.map(k=>k.ctv).filter(Boolean),...D.tt.map(x=>x.ctv).filter(Boolean)].filter(s=>!ptOf(s)));
   const st=s=>{const shops=D.kh.filter(k=>k.ctv===s);const own=D.tt.filter(x=>x.ctv===s);const team=D.tt.filter(x=>x.ld===s).map(x=>Object.assign({},x,{hh:x.hhL||0,doi:1}));
@@ -325,8 +366,8 @@ function vCtv(){const PT=vPartner();const t=D.today;const m0=t.slice(0,7);const 
   const row=(c,lead)=>`<div class="row" style="flex-wrap:wrap;cursor:pointer" data-openctv="${c.s}"><div class="n"><b>${lead?'⭐ ':''}${c.ten?esc(c.ten):'<span style="color:var(--muted)">Chưa đặt tên</span>'}${lead?' <span class="pill p-b">Leader tự bán</span>':''}</b><small class="num">${fmtSdt(c.s)} · ${c.shops.length} shop (${c.dung} đang dùng) · ${c.n} gói</small></div><div class="r"><b class="num">${money(c.dt)}</b><small class="num">HH ${money(c.hh)}</small></div>${openCtv===c.s?panel(c):''}</div>`;
   const form=addCtv?`<div class="card" style="display:flex;flex-direction:column;gap:8px"><h2 style="margin:0">${addCtv==='ld'?'Thêm Leader':'Thêm cộng tác viên'}</h2><input class="f" id="nSdt" inputmode="tel" placeholder="Số điện thoại"><input class="f" id="nTen" placeholder="Tên">${addCtv==='ld'?'':`<select class="f" id="nLd"><option value="">Chọn leader quản lý</option>${leaders.map(l=>`<option value="${l.s}">Đội ${ldName(l)}</option>`).join('')}</select>${leaders.length?'':'<small style="color:var(--amber)">Chưa có Leader nào — bấm Thêm Leader trước.</small>'}`}<div class="act"><button class="btn" data-savenew="${addCtv}">Lưu</button><button class="ghost" data-addctv="0">Thôi</button></div></div>`:'';
   /* 06/11 anh Thái: trong tab Cộng tác viên tách 2 tab con — Cộng tác viên (đội anh) | Partner */
-  const SUB=`<div class="seg" role="tablist" style="background:#d6e4e6"><button data-ctvsub="doi" aria-pressed="${CTV_SUB==='doi'}">👥 Cộng tác viên</button><button data-ctvsub="pt" aria-pressed="${CTV_SUB==='pt'}">📍 Partner (${(D.ctv||[]).filter(c=>c.role==='Partner').length})</button></div>`;
-  const MS=`<div class="seg" role="group"><button data-ctvky="nay" aria-pressed="${CTV_KY==='nay'}">Tháng ${+m0.slice(5)}</button><button data-ctvky="truoc" aria-pressed="${CTV_KY==='truoc'}">Tháng ${+pm.slice(5)}</button></div>`;
+  const SUB=`<div class="stab" role="tablist"><button role="tab" data-ctvsub="doi" aria-selected="${CTV_SUB==='doi'}">Cộng tác viên <i>${list.length}</i></button><button role="tab" data-ctvsub="pt" aria-selected="${CTV_SUB==='pt'}">Partner <i>${(D.ctv||[]).filter(c=>c.role==='Partner').length}</i></button></div>`;
+  const MS=mPick();
   if(CTV_SUB==='pt')return SUB+MS+`<div class="act"><button class="btn" data-addpt="new">＋ Thêm Partner</button></div>${PT.form}${PT.html}`;
   return SUB+MS+`
   <div class="kpis"><div class="kpi hero"><div class="eb">Hoa hồng phải trả · tháng ${+mk.slice(5)}/${mk.slice(0,4)}</div><div class="v num">${money(tong)}</div><div class="d">${blocks.length} đội · Sale ${D.hhSale||40}% + Leader ${D.hhLeader||10}% · doanh thu qua CTV ${short(tongDt)}</div></div>
@@ -342,7 +383,7 @@ function vCtv(){const PT=vPartner();const t=D.today;const m0=t.slice(0,7);const 
   <p class="note">Hoa hồng: CTV bán = CTV ${D.hhSale||40}% + Leader ${D.hhLeader||10}%; Leader tự bán ${D.hhPct}%. Gia hạn chia như lần đầu. Tính khi anh xác nhận đã nhận đủ tiền gói.</p>`}
 
 /* ===== TAB 4: PARTNER KHU VỰC (06/11) — anh chỉ quản Partner; Partner tự quản Leader/CTV trên shopgon.vn/partner ===== */
-function vPartner(){/* 06/11 anh Thái: Partner nằm trong tab Cộng tác viên, không tách tab */const t=D.today,m0=t.slice(0,7),x=pD(t.slice(0,8)+'15');x.setMonth(x.getMonth()-1);const pm=fD(x).slice(0,7);const mk=CTV_KY==='nay'?m0:pm;
+function vPartner(){/* 06/11 anh Thái: Partner nằm trong tab Cộng tác viên, không tách tab */const t=D.today,m0=t.slice(0,7),x=pD(t.slice(0,8)+'15');x.setMonth(x.getMonth()-1);const mk=kyM();
   const pts=(D.ctv||[]).filter(c=>c.role==='Partner');const ds=D.doiSoat||[];
   const st=p=>{const L=D.tt.filter(x=>x.partner===p.sdt&&x.ngay.slice(0,7)===mk);const team=(D.ctv||[]).filter(c=>c.sdt!==p.sdt&&ptOf(c.sdt)===p.sdt);const shops=D.kh.filter(k=>ptOf(k.ctv)===p.sdt);
     return{p,L,dt:L.reduce((a,x)=>a+x.tien,0),nhan:L.reduce((a,x)=>a+(x.hhP||0),0),n:L.length,team,ld:team.filter(c=>c.role==='Leader').length,shops,dung:shops.filter(k=>trangThai(k)==='dung').length,tra:ds.find(d=>d.thang===mk&&d.partner===p.sdt)}};
@@ -373,8 +414,8 @@ function vCuaHang(){const nhom={cho:[],dung:[],het:[],khoa:[]};D.kh.forEach(k=>n
   let L=CH_LOC==='tat'?D.kh.slice():nhom[CH_LOC];const q=Q.trim().toLowerCase();
   if(q)L=L.filter(k=>(k.shop+' '+k.email+' '+k.sdt+' '+k.ctv+' '+tenOf(k.ctv)).toLowerCase().includes(q));
   return progCard()+`<input class="f" id="q" placeholder="Tìm tên shop, Gmail, SĐT, CTV" value="${esc(Q)}" inputmode="search">
-  <div class="chips">${[['cho','Chờ duyệt',nhom.cho.length],['dung','Đang dùng',nhom.dung.length],['het','Hết hạn',nhom.het.length],['khoa','Đã khóa',nhom.khoa.length],['tat','Tất cả',D.kh.length]].map(([k,l,n])=>`<button class="chip" data-loc="${k}" aria-pressed="${CH_LOC===k}">${l} (${n})</button>`).join('')}</div>
-  <div class="card">${L.length?L.map(shopCard).join(''):'<div class="empty">Không có cửa hàng nào.</div>'}</div>
+  <div class="chsplit"><div class="chrail" role="tablist" aria-label="Lọc cửa hàng">${[['cho','Chờ duyệt',nhom.cho.length],['dung','Đang dùng',nhom.dung.length],['het','Hết hạn',nhom.het.length],['khoa','Đã khóa',nhom.khoa.length],['tat','Tất cả',D.kh.length]].map(([k,l,n])=>`<button data-loc="${k}" aria-pressed="${CH_LOC===k}"${k==='cho'&&n?' class="hot"':''}><b class="num">${n}</b><span>${l}</span></button>`).join('')}</div>
+  <div class="chpane"><div class="card">${L.length?L.map(shopCard).join(''):'<div class="empty">Không có cửa hàng nào.</div>'}</div></div></div>
   <p class="note">Giá gói: 1 năm 1.190.000đ · 3 năm 2.690.000đ · ưu đãi 990.000đ/năm cho 100 shop đầu (đã dùng <b class="num">${udDaDung()}/${UD_TONG}</b> suất, hết suất tự ẩn). Duyệt khi đã nhận đủ tiền — shop bấm "Kiểm tra lại" là vào được app ngay.</p>`}
 /* 06/11 anh Thái chốt giá (05/11 22h): 1 năm 1.190.000đ · 3 năm 2.690.000đ · 100 shop đầu 990.000đ/năm.
    Trang quản trị luôn dùng bảng này để duyệt (không lấy giá cũ máy chủ trả về). */
@@ -428,7 +469,9 @@ document.addEventListener('click',e=>{const a=e.target.closest('[data-goch]');if
   if(d.nvtest){try{localStorage.setItem('shopgon_nv',JSON.stringify({sdt:'0900000000',ten:'NV test',phien:'TEST',test:1}))}catch(_){}location.href='/app/';return}
   if(d.tab){go(d.tab);return}
   if(d.ky){KY=d.ky;render();return}
-  if(d.ctvky){CTV_KY=d.ctvky;render();return}
+  if(d.ctvky){CTV_KY=d.ctvky;MP_O=false;MP_Y=0;render();return}
+  if(d.mpo){MP_O=!MP_O;MP_Y=0;render();return}
+  if(d.mpy){MP_Y=+d.mpy;render();return}
   if(d.ptky){PT_KY=d.ptky;render();return}
   if(d.ctvsub){CTV_SUB=d.ctvsub;addCtv=false;addPt=false;openCtv=null;openPt=null;render();$('main').scrollTop=0;return}
   if('addpt' in d){addPt=d.addpt==='0'?false:d.addpt;if(addPt)addCtv=false;render();if(addPt)$('pKv')&&$('pKv').scrollIntoView({block:'center'});if(addPt)setTimeout(()=>$('pKv')&&$('pKv').focus(),0);return}
@@ -438,7 +481,7 @@ document.addEventListener('click',e=>{const a=e.target.closest('[data-goch]');if
     if(!/^0\d{9}$/.test(sdt)){toast('Số điện thoại chưa đúng');return}if(!kv){toast('Nhập khu vực');return}
     if(isNew&&mk.length<6){toast('Mật khẩu ít nhất 6 ký tự');return}if(mk&&mk.length<6){toast('Mật khẩu ít nhất 6 ký tự');return}if(!(pc>0&&pc<100)){toast('% Partner từ 1 đến 99');return}
     b.disabled=true;call('adminSavePartner',sdt,ten,kv,mk,pc).then(x=>{D=x;addPt=false;render();toast(isNew?'Đã thêm Partner '+kv:'Đã lưu Partner')}).catch(er=>{b.disabled=false;toast(er.message)});return}
-  if(d.paid){const t=D.today,x=pD(t.slice(0,8)+'15');x.setMonth(x.getMonth()-1);const mk=CTV_KY==='nay'?t.slice(0,7):fD(x).slice(0,7);
+  if(d.paid){const t=D.today,x=pD(t.slice(0,8)+'15');x.setMonth(x.getMonth()-1);const mk=kyM();
     b.disabled=true;call('adminPaidPartner',mk,d.paid,+d.tien).then(r=>{D=r;render();toast(+d.tien?'Đã ghi chuyển tiền':'Đã bỏ đánh dấu')}).catch(er=>{b.disabled=false;toast(er.message)});return}
   if(d.loc){CH_LOC=d.loc;ask=null;render();return}
   if('addctv' in d){addCtv=d.addctv==='0'?false:d.addctv;if(addCtv)addPt=false;render();if(addCtv)setTimeout(()=>$('nSdt')&&$('nSdt').focus(),0);return}
