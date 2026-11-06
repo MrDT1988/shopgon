@@ -148,6 +148,17 @@ select.f{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius
 @media (min-width:900px){.tig>.ti:last-child:nth-child(3n+1){grid-column:1/-1;min-height:0;display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:12px;align-items:center}.tig>.ti:last-child:nth-child(3n+1) .tic{grid-row:span 2;margin:0}}
 .card:has(.tig){background-image:radial-gradient(rgba(15,132,120,.10) 1px,transparent 1.2px);background-size:14px 14px;background-position:-7px -7px}
 @media (prefers-reduced-motion:reduce){.tig .ti.hot,.tig .ti.hot::before,.tig .ti{animation:none!important}}
+/* 06/11 22h anh Thái: hiệu ứng mạnh hơn — viền neon dày + nhanh, tia sáng quét ngang thẻ test, icon loé sáng lần lượt */
+@keyframes sgSweep{0%,55%{transform:translateX(-130%) skewX(-18deg)}85%,100%{transform:translateX(330%) skewX(-18deg)}}
+@keyframes sgIco{0%,70%{transform:translateX(-140%)}100%{transform:translateX(140%)}}
+.tig .ti.hot::before{padding:2.2px!important;animation-duration:2.6s!important;filter:saturate(1.3)}
+.tig .ti.hot{overflow:hidden}
+.tig .ti.hot::after{content:"";position:absolute;top:0;bottom:0;left:0;width:38%;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);animation:sgSweep 3.2s ease-in-out infinite;z-index:1}
+.tig .ti.hot .tic{box-shadow:0 0 0 3px rgba(245,158,11,.18),0 6px 16px -4px rgba(245,158,11,.7)}
+.tig .tic{position:relative;overflow:hidden}
+.tig .tic::after{content:"";position:absolute;inset:-2px;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.65) 50%,transparent 70%);transform:translateX(-140%);animation:sgIco 4s ease-in-out infinite}
+.tig>:nth-child(2) .tic::after{animation-delay:.35s}.tig>:nth-child(3) .tic::after{animation-delay:.7s}.tig>:nth-child(4) .tic::after{animation-delay:1.05s}.tig>:nth-child(5) .tic::after{animation-delay:1.4s}.tig>:nth-child(6) .tic::after{animation-delay:1.75s}.tig>:nth-child(7) .tic::after{animation-delay:2.1s}
+@media (prefers-reduced-motion:reduce){.tig .ti.hot::after,.tig .tic::after{animation:none!important;display:none}}
 </style></head>
 <body>
 <div class="app">

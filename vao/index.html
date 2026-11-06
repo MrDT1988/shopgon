@@ -181,6 +181,17 @@ main.in{padding-block:16px calc(96px + env(safe-area-inset-bottom,0px));display:
 #pgTi .tile.hot::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.6px;pointer-events:none;background:conic-gradient(from var(--sgA),#14b8a6,#38bdf8,#a78bfa,#f59e0b,#14b8a6);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:sgSpin 4s linear infinite}
 #pgTi .card:first-child{background-image:radial-gradient(rgba(15,132,120,.10) 1px,transparent 1.2px);background-size:14px 14px;background-position:-7px -7px}
 @media (prefers-reduced-motion:reduce){#pgTi .tile.hot,#pgTi .tile.hot::before{animation:none!important}}
+/* 06/11 22h anh Thái: hiệu ứng mạnh hơn — viền neon dày + nhanh, tia sáng quét ngang thẻ test, icon loé sáng lần lượt */
+@keyframes sgSweep{0%,55%{transform:translateX(-130%) skewX(-18deg)}85%,100%{transform:translateX(330%) skewX(-18deg)}}
+@keyframes sgIco{0%,70%{transform:translateX(-140%)}100%{transform:translateX(140%)}}
+#pgTi .tile.hot::before{padding:2.2px!important;animation-duration:2.6s!important;filter:saturate(1.3)}
+#pgTi .tile.hot{overflow:hidden}
+#pgTi .tile.hot::after{content:"";position:absolute;top:0;bottom:0;left:0;width:38%;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(255,255,255,.75),transparent);animation:sgSweep 3.2s ease-in-out infinite;z-index:1}
+#pgTi .tile.hot .u251-ic{box-shadow:0 0 0 3px rgba(245,158,11,.18),0 6px 16px -4px rgba(245,158,11,.7)}
+#pgTi .grid .u251-ic{position:relative;overflow:hidden}
+#pgTi .grid .u251-ic::after{content:"";position:absolute;inset:-2px;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.65) 50%,transparent 70%);transform:translateX(-140%);animation:sgIco 4s ease-in-out infinite}
+#pgTi .grid>:nth-child(2) .u251-ic::after{animation-delay:.35s}#pgTi .grid>:nth-child(3) .u251-ic::after{animation-delay:.7s}#pgTi .grid>:nth-child(4) .u251-ic::after{animation-delay:1.05s}#pgTi .grid>:nth-child(5) .u251-ic::after{animation-delay:1.4s}#pgTi .grid>:nth-child(6) .u251-ic::after{animation-delay:1.75s}#pgTi .grid>:nth-child(7) .u251-ic::after{animation-delay:2.1s}
+@media (prefers-reduced-motion:reduce){#pgTi .tile.hot::after,#pgTi .grid .u251-ic::after{animation:none!important;display:none}}
 </style>
 </head>
 <body>
