@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0b5e57">
+<title>Cổng Shop Gọn</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap">
+<style>
+/* Cổng Shop Gọn (06/11 anh Thái): 1 link vào cho mọi vai — chủ shop · nhân viên · CTV/leader · Partner · quản trị — + demo cho shop + tiện ích (hướng dẫn, so sánh). Bố cục kiểu cổng Tiền Giang: đầu xanh, các khối thẻ lớn bấm 1 chạm. */
+:root{--bg:#eef6f4;--paper:#fff;--ink:#10302d;--muted:#5a6f6c;--line:#d9e7e4;--pen:#0f8d80;--pen-dk:#0b5e57;--pen-soft:#dff3ef;--warm:#b45309;--warm-soft:#fff3df;--red:#b42318;--font:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1615;--paper:#12211f;--ink:#e3f1ee;--muted:#9db3af;--line:#24403c;--pen:#3cc2b2;--pen-dk:#8ee0d4;--pen-soft:#163a35;--warm:#f2a54a;--warm-soft:#3a2a12;--red:#f97066;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0b1615;--paper:#12211f;--ink:#e3f1ee;--muted:#9db3af;--line:#24403c;--pen:#3cc2b2;--pen-dk:#8ee0d4;--pen-soft:#163a35;--warm:#f2a54a;--warm-soft:#3a2a12;--red:#f97066;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.5;-webkit-tap-highlight-color:transparent}
+.hero{background:linear-gradient(140deg,#13998b,#0b5e57);color:#fff;padding-top:env(safe-area-inset-top,0px)}
+.in{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.hero .in{padding-block:22px 54px;display:flex;align-items:center;gap:14px}
+.logo{width:52px;height:52px;border-radius:15px;background:#fff;display:grid;place-items:center;flex:none;box-shadow:0 6px 16px rgba(0,0,0,.18)}
+.logo svg{width:32px;height:32px}
+.hero h1{margin:0;font-size:24px;font-weight:800;line-height:1.15}
+.hero p{margin:2px 0 0;opacity:.88;font-size:14px}
+main.in{margin-top:-36px;padding-block:0 40px;display:flex;flex-direction:column;gap:16px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:16px;box-shadow:0 6px 18px rgba(11,94,87,.07)}
+.card>h2{margin:0 0 4px;font-size:17px;font-weight:800;display:flex;align-items:center;gap:8px}
+.card>p.sub{margin:0 0 12px;color:var(--muted);font-size:13.5px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (min-width:620px){.grid.g3{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:619px){.grid>.tile:last-child:nth-child(odd){grid-column:1/-1;min-height:0;display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:12px;row-gap:2px;align-items:center}.grid>.tile:last-child:nth-child(odd) .ic{grid-row:span 2}}
+.tile{display:flex;flex-direction:column;gap:6px;align-items:flex-start;text-align:left;border:1px solid var(--line);background:var(--bg);border-radius:16px;padding:14px;min-height:96px;color:var(--ink);text-decoration:none;font:inherit;cursor:pointer;width:100%}
+.tile:hover,.tile:focus-visible{border-color:var(--pen);outline:none;background:var(--pen-soft)}
+.tile .ic{width:38px;height:38px;border-radius:11px;background:var(--pen);display:grid;place-items:center;flex:none}
+.tile .ic svg{width:21px;height:21px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tile b{font-size:15px;line-height:1.25}
+.tile small{color:var(--muted);font-size:12.5px;line-height:1.35}
+.tile.hot{background:var(--warm-soft);border-color:#f6d49a}
+.tile.hot .ic{background:var(--warm)}
+.f{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;font:inherit;font-size:16px;background:var(--paper);color:var(--ink)}
+.f:focus{outline:2px solid var(--pen);outline-offset:0}
+.btn{border:0;border-radius:12px;background:var(--pen-dk);color:#fff;font:inherit;font-weight:700;padding:12px 16px;cursor:pointer;min-height:44px}
+.ghost{border:1px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);font:inherit;font-weight:600;padding:10px 14px;cursor:pointer;min-height:44px;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.row .f{flex:1;min-width:0}
+.steps{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:14px}
+.steps b{color:var(--pen-dk)}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+.kv:last-child{border-bottom:0}
+.kv span{color:var(--muted)}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 0}
+.kpi{background:var(--bg);border-radius:14px;padding:10px}
+.kpi small{display:block;color:var(--muted);font-size:11.5px}
+.kpi b{font-size:18px;font-variant-numeric:tabular-nums}
+.pill{display:inline-block;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:700;white-space:nowrap}
+.p-g{background:#dcf5e7;color:#16794a}.p-a{background:var(--warm-soft);color:var(--warm)}.p-r{background:#fde4e2;color:var(--red)}
+.list .it{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.list .it:last-child{border-bottom:0}
+.list .it>div{min-width:0}
+.list .it small{display:block;color:var(--muted);font-size:12.5px}
+.qr{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:10px}
+#qr{background:#fff;padding:8px;border-radius:12px;width:156px;height:156px}
+#qr img,#qr canvas{display:block;width:140px!important;height:140px!important}
+.link{font-weight:700;word-break:break-all;color:var(--pen-dk)}
+.muted{color:var(--muted);font-size:13px}
+.err{color:var(--red);font-size:13.5px;min-height:1.2em;margin-top:6px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#10302d;color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;z-index:20;max-width:calc(100% - 32px)}
+footer{text-align:center;color:var(--muted);font-size:12.5px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+</style>
+</head>
+<body>
+<header class="hero"><div class="in">
+  <div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#0f8d80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9M3 9h18M3 9v11h18V9M9 20v-6h6v6"/></svg></div>
+  <div><h1>Cổng Shop Gọn</h1><p>Một link vào cho chủ shop, nhân viên, cộng tác viên và Partner</p></div>
+</div></header>
+
+<main class="in">
+
+<!-- 1. ĐĂNG NHẬP THEO VAI -->
+<section class="card" aria-labelledby="h-vao">
+  <h2 id="h-vao">Đăng nhập</h2>
+  <p class="sub">Chọn đúng vai của bạn.</p>
+  <div class="grid g3">
+    <a class="tile" href="/app/"><span class="ic"><svg viewBox="0 0 24 24"><path d="M3 9l1.5-5h15L21 9M3 9h18M3 9v11h18V9M9 20v-6h6v6"/></svg></span><b>Chủ shop</b><small>Đăng nhập Gmail của shop</small></a>
+    <a class="tile" href="/app/?nv=1"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c1-4 3.8-6 7-6s6 2 7 6"/></svg></span><b>Nhân viên cửa hàng</b><small>SĐT + mật khẩu chủ shop cấp</small></a>
+    <button class="tile" type="button" data-go="ctv"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14.5c2 .6 3.2 2.4 3.5 5.5"/></svg></span><b>Cộng tác viên · Leader</b><small>Xem shop đã cài, hoa hồng, link cài app</small></button>
+    <a class="tile" href="/partner/"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="3"/><path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z"/></svg></span><b>Partner khu vực</b><small>Doanh số khu vực, đội, đối soát</small></a>
+    <a class="tile" href="/quantri/"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span><b>Quản trị</b><small>Duyệt shop, CTV, Partner (mã PIN)</small></a>
+  </div>
+</section>
+
+<!-- 2. CỘNG TÁC VIÊN -->
+<section class="card" id="ctv" aria-labelledby="h-ctv">
+  <h2 id="h-ctv">Cộng tác viên · Leader</h2>
+  <div id="ctvBox"></div>
+</section>
+
+<!-- 3. DEMO CHO SHOP -->
+<section class="card" aria-labelledby="h-demo">
+  <h2 id="h-demo">Cho shop xem thử</h2>
+  <p class="sub">Dữ liệu mẫu, không cần đăng nhập — đưa điện thoại cho chủ shop bấm thử.</p>
+  <div class="grid g3">
+    <a class="tile hot" href="/app/?demo=1&amp;test=1"><span class="ic"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10 18h4"/></svg></span><b>App demo chủ shop</b><small>Bán, nhập, kho, báo cáo lời lỗ</small></a>
+    <a class="tile hot" href="/bg/?demo=1&amp;xem=1"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.2 3 14.8 0 18M12 3c-3 3.2-3 14.8 0 18"/></svg></span><b>Website shop mẫu</b><small>Trang bảng giá khách xem</small></a>
+    <button class="tile hot" type="button" data-nvtest="1"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c1-4 3.8-6 7-6s6 2 7 6"/></svg></span><b>App nhân viên mẫu</b><small>Nhân viên thấy gì, không thấy gì</small></button>
+  </div>
+</section>
+
+<!-- 4. TIỆN ÍCH -->
+<section class="card" aria-labelledby="h-ti">
+  <h2 id="h-ti">Tiện ích</h2>
+  <div class="grid g3">
+    <a class="tile" href="/huong-dan/"><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M9 7h6"/></svg></span><b>Hướng dẫn sử dụng</b><small>Từng bước, có ảnh màn hình</small></a>
+    <a class="tile" href="/so-sanh.html"><span class="ic"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><b>So sánh với app khác</b><small>Giá, tính năng, tiết kiệm bao nhiêu</small></a>
+    <a class="tile" href="/setup/"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></svg></span><b>Bảng giá · cài đặt</b><small>Giá gói, QR mở app, cách cài</small></a>
+    <a class="tile" href="/"><span class="ic"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></span><b>Giới thiệu Shop Gọn</b><small>Trang chủ shopgon.vn</small></a>
+    <a class="tile" href="/privacy.html"><span class="ic"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span><b>Quyền riêng tư</b><small>Dữ liệu nằm trong Drive của shop</small></a>
+    <a class="tile" href="https://www.facebook.com/profile.php?id=61595903296880" target="_blank" rel="noopener"><span class="ic"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-4-7.5L21 3l-1 4.5A9 9 0 0 1 21 12z"/></svg></span><b>Page Facebook</b><small>Hỏi đáp, hỗ trợ shop</small></a>
+  </div>
+</section>
+
+<footer>Shop Gọn · shopgon.vn · Thêm trang này vào màn hình chính để mở như app</footer>
+</main>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/* Cổng Shop Gọn — 06/11/2026 anh Thái.
+   CTV/Leader: nhập SĐT (nhớ trên máy) → GET LICENSE ?ctv=SĐT (ctvData_: shop đã gắn SĐT, giao dịch + hoa hồng; không trả Gmail shop).
+   Người thuộc Partner: máy chủ trả pct 0 → hoa hồng do Partner chi. ?demo=1 → dữ liệu mẫu. */
+const API='https://script.google.com/macros/s/AKfycbyyqlK8nFmTxO_6ZNDee0FdTZeynwzHWsgRvQKxfKI0qZKtPEve_rrP4kL9O1PWj25bJg/exec';
+const DEMO=/[?&]demo/.test(location.search);
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>Math.round(+n||0).toLocaleString('vi-VN')+'đ';
+const dmy=s=>s?s.slice(8,10)+'/'+s.slice(5,7)+'/'+s.slice(0,4):'';
+const sdtOk=s=>{let d=String(s||'').replace(/\D/g,'');if(d.startsWith('84'))d='0'+d.slice(2);if(d.length===9)d='0'+d;return /^0\d{9}$/.test(d)?d:''};
+const fmt=s=>s?s.replace(/^(\d{4})(\d{3})(\d+)$/,'$1 $2 $3'):'';
+const KEY='sg_vao_ctv';const get=()=>{try{return localStorage.getItem(KEY)||''}catch(_){return ''}};const put=v=>{try{v?localStorage.setItem(KEY,v):localStorage.removeItem(KEY)}catch(_){}};
+let tm;function toast(m){const e=$('toast');e.textContent=m;e.hidden=false;clearTimeout(tm);tm=setTimeout(()=>e.hidden=true,2300)}
+let D=null,loi='';
+
+function sample(s){const t=new Date().toISOString().slice(0,10),m=t.slice(0,8);
+  return {ctv:s,ten:'Tín (mẫu)',pct:40,today:t,shops:[{shop:'Minh Châu Mobile',tt:'Đã duyệt',han:'2027-10-20'},{shop:'Ninh Kiều Phone',tt:'Đã duyệt',han:'2026-12-01'},{shop:'Cái Răng ĐTDĐ',tt:'Chờ duyệt',yeuCau:t}],
+    tt:[{ngay:m+'02',shop:'Minh Châu Mobile',m:12,tien:990000,hh:396000,loai:'Kích hoạt'},{ngay:m+'05',shop:'Ninh Kiều Phone',m:12,tien:1190000,hh:476000,loai:'Kích hoạt'}]}}
+
+function trangThai(k,today){if(k.tt==='Đã duyệt')return k.han&&k.han<today?['Hết hạn','p-r']:['Đang dùng','p-g'];if(k.tt==='Tạm duyệt')return['Dùng trước','p-a'];if(k.tt==='Chờ duyệt')return['Chờ duyệt','p-a'];return[k.tt||'—','p-r']}
+
+function veCtv(){const s=get(),box=$('ctvBox');
+  if(!s){box.innerHTML=`<p class="sub">Nhập số điện thoại bạn dùng khi cài app cho shop. Máy sẽ nhớ cho lần sau.</p>
+    <form id="fCtv" class="row" autocomplete="on"><label for="ctvSdt" hidden>Số điện thoại</label><input class="f" id="ctvSdt" inputmode="tel" autocomplete="tel" placeholder="Số điện thoại của bạn"><button class="btn" type="submit">Xem</button></form>
+    <div class="err" id="ctvErr"></div>
+    <h3 style="font-size:15px;margin:14px 0 6px">Cách bán Shop Gọn cho shop</h3>
+    <ol class="steps">
+      <li>Mở <b>App demo chủ shop</b> ở mục "Cho shop xem thử" để shop bấm thử.</li>
+      <li>Shop ưng → mở link cài app <b>có SĐT của bạn</b> (đăng nhập xong sẽ có link + mã QR riêng).</li>
+      <li>Shop đăng nhập Gmail, gửi đề nghị kích hoạt — ô SĐT cộng tác viên điền số của bạn.</li>
+      <li>Shop chuyển khoản theo gói, bạn chụp biên lai gửi nhóm Shop Gọn để duyệt.</li>
+      <li>Shop được duyệt là hoa hồng ghi cho bạn, gia hạn vẫn tính như lần đầu.</li>
+    </ol>`;return}
+  if(!D){box.innerHTML=loi?`<p class="err">${esc(loi)}</p><div class="row"><button class="ghost" data-reload="1">Thử lại</button><button class="ghost" data-out="1">Đổi số</button></div>`:'<p class="muted">Đang tải…</p>';return}
+  const today=D.today||new Date().toISOString().slice(0,10),thang=today.slice(0,7);
+  const tt=(D.tt||[]).slice().sort((a,b)=>String(b.ngay).localeCompare(a.ngay)),tTh=tt.filter(x=>String(x.ngay).slice(0,7)===thang);
+  const hhTh=tTh.reduce((a,x)=>a+(+x.hh||0),0),hhAll=tt.reduce((a,x)=>a+(+x.hh||0),0),dung=(D.shops||[]).filter(k=>trangThai(k,today)[0]==='Đang dùng').length;
+  const partner=+D.pct===0;const link='https://shopgon.vn/setup/?ctv='+get();
+  box.innerHTML=`<div class="kv"><span>Xin chào</span><b>${esc(D.ten||'Cộng tác viên')} · ${fmt(get())}</b></div>
+    <div class="kpis"><div class="kpi"><small>Shop đã cài</small><b>${(D.shops||[]).length}</b></div><div class="kpi"><small>Đang dùng</small><b>${dung}</b></div><div class="kpi"><small>${partner?'Gói bán tháng này':'Hoa hồng tháng này'}</small><b>${partner?tTh.length:money(hhTh)}</b></div></div>
+    <p class="muted">${partner?'Bạn thuộc đội Partner khu vực — hoa hồng do Partner của bạn chi trả.':`Hoa hồng ${D.pct?D.pct+'% ':''}trên tiền gói, cả lần đầu và gia hạn. Tổng đã ghi: <b>${money(hhAll)}</b>.`}</p>
+    <h3 style="font-size:15px;margin:14px 0 4px">Link cài app của bạn</h3>
+    <p class="muted" style="margin:0">Shop mở link hoặc quét mã này — app tự điền SĐT của bạn.</p>
+    <div class="qr"><div id="qr" aria-label="Mã QR link cài app"></div><div style="min-width:0;flex:1"><div class="link" id="ctvLink">${esc(link)}</div><div class="row" style="margin-top:8px"><button class="ghost" data-copy="1">Chép link</button><a class="ghost" href="${esc(link)}">Mở trang cài</a></div></div></div>
+    <h3 style="font-size:15px;margin:16px 0 0">Shop của bạn</h3>
+    <div class="list">${(D.shops||[]).length?(D.shops||[]).map(k=>{const [t,c]=trangThai(k,today);return `<div class="it"><div><b>${esc(k.shop)}</b><small>${k.han?'Hạn '+dmy(k.han):k.yeuCau?'Gửi '+dmy(k.yeuCau):''}</small></div><span class="pill ${c}">${t}</span></div>`}).join(''):'<p class="muted">Chưa có shop nào gắn số của bạn.</p>'}</div>
+    ${tt.length?`<h3 style="font-size:15px;margin:16px 0 0">Giao dịch</h3><div class="list">${tt.slice(0,20).map(x=>`<div class="it"><div><b>${esc(x.shop)}</b><small>${dmy(String(x.ngay).slice(0,10))} · ${esc(x.loai||'')} ${x.m?(x.m%12?x.m+' tháng':x.m/12+' năm'):''}</small></div><div style="text-align:right"><b>${money(x.tien)}</b>${partner?'':`<small>HH ${money(x.hh)}</small>`}</div></div>`).join('')}</div>`:''}
+    <div class="row" style="margin-top:12px"><button class="ghost" data-reload="1">Tải lại</button><button class="ghost" data-out="1">Đổi số điện thoại</button></div>`;
+  veQr(link)}
+
+function veQr(link){const q=$('qr');if(!q)return;const ve=()=>{q.innerHTML='';try{new QRCode(q,{text:link,width:140,height:140,correctLevel:QRCode.CorrectLevel.M})}catch(_){q.hidden=true}};
+  if(window.QRCode)return ve();const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';s.onload=ve;s.onerror=()=>{q.hidden=true};document.head.appendChild(s)}
+
+async function tai(){const s=get();if(!s){veCtv();return}D=null;loi='';veCtv();
+  if(DEMO){D=sample(s);veCtv();return}
+  try{const r=await fetch(API+'?ctv='+encodeURIComponent(s)+'&_t='+Date.now(),{cache:'no-store'});const j=await r.json();const d=j&&j.data?j.data:j;
+    if(!d||d.ok===false)throw new Error((d&&d.msg)||'Máy chủ chưa trả số');D=d}catch(e){loi='Không tải được: '+e.message}
+  veCtv()}
+
+document.addEventListener('submit',e=>{if(e.target.id!=='fCtv')return;e.preventDefault();const s=sdtOk($('ctvSdt').value);if(!s){$('ctvErr').textContent='Số điện thoại chưa đúng (10 số, bắt đầu bằng 0).';return}put(s);tai()});
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
+  if(d.go){const el=$(d.go);el.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});setTimeout(()=>{const i=$('ctvSdt');i&&i.focus()},350);return}
+  if(d.out){put('');D=null;veCtv();return}
+  if(d.reload){tai();return}
+  if(d.copy){const t=$('ctvLink').textContent;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast('Đã chép link — dán vào Zalo gửi shop'),()=>{const r=document.createRange();r.selectNodeContents($('ctvLink'));const sel=getSelection();sel.removeAllRanges();sel.addRange(r);toast('Đã chọn link — bấm Sao chép')});return}
+  if(d.nvtest){try{localStorage.setItem('shopgon_nv',JSON.stringify({sdt:'0900000000',ten:'NV test',phien:'TEST',test:1}))}catch(_){}location.href='/app/';return}
+});
+tai();
+</script>
+</body>
+</html>
