@@ -149,7 +149,7 @@ const days=(a,b)=>Math.round((pD(a)-pD(b))/864e5);
 const monday=s=>{const x=pD(s);const k=(x.getDay()+6)%7;x.setDate(x.getDate()-k);return fD(x)};
 const goiTen=m=>m%12===0?(m/12)+' năm':m+' tháng';
 const fmtSdt=s=>s?s.replace(/^(\d{4})(\d{3})(\d+)$/,'$1 $2 $3'):'';
-let uncImg=null, D=null, TAB='dt', KY='thang', CTV_KY='nay', CH_LOC='cho', Q='', pick={}, ask=null, ghOpen=null, openCtv=null, editShopCtv=null, addCtv=false, PT_KY='nay', addPt=false, openPt=null;
+let uncImg=null, D=null, TAB='dt', KY='thang', CTV_KY='nay', CH_LOC='cho', Q='', pick={}, ask=null, ghOpen=null, openCtv=null, editShopCtv=null, addCtv=false, PT_KY='nay', CTV_SUB='doi', addPt=false, openPt=null;
 
 /* ===== dữ liệu ===== */
 function sample(){const t=fD(new Date());const ago=n=>addD(t,-n);
@@ -250,18 +250,21 @@ function vCtv(){const PT=vPartner();const t=D.today;const m0=t.slice(0,7);const 
       <div class="eb" style="margin:12px 0 2px">Lịch sử hoa hồng</div>${c.L.length?[...c.L].reverse().map(x=>`<div class="row"><div class="n"><b>${esc(x.shop)}</b><small>${dmy(x.ngay)} · ${esc(x.loai)} ${goiTen(x.m)} · ${money(x.tien)}</small></div><b class="num">${x.doi?'<small style="color:var(--muted);font-weight:600">đội · </small>':''}+${money(x.hh)}</b></div>`).join(''):'<div class="empty">Chưa có.</div>'}</div>`;
   const row=(c,lead)=>`<div class="row" style="flex-wrap:wrap;cursor:pointer" data-openctv="${c.s}"><div class="n"><b>${lead?'⭐ ':''}${c.ten?esc(c.ten):'<span style="color:var(--muted)">Chưa đặt tên</span>'}${lead?' <span class="pill p-b">Leader tự bán</span>':''}</b><small class="num">${fmtSdt(c.s)} · ${c.shops.length} shop (${c.dung} đang dùng) · ${c.n} gói</small></div><div class="r"><b class="num">${money(c.dt)}</b><small class="num">HH ${money(c.hh)}</small></div>${openCtv===c.s?panel(c):''}</div>`;
   const form=addCtv?`<div class="card" style="display:flex;flex-direction:column;gap:8px"><h2 style="margin:0">${addCtv==='ld'?'Thêm Leader':'Thêm cộng tác viên'}</h2><input class="f" id="nSdt" inputmode="tel" placeholder="Số điện thoại"><input class="f" id="nTen" placeholder="Tên">${addCtv==='ld'?'':`<select class="f" id="nLd"><option value="">Chọn leader quản lý</option>${leaders.map(l=>`<option value="${l.s}">Đội ${ldName(l)}</option>`).join('')}</select>${leaders.length?'':'<small style="color:var(--amber)">Chưa có Leader nào — bấm Thêm Leader trước.</small>'}`}<div class="act"><button class="btn" data-savenew="${addCtv}">Lưu</button><button class="ghost" data-addctv="0">Thôi</button></div></div>`:'';
-  return `<div class="seg" role="group"><button data-ctvky="nay" aria-pressed="${CTV_KY==='nay'}">Tháng ${+m0.slice(5)}</button><button data-ctvky="truoc" aria-pressed="${CTV_KY==='truoc'}">Tháng ${+pm.slice(5)}</button></div>
+  /* 06/11 anh Thái: trong tab Cộng tác viên tách 2 tab con — Cộng tác viên (đội anh) | Partner */
+  const SUB=`<div class="seg" role="tablist" style="background:#d6e4e6"><button data-ctvsub="doi" aria-pressed="${CTV_SUB==='doi'}">👥 Cộng tác viên</button><button data-ctvsub="pt" aria-pressed="${CTV_SUB==='pt'}">📍 Partner (${(D.ctv||[]).filter(c=>c.role==='Partner').length})</button></div>`;
+  const MS=`<div class="seg" role="group"><button data-ctvky="nay" aria-pressed="${CTV_KY==='nay'}">Tháng ${+m0.slice(5)}</button><button data-ctvky="truoc" aria-pressed="${CTV_KY==='truoc'}">Tháng ${+pm.slice(5)}</button></div>`;
+  if(CTV_SUB==='pt')return SUB+MS+`<div class="act"><button class="btn" data-addpt="new">＋ Thêm Partner</button></div>${PT.form}${PT.html}`;
+  return SUB+MS+`
   <div class="kpis"><div class="kpi hero"><div class="eb">Hoa hồng phải trả · tháng ${+mk.slice(5)}/${mk.slice(0,4)}</div><div class="v num">${money(tong)}</div><div class="d">${blocks.length} đội · Sale ${D.hhSale||40}% + Leader ${D.hhLeader||10}% · doanh thu qua CTV ${short(tongDt)}</div></div>
     <div class="kpi"><div class="eb">Leader · CTV</div><div class="v num">${leaders.length} · ${list.length-leaders.length}</div><div class="d">${D.kh.filter(k=>k.ctv).length} shop có CTV</div></div>
     <div class="kpi"><div class="eb">Bán không qua CTV</div><div class="v num">${short(khongCtv)}</div><div class="d">Không tính hoa hồng</div></div></div>
-  <div class="act"><button class="btn" data-addctv="ld">＋ Thêm Leader</button><button class="ghost" data-addctv="ctv" style="padding:11px 16px">＋ Thêm CTV</button><button class="ghost" data-addpt="new" style="padding:11px 16px">＋ Thêm Partner</button></div>
-  ${form}${PT.form}
+  <div class="act"><button class="btn" data-addctv="ld">＋ Thêm Leader</button><button class="ghost" data-addctv="ctv" style="padding:11px 16px">＋ Thêm CTV</button></div>
+  ${form}
   ${blocks.map(b=>`<div class="card"><div class="top"><div class="n"><b style="font-size:17px">Đội ${ldName(b.l)}</b><small class="num">Leader ${fmtSdt(b.l.s)} · ${b.mem.length} CTV · ${b.n} gói</small></div><div class="r"><b class="num" style="font-size:19px;color:var(--pen)">${money(b.dt)}</b><small>Doanh thu đội</small></div></div>
     <div class="split"><div class="mini"><small>Leader nhận</small><b class="num">${money(b.hhL)}</b><small>tự bán ${short(b.l.hh)} + đội ${short(b.l.hhDoi)}</small></div><div class="mini"><small>CTV nhận</small><b class="num">${money(b.hhM)}</b><small>${b.mem.filter(c=>c.n).length}/${b.mem.length} CTV có bán</small></div></div>
     <div style="margin-top:6px">${row(b.l,1)}${b.mem.length?b.mem.map(c=>row(c,0)).join(''):'<div class="empty">Chưa có CTV trong đội. Bấm ＋ Thêm CTV.</div>'}</div></div>`).join('')}
   ${lone.length?`<div class="card" style="border:2px solid var(--amber-soft)"><h2 style="color:var(--amber)">Chưa có leader (${lone.length})</h2><small style="color:var(--muted)">Bấm vào từng người → chọn đội → Lưu vai trò.</small>${lone.map(c=>row(c,0)).join('')}</div>`:''}
   ${!blocks.length&&!lone.length?'<div class="card empty">Chưa có Leader, CTV nào. Bấm ＋ Thêm Leader để bắt đầu.</div>':''}
-  ${PT.html}
   <p class="note">Hoa hồng: CTV bán = CTV ${D.hhSale||40}% + Leader ${D.hhLeader||10}%; Leader tự bán ${D.hhPct}%. Gia hạn chia như lần đầu. Tính khi anh xác nhận đã nhận đủ tiền gói.</p>`}
 
 /* ===== TAB 4: PARTNER KHU VỰC (06/11) — anh chỉ quản Partner; Partner tự quản Leader/CTV trên shopgon.vn/partner ===== */
@@ -277,8 +280,7 @@ function vPartner(){/* 06/11 anh Thái: Partner nằm trong tab Cộng tác viê
     <input class="f" id="pMk" type="text" autocomplete="off" placeholder="${ed?'Mật khẩu mới (bỏ trống = giữ mật khẩu cũ)':'Mật khẩu (ít nhất 6 ký tự)'}">
     <label style="display:flex;align-items:center;gap:8px;font-weight:700">Partner nhận <input class="f num" id="pPct" inputmode="numeric" value="${ed?ed.pct||70:70}" style="width:80px;text-align:center"> % tiền gói</label>
     <div class="act"><button class="btn" data-savept="${ed?ed.sdt:'new'}" style="flex:1">Lưu</button><button class="ghost" data-addpt="0">Thôi</button></div></div>`:'';
-  return {form,html:`<h2 style="margin:8px 2px 0">📍 Partner khu vực</h2>
-  <div class="kpis"><div class="kpi hero"><div class="eb">Phải trả Partner · tháng ${+mk.slice(5)}/${mk.slice(0,4)}</div><div class="v num">${money(nhan)}</div><div class="d">${conTra?'Còn chưa chuyển '+money(conTra):nhan?'✓ Đã chuyển đủ':'Chưa phát sinh'} · doanh thu Partner ${short(dt)}</div></div>
+  return {form,html:`<div class="kpis"><div class="kpi hero"><div class="eb">Phải trả Partner · tháng ${+mk.slice(5)}/${mk.slice(0,4)}</div><div class="v num">${money(nhan)}</div><div class="d">${conTra?'Còn chưa chuyển '+money(conTra):nhan?'✓ Đã chuyển đủ':'Chưa phát sinh'} · doanh thu Partner ${short(dt)}</div></div>
     <div class="kpi"><div class="eb">Anh giữ lại</div><div class="v num" style="font-size:19px">${money(dt-nhan)}</div><div class="d">Thuế, phí, duy trì app</div></div>
     <div class="kpi"><div class="eb">Partner</div><div class="v num">${pts.length}</div><div class="d">${S.reduce((a,c)=>a+c.dung,0)} shop đang dùng</div></div></div>
   ${S.map(c=>`<div class="card"><div class="top" style="cursor:pointer" data-openpt="${c.p.sdt}"><div class="n"><b style="font-size:17px">📍 ${esc(c.p.khuVuc||'Chưa ghi khu vực')} · ${esc(c.p.ten)}</b><small class="num">${fmtSdt(c.p.sdt)} · nhận ${c.p.pct||70}% · ${c.ld} leader · ${c.team.length-c.ld} CTV</small></div><div class="r"><b class="num" style="font-size:19px;color:var(--pen)">${money(c.dt)}</b><small>${c.n} gói</small></div></div>
@@ -329,6 +331,7 @@ document.addEventListener('click',e=>{const a=e.target.closest('[data-goch]');if
   if(d.ky){KY=d.ky;render();return}
   if(d.ctvky){CTV_KY=d.ctvky;render();return}
   if(d.ptky){PT_KY=d.ptky;render();return}
+  if(d.ctvsub){CTV_SUB=d.ctvsub;addCtv=false;addPt=false;openCtv=null;openPt=null;render();$('main').scrollTop=0;return}
   if('addpt' in d){addPt=d.addpt==='0'?false:d.addpt;if(addPt)addCtv=false;render();if(addPt)$('pTen')&&$('pTen').scrollIntoView({block:'center'});if(addPt)setTimeout(()=>$('pTen')&&$('pTen').focus(),0);return}
   if(d.openpt&&b.tagName!=='BUTTON'){openPt=openPt===d.openpt?null:d.openpt;render();return}
   if(d.savept){const isNew=d.savept==='new';let sdt=$('pSdt').value.replace(/\D/g,'');if(sdt.startsWith('84'))sdt='0'+sdt.slice(2);if(sdt.length===9)sdt='0'+sdt;
