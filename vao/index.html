@@ -173,6 +173,14 @@ main.in{padding-block:16px calc(96px + env(safe-area-inset-bottom,0px));display:
 
 .toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#132422;color:#fff;padding:11px 16px;border-radius:14px;font-size:14px;z-index:40;max-width:calc(100% - 32px);box-shadow:0 10px 24px rgba(0,0,0,.2)}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.tile{opacity:1;transform:none}.u251-ic{transform:none}}
+/* 06/11 21h50 anh Thái: hiệu ứng công nghệ tab Tiện ích — viền neon xoay + sáng nhịp ở 2 thẻ test, thẻ hiện dần, nền lưới chấm */
+@property --sgA{syntax:"<angle>";inherits:false;initial-value:0deg}
+@keyframes sgSpin{to{--sgA:360deg}}
+@keyframes sgGlow{0%,100%{box-shadow:0 6px 18px -10px rgba(14,165,233,.35)}50%{box-shadow:0 10px 26px -8px rgba(20,184,166,.55)}}
+#pgTi .tile.hot{position:relative;isolation:isolate;animation:sgGlow 3.6s ease-in-out infinite}
+#pgTi .tile.hot::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.6px;pointer-events:none;background:conic-gradient(from var(--sgA),#14b8a6,#38bdf8,#a78bfa,#f59e0b,#14b8a6);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:sgSpin 4s linear infinite}
+#pgTi .card:first-child{background-image:radial-gradient(rgba(15,132,120,.10) 1px,transparent 1.2px);background-size:14px 14px;background-position:-7px -7px}
+@media (prefers-reduced-motion:reduce){#pgTi .tile.hot,#pgTi .tile.hot::before{animation:none!important}}
 </style>
 </head>
 <body>
