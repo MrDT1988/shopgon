@@ -27,7 +27,7 @@ header small{opacity:.85;font-size:12.5px}
 main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .wrap{max-width:760px;margin:0 auto;padding:16px max(16px,env(safe-area-inset-right)) 24px max(16px,env(safe-area-inset-left));display:flex;flex-direction:column;gap:14px}
 nav{flex:none;background:#fff;box-shadow:0 -6px 20px rgba(16,42,52,.10);padding:6px max(8px,env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));z-index:2}
-nav .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+nav .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
 nav button{border:0;background:none;border-radius:14px;padding:7px 4px;font-size:12.5px;font-weight:700;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;position:relative}
 nav svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 nav button[aria-selected="true"]{color:var(--pen);background:linear-gradient(180deg,#e2f6f1,#cdefe7)}
@@ -118,6 +118,17 @@ input.f{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:
 .prog .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.prog .g3 div{background:#fff;border-radius:12px;padding:8px 10px;min-width:0}.prog .g3 small{display:block;color:var(--muted);font-size:11.5px}.prog .g3 b{display:block;font-size:clamp(12.5px,3.4vw,17px);white-space:nowrap}.prog .g3 em{font-style:normal;font-size:11px;color:var(--green);font-weight:700}
 .prog .g3 .hot{background:#b45309;color:#fff}.prog .g3 .hot small,.prog .g3 .hot em{color:#ffe9c7}
 .delx{border:0;background:none;color:var(--muted);font-size:12.5px;font-weight:700;padding:2px 0;text-decoration:underline;align-self:flex-end}
+/* 06/11 anh Thái: tab Tiện ích ở quản trị + Partner để demo cho anh em */
+.tih{margin:0;font-size:18px}.tis{margin:4px 0 12px;color:var(--muted);font-size:14px}
+.tig{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (min-width:900px){.tig{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.ti{display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left;font:inherit;color:inherit;text-decoration:none;background:#f4f8f7;border:1px solid #dbe8e5;border-radius:16px;padding:14px;min-height:118px;cursor:pointer}
+.ti.hot{background:#fff6e6;border-color:#f5d9a8}
+.ti .tic{width:40px;height:40px;border-radius:12px;background:#0f8478;display:grid;place-items:center;margin-bottom:6px}
+.ti.hot .tic{background:#e8930c}
+.ti .tic svg{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.ti b{font-size:15px;line-height:1.3}.ti small{font-size:12.5px;color:var(--muted);line-height:1.4}
+.ti:focus-visible{outline:3px solid #0b5e57;outline-offset:2px}
 </style></head>
 <body>
 <div class="app">
@@ -132,6 +143,7 @@ input.f{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:
     <button role="tab" data-tab="dt" aria-selected="true"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Doanh thu</button>
     <button role="tab" data-tab="ctv" aria-selected="false"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.8-3.6 3.4-5.5 6.5-5.5s5.7 1.9 6.5 5.5"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14c2.6 0 4.2 1.6 4.8 4.5"/></svg>Cộng tác viên</button>
     <button role="tab" data-tab="ch" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M3 9l1.5-5h15L21 9M3 9h18M3 9v11h18V9M9 20v-6h6v6"/></svg>Cửa hàng<span class="dot" id="dotCho" hidden></span></button>
+    <button role="tab" data-tab="ti" aria-selected="false"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.5"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.5"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.5"/></svg>Tiện ích</button>
   </div></nav>
 </div>
 <div class="toast" id="toast" hidden></div>
@@ -355,13 +367,15 @@ function render(){if(!D)return;
   const cho=D.kh.filter(k=>trangThai(k)==='cho'||(k.unc&&trangThai(k)!=='khoa')).length;$('dotCho').textContent=cho;$('dotCho').hidden=!cho;
   $('sub').textContent=(LIVE?'':'Bản xem trước · dữ liệu mẫu · ')+'Cập nhật '+new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});
   document.querySelectorAll('nav [data-tab]').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===TAB));
-  $('v').innerHTML=TAB==='dt'?vDoanhThu():TAB==='ctv'?vCtv():vCuaHang()}
+  $('v').innerHTML=TAB==='dt'?vDoanhThu():TAB==='ctv'?vCtv():TAB==='ti'?vTi():vCuaHang()}
+function vTi(){return `<div class="card"><h2 class="tih">Tiện ích</h2><p class="tis">Demo cho đội và shop: tự test app, học cách dùng, nắm giá đối thủ.</p><div class="tig"><a class="ti hot" href="/app/?demo=1&test=1"><span class="tic"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></svg></span><b>App chủ shop · test</b><small>Vào thẳng tài khoản test, đủ tính năng</small></a><button type="button" class="ti hot" data-nvtest="1"><span class="tic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c.9-4 4-6 8-6s7.1 2 8 6"/></svg></span><b>App nhân viên · test</b><small>Vào thẳng tài khoản nhân viên bán hàng</small></button><a class="ti" href="/bg/?demo=1&xem=1"><span class="tic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg></span><b>Website bảng giá mẫu</b><small>Trang khách xem giá, gọi Zalo</small></a><a class="ti" href="/huong-dan/"><span class="tic"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5M8 7h7"/></svg></span><b>Hướng dẫn sử dụng</b><small>Từng bước, có ảnh</small></a><a class="ti" href="/so-sanh.html"><span class="tic"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><b>So sánh giá đối thủ</b><small>Shop Gọn vs KiotViet, Sapo</small></a><a class="ti" href="/setup/"><span class="tic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v1M14 20h1M18 18h3v3"/></svg></span><b>Bảng giá · cài đặt</b><small>Giá gói, QR mở app</small></a><a class="ti" href="https://www.facebook.com/profile.php?id=61595903296880" target="_blank" rel="noopener"><span class="tic"><svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 01-11.6 7.1L4 20l1-4.6A8 8 0 1121 12z"/></svg></span><b>Page Facebook</b><small>Gửi shop xem, hỏi đáp</small></a></div></div>`}
 function go(t){TAB=t;ask=null;editShopCtv=null;addPt=false;openPt=null;render();$('main').scrollTop=0}
 
 document.addEventListener('click',e=>{const a=e.target.closest('[data-goch]');if(a){e.preventDefault();CH_LOC=a.dataset.goch;go('ch');return}
   if(e.target.closest('.ex')&&!e.target.closest('button'))return;
   const b=e.target.closest('button,[data-openctv],[data-openpt]');if(!b)return;const d=b.dataset;
   if(b.id==='reload'){load();return}
+  if(d.nvtest){try{localStorage.setItem('shopgon_nv',JSON.stringify({sdt:'0900000000',ten:'NV test',phien:'TEST',test:1}))}catch(_){}location.href='/app/';return}
   if(d.tab){go(d.tab);return}
   if(d.ky){KY=d.ky;render();return}
   if(d.ctvky){CTV_KY=d.ctvky;render();return}
