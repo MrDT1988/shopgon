@@ -210,6 +210,8 @@ main.in{padding-block:16px calc(96px + env(safe-area-inset-bottom,0px));display:
 @keyframes rkGrow{from{transform:scaleX(0)}to{transform:none}}
 .rk-ct{padding:0 0 12px 40px}
 @media (prefers-reduced-motion:reduce){.rk-bar i{animation:none}}
+.qt-bar{position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px max(12px,env(safe-area-inset-left)) 8px max(12px,env(safe-area-inset-right));background:linear-gradient(90deg,#1e293b,#0f766e);color:#fff;font-size:13px}
+.qt-bar b{color:#fde68a}.qt-bar a{color:#fff;font-weight:800;text-decoration:none;background:rgba(255,255,255,.16);border-radius:99px;padding:6px 12px;min-height:32px;display:inline-flex;align-items:center;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -389,7 +391,10 @@ const money=n=>Math.round(+n||0).toLocaleString('vi-VN')+'đ';
 const dmy=s=>s?s.slice(8,10)+'/'+s.slice(5,7)+'/'+s.slice(0,4):'';
 const sdtOk=s=>{let d=String(s||'').replace(/\D/g,'');if(d.startsWith('84'))d='0'+d.slice(2);if(d.length===9)d='0'+d;return /^0\d{9}$/.test(d)?d:''};
 const fmt=s=>s?s.replace(/^(\d{4})(\d{3})(\d+)$/,'$1 $2 $3'):'';
-const ls={get:k=>{try{return localStorage.getItem(k)||''}catch(_){return ''}},set:(k,v)=>{try{v?localStorage.setItem(k,v):localStorage.removeItem(k)}catch(_){}}};
+/* 06/11: bản mẫu dùng khoá riêng 'demo_' để không đè phiên thật trên cùng máy */
+const LSP=/[?&]demo/.test(location.search)?'demo_':'';
+const ls={get:k=>{try{return localStorage.getItem(LSP+k)||''}catch(_){return ''}},set:(k,v)=>{try{v?localStorage.setItem(LSP+k,v):localStorage.removeItem(LSP+k)}catch(_){}}};
+const AS=(location.search.match(/[?&]as=(ctv|leader)/)||[])[1]||'';
 const KADM='sg_admin_tok',KEY='sg_vao_ctv',KTOK='sg_vao_tok',KVAI='sg_vao_vai',KPT='sg_partner_tok',KTAB='sg_vao_tab',MK0='123456';
 const ic=n=>`<svg class="i"><use href="#i-${n}"/></svg>`;
 let tm;function toast(m){const e=$('toast');e.textContent=m;e.hidden=false;clearTimeout(tm);tm=setTimeout(()=>e.hidden=true,2400)}
@@ -405,11 +410,12 @@ const ctvApi=(fn,...args)=>post({act:'ctv',tok:ls.get(KTOK),fn,args});
 
 function sample(s){const t=new Date().toISOString().slice(0,10),m=t.slice(0,8),sau=d=>new Date(Date.now()+d*864e5).toISOString().slice(0,10);
   const tr=(()=>{const x=new Date(t);x.setMonth(x.getMonth()-1);return x.toISOString().slice(0,8)})();
-  return {ctv:s,ten:'Tín (mẫu)',pct:50,role:'Leader',hhLd:10,today:t,doi:[
+  const LD=AS==='leader';
+  return {ctv:s,ten:LD?'Tín (mẫu)':'Vy (mẫu)',pct:LD?50:40,role:LD?'Leader':'',hhLd:10,today:t,doi:LD?[
     {sdt:'0901234561',ten:'Hậu (mẫu)',shops:[{shop:'Vĩnh Long Mobile (mẫu)',tt:'Đã duyệt',han:sau(340)},{shop:'Trà Ôn Phone (mẫu)',tt:'Đã duyệt',han:sau(300)},{shop:'Bình Minh ĐTDĐ (mẫu)',tt:'Tạm duyệt',han:sau(4)}],tt:[{ngay:m+'01',shop:'Vĩnh Long Mobile (mẫu)',tien:990000},{ngay:m+'04',shop:'Trà Ôn Phone (mẫu)',tien:2690000},{ngay:tr+'20',shop:'Long Hồ Mobile (mẫu)',tien:1190000}]},
     {sdt:'0901234562',ten:'Ngọc (mẫu)',shops:[{shop:'Châu Thành Phone (mẫu)',tt:'Đã duyệt',han:sau(355)},{shop:'Mỹ Tho Mobile (mẫu)',tt:'Chờ duyệt',yeuCau:t}],tt:[{ngay:m+'03',shop:'Châu Thành Phone (mẫu)',tien:1190000},{ngay:tr+'12',shop:'Gò Công Mobile (mẫu)',tien:990000},{ngay:tr+'25',shop:'Tân Phước ĐTDĐ (mẫu)',tien:990000}]},
-    {sdt:'0901234563',ten:'Phát (mẫu)',shops:[{shop:'Cai Lậy Mobile (mẫu)',tt:'Đã duyệt',han:sau(60)}],tt:[{ngay:tr+'08',shop:'Cai Lậy Mobile (mẫu)',tien:990000}]}],shops:[{shop:'Minh Châu Mobile (mẫu)',tt:'Đã duyệt',han:sau(350)},{shop:'Ninh Kiều Phone (mẫu)',tt:'Đã duyệt',han:sau(20)},{shop:'Cái Răng ĐTDĐ (mẫu)',tt:'Chờ duyệt',yeuCau:t},{shop:'Phong Điền Mobile (mẫu)',tt:'Tạm duyệt',han:sau(5)}],
-    tt:[{ngay:m+'02',shop:'Minh Châu Mobile (mẫu)',m:12,tien:990000,hh:495000,loai:'Kích hoạt'},{ngay:m+'05',shop:'Ninh Kiều Phone (mẫu)',m:12,tien:1190000,hh:595000,loai:'Kích hoạt'}]}}
+    {sdt:'0901234563',ten:'Phát (mẫu)',shops:[{shop:'Cai Lậy Mobile (mẫu)',tt:'Đã duyệt',han:sau(60)}],tt:[{ngay:tr+'08',shop:'Cai Lậy Mobile (mẫu)',tien:990000}]}]:undefined,shops:[{shop:'Minh Châu Mobile (mẫu)',tt:'Đã duyệt',han:sau(350)},{shop:'Ninh Kiều Phone (mẫu)',tt:'Đã duyệt',han:sau(20)},{shop:'Cái Răng ĐTDĐ (mẫu)',tt:'Chờ duyệt',yeuCau:t},{shop:'Phong Điền Mobile (mẫu)',tt:'Tạm duyệt',han:sau(5)}],
+    tt:[{ngay:m+'02',shop:'Minh Châu Mobile (mẫu)',m:12,tien:990000,hh:LD?495000:396000,loai:'Kích hoạt'},{ngay:m+'05',shop:'Ninh Kiều Phone (mẫu)',m:12,tien:1190000,hh:LD?595000:476000,loai:'Kích hoạt'}]}}
 function trangThai(k,today){if(k.tt==='Đã duyệt')return k.han&&k.han<today?['Hết hạn','p-r']:['Đang dùng','p-g'];if(k.tt==='Tạm duyệt')return['Dùng trước','p-a'];if(k.tt==='Chờ duyệt')return['Chờ duyệt','p-a'];return[k.tt||'—','p-r']}
 const ngayCon=(han,today)=>Math.round((new Date(han)-new Date(today))/864e5);
 
@@ -436,7 +442,7 @@ const io='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEac
 function reveal(root){root.querySelectorAll('[data-rv] .tile').forEach((t,k)=>{t.classList.remove('is-in');t.style.setProperty('--d',(k%3)*.08+Math.floor(k/3)*.06+'s');if(RM||!io)t.classList.add('is-in');else io.observe(t)})}
 
 /* ---- Màn ---- */
-function man(){const vao=!!ls.get(KTOK);$('vLogin').hidden=vao;$('vApp').hidden=!vao;
+function man(){if(DEMO&&AS&&!ls.get(KTOK)){ls.set(KEY,'0900000001');ls.set(KTOK,'DEMO')}const vao=!!ls.get(KTOK);$('vLogin').hidden=vao;$('vApp').hidden=!vao;
   if(vao){moTab(ls.get(KTAB)||'home',true);tai()}else{const s=ls.get(KEY);if(s&&!$('ctvSdt').value)$('ctvSdt').value=fmt(s);chonVai((location.search.match(/[?&]vai=(ctv|pt|qt)/)||[])[1]||ls.get(KVAI)||'ctv',false);requestAnimationFrame(()=>movePill(false))}}
 function dangXuat(msg){ls.set(KTOK,'');ls.set(KTAB,'');D=null;$('vMk').hidden=true;man();if(msg)$('ctvErr').textContent=msg}
 function moTab(t,lan1){TAB=t;ls.set(KTAB,t);document.querySelectorAll('.tabbar button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));
@@ -572,6 +578,8 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
 });
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>movePill(false));
 man();
+/* 06/11 Đổi vai: mở từ quản trị (?tu=qt) → thanh trên cùng báo đang xem vai, nút về quản trị */
+if(/[?&]tu=qt/.test(location.search)){const b=document.createElement('div');b.className='qt-bar';b.innerHTML='<span>👁 Đang xem vai <b>'+(AS==='leader'?'Leader':'Cộng tác viên')+'</b> · dữ liệu mẫu</span><a href="/quantri/">← Quản trị</a>';document.body.prepend(b);document.body.classList.add('co-qtbar')}
 </script>
 </body>
 </html>

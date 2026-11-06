@@ -159,6 +159,8 @@ select.f{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius
 .tig .tic::after{content:"";position:absolute;inset:-2px;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.65) 50%,transparent 70%);transform:translateX(-140%);animation:sgIco 4s ease-in-out infinite}
 .tig>:nth-child(2) .tic::after{animation-delay:.35s}.tig>:nth-child(3) .tic::after{animation-delay:.7s}.tig>:nth-child(4) .tic::after{animation-delay:1.05s}.tig>:nth-child(5) .tic::after{animation-delay:1.4s}.tig>:nth-child(6) .tic::after{animation-delay:1.75s}.tig>:nth-child(7) .tic::after{animation-delay:2.1s}
 @media (prefers-reduced-motion:reduce){.tig .ti.hot::after,.tig .tic::after{animation:none!important;display:none}}
+.qt-bar{position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px max(12px,env(safe-area-inset-left)) 8px max(12px,env(safe-area-inset-right));background:linear-gradient(90deg,#1e293b,#0f766e);color:#fff;font-size:13px}
+.qt-bar b{color:#fde68a}.qt-bar a{color:#fff;font-weight:800;text-decoration:none;background:rgba(255,255,255,.16);border-radius:99px;padding:6px 12px;min-height:32px;display:inline-flex;align-items:center;white-space:nowrap}
 </style></head>
 <body>
 <div class="app">
@@ -371,5 +373,7 @@ document.addEventListener('click',e=>{if(e.target.closest('.ex')&&!e.target.clos
 });
 document.addEventListener('input',e=>{const t=e.target;if(t.id==='q'){Q=t.value;const pos=t.selectionStart;render();const i=$('q');i.focus();try{i.setSelectionRange(pos,pos)}catch(_){}}});
 load();
+/* 06/11 Đổi vai: mở từ quản trị (?tu=qt) → thanh trên cùng báo đang xem vai, nút về quản trị */
+if(/[?&]tu=qt/.test(location.search)){const b=document.createElement('div');b.className='qt-bar';b.innerHTML='<span>👁 Đang xem vai <b>'+('Partner')+'</b> · dữ liệu mẫu</span><a href="/quantri/">← Quản trị</a>';document.body.prepend(b);document.body.classList.add('co-qtbar');b.style.position='fixed';b.style.left=b.style.right=b.style.top='0';const ap=document.querySelector('.app'),fit=()=>{if(ap)ap.style.top=b.offsetHeight+'px'};fit();addEventListener('resize',fit)}
 </script>
 </body></html>

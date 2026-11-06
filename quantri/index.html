@@ -157,12 +157,30 @@ input.f{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:
 .tig .tic::after{content:"";position:absolute;inset:-2px;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.65) 50%,transparent 70%);transform:translateX(-140%);animation:sgIco 4s ease-in-out infinite}
 .tig>:nth-child(2) .tic::after{animation-delay:.35s}.tig>:nth-child(3) .tic::after{animation-delay:.7s}.tig>:nth-child(4) .tic::after{animation-delay:1.05s}.tig>:nth-child(5) .tic::after{animation-delay:1.4s}.tig>:nth-child(6) .tic::after{animation-delay:1.75s}.tig>:nth-child(7) .tic::after{animation-delay:2.1s}
 @media (prefers-reduced-motion:reduce){.tig .ti.hot::after,.tig .tic::after{animation:none!important;display:none}}
+/* 06/11 22h anh Thái: Đổi vai — quản trị xem giao diện CTV / Leader / Partner / Chủ shop / Nhân viên bằng dữ liệu mẫu */
+.hbtn.dvb{width:auto!important;padding:0 12px!important;font-size:13.5px!important;gap:6px;display:inline-flex;align-items:center;margin-left:auto}
+.hbtn.dvb+.hbtn{margin-left:8px}
+.dv-bg{position:fixed;inset:0;z-index:50;background:rgba(8,30,28,.45);display:flex;align-items:flex-end;justify-content:center}
+.dv-bg[hidden]{display:none}
+.dv{background:#fff;width:100%;max-width:520px;border-radius:22px 22px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom));animation:dvUp .28s cubic-bezier(.2,.8,.2,1)}
+@media (min-width:900px){.dv-bg{align-items:center}.dv{border-radius:22px}}
+@keyframes dvUp{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+.dv-h{display:flex;align-items:center;justify-content:space-between}.dv-h b{font-size:17px}
+.dv-x{border:0;background:#eef4f3;border-radius:10px;width:40px;height:40px;font-size:16px;cursor:pointer}
+.dv-s{margin:6px 0 12px;font-size:13.5px;color:var(--muted);line-height:1.45}
+.dv-l{display:flex;flex-direction:column;gap:8px}
+.dv-it{display:flex;gap:12px;align-items:center;text-align:left;font:inherit;color:inherit;text-decoration:none;background:#f4f8f7;border:1px solid #dbe8e5;border-radius:14px;padding:10px 12px;min-height:56px;cursor:pointer;width:100%}
+.dv-it b{display:block;font-size:15px}.dv-it small{display:block;font-size:12.5px;color:var(--muted)}
+.dv-ic{width:38px;height:38px;border-radius:11px;background:#0f8478;display:grid;place-items:center;flex:none}
+.dv-ic svg{width:21px;height:21px;stroke:#fff;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+@media (prefers-reduced-motion:reduce){.dv{animation:none}}
 </style></head>
 <body>
 <div class="app">
   <header><div class="w">
     <div class="logo"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M9 7h6M9 11h6M9 15h3"/></svg></div>
     <div><h1>Quản trị Shop Gọn</h1><small id="sub">Đang tải…</small></div>
+    <button class="hbtn dvb" type="button" data-dv="1" aria-label="Đổi vai xem giao diện">👁 Đổi vai</button>
     <button class="hbtn" id="reload" aria-label="Tải lại">↻</button>
   </div></header>
   <main id="main"><div class="wrap" id="v"><div class="card empty">Đang tải…</div></div></main>
@@ -175,6 +193,8 @@ input.f{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:
   </div></nav>
 </div>
 <div class="toast" id="toast" hidden></div>
+<div class="dv-bg" id="dvBg" hidden><div class="dv" role="dialog" aria-modal="true" aria-labelledby="dvT"><div class="dv-h"><b id="dvT">Đổi vai — xem giao diện</b><button type="button" class="dv-x" data-dvx="1" aria-label="Đóng">✕</button></div><p class="dv-s">Mở bằng dữ liệu mẫu (tên &amp; số giả lập), không đụng số thật. Bấm "← Quản trị" ở đầu màn để quay lại.</p><div class="dv-l"><a class="dv-it" href="/vao/?demo=1&amp;as=ctv&amp;tu=qt"><span class="dv-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c.9-4 4-6 8-6s7.1 2 8 6"/></svg></span><span><b>Cộng tác viên</b><small>Cổng CTV: hoa hồng, shop, link cài</small></span></a><a class="dv-it" href="/vao/?demo=1&amp;as=leader&amp;tu=qt"><span class="dv-ic"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 19.5c.7-3.4 3-5.2 6-5.2s5.3 1.8 6 5.2"/><circle cx="17" cy="9" r="2.4"/><path d="M16.5 14.2c2.4.1 4 1.7 4.6 4.6"/></svg></span><span><b>Leader</b><small>Như CTV + tab Đội xếp hạng CTV</small></span></a><a class="dv-it" href="/partner/?demo=1&amp;tu=qt"><span class="dv-ic"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0119 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span><span><b>Partner</b><small>App khu vực: doanh thu, đội, cửa hàng</small></span></a><a class="dv-it" href="/app/?demo=1&amp;test=1"><span class="dv-ic"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></svg></span><span><b>Chủ shop</b><small>App bán hàng đủ tính năng</small></span></a><button type="button" class="dv-it" data-nvtest="1"><span class="dv-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c.9-4 4-6 8-6s7.1 2 8 6"/></svg></span><span><b>Nhân viên shop</b><small>Chỉ bán + tờ rơi, không thấy giá vốn</small></span></button></div></div></div>
+
 <div class="gate" id="gate" hidden><form class="box" id="gateF">
   <div class="logo"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M9 7h6M9 11h6M9 15h3"/></svg></div>
   <h1>Quản trị Shop Gọn</h1><p>Nhập mã PIN để mở. Máy này sẽ nhớ, lần sau vào thẳng.</p>
@@ -403,6 +423,8 @@ document.addEventListener('click',e=>{const a=e.target.closest('[data-goch]');if
   if(e.target.closest('.ex')&&!e.target.closest('button'))return;
   const b=e.target.closest('button,[data-openctv],[data-openpt]');if(!b)return;const d=b.dataset;
   if(b.id==='reload'){load();return}
+  if(d.dv){$('dvBg').hidden=false;return}
+  if(d.dvx){$('dvBg').hidden=true;return}
   if(d.nvtest){try{localStorage.setItem('shopgon_nv',JSON.stringify({sdt:'0900000000',ten:'NV test',phien:'TEST',test:1}))}catch(_){}location.href='/app/';return}
   if(d.tab){go(d.tab);return}
   if(d.ky){KY=d.ky;render();return}
@@ -451,5 +473,6 @@ document.addEventListener('input',e=>{const t=e.target;
   if(t.dataset&&t.dataset.tien){const h=document.getElementById('hh-'+t.dataset.tien);if(h)h.textContent=money((+t.value.replace(/\D/g,'')||0)*(+h.dataset.p||D.hhPct)/100)}});
 document.addEventListener('focusout',e=>{const t=e.target;if(t.dataset&&t.dataset.tien&&t.value){const n=+t.value.replace(/\D/g,'');t.value=n?n.toLocaleString('vi-VN'):''}});
 load();
+document.addEventListener('click',e=>{if(e.target.id==='dvBg')e.target.hidden=true});document.addEventListener('keydown',e=>{if(e.key==='Escape'){const b=document.getElementById('dvBg');if(b)b.hidden=true}});
 </script>
 </body></html>
