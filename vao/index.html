@@ -323,8 +323,8 @@ main.in{padding-block:16px calc(96px + env(safe-area-inset-bottom,0px));display:
         <li><span>Mở <b>App bán hàng mẫu</b> ở trên cho shop bấm thử.</span></li>
         <li><span>Shop ưng → gửi <b>link cài app của bạn</b> hoặc cho quét mã QR (tab Trang chủ).</span></li>
         <li><span>Shop đăng nhập Gmail, gửi đề nghị kích hoạt — ô SĐT cộng tác viên là số của bạn.</span></li>
-        <li><span>Shop chuyển khoản theo gói, bạn chụp biên lai gửi nhóm Shop Gọn để duyệt.</span></li>
-        <li><span>Shop được duyệt là hoa hồng ghi cho bạn, gia hạn vẫn tính.</span></li>
+        <li><span>Shop Gọn <b>cho shop dùng trước 7 ngày</b>; nhắc shop chuyển khoản đúng giá gói trong 7 ngày.</span></li>
+        <li><span>Tiền về, Shop Gọn <b>xác nhận</b> là hoa hồng ghi cho bạn — gia hạn vẫn tính.</span></li>
       </ol>
     </section>
   </div>
@@ -458,7 +458,7 @@ function dauTrang(){const s=ls.get(KEY),d=new Date(),thu=['Chủ nhật','Thứ 
   $('accTen').textContent=ten||'Cộng tác viên';$('accSdt').textContent=fmt(s);$('accAv').textContent=(goi[0]||'C').toUpperCase()}
 
 function viecCan(today){const v=[];(D.shops||[]).forEach(k=>{const [t]=trangThai(k,today);
-    if(t==='Chờ duyệt')v.push([k.shop,'Chờ Shop Gọn duyệt — nhắc shop gửi biên lai']);
+    if(t==='Chờ duyệt')v.push([k.shop,'Chờ Shop Gọn duyệt — nhắc shop chuyển khoản']);
     else if(t==='Dùng trước')v.push([k.shop,'Đang dùng trước'+(k.han?' · còn '+Math.max(0,ngayCon(k.han,today))+' ngày':'')+' — nhắc shop chuyển khoản']);
     else if(t==='Hết hạn')v.push([k.shop,'Hết hạn '+dmy(k.han)+' — mời gia hạn']);
     else if(k.han&&ngayCon(k.han,today)<=30)v.push([k.shop,'Còn '+ngayCon(k.han,today)+' ngày hết hạn — mời gia hạn'])});return v}

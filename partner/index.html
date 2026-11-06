@@ -161,6 +161,37 @@ select.f{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius
 @media (prefers-reduced-motion:reduce){.tig .ti.hot::after,.tig .tic::after{animation:none!important;display:none}}
 .qt-bar{position:sticky;top:0;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px max(12px,env(safe-area-inset-left)) 8px max(12px,env(safe-area-inset-right));background:linear-gradient(90deg,#1e293b,#0f766e);color:#fff;font-size:13px}
 .qt-bar b{color:#fde68a}.qt-bar a{color:#fff;font-weight:800;text-decoration:none;background:rgba(255,255,255,.16);border-radius:99px;padding:6px 12px;min-height:32px;display:inline-flex;align-items:center;white-space:nowrap}
+/* 06/11 23h: chọn tháng + cột lọc trái giống quản trị */
+.mp{display:flex;flex-direction:column;gap:8px}
+.mp-bar{display:grid;grid-template-columns:48px minmax(0,1fr) 48px;gap:6px}
+.mp-ar,.mp-t{border:1px solid var(--line);background:#fff;border-radius:14px;min-height:48px;font-weight:800;color:var(--pen);box-shadow:0 1px 2px rgba(16,42,52,.06)}
+.mp-ar{font-size:22px}.mp-ar:disabled{opacity:.35}
+.mp-t{display:flex;align-items:center;justify-content:center;gap:8px;font-size:16px}
+.mp-t em{font-style:normal;font-size:11.5px;font-weight:800;background:#e2f6f1;color:var(--pen);border-radius:99px;padding:2px 8px}
+.mp-t i{font-style:normal;font-size:12px;color:var(--muted);transition:transform .2s}.mp-t[aria-expanded="true"] i{transform:rotate(180deg)}
+.mp-g{background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px;animation:mpIn .2s ease-out}
+@keyframes mpIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.mp-y{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.mp-y button{border:0;background:#eef4f3;border-radius:10px;min-height:40px;padding:0 12px;font-weight:700;color:var(--pen)}.mp-y button:disabled{opacity:.35}
+.mp-m{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.mp-m button{border:1px solid var(--line);background:#f6f9f9;border-radius:10px;min-height:44px;font-weight:700;font-size:13.5px;color:var(--ink,#16323a)}
+.mp-m button[aria-pressed="true"]{background:var(--pen);border-color:var(--pen);color:#fff}
+.mp-m button:disabled{opacity:.35}
+.chsplit{display:grid;grid-template-columns:84px minmax(0,1fr);gap:10px;align-items:start}
+.chrail{position:sticky;top:8px;display:flex;flex-direction:column;gap:4px;background:#e2f1ee;border:1px solid #c9e4de;border-radius:16px;padding:4px}
+.chrail button{position:relative;border:0;background:none;border-radius:12px;min-height:66px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#2f5d58;font-weight:700;font-size:12.5px;line-height:1.25;text-align:center;transition:background .2s,color .2s}
+.chrail button b{font-size:20px;font-weight:800}
+.chrail button[aria-pressed="true"]{background:var(--pen);color:#fff;box-shadow:0 6px 14px -6px rgba(11,94,87,.6)}
+.chrail button.hot:not([aria-pressed="true"]) b{color:#c2410c}
+.chrail button.hot::before{content:"";position:absolute;top:8px;right:8px;width:8px;height:8px;border-radius:50%;background:#dc2626}
+.chpane{min-width:0}.chpane>.card{margin:0}
+@media (min-width:900px){.chsplit{grid-template-columns:112px minmax(0,1fr)}.chrail button{font-size:13.5px}}
+.chpane{min-width:0}.chpane>.card{margin:0}
+.chpane .row{flex-wrap:wrap}
+.mp-t span{white-space:nowrap}
+@media (max-width:600px){.mp-t{font-size:15px;gap:6px}.mp-t em{font-size:0;width:8px;height:8px;padding:0;background:#16a34a;border-radius:50%}
+  .chsplit{grid-template-columns:62px minmax(0,1fr);gap:8px}.chrail{padding:3px}.chrail button{min-height:58px;padding:6px 2px;font-size:11px}.chrail button b{font-size:18px}}
+.chpane .row{align-items:flex-start;row-gap:6px}.chpane .row .n{flex:1 1 100%}
 </style></head>
 <body>
 <div class="app">
@@ -244,7 +275,12 @@ const P=()=>D.partner;
 const memOf=s=>s===P().sdt?{sdt:s,ten:'Partner '+(P().khuVuc||''),role:'Partner',leader:''}:(D.ctv.find(x=>x.sdt===s)||{sdt:s,ten:'',role:'Sale',leader:''});
 const tenOf=s=>{const m=memOf(s);return m.ten||fmtSdt(s)};
 const trangThai=k=>k.tt==='Tạm duyệt'||k.tt==='Chờ duyệt'?'cho':k.tt==='Đã duyệt'?(k.han&&k.han<D.today?'het':'dung'):'khoa';
-const thangKey=()=>{const t=D.today;if(THANG==='nay')return t.slice(0,7);const x=pD(t.slice(0,8)+'15');x.setMonth(x.getMonth()-1);return fD(x).slice(0,7)};
+const thangKey=()=>{const t=D.today;if(/^\d{4}-\d\d$/.test(THANG))return THANG;if(THANG==='nay')return t.slice(0,7);const x=pD(t.slice(0,8)+'15');x.setMonth(x.getMonth()-1);return fD(x).slice(0,7)};
+/* 06/11 23h anh Thái: chọn tháng bất kỳ như quản trị */
+let MP_O=false,MP_Y=0;const shiftM=(m,n)=>{const x=pD(m+'-15');x.setMonth(x.getMonth()+n);return fD(x).slice(0,7)};
+function mPick(){const mk=thangKey(),cur=D.today.slice(0,7),y=MP_Y||+mk.slice(0,4),pv=shiftM(mk,-1),nx=shiftM(mk,1);
+  return `<div class="mp"><div class="mp-bar"><button class="mp-ar" data-thang="${pv}" aria-label="Tháng trước">‹</button><button class="mp-t" data-mpo="1" aria-expanded="${MP_O}"><span>Tháng ${+mk.slice(5)}/${mk.slice(0,4)}</span>${mk===cur?'<em>đang chạy</em>':''}<i>▾</i></button><button class="mp-ar" data-thang="${nx}" ${nx>cur?'disabled':''} aria-label="Tháng sau">›</button></div>
+  ${MP_O?`<div class="mp-g"><div class="mp-y"><button data-mpy="${y-1}">‹ ${y-1}</button><b>Năm ${y}</b><button data-mpy="${y+1}" ${y+1>+cur.slice(0,4)?'disabled':''}>${y+1} ›</button></div><div class="mp-m">${Array.from({length:12},(_,i)=>{const k=y+'-'+String(i+1).padStart(2,'0');return `<button data-thang="${k}" ${k>cur?'disabled':''} aria-pressed="${k===mk}">Tháng ${i+1}</button>`}).join('')}</div></div>`:''}</div>`}
 const inM=(x,m)=>x.ngay.slice(0,7)===m;
 function sumM(m,f){const L=D.tt.filter(x=>inM(x,m)&&(!f||f(x)));return{L,dt:L.reduce((a,x)=>a+x.tien,0),nhan:L.reduce((a,x)=>a+(x.hhP||0),0),n:L.length,moi:L.filter(x=>x.loai!=='Gia hạn').length,gh:L.filter(x=>x.loai==='Gia hạn').length}}
 const pctTxt=()=>(P().pct||70)+'%';
@@ -320,7 +356,7 @@ function vDoi(){const m=thangKey();
     <input class="f" id="mSdt" inputmode="tel" placeholder="Số điện thoại" value="${ed?ed.sdt:''}" ${ed?'readonly':''}><input class="f" id="mTen" placeholder="Tên" value="${ed?esc(ed.ten):''}">
     ${(ed?ed.role!=='Leader':addMem==='ctv')?`<select class="f" id="mLd"><option value="">Chọn leader quản lý</option>${leaders.map(l=>`<option value="${l.sdt}" ${ed&&ed.leader===l.sdt?'selected':''}>${esc(l.ten||fmtSdt(l.sdt))}</option>`).join('')}</select>`:''}
     <div class="act"><button class="btn" data-savemem="${ed?'ed':addMem}" style="flex:1">Lưu</button><button class="ghost" data-addmem="0">Thôi</button></div></div>`:'';
-  return `<div class="seg" role="group"><button data-thang="nay" aria-pressed="${THANG==='nay'}">Tháng này</button><button data-thang="truoc" aria-pressed="${THANG==='truoc'}">Tháng trước</button></div>
+  return `${mPick()}
   <div class="kpis"><div class="kpi"><div class="eb">Leader · CTV</div><div class="v num">${leaders.length} · ${D.ctv.length-leaders.length}</div><div class="d">${D.ctv.filter(c=>sumM(m,x=>x.ctv===c.sdt).n).length} người có bán tháng ${+m.slice(5)}</div></div>
     <div class="kpi"><div class="eb">Bạn tự bán</div><div class="v num" style="font-size:19px">${money(me.dt)}</div><div class="d">${me.n} gói · ${me.shops} shop</div></div></div>
   <div class="act"><button class="btn" data-addmem="ld">＋ Thêm Leader</button><button class="ghost" data-addmem="ctv" style="padding:11px 16px">＋ Thêm CTV</button></div>
@@ -338,9 +374,9 @@ function pill(k){const s=trangThai(k),left=k.han?days(k.han,D.today):null;
 function vCH(){const nhom={cho:[],dung:[],het:[],khoa:[]};D.kh.forEach(k=>nhom[trangThai(k)].push(k));nhom.dung.sort((a,b)=>(a.han||'').localeCompare(b.han||''));
   let L=CH_LOC==='tat'?D.kh.slice():nhom[CH_LOC];const q=Q.trim().toLowerCase();if(q)L=L.filter(k=>(k.shop+' '+k.sdt+' '+tenOf(k.ctv)).toLowerCase().includes(q));
   return `<input class="f" id="q" placeholder="Tìm tên shop, SĐT, người bán" value="${esc(Q)}" inputmode="search">
-  <div class="chips">${[['dung','Đang dùng',nhom.dung.length],['cho','Chờ duyệt',nhom.cho.length],['het','Hết hạn',nhom.het.length],['tat','Tất cả',D.kh.length]].map(([k,l,n])=>`<button class="chip" data-loc="${k}" aria-pressed="${CH_LOC===k}">${l} (${n})</button>`).join('')}</div>
-  <div class="card">${L.length?L.map(k=>`<div class="row"><div class="n"><b>${esc(k.shop)}</b><small class="num">${k.sdt?esc(k.sdt)+' · ':''}${esc(tenOf(k.ctv))}${k.han?' · hạn '+dmy(k.han):' · gửi '+dmy(k.yeuCau)}</small></div>${pill(k)}</div>`).join(''):'<div class="empty">Không có cửa hàng nào.</div>'}</div>
-  <p class="note">Shop chờ duyệt: nhắc shop chuyển khoản đúng giá gói, gửi biên lai cho Sale → Shop Gọn duyệt. Partner không xem được dữ liệu bán hàng của shop.</p>`}
+  <div class="chsplit"><div class="chrail" aria-label="Lọc cửa hàng">${[['dung','Đang dùng',nhom.dung.length],['cho','Chờ duyệt',nhom.cho.length],['het','Hết hạn',nhom.het.length],['tat','Tất cả',D.kh.length]].map(([k,l,n])=>`<button data-loc="${k}" aria-pressed="${CH_LOC===k}"${k==='cho'&&n?' class="hot"':''}><b class="num">${n}</b><span>${l}</span></button>`).join('')}</div>
+  <div class="chpane"><div class="card">${L.length?L.map(k=>`<div class="row"><div class="n"><b>${esc(k.shop)}</b><small class="num">${k.sdt?esc(k.sdt)+' · ':''}${esc(tenOf(k.ctv))}${k.han?' · hạn '+dmy(k.han):' · gửi '+dmy(k.yeuCau)}</small></div>${pill(k)}</div>`).join(''):'<div class="empty">Không có cửa hàng nào.</div>'}</div></div></div>
+  <p class="note">Shop chờ duyệt: nhắc shop chuyển khoản đúng giá gói — Shop Gọn cho dùng trước 7 ngày, tiền về là xác nhận. Partner không xem được dữ liệu bán hàng của shop.</p>`}
 
 /* ===== vẽ ===== */
 function render(){if(!D)return;$('ttl').textContent='Partner '+(P().khuVuc||'');
@@ -356,7 +392,9 @@ document.addEventListener('click',e=>{if(e.target.closest('.ex')&&!e.target.clos
   if(d.out){try{localStorage.removeItem(KTOK)}catch(_){}TOK='';D=null;showGate('');return}
   if(d.nvtest){try{localStorage.setItem('shopgon_nv',JSON.stringify({sdt:'0900000000',ten:'NV test',phien:'TEST',test:1}))}catch(_){}location.href='/app/';return}
   if(d.tab){go(d.tab);return}
-  if(d.thang){THANG=d.thang;render();return}
+  if(d.thang){THANG=d.thang;MP_O=false;MP_Y=0;render();return}
+  if(d.mpo){MP_O=!MP_O;MP_Y=0;render();return}
+  if(d.mpy){MP_Y=+d.mpy;render();return}
   if(d.kyp){KYP=d.kyp;render();return}
   if(d.doimk){doiMk=d.doimk==='1';render();if(doiMk)setTimeout(()=>{const i=$('mkCu');i&&i.scrollIntoView({block:'center'});i&&i.focus()},0);return}
   if(d.luumk){const cu=$('mkCu').value,mo=$('mkMoi').value,mo2=$('mkMoi2').value;if(!cu){toast('Nhập mật khẩu đang dùng');return}if(mo.length<6){toast('Mật khẩu mới ít nhất 6 ký tự');return}if(mo!==mo2){toast('Hai lần nhập mật khẩu mới không khớp');return}
