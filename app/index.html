@@ -612,6 +612,20 @@ button.hit{cursor:pointer}button.hit:active{background:var(--pen-bg)}
 .bars.rb .bar i{background:color-mix(in srgb,var(--pen) 55%,#fff)}
 .bars.rb .bar:has(i[style*="height:100%"]) i{background:var(--pen)}
 .bars.rb .bar:has(i[style="height:0%"]) i{background:transparent}
+/* 06/11 lượt 2: ô tìm Kho giống Bán · dòng phụ đơn 1 dòng · hiệu ứng bán xong */
+.kqs{margin:8px 0 2px}
+.mgs .menu>button:only-child{grid-column:1/-1}
+.row.tcr .n,#v-more .mrow .n{min-width:0}
+.row.tcr .n small,#v-more .mrow .n small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kgline .kggoi{white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+#v-rpt .list .row .n{min-width:0}
+#v-rpt .list .row .n small{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bxfx{position:fixed;inset:0;z-index:9999;display:grid;place-items:center;pointer-events:none;animation:bxbg .9s ease forwards}
+.bxfx i{width:88px;height:88px;border-radius:50%;background:var(--pen);display:grid;place-items:center;box-shadow:0 12px 30px rgba(0,0,0,.25);animation:bxpop .9s cubic-bezier(.2,.9,.3,1.3) forwards}
+.bxfx svg{width:48px;height:48px;fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:24;stroke-dashoffset:24;animation:bxck .35s .12s ease forwards}
+@keyframes bxpop{0%{transform:scale(.4);opacity:0}25%{transform:scale(1);opacity:1}75%{transform:scale(1);opacity:1}100%{transform:scale(.9);opacity:0}}
+@keyframes bxck{to{stroke-dashoffset:0}}
+@keyframes bxbg{0%,75%{background:rgba(0,0,0,.08)}100%{background:transparent}}
 </style>
 
 <header><div class="hw">
@@ -666,6 +680,10 @@ const DAY=86400000;
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money=n=>Math.round(n).toLocaleString('vi-VN')+'đ';
+/* 06/11 anh Thái: 2 hiệu ứng có tác dụng — số chạy khi đổi kỳ, dấu ✓ + rung nhẹ khi bán xong (giảm chuyển động thì bỏ) */
+const itMotion=()=>{try{return matchMedia('(prefers-reduced-motion: reduce)').matches}catch(_){return false}};
+function soChay(sel){if(itMotion())return;document.querySelectorAll(sel).forEach(el=>{const t=el.textContent,v=+t.replace(/[^0-9]/g,'');if(!v||!/đ$/.test(t.trim()))return;const am=/^\s*-/.test(t)?-1:1,t0=performance.now(),D=450;const f=now=>{const k=Math.min(1,(now-t0)/D),e=1-Math.pow(1-k,3);el.textContent=money(am*v*e);if(k<1)requestAnimationFrame(f);else el.textContent=t};requestAnimationFrame(f)})}
+function banXongFx(){try{navigator.vibrate&&navigator.vibrate(35)}catch(_){}if(itMotion())return;const o=document.createElement('div');o.className='bxfx';o.setAttribute('aria-hidden','true');o.innerHTML='<i><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></i>';document.body.appendChild(o);setTimeout(()=>o.remove(),900)}
 const short=n=>Math.abs(n)>=1e9?(n/1e9).toLocaleString('vi-VN',{maximumFractionDigits:2})+' tỷ':Math.abs(n)>=1e6?(n/1e6).toLocaleString('vi-VN',{maximumFractionDigits:1})+'tr':Math.round(n/1000).toLocaleString('vi-VN')+'k';
 const parseMoney=s=>{const d=String(s||'').replace(/[^\d]/g,'');return d?+d:0};
 const iso=d=>{const x=new Date(d);return x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0')};
@@ -1120,7 +1138,7 @@ function nvClose(){const lines=db.don.filter(x=>x.bill===rcId||x.id===rcId);cons
   const tot=lines.reduce((a,x)=>a+x.giaBan,0);$('rc').hidden=true;
   if(lines.length){const d0=lines[0];const o={id:d0.bill||d0.id,ngay:d0.ngay,gio:d0.gio,tt,no:rcPay==='no'?Math.max(0,tot-tra):0,khach:d0.khach||'',sdtKh:d0.sdt||'',
       lines:lines.map(x=>({loai:x.loai,imei:x.imei||'',ten:x.ten,hang:x.hang||'',giaBan:x.giaBan,giaVon:x.loai==='may'||x.hangId?0:x.giaVon,hangId:x.hangId||'',sl:x.sl||1,bh:x.bh||0,soTien:x.soTien||0,uocTinh:!!x.uocTinh}))};
-    nvQSet([...nvQ(),o]);nvHomNaySet([...nvHomNay(),{...o,nvTen:NV.ten}]);db.don=[];nvFlush();toast('Đã bán '+money(tot)+' · đang gửi về shop')}
+    nvQSet([...nvQ(),o]);nvHomNaySet([...nvHomNay(),{...o,nvTen:NV.ten}]);db.don=[];nvFlush();banXongFx();toast('Đã bán '+money(tot)+' · đang gửi về shop')}
   rcId=null;render()}
 function nvTongKet(){const ds=nvHomNay(),q=nvQ();let dt=0,may=0,tm=0,ck=0,no=0;
   ds.forEach(o=>{const t=(o.lines||[]).reduce((a,c)=>a+(+c.giaBan||0),0);dt+=t;may+=(o.lines||[]).filter(c=>c.loai==='may').length;if(o.tt==='Chuyển khoản')ck+=t;else if(o.tt==='Ghi nợ'){no+=+o.no||0;tm+=t-(+o.no||0)}else tm+=t});
@@ -1542,7 +1560,7 @@ function renderStock0(){
   const kR=!stockQ.trim(),kHB={};st.forEach(m=>{const h=m.hang||'Khác';kHB[h]=(kHB[h]||0)+1});if(kR&&stockBrand!=='Tất cả'&&!kHB[stockBrand])stockBrand='Tất cả';
   const kOut=x=>{$('v-stock').innerHTML+=kR&&st.length?`<div class="hsplit">${hRail([['Tất cả','Tất cả',st.length],...Object.entries(kHB).sort((a,b)=>b[1]-a[1]).map(([h,n])=>[h,h,n])],stockBrand,'data-brand')}<div class="hpane">${x}</div></div>`:x};
   $('v-stock').innerHTML=seg+`
-  <input id="kQ" inputmode="search" placeholder="Tìm tên máy hoặc IMEI" value="${esc(stockQ)}">
+  <div class="gsb sb kqs"><svg viewBox="0 0 24 24"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-5-5"/></svg><input id="kQ" inputmode="search" autocomplete="off" placeholder="Tìm tên máy hoặc IMEI…" value="${esc(stockQ)}"><button type="button" class="gsc" data-scan="kQ" aria-label="Quét IMEI"><svg viewBox="0 0 24 24"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 8v8M10 8v8M13 8v8M17 8v8"/></svg></button></div>
   ${stockBrand!=='Tất cả'&&!kR?`<button class="back" data-brand="Tất cả">‹ Tất cả hãng</button><h2 style="margin:0">${esc(stockBrand)} · ${st.filter(m=>m.hang===stockBrand).length} máy</h2>`:''}
 `;
   /* 23/10: vào kho điện thoại thấy bảng theo hãng trước, bấm hãng mới ra danh sách máy */
@@ -1559,7 +1577,7 @@ function renderStock0(){
   const imeiHit=/^\d{4,}$/.test(stockQ.trim());
   kOut(`${kTong}${kR&&stockOld?`<div class="hph"><div><b>Tồn trên 45 ngày</b><small>${L.length} máy · ưu tiên đẩy bán</small></div><button type="button" class="ghost" data-old="1">Bỏ lọc</button></div>`:''}${kR&&stockBrand!=='Tất cả'&&!stockOld?`<div class="hph"><div><b>${esc(stockBrand)}</b><small>${L.length} máy · ${groups.length} mẫu<span class="own"> · vốn ${short(L.reduce((a,m)=>a+m.giaNhap,0))}</span></small></div></div>`:''}<div class="panel"><div class="list">${groups.length?groups.map(g=>{const [k]=ageClass(g.old);const open=imeiHit||expModel.has(g.ten);
     return `<div class="mg"><button class="mrow" data-model="${esc(g.ten)}" aria-expanded="${open}"><span class="n"><b>${esc(g.ten)}</b><small class="num"><span class="own">Vốn ${short(g.ms.reduce((s2,m)=>s2+m.giaNhap,0))} · </span>lâu nhất ${g.old} ngày</small></span><span class="cnt num">${g.ms.length} máy</span><span class="pill ${k}">${g.old>45?'Tồn lâu':g.old>30?'Tồn vừa':'Mới'}</span><span class="chev">${open?'▴':'▾'}</span></button>
-    <div class="kgline"><span>Giá bán · hiện trên web${(()=>{const t=tgCua(g.ten),tay=(db.shop.giaTay||{})[gk(g.ten)];return tay&&t&&t.ny?` <button type="button" class="pill kggoi" data-kggoi="${esc(g.ten)}">↺ Theo giá niêm yết ${money(t.ny)}</button>`:!tay&&t&&t.ny?' <span class="pill g">tự cập nhật</span>':''})()}${(()=>{const k=kmCua('m|'+g.ten);return k.length?` <span class="pill kmp2">🎁 ${esc(k.map(kmTxt).join(' + '))}</span>`:''})()}${new Set(g.ms.map(m=>m.giaBan||0)).size>1?' <span class="pill a">giá chưa đều</span>':''}</span>${giaO(`data-kgm="${esc(g.ten)}"`,Math.max(...g.ms.map(m=>m.giaBan||0)))}</div>
+    <div class="kgline"><span>Giá web${(()=>{const t=tgCua(g.ten),tay=(db.shop.giaTay||{})[gk(g.ten)];return tay&&t&&t.ny?` <button type="button" class="pill kggoi" data-kggoi="${esc(g.ten)}" title="Về theo giá niêm yết ${money(t.ny)}">↺ Niêm yết ${short(t.ny)}</button>`:!tay&&t&&t.ny?' <span class="pill g">tự cập nhật</span>':''})()}${(()=>{const k=kmCua('m|'+g.ten);return k.length?` <span class="pill kmp2">🎁 ${esc(k.map(kmTxt).join(' + '))}</span>`:''})()}${new Set(g.ms.map(m=>m.giaBan||0)).size>1?' <span class="pill a">giá chưa đều</span>':''}</span>${giaO(`data-kgm="${esc(g.ten)}"`,Math.max(...g.ms.map(m=>m.giaBan||0)))}</div>
     ${open?`<div class="imeis">${g.ms.map(m=>{const a2=ageDays(m),[k2]=ageClass(a2);return `<div class="row"><div class="n"><b class="num">${m.imei}</b><small class="num">Nhập ${dmy(m.ngayNhap)}<span class="own"> · ${money(m.giaNhap)}</span></small></div><div class="right" style="flex-direction:row;align-items:center;gap:6px"><span class="pill ${k2} num">${a2} ngày</span><button class="ghost red" data-delimei="${m.imei}" aria-label="Xóa IMEI này">Xóa</button></div></div>
       ${delImei===m.imei?`<div class="confirm" style="margin:0 0 8px"><b style="color:var(--red)">Xóa IMEI ${m.imei} khỏi kho?</b><span>Dùng khi nhập nhầm / nhập trùng. Máy bán rồi thì không cần xóa ở đây.</span><span class="inrow"><button class="ghost red" data-delimeiok="${m.imei}">Xác nhận xóa</button><button class="ghost" data-delimei="">Thôi</button></span></div>`:''}`}).join('')}</div>`:''}</div>`}).join(''):'<div class="empty">Không có máy nào khớp.</div>'}</div></div>`);
 }
@@ -1958,13 +1976,13 @@ document.addEventListener('click',e=>{
       else if(c.type==='hang'){const h=db.hang.find(x=>x.id===c.hangId);if(h)h.sl-=c.sl;db.don.push({...base,loai:c.nhom,ten:c.ten+(c.sl>1?' ×'+c.sl:''),hangId:c.hangId,sl:c.sl,giaBan:c.gia*c.sl,giaVon:c.von*c.sl})}
       else if(c.type==='thu'){if(!db.may.some(x=>x.imei===c.imei))db.may.push({imei:c.imei,ten:c.ten,hang:c.hang,giaNhap:-c.gia,giaBan:c.gb||0,ngayNhap:todayIso(),ncc:'Thu của khách'+(cartKhach.trim()?': '+cartKhach.trim():''),tt:'ton'});db.don.push({...base,loai:'thu',imei:c.imei,ten:'Thu máy cũ: '+c.ten+(c.note?' ('+c.note+')':''),hang:c.hang,giaBan:c.gia,giaVon:c.gia})}
       else db.don.push({...base,loai:c.nhom,ten:c.ten,giaBan:c.gia,giaVon:c.von,uocTinh:c.uocTinh})});
-    cart=[];cartKhach='';cartSdt='';kmOpen=false;kmQ='';save();render();openReceipt(bill);return}
+    cart=[];cartKhach='';cartSdt='';kmOpen=false;kmQ='';save();render();banXongFx();openReceipt(bill);return}
   if(b.dataset.rm){rptMode=b.dataset.rm;rptSel=null;render();return}
   if(b.dataset.rsel){rptSel=rptSel===b.dataset.rsel?null:b.dataset.rsel;render();return}
   if(b.dataset.toggle==='todayList'){showToday=!showToday;render();return}
   if(b.dataset.v){if(b.dataset.v==='more')more='menu';if(b.dataset.v==='stock'){khoHub=true;khoTab='kho'}go(b.dataset.v);return}
   if(b.dataset.go){if(b.dataset.go==='stock')khoHub=false;if(b.dataset.filter==='may'){stockMode='may';stockBrand='Tất cả'}if(b.dataset.filter==='hang')stockMode='hang';go(b.dataset.go);return}
-  if(b.dataset.hday){homeD=b.dataset.hday;render();return}
+  if(b.dataset.hday){homeD=b.dataset.hday;render();soChay('.hmo2 .hmg b.num');return}
   if(b.dataset.kmf){kmF=b.dataset.kmf;render();return}
   if(b.dataset.webview!==undefined){try{Store.save(db)}catch(e){}location.href='/bg/?tu=app&xem=1'+(DEMO?'&demo=1':'');return}
   if(b.dataset.more==='bg'||b.dataset.more==='tt'){try{Store.save(db)}catch(e){}location.href='/'+b.dataset.more+'/?tu=app'+(DEMO?'&demo=1':'');return}
@@ -2634,7 +2652,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261106-2125';let verLuc=0;
+const BUILD='20261106-2150';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
