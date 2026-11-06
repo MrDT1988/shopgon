@@ -209,13 +209,33 @@ input.f{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:
 @media (prefers-reduced-motion:reduce){.mp-g{animation:none}.stab button::after{transition:none}}
 .chpane .chip{white-space:normal;text-align:left;max-width:100%;line-height:1.3}
 .chpane .act{flex-wrap:wrap}
+/* 06/11 22h50 anh Thái: tối ưu hiển thị trên điện thoại thật (chữ máy to) */
+header h1{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+header .w>div:nth-child(2){min-width:0;flex:1}
+.ctvtag{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left}
+.chpane .shop .top{flex-direction:column;align-items:flex-start;gap:6px}
+.chpane .shop .top .n{width:100%}
+.chpane .shop .top .n small:first-of-type{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;overflow-wrap:normal}
+.chpane .shop .top .n b{font-size:16.5px;line-height:1.3}
+@media (max-width:600px){
+  header .w{gap:10px}header h1{font-size:17px}
+  .hbtn.dvb{padding:0 10px!important}
+  .chsplit{grid-template-columns:62px minmax(0,1fr);gap:8px}
+  .chrail{padding:3px;border-radius:14px}
+  .chrail button{min-height:58px;padding:6px 2px;font-size:11px}
+  .chrail button b{font-size:18px}
+  .chrail button.hot::before{top:6px;right:6px}
+  .chpane>.card{padding:12px}
+  .chpane .act .btn,.chpane .act .ghost{font-size:14px}
+}
+@media (max-width:420px){.dvt{display:none}.hbtn.dvb{width:40px!important;padding:0!important;justify-content:center}}
 </style></head>
 <body>
 <div class="app">
   <header><div class="w">
     <div class="logo"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M9 7h6M9 11h6M9 15h3"/></svg></div>
     <div><h1>Quản trị Shop Gọn</h1><small id="sub">Đang tải…</small></div>
-    <button class="hbtn dvb" type="button" data-dv="1" aria-label="Đổi vai xem giao diện">👁 Đổi vai</button>
+    <button class="hbtn dvb" type="button" data-dv="1" aria-label="Đổi vai xem giao diện">👁<span class="dvt"> Đổi vai</span></button>
     <button class="hbtn" id="reload" aria-label="Tải lại">↻</button>
   </div></header>
   <main id="main"><div class="wrap" id="v"><div class="card empty">Đang tải…</div></div></main>
@@ -363,7 +383,7 @@ function vCtv(){const PT=vPartner();const t=D.today;const m0=t.slice(0,7);const 
       <div class="split"><div class="mini"><small>Hoa hồng từ trước tới nay</small><b class="num">${money(c.hhAll)}</b></div><div class="mini"><small>Shop đang dùng</small><b class="num">${c.dung}/${c.shops.length}</b></div></div>
       <div class="eb" style="margin:12px 0 2px">Shop</div>${c.shops.length?c.shops.map(k=>`<div class="row"><div class="n"><b>${esc(k.shop)}</b><small>${k.han?'Hạn '+dmy(k.han):'Gửi '+dmy(k.yeuCau)}</small></div>${pillOf(k)}</div>`).join(''):'<div class="empty">Chưa có shop.</div>'}
       <div class="eb" style="margin:12px 0 2px">Lịch sử hoa hồng</div>${c.L.length?[...c.L].reverse().map(x=>`<div class="row"><div class="n"><b>${esc(x.shop)}</b><small>${dmy(x.ngay)} · ${esc(x.loai)} ${goiTen(x.m)} · ${money(x.tien)}</small></div><b class="num">${x.doi?'<small style="color:var(--muted);font-weight:600">đội · </small>':''}+${money(x.hh)}</b></div>`).join(''):'<div class="empty">Chưa có.</div>'}</div>`;
-  const row=(c,lead)=>`<div class="row" style="flex-wrap:wrap;cursor:pointer" data-openctv="${c.s}"><div class="n"><b>${lead?'⭐ ':''}${c.ten?esc(c.ten):'<span style="color:var(--muted)">Chưa đặt tên</span>'}${lead?' <span class="pill p-b">Leader tự bán</span>':''}</b><small class="num">${fmtSdt(c.s)} · ${c.shops.length} shop (${c.dung} đang dùng) · ${c.n} gói</small></div><div class="r"><b class="num">${money(c.dt)}</b><small class="num">HH ${money(c.hh)}</small></div>${openCtv===c.s?panel(c):''}</div>`;
+  const row=(c,lead)=>`<div class="row" style="flex-wrap:wrap;cursor:pointer" data-openctv="${c.s}"><div class="n"><b>${lead?'⭐ ':''}${c.ten?esc(c.ten):'<span style="color:var(--muted)">Chưa đặt tên</span>'}${lead?' <span class="pill p-b">Leader tự bán</span>':''}</b><small class="num">${fmtSdt(c.s)} · ${c.shops.length} shop · ${c.n} gói</small></div><div class="r"><b class="num">${money(c.dt)}</b><small class="num">HH ${money(c.hh)}</small></div>${openCtv===c.s?panel(c):''}</div>`;
   const form=addCtv?`<div class="card" style="display:flex;flex-direction:column;gap:8px"><h2 style="margin:0">${addCtv==='ld'?'Thêm Leader':'Thêm cộng tác viên'}</h2><input class="f" id="nSdt" inputmode="tel" placeholder="Số điện thoại"><input class="f" id="nTen" placeholder="Tên">${addCtv==='ld'?'':`<select class="f" id="nLd"><option value="">Chọn leader quản lý</option>${leaders.map(l=>`<option value="${l.s}">Đội ${ldName(l)}</option>`).join('')}</select>${leaders.length?'':'<small style="color:var(--amber)">Chưa có Leader nào — bấm Thêm Leader trước.</small>'}`}<div class="act"><button class="btn" data-savenew="${addCtv}">Lưu</button><button class="ghost" data-addctv="0">Thôi</button></div></div>`:'';
   /* 06/11 anh Thái: trong tab Cộng tác viên tách 2 tab con — Cộng tác viên (đội anh) | Partner */
   const SUB=`<div class="stab" role="tablist"><button role="tab" data-ctvsub="doi" aria-selected="${CTV_SUB==='doi'}">Cộng tác viên <i>${list.length}</i></button><button role="tab" data-ctvsub="pt" aria-selected="${CTV_SUB==='pt'}">Partner <i>${(D.ctv||[]).filter(c=>c.role==='Partner').length}</i></button></div>`;
