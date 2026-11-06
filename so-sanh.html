@@ -1,122 +1,150 @@
 <!doctype html>
 <html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Shop Gọn · So sánh giá</title><meta name="theme-color" content="#0f766e">
-<meta name="description" content="So sánh giá Shop Gọn với các phần mềm bán hàng phổ biến cho shop điện thoại: quản lý bán hàng, truyền thông online và website mini trong một gói.">
+<title>Shop Gọn · So sánh đối thủ</title><meta name="theme-color" content="#0f766e">
+<meta name="description" content="Shop Gọn so với KiotViet, Sapo: một gói đủ quản lý bán hàng, ảnh truyền thông và website bảng giá cho shop điện thoại.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap">
 <style>
-:root{--ngoc:#0f766e;--ngoc2:#e6f4f1;--muc:#0b3b37;--xam:#5d6f6c;--vien:#d5e4e1;--nen:#f6faf9;--trang:#fff;--thanh:#dfe8e6;--thanh2:#9fb3af}
-*{box-sizing:border-box}
-[hidden]{display:none!important}
+/* 06/11/2026 anh Thái: làm bảng so sánh mới, ưu tiên hiện thế mạnh Shop Gọn. Giá đối thủ kiểm lại 06/11/2026. */
+:root{--ngoc:#0f766e;--ngoc-d:#0b5a54;--ngoc2:#e6f4f1;--muc:#0b2f2c;--xam:#556966;--vien:#d5e4e1;--nen:#f4f8f7;--trang:#fff;--do:#b42318;--do2:#fdecea;--vang:#b45309;--vang2:#fff4e0}
+*{box-sizing:border-box}[hidden]{display:none!important}
 html,body{margin:0;background:var(--nen);color:var(--muc);font-family:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-text-size-adjust:100%}
-.k{max-width:640px;margin:0 auto;padding:calc(20px + env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) calc(32px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));display:flex;flex-direction:column;gap:18px}
+.k{max-width:720px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) calc(36px + env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));display:flex;flex-direction:column;gap:16px}
 .eb{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ngoc)}
-h1{font-size:clamp(28px,8vw,40px);line-height:1.12;margin:4px 0 0;font-weight:800;letter-spacing:-.02em;text-wrap:balance}
+h1{font-size:clamp(26px,7.4vw,38px);line-height:1.15;margin:6px 0 0;font-weight:800;letter-spacing:-.02em;text-wrap:balance}
 h1 b{color:var(--ngoc)}
-.sub{margin:0;color:var(--xam);font-size:15px}
-.bang{background:var(--trang);border:1px solid var(--vien);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:12px}
-.hang{display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:end;font-variant-numeric:tabular-nums;padding:6px 4px}
-.ten{font-weight:700;font-size:16px}
-.ten small{display:block;font-weight:500;font-size:12px;color:var(--xam)}
-.gia{text-align:right;font-weight:800;font-size:18px}
-.gia small{display:block;font-weight:500;font-size:12px;color:var(--xam)}
-.thanh{grid-column:1/-1;height:12px;border-radius:8px;background:var(--thanh);overflow:hidden}
-.thanh i{display:block;height:100%;background:var(--thanh2);border-radius:8px}
-.hang.sg{background:var(--ngoc2);border-radius:14px;padding:10px}
-.hang.sg .ten,.hang.sg .gia{color:var(--ngoc)}
-.hang.sg .thanh{background:#cfe9e4}
-.hang.sg .thanh i{background:var(--ngoc)}
-.goi{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.goi div{background:var(--trang);border:1px solid var(--vien);border-radius:16px;padding:14px 10px;text-align:center;font-variant-numeric:tabular-nums}
-.goi div.chon{background:var(--ngoc);border-color:var(--ngoc);color:#fff}
-.goi .n{font-size:13px;font-weight:600;opacity:.85}
-.goi .g{font-size:20px;font-weight:800;margin-top:4px}
-.goi .d{font-size:12px;opacity:.85;margin-top:2px}
-.tk{background:var(--ngoc);color:#fff;border-radius:20px;padding:18px 20px}
-.tk .l{font-size:13px;opacity:.9;font-weight:600}
-.tk .s{font-size:34px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-.tk .m{font-size:13px;opacity:.9}
-h2{font-size:20px;margin:6px 0 0}
-.ly{display:grid;grid-template-columns:1fr;gap:10px}
-.ly div{background:var(--trang);border:1px solid var(--vien);border-radius:16px;padding:14px 16px;font-size:15px;line-height:1.45}
-.ly b{display:block;color:var(--ngoc);font-size:16px;margin-bottom:2px}
-.nut{display:block;text-align:center;background:var(--ngoc);color:#fff;text-decoration:none;font-weight:700;border-radius:14px;padding:15px;font-size:16px}
-.nut:focus-visible{outline:3px solid var(--muc);outline-offset:2px}
-.chu{font-size:12px;color:var(--xam);line-height:1.5}
-.chu a{color:var(--xam)}
+h2{font-size:19px;margin:8px 0 0;letter-spacing:-.01em}
+.sub{margin:0;color:var(--xam);font-size:15px;line-height:1.5}
+.i{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+/* 3 thế mạnh */
 .ba{display:grid;grid-template-columns:1fr;gap:10px}
-.ba div{background:var(--trang);border:1px solid var(--vien);border-radius:16px;padding:14px 16px;font-size:15px;line-height:1.45;display:grid;grid-template-columns:40px 1fr;gap:4px 10px;align-items:start}
-.ba i{font-style:normal;font-size:26px;line-height:1.2;grid-row:span 2}
-.ba b{color:var(--ngoc);font-size:16px}
+@media (min-width:640px){.ba{grid-template-columns:repeat(3,1fr)}}
+.ba>div{background:var(--trang);border:1px solid var(--vien);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:6px}
+.ba .ic{width:42px;height:42px;border-radius:12px;background:var(--ngoc);color:#fff;display:grid;place-items:center}
+.ba b{font-size:16px}
+.ba p{margin:0;font-size:14px;line-height:1.5;color:var(--xam)}
+.ba .tag{align-self:flex-start;font-size:12px;font-weight:700;color:var(--do);background:var(--do2);border-radius:999px;padding:3px 9px}
+/* bảng so sánh */
 .ss{background:var(--trang);border:1px solid var(--vien);border-radius:20px;overflow:hidden}
-.ss table{width:100%;border-collapse:collapse;font-size:13.5px;line-height:1.35}
-.ss th,.ss td{padding:10px 8px;border-top:1px solid var(--vien);text-align:center;vertical-align:middle}
-.ss thead th{border-top:0;font-size:12.5px;color:var(--xam);font-weight:700}
-.ss thead th.sg{color:var(--ngoc)}
-.ss td:first-child,.ss th:first-child{text-align:left;font-weight:600;width:40%}
-.ss td.sg{background:var(--ngoc2);color:var(--ngoc);font-weight:800}
-.ss .ko{color:#b4232f;font-weight:600}
-.ss small{display:block;font-weight:500;color:var(--xam);font-size:11.5px}
+.ss table{width:100%;border-collapse:collapse;font-size:14px;line-height:1.35;table-layout:fixed}
+.ss th,.ss td{padding:11px 6px;border-top:1px solid var(--vien);text-align:center;vertical-align:middle}
+.ss thead th{border-top:0;font-size:13px;font-weight:700;color:var(--xam);padding-top:14px;padding-bottom:12px}
+.ss thead th.sg{background:var(--ngoc);color:#fff;border-radius:0}
+.ss thead th small{display:block;font-weight:500;font-size:11.5px;opacity:.85;margin-top:2px}
+.ss td:first-child,.ss th:first-child{text-align:left;font-weight:600;width:40%;padding-left:14px}
+.ss td:first-child small{display:block;font-weight:500;color:var(--xam);font-size:12px;margin-top:2px}
+.ss td.sg{background:var(--ngoc2);color:var(--ngoc-d);font-weight:800}
+.ss tr.nhom td{background:var(--nen);font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--ngoc);padding:8px 14px;text-align:left}
+.co{color:var(--ngoc-d);font-weight:800}
+.ko{color:var(--do);font-weight:700;font-size:13px}
+.na{color:var(--xam);font-size:13px}
+.ss td .ko small,.ss td .na small{display:block;font-weight:500;font-size:11.5px;color:var(--xam)}
+@media (max-width:480px){.ss table{font-size:13px}.ss td:first-child,.ss th:first-child{width:36%;padding-left:10px}.ss th,.ss td{padding:10px 4px}}
+.ss td,.ss th{overflow-wrap:anywhere}
+.chuthich{font-size:12px;color:var(--xam);padding:10px 14px;border-top:1px solid var(--vien);line-height:1.5}
+/* chi phí */
+.bang{background:var(--trang);border:1px solid var(--vien);border-radius:20px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.bang .tit{font-weight:700;font-size:15px}
+.hang{display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:end;font-variant-numeric:tabular-nums;padding:4px}
+.ten{font-weight:700;font-size:15px}
+.ten small{display:block;font-weight:500;font-size:12px;color:var(--xam)}
+.gia{text-align:right;font-weight:800;font-size:17px}
+.thanh{grid-column:1/-1;height:12px;border-radius:8px;background:#e4ecea;overflow:hidden}
+.thanh i{display:block;height:100%;background:#a7b9b5;border-radius:8px}
+.hang.sg{background:var(--ngoc2);border-radius:14px;padding:10px}
+.hang.sg .ten,.hang.sg .gia{color:var(--ngoc-d)}
+.hang.sg .thanh i{background:var(--ngoc)}
+.tk{background:linear-gradient(135deg,var(--ngoc-d),var(--ngoc));color:#fff;border-radius:20px;padding:18px 20px;display:grid;gap:4px}
+.tk .l{font-size:13px;opacity:.92;font-weight:600}
+.tk .s{font-size:36px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.1}
+.tk .m{font-size:13px;opacity:.92;line-height:1.5}
+/* gói */
+.goi{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.goi>div{background:var(--trang);border:1px solid var(--vien);border-radius:16px;padding:14px 10px;text-align:center;font-variant-numeric:tabular-nums}
+.goi>div.chon{background:var(--ngoc);border-color:var(--ngoc);color:#fff}
+.goi .n{font-size:13px;font-weight:600;opacity:.85}
+.goi .g{font-size:21px;font-weight:800;margin-top:4px}
+.goi .d{font-size:12.5px;opacity:.9;margin-top:4px;line-height:1.45}
+.uu{background:var(--vang2);color:var(--vang);border-radius:14px;padding:12px 14px;font-size:14px;font-weight:700;text-align:center}
+/* câu hỏi */
+.hoi{display:flex;flex-direction:column;gap:10px}
+.hoi details{background:var(--trang);border:1px solid var(--vien);border-radius:16px;padding:0 16px}
+.hoi summary{cursor:pointer;list-style:none;font-weight:700;font-size:15px;padding:14px 0;min-height:44px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.hoi summary::-webkit-details-marker{display:none}
+.hoi summary:after{content:"+";font-size:20px;color:var(--ngoc);font-weight:600}
+.hoi details[open] summary:after{content:"–"}
+.hoi p{margin:0 0 14px;font-size:14.5px;line-height:1.55;color:var(--muc)}
+.nut{display:block;text-align:center;background:var(--ngoc);color:#fff;text-decoration:none;font-weight:700;border-radius:14px;padding:15px;font-size:16px;min-height:48px}
+.nut:focus-visible,.hoi summary:focus-visible{outline:3px solid var(--muc);outline-offset:2px}
+.chu{font-size:12px;color:var(--xam);line-height:1.55;margin:0}
+.chu a{color:var(--xam)}
 </style></head><body><main class="k">
-<div><div class="eb">Shop Gọn · app bán hàng cho shop điện thoại</div>
-<h1>Rẻ hơn KiotViet <b>gần 3 lần</b>, có người cài tận shop</h1></div>
-<p class="sub">Giá 1 năm cho 1 cửa hàng, gói thấp nhất của mỗi bên</p>
-<div class="bang">
- <div class="hang"><div class="ten">KiotViet<small>Gói hỗ trợ 270.000đ/tháng</small></div><div class="gia">3.240.000đ<small>≈ 8.900đ/ngày</small></div><div class="thanh"><i style="width:100%"></i></div></div>
- <div class="hang"><div class="ten">Sapo<small>Start Up 170.000đ/tháng</small></div><div class="gia">2.040.000đ<small>≈ 5.600đ/ngày</small></div><div class="thanh"><i style="width:63%"></i></div></div>
- <div class="hang"><div class="ten">Nhanh.vn*<small>POS Basic 150.000đ/tháng</small></div><div class="gia">1.800.000đ<small>≈ 4.900đ/ngày</small></div><div class="thanh"><i style="width:56%"></i></div></div>
- <div class="hang"><div class="ten">MISA eShop*<small>Cơ bản ~100.000đ/tháng</small></div><div class="gia">1.200.000đ<small>≈ 3.300đ/ngày</small></div><div class="thanh"><i style="width:37%"></i></div></div>
- <div class="hang sg"><div class="ten">Shop Gọn<small>Gói 1 năm</small></div><div class="gia">1.190.000đ<small>≈ 3.300đ/ngày</small></div><div class="thanh"><i style="width:37%"></i></div></div>
-</div>
-<h2>Bảng giá Shop Gọn</h2>
-<div class="goi">
- <div><div class="n">1 năm</div><div class="g">1.190.000đ</div><div class="d">≈ 3.300đ/ngày · 12 bài truyền thông<br><b style="color:#b45309">🎁 100 shop đầu: 990.000đ</b></div></div>
- <div class="chon"><div class="n">3 năm</div><div class="g">2.690.000đ</div><div class="d">≈ 2.500đ/ngày · 36 bài truyền thông · tiết kiệm 880.000đ</div></div>
-</div>
-<div class="bang" style="gap:6px">
- <div style="font-weight:700">Gói nào cũng có</div>
- <div>✓ App quản lý bán hàng đủ tính năng: IMEI, kho, bảo hành, lời lỗ, hóa đơn QR</div>
- <div>✓ Website mini — bảng giá online gửi khách qua Zalo</div>
- <div>✓ Thiết kế hình sản phẩm, kho ảnh máy chính hãng tự cập nhật</div>
- <div>✓ 1 bài truyền thông/tháng do Shop Gọn thiết kế (1 năm 12 bài · 3 năm 36 bài)</div>
- <div>✓ Sale cài app tận shop, <b>nhập tồn lần đầu tối đa 50 mã</b> hàng bán chạy, giá trị cao + hướng dẫn sử dụng</div>
- <div>✓ Dữ liệu nằm trong Google Drive của chính shop</div>
- <div style="color:#667;font-size:14px">Shop trên 50 mã hàng: thương lượng với Sale gói hỗ trợ nhập full shop.</div>
-</div>
-<div class="tk"><div class="l">Dùng 3 năm, shop tiết kiệm so với KiotViet</div><div class="s">7.030.000đ</div><div class="m">KiotViet 3 năm: 9.720.000đ · Shop Gọn 3 năm: 2.690.000đ</div></div>
-<h2>Một gói, đủ 3 việc cho shop</h2>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+ <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.3 8.3-8 9-4.7-.7-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></symbol>
+ <symbol id="i-img" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-9 9"/></symbol>
+ <symbol id="i-web" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></symbol>
+</svg>
+
+<div><div class="eb">Shop Gọn · so sánh đối thủ</div>
+<h1>1 gói đủ <b>3 việc</b> — đối thủ bán riêng từng món</h1></div>
+<p class="sub">Shop điện thoại cần quản lý chặt, đăng bài đều và có trang giá gửi khách. KiotViet, Sapo gói rẻ chỉ có phần quản lý; muốn có website phải lên gói đắt.</p>
+
 <div class="ba">
- <div><i>🧾</i><b>Quản lý bán hàng</b>Máy theo IMEI, tồn kho, bảo hành, trả góp, lời lỗ mỗi ngày.</div>
- <div><i>📣</i><b>Truyền thông online</b>Thiết kế hình máy kèm giá, khuyến mãi để đăng Zalo, Facebook. Có sẵn ảnh chính hãng hơn 220 mẫu, tự cập nhật ngày 10, 20 và cuối tháng.</div>
- <div><i>🌐</i><b>Website mini cho shop</b>Bảng giá online như một trang web nhỏ: máy còn hàng, giá, khuyến mãi, nút gọi và Zalo. Gửi link cho khách là xem được ngay.</div>
+ <div><span class="ic"><svg class="i"><use href="#i-shield"/></svg></span><b>Quản lý chặt, chống thất thoát</b><p>Máy theo IMEI, quét camera. Nhân viên chỉ bán, không thấy giá vốn, không thấy lời. Chủ shop xem ai bán gì.</p></div>
+ <div><span class="ic"><svg class="i"><use href="#i-img"/></svg></span><b>Ảnh truyền thông làm sẵn</b><p>Chọn máy + khuyến mãi là ra 15 mẫu ảnh và bài đăng viết sẵn. Thêm tờ rơi in ngay.</p><span class="tag">Đối thủ không có</span></div>
+ <div><span class="ic"><svg class="i"><use href="#i-web"/></svg></span><b>Website bảng giá riêng</b><p>Link riêng của shop: máy còn hàng, giá, khuyến mãi, nút gọi và Zalo. Sửa giá ở kho là web đổi theo.</p><span class="tag">Đối thủ tính thêm tiền</span></div>
 </div>
-<h2>So với gói thấp nhất của các bên</h2>
+
+<h2>Bảng so sánh</h2>
 <div class="ss"><table>
- <thead><tr><th></th><th class="sg">Shop Gọn<small>1.190.000đ/năm</small></th><th>KiotViet<small>Gói hỗ trợ</small></th><th>Sapo<small>Start Up</small></th></tr></thead>
+ <thead><tr><th></th><th class="sg">Shop Gọn<small>1.190.000đ<br>/năm</small></th><th>KiotViet<small>Gói hỗ trợ</small></th><th>Sapo<small>Startup</small></th></tr></thead>
  <tbody>
- <tr><td>Quản lý bán hàng, kho</td><td class="sg">✓</td><td>✓</td><td>✓</td></tr>
- <tr><td>Website bán hàng / bảng giá online</td><td class="sg">✓ Có sẵn</td><td class="ko">Phải lên gói 330.000đ/tháng</td><td class="ko">Phải lên gói 600.000đ/tháng</td></tr>
- <tr><td>Thiết kế hình sản phẩm đăng Zalo, Facebook</td><td class="sg">✓ Có sẵn</td><td class="ko">Không có</td><td class="ko">Không có</td></tr>
- <tr><td>Kho ảnh máy chính hãng, tự cập nhật</td><td class="sg">✓ 3 lần/tháng</td><td class="ko">Không có</td><td class="ko">Không có</td></tr>
+ <tr class="nhom"><td colspan="4">Truyền thông &amp; bán online</td></tr>
+ <tr><td>Website bảng giá riêng của shop</td><td class="sg">✓ Có sẵn</td><td><span class="ko">✗<small>Phải lên gói 330.000đ<br>/tháng</small></span></td><td><span class="ko">✗<small>Phải lên gói 600.000đ<br>/tháng</small></span></td></tr>
+ <tr><td>Ảnh truyền thông tự thiết kế<small>Chọn máy là có ảnh</small></td><td class="sg">✓ 2 bài/tuần</td><td><span class="ko">✗</span></td><td><span class="ko">✗</span></td></tr>
+ <tr><td>Bài đăng Zalo, Facebook viết sẵn<small>Kèm link web của shop</small></td><td class="sg">✓</td><td><span class="ko">✗</span></td><td><span class="ko">✗</span></td></tr>
+ <tr><td>Tờ rơi in cho shop</td><td class="sg">✓</td><td><span class="ko">✗</span></td><td><span class="ko">✗</span></td></tr>
+ <tr><td>Kho ảnh máy chính hãng<small>OPPO, Samsung, Xiaomi, iPhone</small></td><td class="sg">✓ Tự cập nhật</td><td><span class="ko">✗</span></td><td><span class="ko">✗</span></td></tr>
+ <tr class="nhom"><td colspan="4">Quản lý bán hàng</td></tr>
+ <tr><td>Bán hàng, kho, lời lỗ</td><td class="sg">✓</td><td><span class="co">✓</span></td><td><span class="co">✓</span></td></tr>
+ <tr><td>Quản máy theo IMEI</td><td class="sg">✓</td><td><span class="co">✓</span></td><td><span class="co">✓</span></td></tr>
+ <tr><td>Tài khoản nhân viên</td><td class="sg">✓ 3 người</td><td><span class="co">✓ 3 người</span></td><td><span class="co">✓ 3 người</span></td></tr>
+ <tr><td>Làm riêng cho shop điện thoại</td><td class="sg">✓</td><td><span class="na">Dùng chung nhiều ngành</span></td><td><span class="na">Dùng chung nhiều ngành</span></td></tr>
+ <tr class="nhom"><td colspan="4">Hỗ trợ &amp; dữ liệu</td></tr>
+ <tr><td>Người cài tận shop, nhập tồn lần đầu<small>Tối đa 50 mã hàng</small></td><td class="sg">✓</td><td><span class="na">—</span></td><td><span class="na">—</span></td></tr>
+ <tr><td>Dữ liệu nằm trong Google Drive của chủ shop</td><td class="sg">✓</td><td><span class="na">Trên máy chủ hãng</span></td><td><span class="na">Trên máy chủ hãng</span></td></tr>
  </tbody>
-</table></div>
+</table>
+<div class="chuthich">✓ có · ✗ bảng giá gói này không có · — bảng giá không ghi. Giá đối thủ: gói thấp nhất ngành bán lẻ, 1 cửa hàng.</div>
+</div>
+
+<h2>Muốn đủ như Shop Gọn (có website), 1 năm tốn bao nhiêu?</h2>
 <div class="bang">
- <div style="font-weight:700">Muốn có cả website bán hàng, 1 năm tốn bao nhiêu?</div>
- <div class="hang"><div class="ten">Sapo<small>Gói Advanced 600.000đ/tháng</small></div><div class="gia">7.200.000đ</div><div class="thanh"><i style="width:100%"></i></div></div>
- <div class="hang"><div class="ten">KiotViet<small>Gói chuyên nghiệp 330.000đ/tháng</small></div><div class="gia">3.960.000đ</div><div class="thanh"><i style="width:55%"></i></div></div>
- <div class="hang sg"><div class="ten">Shop Gọn<small>Gói 1 năm, đã gồm bảng giá online</small></div><div class="gia">1.190.000đ</div><div class="thanh"><i style="width:17%"></i></div></div>
+ <div class="hang"><div class="ten">Sapo<small>Advanced 600.000đ/tháng</small></div><div class="gia">7.200.000đ</div><div class="thanh"><i style="width:100%"></i></div></div>
+ <div class="hang"><div class="ten">KiotViet<small>Chuyên nghiệp 330.000đ/tháng</small></div><div class="gia">3.960.000đ</div><div class="thanh"><i style="width:55%"></i></div></div>
+ <div class="hang sg"><div class="ten">Shop Gọn<small>Gói 1 năm, đủ 3 việc</small></div><div class="gia">1.190.000đ</div><div class="thanh"><i style="width:17%"></i></div></div>
 </div>
-<h2>Shop được gì</h2>
-<div class="ly">
- <div><b>Có người cài tận nơi</b>Nhân viên bên em xuống shop cài đặt, chỉ cách dùng, có gì gọi là tới.</div>
- <div><b>Quản từng máy theo IMEI</b>Nhập máy theo lô, quét IMEI bằng camera, xem máy nào tồn lâu.</div>
- <div><b>Bán nhanh, QR đúng số tiền</b>Giỏ nhiều món, in hóa đơn, mã QR chuyển khoản tự ra đúng tổng tiền.</div>
- <div><b>Biết lời lỗ mỗi ngày</b>Doanh thu, tiền lời, lời theo hãng, theo nhóm hàng ngay trên điện thoại.</div>
- <div><b>Dữ liệu là của shop</b>Sổ bán hàng nằm trên Google Drive của chính chủ shop, bên em không giữ.</div>
+
+<div class="tk"><div class="l">Dùng 3 năm, shop tiết kiệm so với KiotViet có website</div><div class="s">9.190.000đ</div><div class="m">KiotViet Chuyên nghiệp 3 năm: 11.880.000đ · Shop Gọn 3 năm: 2.690.000đ<br>So với Sapo Advanced 3 năm (21.600.000đ): tiết kiệm 18.910.000đ</div></div>
+
+<h2>Giá Shop Gọn</h2>
+<div class="goi">
+ <div><div class="n">1 năm</div><div class="g">1.190.000đ</div><div class="d">≈ 3.300đ/ngày</div></div>
+ <div class="chon"><div class="n">3 năm</div><div class="g">2.690.000đ</div><div class="d">≈ 2.500đ/ngày<br>giảm đến 880.000đ</div></div>
 </div>
-<a class="nut" id="nutDemo" hidden href="#">Bấm thử app ngay</a>
-<p class="chu">Giá và tính năng các bên lấy từ bảng giá công bố ngày 24/10/2026 (bảng tính năng: "Không có" nghĩa là bảng giá của gói đó không ghi tính năng này): <a href="https://www.kiotviet.vn/phi-dich-vu" target="_blank" rel="noopener">KiotViet</a>, <a href="https://sapo.vn/bang-gia.html" target="_blank" rel="noopener">Sapo</a>. * Nhanh.vn, MISA eShop theo bài tổng hợp trên misaeshop.vn, có thể đã thay đổi. Giá các bên có thể khác theo khuyến mãi từng thời điểm.</p>
+<div class="uu">100 shop đầu tiên: gói 1 năm chỉ 990.000đ</div>
+
+<h2>Shop hay hỏi</h2>
+<div class="hoi">
+ <details><summary>Đang xài KiotViet / Sapo rồi, đổi làm gì?</summary><p>Gói đang xài chỉ lo phần quản lý. Shop Gọn rẻ hơn mà có thêm ảnh truyền thông, bài đăng và website giá — thứ giúp shop có thêm khách, không chỉ ghi sổ.</p></details>
+ <details><summary>Rẻ vậy có đủ tính năng không?</summary><p>Đủ phần shop điện thoại cần: IMEI, kho, bảo hành, lời lỗ, nhân viên, hóa đơn QR. Bỏ bớt thứ shop không dùng nên giá thấp và app gọn.</p></details>
+ <details><summary>Dữ liệu của shop có bị lộ không?</summary><p>Sổ bán hàng nằm trong Google Drive của chính chủ shop. Shop tự tải file Excel về lưu được. Nhân viên không thấy giá vốn, không thấy lời.</p></details>
+ <details><summary>Không rành điện thoại thì sao?</summary><p>Có người xuống tận shop cài app, nhập sẵn 50 mã hàng đầu và chỉ cách bán. Thử trước bằng app mẫu, ưng mới mua.</p></details>
+</div>
+
+<a class="nut" id="nutDemo" href="app/?demo=1">Bấm thử app mẫu ngay</a>
+<p class="chu">Giá đối thủ lấy từ bảng giá công bố, kiểm ngày 06/11/2026: <a href="https://www.kiotviet.vn/phi-dich-vu" target="_blank" rel="noopener">KiotViet</a>, <a href="https://sapo.vn/bang-gia.html" target="_blank" rel="noopener">Sapo</a>. Giá có thể đổi theo thời gian.</p>
 </main>
 <script>
-(function(){var q=new URLSearchParams(location.search),c=(q.get('ctv')||'').replace(/\D/g,'');var b=document.getElementById('nutDemo');if(c.length>=9){b.href='app/?demo=1&ctv='+c;b.hidden=false;}})();
+(function(){var q=new URLSearchParams(location.search),c=(q.get('ctv')||'').replace(/\D/g,'');if(c.length>=9){document.getElementById('nutDemo').href='app/?demo=1&ctv='+c;}})();
 </script>
 </body></html>
