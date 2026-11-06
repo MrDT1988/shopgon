@@ -188,6 +188,7 @@ function fake(fn,a,b,c){if(fn==='adminData')return D||sample();
   if(fn==='adminSaveCtv'){const x=D.ctv.find(o=>o.sdt===a);if(x&&arguments[3]!==undefined){x.role=arguments[3]==='Leader'?'Leader':'';x.leader=arguments[4]||''}if(x)x.ten=b;else D.ctv.push({sdt:a,ten:b,ngay:D.today,role:arguments[3]==='Leader'?'Leader':'',leader:arguments[4]||''});return D}
   const k=D.kh.find(r=>r.email===a);
   if(fn==='adminSetShopCtv'){k.ctv=b;return D}
+  if(fn==='adminTamDuyet'){k.tt='Tạm duyệt';k.han=addD(D.today,+arguments[4]||7);k.note='TAM|'+b+'|'+c+'|'+D.today;return D}
   if(fn==='adminApprove'){const gh=k.tt==='Đã duyệt';const base=gh&&k.han>D.today?k.han:D.today;const x=pD(base);x.setMonth(x.getMonth()+b);k.tt='Đã duyệt';k.han=fD(x);const pt=ptOf(k.ctv);D.tt.push(Object.assign({ngay:D.today,email:a,shop:k.shop,m:b,tien:c,loai:gh?'Gia hạn':'Kích hoạt',ctv:k.ctv},pt?{hh:0,partner:pt,hhP:Math.round(c*ptPct(pt)/100)}:{hh:k.ctv?Math.round(c*D.hhPct/100):0}))}
   if(fn==='adminXoaCtv'){const x=D.ctv.find(o=>o.sdt===a);if(!x)throw new Error('Không tìm thấy');if(x.role==='Partner')D.ctv=D.ctv.filter(o=>o.sdt!==a&&o.partner!==a);else{D.ctv=D.ctv.filter(o=>o.sdt!==a);D.ctv.forEach(o=>{if(o.leader===a)o.leader=''})}return D}
   if(fn==='adminKhoaPartner'){const x=D.ctv.find(o=>o.sdt===a&&o.role==='Partner');if(x)x.khoa=!!b;return D}
@@ -327,7 +328,9 @@ function progCard(){const da=udDaDung(),con=Math.max(0,UD_TONG-da);
   <div class="g3"><div class="hot"><small>Ưu đãi 100 shop đầu</small><b class="num">990.000đ</b><em>gói 1 năm</em></div>
     <div><small>Gói 1 năm</small><b class="num">1.190.000đ</b><em>12 bài truyền thông</em></div>
     <div><small>Gói 3 năm</small><b class="num">2.690.000đ</b><em>giảm đến 880.000đ</em></div></div></div>`}
-const tamOf=k=>{const m=String(k.note||'').match(/^AI-TAM\|(\d+)\|(\d+)\|/);return k.tt==='Tạm duyệt'&&m?{m:+m[1],tien:+m[2]}:null};
+/* 06/11 anh Thái: "Cho dùng trước 7 ngày" — ghi chú TAM|tháng|tiền|ngày (anh duyệt tay) hoặc AI-TAM|… (AI đọc UNC cũ) */
+const TAM_NGAY=7;
+const tamOf=k=>{const m=String(k.note||'').match(/^(AI-)?TAM\|(\d+)\|(\d+)\|/);return k.tt==='Tạm duyệt'&&m?{m:+m[2],tien:+m[3],ai:!!m[1]}:null};
 /* 06/11 anh Thái: xoá hẳn shop duyệt nhầm (xoá dòng khách + giao dịch của shop, máy chủ lưu bản sao vào tab DaXoa) */
 function delRow(k){const e=esc(k.email);const L=D.tt.filter(x=>x.email===k.email);const tong=L.reduce((a,x)=>a+x.tien,0);
   return askDel===k.email?`<div class="ex" style="padding:10px 12px;border:2px solid var(--red-soft)"><b style="color:var(--red)">Xoá hẳn ${esc(k.shop||k.email)}?</b><small style="display:block;color:var(--muted);margin:4px 0 8px">${L.length?'Xoá luôn '+L.length+' giao dịch ('+money(tong)+') khỏi doanh thu, hoa hồng và suất ưu đãi. ':''}Shop bị đẩy ra khỏi app. Không khôi phục trên app được.</small><div class="act"><button class="ghost red" data-del="${e}">🗑 Xoá hẳn</button><button class="ghost" data-askdel="">Thôi</button></div></div>`
@@ -340,10 +343,11 @@ function shopCard(k){const s=trangThai(k),e=esc(k.email),tam=tamOf(k);const G=go
     :`<div class="act"><div class="chips" style="overflow:visible;flex-wrap:wrap">${G.map(g=>`<button class="chip" data-pick="${e}" data-k="${g.k}" aria-pressed="${p.k===g.k}">${g.ten} · ${money(g.gia)}</button>`).join('')}</div>
       <input inputmode="numeric" class="num" data-tien="${e}" value="${p.gia.toLocaleString('vi-VN')}" aria-label="Số tiền đã nhận"></div>
       ${k.ctv?`<small style="color:var(--muted)">${hhTxt(k.ctv)}: <b class="num" id="hh-${e}" data-p="${pctOf(k.ctv)}">${money(p.gia*pctOf(k.ctv)/100)}</b></small>`:''}
-      ${tam?`<small style="color:#0b5e57;font-weight:700">⚡ AI đã đọc ủy nhiệm chi đúng ${money(tam.tien)} — shop đang dùng tạm tới ${dmy(k.han)}. Tiền về thì Xác nhận; không có tiền thì Hủy.</small>`:/^AI chưa tự duyệt/.test(String(k.note||''))?`<small style="color:var(--amber)">🤖 ${esc(k.note)}</small>`:''}
+      ${tam?`<small style="color:#0b5e57;font-weight:700">⚡ ${tam.ai?'AI đã đọc ủy nhiệm chi đúng '+money(tam.tien)+' — shop':'Shop'} đang dùng trước tới ${dmy(k.han)}${k.han?' (còn '+Math.max(0,days(k.han,D.today))+' ngày)':''}. Tiền về thì bấm Xác nhận; hết hạn chưa có tiền shop tự bị khoá.</small>`:/^AI chưa tự duyệt/.test(String(k.note||''))?`<small style="color:var(--amber)">🤖 ${esc(k.note)}</small>`:''}
       ${ask===k.email?`<div class="act"><b style="color:var(--red)">${tam?'Hủy kích hoạt tạm? Shop bị khóa lại.':s==='cho'?'Từ chối shop này?':'Khóa shop này? Shop bị đẩy ra khỏi app.'}</b><button class="ghost red" data-st="${e}" data-v="${s==='cho'?'Từ chối':'Khóa'}">Xác nhận</button><button class="ghost" data-ask="">Thôi</button></div>`
-        :`<div class="act"><button class="btn" data-ok="${e}" style="flex:1">${tam?'Xác nhận đã nhận tiền':s==='cho'?'Duyệt':'Gia hạn'}</button><button class="ghost red" data-ask="${e}">${tam?'Hủy':s==='cho'?'Từ chối':'Khóa'}</button></div>`}`;
-  return `<div class="shop"><div class="top"><div class="n"><b>${esc(k.shop||'(chưa ghi tên)')}</b><small>${e}</small><small class="num">${k.sdt?`<a href="tel:${esc(k.sdt.replace(/\s/g,''))}" style="color:var(--pen)">${esc(k.sdt)}</a> · `:''}${s==='cho'?'Gửi '+dmy(k.yeuCau):k.han?'Hạn '+dmy(k.han):''}</small></div>${s==='cho'?(k.unc?`<button class="pill p-g" data-unc="${e}" style="border:0;cursor:pointer">${tam?'⚡ Tạm kích hoạt':'🧾 Đã chuyển tiền'} · ${dm(k.unc)}</button>`:'<span class="pill p-a">Chờ tiền</span>'):k.unc&&s!=='khoa'?`<button class="pill p-g" data-unc="${e}" style="border:0;cursor:pointer">🧾 Chuyển tiền gia hạn · ${dm(k.unc)}</button>`:pillOf(k)}</div>${ctvRow}${uncImg===k.email?'<div id="uncBox" class="ex" style="padding:8px;text-align:center">Đang tải ảnh…</div>':''}${duyet}${delRow(k)}</div>`}
+        :`<div class="act"><button class="btn" data-ok="${e}" style="flex:1">${tam?'✓ Xác nhận đã nhận tiền':s==='cho'?'Duyệt (đã nhận tiền)':'Gia hạn'}</button><button class="ghost red" data-ask="${e}">${tam?'Hủy':s==='cho'?'Từ chối':'Khóa'}</button></div>
+        ${s==='cho'&&!tam?`<div class="act"><button class="ghost" data-tam="${e}" style="flex:1;border-color:#f6d49a;background:#fff7e8;color:#7a4700">⚡ Cho dùng trước ${TAM_NGAY} ngày (chưa nhận tiền)</button></div>`:''}`}`;
+  return `<div class="shop"><div class="top"><div class="n"><b>${esc(k.shop||'(chưa ghi tên)')}</b><small>${e}</small><small class="num">${k.sdt?`<a href="tel:${esc(k.sdt.replace(/\s/g,''))}" style="color:var(--pen)">${esc(k.sdt)}</a> · `:''}${s==='cho'?'Gửi '+dmy(k.yeuCau):k.han?'Hạn '+dmy(k.han):''}</small></div>${s==='cho'?(k.unc?`<button class="pill p-g" data-unc="${e}" style="border:0;cursor:pointer">${tam?'⚡ Tạm kích hoạt':'🧾 Đã chuyển tiền'} · ${dm(k.unc)}</button>`:(tamOf(k)?`<span class="pill p-n">⚡ Dùng trước · còn ${Math.max(0,days(k.han,D.today))} ngày</span>`:'<span class="pill p-a">Chờ tiền</span>')):k.unc&&s!=='khoa'?`<button class="pill p-g" data-unc="${e}" style="border:0;cursor:pointer">🧾 Chuyển tiền gia hạn · ${dm(k.unc)}</button>`:pillOf(k)}</div>${ctvRow}${uncImg===k.email?'<div id="uncBox" class="ex" style="padding:8px;text-align:center">Đang tải ảnh…</div>':''}${duyet}${delRow(k)}</div>`}
 
 /* ===== vẽ ===== */
 function render(){if(!D)return;
@@ -394,6 +398,8 @@ document.addEventListener('click',e=>{const a=e.target.closest('[data-goch]');if
   if(d.ok){const email=d.ok,g=pick[email]||goiDs()[0];const inp=[...document.querySelectorAll('[data-tien]')].find(x=>x.dataset.tien===email);const tien=+String(inp.value).replace(/\D/g,'')||0;
     if(!tien){toast('Nhập số tiền đã nhận');return}
     b.disabled=true;call('adminApprove',email,g.m,tien).then(x=>{D=x;delete pick[email];render();toast('Đã kích hoạt '+g.ten+' · '+money(tien))}).catch(er=>{b.disabled=false;toast('Lỗi: '+er.message)});return}
+  if(d.tam){const email=d.tam,g=pick[email]||goiDs()[0];const inp=[...document.querySelectorAll('[data-tien]')].find(x=>x.dataset.tien===email);const tien=+String(inp.value).replace(/\D/g,'')||g.gia;
+    b.disabled=true;call('adminTamDuyet',email,g.m,tien,TAM_NGAY).then(x=>{D=x;render();toast('Shop vào dùng được '+TAM_NGAY+' ngày — tiền về thì bấm Xác nhận')}).catch(er=>{b.disabled=false;toast('Lỗi: '+er.message)});return}
   if(d.st){call('adminSetStatus',d.st,d.v).then(x=>{D=x;ask=null;render();toast(d.v==='Đã duyệt'?'Đã mở lại':'Đã '+d.v.toLowerCase())}).catch(er=>toast('Lỗi: '+er.message));return}
 });
 document.addEventListener('input',e=>{const t=e.target;
