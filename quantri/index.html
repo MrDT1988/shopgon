@@ -303,6 +303,8 @@ document.getElementById('gateF').addEventListener('submit',e=>{e.preventDefault(
 function fake(fn,a,b,c){if(fn==='adminData')return D||sample();
   if(fn==='adminSavePartner'){const [sdt,ten,kv,mk,pc]=[...arguments].slice(1);const x=D.ctv.find(o=>o.sdt===sdt);if(!x&&!mk)throw new Error('Partner mới phải đặt mật khẩu');
     if(x&&x.role!=='Partner')throw new Error('Số này đang là CTV/Leader của đội anh');if(x)Object.assign(x,{ten,khuVuc:kv,pct:+pc||70});else D.ctv.push({sdt,ten,role:'Partner',khuVuc:kv,pct:+pc||70,ngay:D.today});return D}
+  if(fn==='adminDoiSdt'){const x=D.ctv.find(o=>o.sdt===a);if(!x)throw new Error('Không tìm thấy');if(D.ctv.some(o=>o.sdt===b))throw new Error('Số mới đã có');x.sdt=b;
+    D.ctv.forEach(o=>{if(o.leader===a)o.leader=b;if(o.partner===a)o.partner=b});D.kh.forEach(k=>{if(k.ctv===a)k.ctv=b});D.tt.forEach(t=>{['ctv','ld','partner'].forEach(f=>{if(t[f]===a)t[f]=b})});(D.doiSoat||[]).forEach(t=>{if(t.partner===a)t.partner=b});return D}
   if(fn==='adminPaidPartner'){D.doiSoat=(D.doiSoat||[]).filter(x=>!(x.thang===a&&x.partner===b));if(c)D.doiSoat.push({thang:a,partner:b,tien:c,ngayTra:D.today});return D}
   if(fn==='adminSaveCtv'){const x=D.ctv.find(o=>o.sdt===a);if(x&&arguments[3]!==undefined){x.role=arguments[3]==='Leader'?'Leader':'';x.leader=arguments[4]||''}if(x)x.ten=b;else D.ctv.push({sdt:a,ten:b,ngay:D.today,role:arguments[3]==='Leader'?'Leader':'',leader:arguments[4]||''});return D}
   const k=D.kh.find(r=>r.email===a);
@@ -415,7 +417,7 @@ function vPartner(){/* 06/11 anh Thái: Partner nằm trong tab Cộng tác viê
   const ed=addPt&&addPt!=='new'?pts.find(p=>p.sdt===addPt):null;
   const form=addPt?`<div class="card" style="display:flex;flex-direction:column;gap:8px"><h2 style="margin:0">${ed?'Sửa Partner '+esc(ed.khuVuc||ed.ten||''):'Thêm Partner khu vực'}</h2>
     <input class="f" id="pKv" placeholder="Khu vực (VD: Cần Thơ)" value="${ed?esc(ed.khuVuc||''):''}">
-    <input class="f" id="pSdt" inputmode="tel" placeholder="Số điện thoại đăng nhập" value="${ed?ed.sdt:''}" ${ed?'readonly':''}>
+    <input class="f" id="pSdt" inputmode="tel" placeholder="Số điện thoại đăng nhập" value="${ed?ed.sdt:''}">${ed?'<small style="color:var(--muted);margin-top:-4px">Sửa SĐT: Partner đăng nhập bằng số mới, mật khẩu giữ nguyên; đội, shop, giao dịch và đối soát chuyển theo số mới.</small>':''}
     <input class="f" id="pMk" type="text" autocomplete="off" placeholder="${ed?'Mật khẩu mới (bỏ trống = giữ mật khẩu cũ)':'Mật khẩu (ít nhất 6 ký tự)'}">
     <label style="display:flex;align-items:center;gap:8px;font-weight:700">Partner nhận <input class="f num" id="pPct" inputmode="numeric" value="${ed?ed.pct||70:70}" style="width:80px;text-align:center"> % tiền gói</label>
     <div class="act"><button class="btn" data-savept="${ed?ed.sdt:'new'}" style="flex:1">Lưu</button><button class="ghost" data-addpt="0">Thôi</button></div></div>`:'';
@@ -504,7 +506,10 @@ document.addEventListener('click',e=>{const a=e.target.closest('[data-goch]');if
     const kv=$('pKv').value.trim(),ten=kv,mk=$('pMk').value.trim(),pc=+$('pPct').value.replace(/\D/g,'');
     if(!/^0\d{9}$/.test(sdt)){toast('Số điện thoại chưa đúng');return}if(!kv){toast('Nhập khu vực');return}
     if(isNew&&mk.length<6){toast('Mật khẩu ít nhất 6 ký tự');return}if(mk&&mk.length<6){toast('Mật khẩu ít nhất 6 ký tự');return}if(!(pc>0&&pc<100)){toast('% Partner từ 1 đến 99');return}
-    b.disabled=true;call('adminSavePartner',sdt,ten,kv,mk,pc).then(x=>{D=x;addPt=false;render();toast(isNew?'Đã thêm Partner '+kv:'Đã lưu Partner')}).catch(er=>{b.disabled=false;toast(er.message)});return}
+    /* 06/11 23h anh Thái: cho sửa SĐT Partner (đánh nhầm) — đổi số trước rồi lưu các trường còn lại */
+    const cu=isNew?'':d.savept,doiSo=!isNew&&sdt!==cu;
+    if(doiSo&&(D.ctv||[]).some(o=>o.sdt===sdt)){toast('Số '+fmtSdt(sdt)+' đã có trong hệ thống');return}
+    b.disabled=true;(doiSo?call('adminDoiSdt',cu,sdt):Promise.resolve()).then(()=>call('adminSavePartner',sdt,ten,kv,mk,pc)).then(x=>{D=x;addPt=false;render();toast(isNew?'Đã thêm Partner '+kv:doiSo?'Đã đổi SĐT Partner sang '+fmtSdt(sdt):'Đã lưu Partner')}).catch(er=>{b.disabled=false;toast(/không hợp lệ|unknown|act|fn/i.test(er.message)?'Máy chủ đang cập nhật chức năng đổi SĐT — thử lại sau ít phút':er.message)});return}
   if(d.paid){const t=D.today,x=pD(t.slice(0,8)+'15');x.setMonth(x.getMonth()-1);const mk=kyM();
     b.disabled=true;call('adminPaidPartner',mk,d.paid,+d.tien).then(r=>{D=r;render();toast(+d.tien?'Đã ghi chuyển tiền':'Đã bỏ đánh dấu')}).catch(er=>{b.disabled=false;toast(er.message)});return}
   if(d.loc){CH_LOC=d.loc;ask=null;render();return}
