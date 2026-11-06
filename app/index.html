@@ -1056,7 +1056,7 @@ function reportPanel(){
   else{const ms=monthsList().slice(0,12).reverse();ms.forEach(k=>{const r=sumRange(k+'-01',k+'-31');bars.push({k,l:'T'+(+k.slice(5)),v:r.loi,r,lbl:mLbl(k)})});
     sum=bars.reduce((a,b)=>({dt:a.dt+b.r.dt,loi:a.loi+b.r.loi,may:a.may+b.r.may,n:a.n+b.r.n}),{dt:0,loi:0,may:0,n:0});}
   const mx=Math.max(...bars.map(b=>b.v),1);const sel=bars.find(b=>b.k===rptSel);
-  let cmp='';if(rptMode==='ngay'){const pd=new Date(rm+'-01');pd.setMonth(pd.getMonth()-1);const pk=iso(pd).slice(0,7);const p=sumRange(pk+'-01',pk+'-31');if(p.loi)cmp=` · ${sum.loi>=p.loi?'▲':'▼'} ${Math.abs(Math.round((sum.loi/p.loi-1)*100))}% lời so với ${mLbl(pk).toLowerCase()}`}
+  let cmp='';if(rptMode==='ngay'){const pd=new Date(rm+'-01');pd.setMonth(pd.getMonth()-1);const pk=iso(pd).slice(0,7);/* 06/11 anh Thái: tháng đang chạy so CÙNG KỲ (1→hôm nay của tháng trước), tháng đã qua so cả tháng */const dang=rm===cur,nd=+t.slice(8),lastP=new Date(+pk.slice(0,4),+pk.slice(5),0).getDate(),den=dang?Math.min(nd,lastP):31;const p=sumRange(pk+'-01',pk+'-'+String(den).padStart(2,'0'));if(p.loi)cmp=` · ${sum.loi>=p.loi?'▲':'▼'} ${Math.abs(Math.round((sum.loi/p.loi-1)*100))}% lời so với ${dang?`cùng kỳ 1–${den}/${+pk.slice(5)}`:mLbl(pk).toLowerCase()}`}
   return `<div class="panel own"><div class="rh"><h2 style="margin:0">Tình hình kinh doanh</h2></div>
     <div class="seg" role="group" style="margin:10px 0"><button data-rm="ngay" aria-pressed="${rptMode==='ngay'}">Theo ngày</button><button data-rm="thang" aria-pressed="${rptMode==='thang'}">Theo tháng</button></div>
     ${rptMode==='ngay'?`<select id="rMonth" style="margin-bottom:10px">${monthsList().map(k=>`<option value="${k}" ${k===rm?'selected':''}>${mLbl(k)}</option>`).join('')}</select>`:''}
@@ -2634,7 +2634,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261106-2115';let verLuc=0;
+const BUILD='20261106-2125';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
