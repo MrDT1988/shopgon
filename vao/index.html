@@ -4,18 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#f3f6fb">
+<meta name="theme-color" content="#0f8d80">
 <title>Cổng Shop Gọn</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap">
 <style>
-/* Cổng Shop Gọn — 06/11/2026 anh Thái: chỉ cho anh · Partner · Leader · CTV. Vỏ giống App RM (vo-app.js):
-   nền #f3f6fb · đầu trắng mờ "Chào <tên>" xanh 25px · thẻ trắng bo 22 bóng nhẹ · thanh tab dưới trắng mờ, tab chọn xanh + vạch 3px · huy hiệu đỏ.
+/* Cổng Shop Gọn — 06/11/2026 anh Thái: chỉ cho anh · Partner · Leader · CTV. Vỏ giống App RM (vo-app.js), màu theo logo Shop Gọn (xanh ngọc + mái hiên cam).
+   Leader/CTV đăng nhập SĐT + mật khẩu (mặc định 123456, vào lần đầu bắt đổi).
    Hiệu ứng (thư viện Lucian, anh duyệt 05/11): #039 tab viên thuốc trượt (đăng nhập) · #098 số chạy từng chữ số (hoa hồng) · #251 hiện dần từng thẻ (Bán hàng, Tiện ích). */
-:root{--bg:#f3f6fb;--paper:#fff;--ink:#15211b;--ink2:#56645d;--ink3:#8a96a8;--line:#edf1ef;--line2:#e3e9e6;--ac:#0a7a50;--ac2:#2bb37a;--ac-soft:#e6f4ec;--red:#dc2626;--red-dk:#b91c1c;--warn:#b45309;--warn-soft:#fff3df;
-  --sh:0 6px 24px rgba(23,43,77,.07),0 1px 3px rgba(23,43,77,.05);--spring:cubic-bezier(.34,1.45,.64,1);--ease:cubic-bezier(.2,.8,.2,1);
+:root{--bg:#f2f6f6;--paper:#fff;--ink:#132422;--ink2:#53625f;--ink3:#8a979a;--line:#ebf0ef;--line2:#dfe8e6;--ac:#0f8d80;--ac-dk:#0b5e57;--ac-soft:#e2f4f1;--or:#f59e0b;--or-dk:#c2620a;--or-soft:#fff3df;--red:#dc2626;--red-dk:#b91c1c;
+  --sh:0 6px 24px rgba(16,48,45,.07),0 1px 3px rgba(16,48,45,.05);--spring:cubic-bezier(.34,1.45,.64,1);--ease:cubic-bezier(.2,.8,.2,1);
   --font:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
@@ -24,46 +24,62 @@ body{background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15p
 .in{max-width:680px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 svg.i{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
 
-/* Đầu trang kiểu App RM */
-.top{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,rgba(255,255,255,.94),rgba(255,255,255,.82));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 1px 0 rgba(23,43,77,.07);padding-top:env(safe-area-inset-top,0px)}
-.top .in{display:flex;align-items:center;gap:12px;padding-block:14px 12px}
-.top h1{margin:0;font-size:25px;font-weight:800;letter-spacing:-.6px;color:var(--ac);line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.top .sub{margin:2px 0 0;color:#65736c;font-size:13.5px;font-weight:500}
+/* ===== Màn đăng nhập: đầu trang theo logo (mái hiên cam-trắng + nền xanh ngọc) ===== */
+.lhero{position:relative;background:linear-gradient(155deg,#19b8a4 0%,#0f8d80 48%,#0b5e57 100%);color:#fff;text-align:center;padding:calc(env(safe-area-inset-top,0px) + 0px) 0 64px;overflow:hidden}
+.lhero::after{content:"";position:absolute;right:-60px;bottom:-80px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.07)}
+.lhero::before{content:"";position:absolute;left:-70px;top:60px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.05)}
+.awn{height:26px;background:repeating-linear-gradient(90deg,var(--or) 0 44px,#fff 44px 88px);-webkit-mask:linear-gradient(#000,#000) 0 0/100% 8px no-repeat,radial-gradient(circle 22px at 22px 8px,#000 97%,transparent 100%) 0 0/44px 30px repeat-x;mask:linear-gradient(#000,#000) 0 0/100% 8px no-repeat,radial-gradient(circle 22px at 22px 8px,#000 97%,transparent 100%) 0 0/44px 30px repeat-x;filter:drop-shadow(0 3px 2px rgba(0,0,0,.12))}
+.lhero .logo{position:relative;z-index:1;width:96px;height:96px;border-radius:26px;margin:22px auto 0;display:block;box-shadow:0 0 0 4px rgba(255,255,255,.25),0 14px 30px rgba(4,40,36,.35);animation:logoIn .7s var(--spring) both}
+@keyframes logoIn{from{opacity:0;transform:translateY(14px) scale(.8)}to{opacity:1;transform:none}}
+.lhero h1{position:relative;z-index:1;margin:14px 0 0;font-size:30px;font-weight:800;letter-spacing:-.8px;line-height:1.1}
+.lhero p{position:relative;z-index:1;margin:6px 0 0;font-size:14px;opacity:.9;font-weight:500}
+.login-main{margin-top:-44px;position:relative;z-index:2;padding-bottom:36px!important}
+
+/* ===== Đầu trang app kiểu App RM ===== */
+.top{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(255,255,255,.84));-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 1px 0 rgba(16,48,45,.07);padding-top:env(safe-area-inset-top,0px)}
+.top .in{display:flex;align-items:center;gap:12px;padding-block:12px}
+.top .lg{width:42px;height:42px;border-radius:13px;flex:none;box-shadow:0 4px 12px rgba(11,94,87,.22)}
+.top h1{margin:0;font-size:23px;font-weight:800;letter-spacing:-.6px;color:var(--ac-dk);line-height:1.15;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.top .sub{margin:1px 0 0;color:#65736f;font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .top .tx{min-width:0;flex:1}
-.rb{width:44px;height:44px;border:0;border-radius:99px;background:#fff;box-shadow:var(--sh);display:grid;place-items:center;color:var(--ink);cursor:pointer;flex:none;text-decoration:none}
+.rb{width:44px;height:44px;border:0;border-radius:99px;background:#fff;box-shadow:var(--sh);display:grid;place-items:center;color:var(--ink);cursor:pointer;flex:none}
 .rb svg.i{width:20px;height:20px}
-.mark{width:44px;height:44px;border-radius:14px;background:var(--ac);display:grid;place-items:center;color:#fff;flex:none;box-shadow:0 6px 16px rgba(10,122,80,.25)}
 
 main.in{padding-block:16px calc(96px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px}
-.login-main{padding-bottom:40px!important}
 .card{background:var(--paper);border-radius:22px;box-shadow:var(--sh);padding:16px}
 .card>h2{margin:0 0 4px;font-size:17px;font-weight:800;letter-spacing:-.3px;display:flex;align-items:center;gap:8px}
 .card>h2 .more{margin-left:auto;font-size:13px;font-weight:700;color:var(--ac);background:none;border:0;font-family:inherit;cursor:pointer;min-height:44px;padding:0 4px}
 .card>p.sub{margin:0 0 12px;color:var(--ink2);font-size:13.5px}
+.login-main .card{box-shadow:0 18px 40px -18px rgba(11,94,87,.35),var(--sh)}
 
-/* #039 tab viên thuốc trượt (đăng nhập) */
 /* Lucian UX/UI Prompt #039 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/#039 */
 .u039-tabs{position:relative;display:flex;padding:5px;border-radius:999px;background:var(--bg);margin-bottom:14px}
-.u039-pill{position:absolute;left:0;top:5px;bottom:5px;width:var(--w,80px);border-radius:999px;background:var(--ac);transform:translateX(var(--x,5px));box-shadow:0 8px 16px -10px rgba(10,122,80,.6);transition:transform .5s var(--spring),width .5s var(--spring)}
+.u039-pill{position:absolute;left:0;top:5px;bottom:5px;width:var(--w,80px);border-radius:999px;background:var(--ac);transform:translateX(var(--x,5px));box-shadow:0 8px 16px -10px rgba(11,94,87,.7);transition:transform .5s var(--spring),width .5s var(--spring)}
 .u039-tab{position:relative;flex:1;height:44px;border:0;padding:0 6px;border-radius:999px;background:none;font:inherit;font-size:14px;font-weight:700;color:var(--ink2);white-space:nowrap;cursor:pointer;transition:color .35s var(--ease)}
 .u039-tab[aria-selected="true"]{color:#fff}
 .u039-tab:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+
 .frm{display:flex;flex-direction:column;gap:8px;animation:frmIn .45s var(--ease)}
 @keyframes frmIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.frm label{font-size:13px;font-weight:700;color:var(--ink2)}
-.f{width:100%;padding:12px 14px;border:1px solid var(--line2);border-radius:14px;font:inherit;font-size:16px;background:#f8faf9;color:var(--ink);min-height:48px}
+.frm label{font-size:13px;font-weight:700;color:var(--ink2);margin-top:2px}
+.fw{position:relative}
+.f{width:100%;padding:12px 14px;border:1px solid var(--line2);border-radius:14px;font:inherit;font-size:16px;background:#f7faf9;color:var(--ink);min-height:50px}
+.fw .f{padding-right:52px}
 .f:focus{outline:2px solid var(--ac);outline-offset:0;background:#fff}
-.btn{border:0;border-radius:14px;background:var(--ac);color:#fff;font:inherit;font-weight:800;padding:12px 16px;cursor:pointer;min-height:48px;text-align:center;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .2s var(--spring),filter .2s}
+.eye{position:absolute;right:3px;top:3px;width:44px;height:44px;border:0;background:none;color:var(--ink3);display:grid;place-items:center;cursor:pointer;border-radius:12px}
+.eye svg.i{width:20px;height:20px}
+.hint{display:flex;gap:8px;align-items:flex-start;background:var(--or-soft);color:#8a4a06;border-radius:12px;padding:9px 11px;font-size:13px;font-weight:600}
+.hint svg.i{width:18px;height:18px;margin-top:1px}
+.btn{border:0;border-radius:14px;background:linear-gradient(180deg,#12a291,var(--ac));color:#fff;font:inherit;font-weight:800;font-size:15.5px;padding:12px 16px;cursor:pointer;min-height:50px;text-align:center;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 18px -8px rgba(11,94,87,.6);transition:transform .2s var(--spring),filter .2s}
 .btn:active{transform:scale(.97)}
 .btn[disabled]{filter:grayscale(.4) opacity(.7)}
 .ghost{border:0;border-radius:12px;background:var(--bg);color:var(--ink);font:inherit;font-weight:700;font-size:14px;padding:10px 14px;cursor:pointer;min-height:44px;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
 .ghost svg.i{width:18px;height:18px}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .muted{color:var(--ink2);font-size:13.5px}
-.err{color:var(--red-dk);font-size:13.5px;min-height:1.2em}
-.who{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:4px}
-.who div{background:var(--bg);border-radius:14px;padding:10px;text-align:center;font-size:12.5px;color:var(--ink2);font-weight:600}
-.who b{display:block;color:var(--ink);font-size:13.5px}
+.err{color:var(--red-dk);font-size:13.5px;min-height:1.2em;font-weight:600}
+.err.ok{color:var(--ac-dk)}
+.lfoot{text-align:center;color:var(--ink3);font-size:12.5px;margin-top:4px}
 
 /* Việc cần xử lý: 1 dòng đỏ, bấm bung (như App RM) */
 .viec{border-radius:16px;overflow:hidden;background:#fff;box-shadow:0 6px 18px rgba(220,38,38,.22)}
@@ -74,28 +90,27 @@ main.in{padding-block:16px calc(96px + env(safe-area-inset-bottom,0px));display:
 .viec .ds{padding:4px 14px 10px}
 .viec:not(.mo) .ds{display:none}
 
-/* #098 số chạy từng chữ số */
 /* Lucian UX/UI Prompt #098 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/#098 */
-.hero{background:linear-gradient(140deg,#0a7a50,#0f5f42);color:#fff;border-radius:22px;padding:18px;box-shadow:0 14px 30px -14px rgba(10,122,80,.55)}
-.hero small{font-size:13px;font-weight:700;opacity:.88}
+.hero{position:relative;overflow:hidden;background:linear-gradient(150deg,#14a796,#0f8d80 45%,#0b5e57);color:#fff;border-radius:22px;padding:18px;box-shadow:0 14px 30px -14px rgba(11,94,87,.6)}
+.hero::after{content:"";position:absolute;right:-40px;top:-50px;width:170px;height:170px;border-radius:50%;background:rgba(255,255,255,.08)}
+.hero>*{position:relative;z-index:1}
+.hero small{font-size:13px;font-weight:700;opacity:.9}
 .u098-num{display:flex;align-items:flex-start;height:46px;margin-top:4px;overflow:hidden;-webkit-mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(transparent,#000 14%,#000 86%,transparent);font-size:38px;font-weight:800;letter-spacing:-.04em;line-height:46px;font-variant-numeric:tabular-nums}
 .u098-col{display:inline-flex;flex-direction:column;transform:translateY(calc(var(--d) * -46px));transition:transform .9s cubic-bezier(.3,1.25,.5,1);transition-delay:calc(var(--i) * 45ms)}
 .u098-col span{height:46px}
 .u098-sym{display:inline-block}
 .u098-sym.sm{font-size:22px;margin-left:2px}
-.hero .note{margin:6px 0 0;font-size:13px;opacity:.9}
+.hero .note{margin:6px 0 0;font-size:13px;opacity:.92}
 .kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:14px}
-.kpi{background:rgba(255,255,255,.14);border-radius:14px;padding:9px 10px}
+.kpi{background:rgba(255,255,255,.15);border-radius:14px;padding:9px 10px}
 .kpi small{display:block;font-size:11.5px;font-weight:600;opacity:.9}
 .kpi b{font-size:19px;font-variant-numeric:tabular-nums}
 
-/* Link + QR */
 .qr{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
 #qr{background:#fff;padding:8px;border-radius:14px;width:156px;height:156px;box-shadow:inset 0 0 0 1px var(--line2)}
 #qr img,#qr canvas{display:block;width:140px!important;height:140px!important}
-.link{font-weight:700;word-break:break-all;color:var(--ac);font-size:14px}
+.link{font-weight:700;word-break:break-all;color:var(--ac-dk);font-size:14px}
 
-/* Danh sách */
 .list .it{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line)}
 .list .it:last-child{border-bottom:0}
 .list .it>div{min-width:0}
@@ -103,59 +118,65 @@ main.in{padding-block:16px calc(96px + env(safe-area-inset-bottom,0px));display:
 .list .it small{display:block;color:var(--ink2);font-size:12.5px}
 .list .r{text-align:right;flex:none}
 .pill{display:inline-block;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:800;white-space:nowrap}
-.p-g{background:var(--ac-soft);color:var(--ac)}.p-a{background:var(--warn-soft);color:var(--warn)}.p-r{background:#fde4e2;color:var(--red-dk)}
+.p-g{background:var(--ac-soft);color:var(--ac-dk)}.p-a{background:var(--or-soft);color:var(--or-dk)}.p-r{background:#fde4e2;color:var(--red-dk)}
 .seg2{display:flex;gap:6px;margin:2px 0 6px;overflow-x:auto;scrollbar-width:none}
 .seg2 button{border:0;background:var(--bg);color:var(--ink2);font:inherit;font-weight:700;font-size:13px;border-radius:99px;padding:0 14px;min-height:40px;cursor:pointer;white-space:nowrap}
-.seg2 button.on{background:var(--ink);color:#fff}
+.seg2 button.on{background:var(--ac-dk);color:#fff}
 .empty{text-align:center;padding:22px 8px;color:var(--ink2);font-size:14px}
 .empty svg.i{width:34px;height:34px;color:var(--ink3);display:block;margin:0 auto 6px}
-.sk{height:14px;border-radius:7px;background:linear-gradient(90deg,#eef2f0 25%,#f7f9f8 50%,#eef2f0 75%);background-size:200% 100%;animation:sk 1.2s linear infinite;margin:10px 0}
+.sk{height:14px;border-radius:7px;background:linear-gradient(90deg,#edf2f1 25%,#f7f9f9 50%,#edf2f1 75%);background-size:200% 100%;animation:sk 1.2s linear infinite;margin:10px 0}
 @keyframes sk{to{background-position:-200% 0}}
 
-/* #251 hiện dần từng thẻ */
 /* Lucian UX/UI Prompt #251 · MIT License (c) 2026 Seokwoooo · https://lucianlabs.dev/uxui-prompt/#251 */
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 @media (min-width:620px){.grid.g3{grid-template-columns:repeat(3,minmax(0,1fr))}}
-.tile{display:flex;flex-direction:column;gap:2px;align-items:flex-start;text-align:left;border:0;background:#f6f8f7;box-shadow:inset 0 0 0 1px var(--line);border-radius:18px;padding:14px 12px;min-height:118px;color:var(--ink);text-decoration:none;font:inherit;cursor:pointer;width:100%;
+.tile{display:flex;flex-direction:column;gap:2px;align-items:flex-start;text-align:left;border:0;background:#f6f9f8;box-shadow:inset 0 0 0 1px var(--line);border-radius:18px;padding:14px 12px;min-height:118px;color:var(--ink);text-decoration:none;font:inherit;cursor:pointer;width:100%;
   opacity:0;transform:translateY(26px) scale(.97);transition:opacity .5s,transform .7s cubic-bezier(.2,.8,.2,1),background-color .2s;transition-delay:var(--d,0s)}
 .tile.is-in{opacity:1;transform:none}
 .tile:hover,.tile:focus-visible{background:var(--ac-soft);outline:none}
-.tile:active{transform:scale(.98)}
 .u251-ic{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;color:#fff;background:var(--ac);margin-bottom:10px;transform:scale(.4);transition:transform .55s cubic-bezier(.3,1.7,.5,1);transition-delay:calc(var(--d,0s) + .18s)}
 .tile.is-in .u251-ic{transform:none}
 .u251-ic svg.i{width:20px;height:20px}
-.tile.hot .u251-ic{background:#d97706}
+.tile.hot{background:linear-gradient(160deg,#fff8ea,#fff1d6);box-shadow:inset 0 0 0 1px #f8e2b8}
+.tile.hot .u251-ic{background:var(--or)}
 .tile b{font-size:14.5px;line-height:1.25;font-weight:800}
 .tile small{color:var(--ink2);font-size:12.5px;line-height:1.35}
+@media (max-width:619px){.grid>.tile:last-child:nth-child(odd){grid-column:1/-1;min-height:0;display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:12px;align-items:center}.grid>.tile:last-child:nth-child(odd) .u251-ic{grid-row:span 2;margin:0}}
 .steps{margin:0;padding:0;list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:10px}
 .steps li{counter-increment:s;display:flex;gap:10px;font-size:14px;align-items:flex-start}
-.steps li::before{content:counter(s);width:26px;height:26px;border-radius:99px;background:var(--ac-soft);color:var(--ac);font-weight:800;font-size:13px;display:grid;place-items:center;flex:none}
-.steps b{color:var(--ac)}
+.steps li::before{content:counter(s);width:26px;height:26px;border-radius:99px;background:var(--ac-soft);color:var(--ac-dk);font-weight:800;font-size:13px;display:grid;place-items:center;flex:none}
+.steps b{color:var(--ac-dk)}
 .gia{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .gia div{background:var(--bg);border-radius:14px;padding:10px 12px}
 .gia small{display:block;color:var(--ink2);font-size:12.5px;font-weight:600}
 .gia b{font-size:17px}
+.acc{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.acc .av{width:46px;height:46px;border-radius:99px;background:var(--ac-soft);color:var(--ac-dk);display:grid;place-items:center;font-weight:800;font-size:18px;flex:none}
 
 /* Thanh tab dưới (như App RM) */
-.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:10;background:rgba(255,255,255,.92);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 -1px 0 rgba(23,43,77,.08),0 -8px 24px rgba(23,43,77,.06);padding-bottom:env(safe-area-inset-bottom,0px)}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:10;background:rgba(255,255,255,.93);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);box-shadow:0 -1px 0 rgba(16,48,45,.08),0 -8px 24px rgba(16,48,45,.06);padding-bottom:env(safe-area-inset-bottom,0px)}
 .tabbar .in{display:grid;grid-template-columns:repeat(4,1fr);padding-inline:4px}
 .tabbar button{position:relative;border:0;background:transparent;color:var(--ink3);font:inherit;font-size:11.5px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 2px 8px;min-height:58px;cursor:pointer}
 .tabbar button.on{color:var(--ac);font-weight:800}
 .tabbar button.on::before{content:"";position:absolute;top:0;left:30%;right:30%;height:3px;border-radius:0 0 3px 3px;background:var(--ac)}
 .tabbar button i{position:absolute;top:5px;left:calc(50% + 6px);min-width:18px;height:18px;border-radius:99px;background:var(--red);color:#fff;font-style:normal;font-size:11px;font-weight:800;display:grid;place-items:center;padding:0 5px}
 .pg{animation:pgIn .35s var(--ease);display:flex;flex-direction:column;gap:14px}
-@media (max-width:619px){.grid>.tile:last-child:nth-child(odd){grid-column:1/-1;min-height:0;display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:12px;align-items:center}.grid>.tile:last-child:nth-child(odd) .u251-ic{grid-row:span 2;margin:0}}
-@media (max-width:480px){.top .sub .sdt{display:none}}
 @keyframes pgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#15211b;color:#fff;padding:11px 16px;border-radius:14px;font-size:14px;z-index:20;max-width:calc(100% - 32px);box-shadow:0 10px 24px rgba(0,0,0,.2)}
-footer{text-align:center;color:var(--ink3);font-size:12.5px}
+/* Đổi mật khẩu (lớp phủ) */
+.ov{position:fixed;inset:0;z-index:30;background:rgba(10,30,28,.45);display:flex;align-items:flex-end;justify-content:center;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px));animation:ovIn .25s var(--ease)}
+@keyframes ovIn{from{opacity:0}}
+.ov .card{width:100%;max-width:440px;animation:shIn .45s var(--spring)}
+@keyframes shIn{from{transform:translateY(40px);opacity:0}}
+@media (min-width:620px){.ov{align-items:center}}
+.ov .ic0{width:52px;height:52px;border-radius:16px;background:var(--or-soft);color:var(--or-dk);display:grid;place-items:center;margin-bottom:10px}
+
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:#132422;color:#fff;padding:11px 16px;border-radius:14px;font-size:14px;z-index:40;max-width:calc(100% - 32px);box-shadow:0 10px 24px rgba(0,0,0,.2)}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.tile{opacity:1;transform:none}.u251-ic{transform:none}}
 </style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <symbol id="i-store" viewBox="0 0 24 24"><path d="M3 9l1.5-5h15L21 9M3 9h18M3 9v11h18V9M9 20v-6h6v6"/></symbol>
   <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></symbol>
   <symbol id="i-shops" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></symbol>
   <symbol id="i-sell" viewBox="0 0 24 24"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></symbol>
@@ -172,18 +193,23 @@ footer{text-align:center;color:var(--ink3);font-size:12.5px}
   <symbol id="i-reload" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 4v5h-5"/></symbol>
   <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></symbol>
   <symbol id="i-empty" viewBox="0 0 24 24"><path d="M3 9l1.5-5h15L21 9M3 9h18M3 9v11h18V9"/><path d="M9 14h6"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.5" cy="15.5" r="4.5"/><path d="M10.7 12.3L21 2M17 6l3 3M14 9l2 2"/></symbol>
 </svg>
 
 <!-- ===== MÀN ĐĂNG NHẬP (mở thẳng) — chỉ anh, Partner, Leader, CTV ===== -->
 <div id="vLogin">
-<header class="top"><div class="in">
-  <div class="mark"><svg class="i"><use href="#i-store"/></svg></div>
-  <div class="tx"><h1>Shop Gọn</h1><p class="sub">Cổng đội bán</p></div>
-</div></header>
+<header class="lhero">
+  <div class="awn" aria-hidden="true"></div>
+  <img class="logo" src="icon-512.png" alt="Logo Shop Gọn" width="96" height="96">
+  <h1>Shop Gọn</h1>
+  <p>Cổng đội bán · Leader · CTV · Partner</p>
+</header>
 <main class="in login-main">
   <section class="card" aria-labelledby="h-login">
     <h2 id="h-login">Đăng nhập</h2>
-    <p class="sub">Chỉ dành cho đội bán Shop Gọn.</p>
+    <p class="sub">Chọn vai của bạn.</p>
     <div class="u039-tabs" role="tablist" aria-label="Vai">
       <span class="u039-pill" aria-hidden="true"></span>
       <button class="u039-tab" type="button" role="tab" data-vai="ctv" aria-selected="true">Leader · CTV</button>
@@ -191,42 +217,37 @@ footer{text-align:center;color:var(--ink3);font-size:12.5px}
       <button class="u039-tab" type="button" role="tab" data-vai="qt" aria-selected="false">Quản trị</button>
     </div>
     <form id="fCtv" class="frm" autocomplete="on">
-      <label for="ctvSdt">Số điện thoại của bạn</label>
-      <input class="f" id="ctvSdt" inputmode="tel" autocomplete="tel" placeholder="Số bạn dùng khi cài app cho shop">
+      <label for="ctvSdt">Số điện thoại</label>
+      <input class="f" id="ctvSdt" inputmode="tel" autocomplete="username" placeholder="Số bạn dùng khi cài app cho shop">
+      <label for="ctvMk">Mật khẩu</label>
+      <div class="fw"><input class="f" id="ctvMk" type="password" autocomplete="current-password" placeholder="Mật khẩu"><button class="eye" type="button" data-eye="ctvMk" aria-label="Hiện mật khẩu"><svg class="i"><use href="#i-eye"/></svg></button></div>
+      <div class="hint"><svg class="i"><use href="#i-key"/></svg><span>Lần đầu vào: mật khẩu <b>123456</b>, vào xong đặt mật khẩu riêng.</span></div>
       <button class="btn" type="submit">Vào</button>
-      <div class="err" id="ctvErr"></div>
+      <div class="err" id="ctvErr" role="alert"></div>
     </form>
     <form id="fPt" class="frm" autocomplete="on" hidden>
       <label for="ptSdt">Số điện thoại Partner</label>
       <input class="f" id="ptSdt" inputmode="tel" autocomplete="username" placeholder="Số điện thoại">
       <label for="ptMk">Mật khẩu</label>
-      <input class="f" id="ptMk" type="password" autocomplete="current-password" placeholder="Mật khẩu Shop Gọn cấp">
+      <div class="fw"><input class="f" id="ptMk" type="password" autocomplete="current-password" placeholder="Mật khẩu Shop Gọn cấp"><button class="eye" type="button" data-eye="ptMk" aria-label="Hiện mật khẩu"><svg class="i"><use href="#i-eye"/></svg></button></div>
       <button class="btn" type="submit">Vào</button>
-      <div class="err" id="ptErr"></div>
+      <div class="err" id="ptErr" role="alert"></div>
     </form>
     <div id="fQt" class="frm" hidden>
       <p class="muted" style="margin:0">Trang quản trị hỏi mã PIN.</p>
       <a class="btn" href="/quantri/">Mở quản trị</a>
     </div>
   </section>
-  <section class="card">
-    <h2>Ai dùng cổng này</h2>
-    <div class="who">
-      <div><b>Leader · CTV</b>Shop, hoa hồng, link cài</div>
-      <div><b>Partner</b>Doanh thu khu vực, đội</div>
-      <div><b>Quản trị</b>Duyệt shop, Partner</div>
-    </div>
-  </section>
-  <footer>Thêm trang này vào màn hình chính để mở như app</footer>
+  <p class="lfoot">Quên mật khẩu: báo Partner hoặc quản trị Shop Gọn đặt lại.<br>Thêm trang này vào màn hình chính để mở như app.</p>
 </main>
 </div>
 
 <!-- ===== APP SAU KHI VÀO (Leader · CTV) ===== -->
 <div id="vApp" hidden>
 <header class="top"><div class="in">
+  <img class="lg" src="icon-192.png" alt="Shop Gọn" width="42" height="42">
   <div class="tx"><h1 id="chao">Chào bạn</h1><p class="sub" id="ngay"></p></div>
   <button class="rb" type="button" data-reload="1" aria-label="Tải lại"><svg class="i"><use href="#i-reload"/></svg></button>
-  <button class="rb" type="button" data-out="1" aria-label="Đăng xuất"><svg class="i"><use href="#i-out"/></svg></button>
 </div></header>
 <main class="in" id="pages">
   <div class="pg" data-pg="home" id="pgHome"></div>
@@ -271,6 +292,11 @@ footer{text-align:center;color:var(--ink3);font-size:12.5px}
         <a class="tile" href="https://www.facebook.com/profile.php?id=61595903296880" target="_blank" rel="noopener"><span class="u251-ic"><svg class="i"><use href="#i-chat"/></svg></span><b>Page Facebook</b><small>Gửi shop xem, hỏi đáp</small></a>
       </div>
     </section>
+    <section class="card" id="accCard">
+      <h2>Tài khoản</h2>
+      <div class="acc"><div class="av" id="accAv">C</div><div><b id="accTen">Cộng tác viên</b><div class="muted" id="accSdt"></div></div></div>
+      <div class="row"><button class="ghost" type="button" data-doimk="1"><svg class="i"><use href="#i-lock"/></svg>Đổi mật khẩu</button><button class="ghost" type="button" data-out="1"><svg class="i"><use href="#i-out"/></svg>Đăng xuất</button></div>
+    </section>
   </div>
 </main>
 <nav class="tabbar" aria-label="Tab"><div class="in">
@@ -280,13 +306,32 @@ footer{text-align:center;color:var(--ink3);font-size:12.5px}
   <button type="button" data-tab="ti"><svg class="i"><use href="#i-grid"/></svg>Tiện ích</button>
 </div></nav>
 </div>
+
+<!-- ===== ĐỔI MẬT KHẨU ===== -->
+<div class="ov" id="vMk" role="dialog" aria-modal="true" aria-labelledby="h-mk" hidden>
+  <form class="card frm" id="fMk" autocomplete="off">
+    <div class="ic0"><svg class="i"><use href="#i-lock"/></svg></div>
+    <h2 id="h-mk" style="margin:0">Đặt mật khẩu riêng</h2>
+    <p class="muted" id="mkSub" style="margin:0 0 4px">Bạn đang dùng mật khẩu mặc định 123456. Đặt mật khẩu riêng để giữ an toàn danh sách shop và hoa hồng.</p>
+    <div id="mkCuW"><label for="mkCu">Mật khẩu đang dùng</label>
+      <div class="fw"><input class="f" id="mkCu" type="password" autocomplete="current-password"><button class="eye" type="button" data-eye="mkCu" aria-label="Hiện mật khẩu"><svg class="i"><use href="#i-eye"/></svg></button></div></div>
+    <label for="mkMoi">Mật khẩu mới (ít nhất 6 ký tự)</label>
+    <div class="fw"><input class="f" id="mkMoi" type="password" autocomplete="new-password"><button class="eye" type="button" data-eye="mkMoi" aria-label="Hiện mật khẩu"><svg class="i"><use href="#i-eye"/></svg></button></div>
+    <label for="mkLai">Nhập lại mật khẩu mới</label>
+    <input class="f" id="mkLai" type="password" autocomplete="new-password">
+    <button class="btn" type="submit">Lưu mật khẩu</button>
+    <button class="ghost" type="button" id="mkThoi" data-mkthoi="1" style="justify-content:center">Để sau</button>
+    <div class="err" id="mkErr" role="alert"></div>
+  </form>
+</div>
 <div class="toast" id="toast" role="status" hidden></div>
 
 <script>
-/* Cổng Shop Gọn — 06/11/2026 anh Thái: CHỈ cho anh · Partner · Leader · CTV, mở thẳng màn đăng nhập. Vỏ App RM.
-   Leader/CTV: SĐT (nhớ trên máy) → GET LICENSE ?ctv=SĐT (ctvData_: shop gắn SĐT + giao dịch + hoa hồng; không trả Gmail shop).
+/* Cổng Shop Gọn — 06/11/2026 anh Thái: CHỈ cho anh · Partner · Leader · CTV, mở thẳng màn đăng nhập. Vỏ App RM, màu logo Shop Gọn.
+   Leader/CTV: POST {act:'ctv',fn:'ctvLogin',args:[sdt,mk]} → tok (lưu 'sg_vao_tok'); mật khẩu mặc định 123456 → doiMk:true → bắt đổi (ctvDoiMatKhau).
+     Số liệu: POST {act:'ctv',tok,fn:'ctvData'} (= ctvData_: shop gắn SĐT + giao dịch + hoa hồng; không trả Gmail shop).
    Partner: partnerLogin (SĐT + MK) → lưu tok 'sg_partner_tok' (cùng khoá app /partner/) → sang /partner/.
-   Quản trị: sang /quantri/ (hỏi PIN ở đó). ?demo=1 → dữ liệu mẫu (tên & số giả lập). */
+   Quản trị: sang /quantri/ (hỏi PIN ở đó). ?demo=1 → dữ liệu mẫu (tên & số giả lập), MK 123456 → thử luồng đổi MK. */
 const API='https://script.google.com/macros/s/AKfycbyyqlK8nFmTxO_6ZNDee0FdTZeynwzHWsgRvQKxfKI0qZKtPEve_rrP4kL9O1PWj25bJg/exec';
 const DEMO=/[?&]demo/.test(location.search);
 const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -297,10 +342,18 @@ const dmy=s=>s?s.slice(8,10)+'/'+s.slice(5,7)+'/'+s.slice(0,4):'';
 const sdtOk=s=>{let d=String(s||'').replace(/\D/g,'');if(d.startsWith('84'))d='0'+d.slice(2);if(d.length===9)d='0'+d;return /^0\d{9}$/.test(d)?d:''};
 const fmt=s=>s?s.replace(/^(\d{4})(\d{3})(\d+)$/,'$1 $2 $3'):'';
 const ls={get:k=>{try{return localStorage.getItem(k)||''}catch(_){return ''}},set:(k,v)=>{try{v?localStorage.setItem(k,v):localStorage.removeItem(k)}catch(_){}}};
-const KEY='sg_vao_ctv',KVAI='sg_vao_vai',KPT='sg_partner_tok',KTAB='sg_vao_tab';
+const KEY='sg_vao_ctv',KTOK='sg_vao_tok',KVAI='sg_vao_vai',KPT='sg_partner_tok',KTAB='sg_vao_tab',MK0='123456';
 const ic=n=>`<svg class="i"><use href="#i-${n}"/></svg>`;
-let tm;function toast(m){const e=$('toast');e.textContent=m;e.hidden=false;clearTimeout(tm);tm=setTimeout(()=>e.hidden=true,2300)}
-let D=null,loi='',LOC='all',TAB='home';
+let tm;function toast(m){const e=$('toast');e.textContent=m;e.hidden=false;clearTimeout(tm);tm=setTimeout(()=>e.hidden=true,2400)}
+let D=null,loi='',LOC='all',TAB='home',MK_EP=false;
+
+/* ---- Gọi máy chủ ---- */
+async function post(body){const r=await fetch(API,{method:'POST',body:JSON.stringify(body)});const j=await r.json();
+  const d=j&&j.data!==undefined?j.data:j;
+  if(j&&(j.dangNhap||(d&&d.dangNhap)))throw Object.assign(new Error((j.msg||d.msg)||'Phiên đăng nhập đã hết, đăng nhập lại.'),{dangNhap:true});
+  if(!j||j.ok===false){const m=(j&&j.msg)||'';throw new Error(/không hợp lệ|unknown|act/i.test(m)||!m?'Máy chủ đang nâng cấp đăng nhập mật khẩu — thử lại sau ít phút.':m)}
+  return d}
+const ctvApi=(fn,...args)=>post({act:'ctv',tok:ls.get(KTOK),fn,args});
 
 function sample(s){const t=new Date().toISOString().slice(0,10),m=t.slice(0,8),sau=d=>new Date(Date.now()+d*864e5).toISOString().slice(0,10);
   return {ctv:s,ten:'Tín (mẫu)',pct:40,today:t,shops:[{shop:'Minh Châu Mobile (mẫu)',tt:'Đã duyệt',han:sau(350)},{shop:'Ninh Kiều Phone (mẫu)',tt:'Đã duyệt',han:sau(20)},{shop:'Cái Răng ĐTDĐ (mẫu)',tt:'Chờ duyệt',yeuCau:t},{shop:'Phong Điền Mobile (mẫu)',tt:'Tạm duyệt',han:sau(5)}],
@@ -310,7 +363,7 @@ const ngayCon=(han,today)=>Math.round((new Date(han)-new Date(today))/864e5);
 
 /* ---- #039 tab viên thuốc trượt ---- */
 const tabs=[...document.querySelectorAll('.u039-tab')],pill=document.querySelector('.u039-pill');
-function movePill(anim){const t=tabs.find(b=>b.getAttribute('aria-selected')==='true')||tabs[0];if(!anim)pill.style.transition='none';
+function movePill(anim){const t=tabs.find(b=>b.getAttribute('aria-selected')==='true')||tabs[0];if(!t.offsetWidth)return;if(!anim)pill.style.transition='none';
   pill.style.setProperty('--x',t.offsetLeft+'px');pill.style.setProperty('--w',t.offsetWidth+'px');if(!anim){void pill.offsetWidth;pill.style.transition=''}}
 function chonVai(v,anim){ls.set(KVAI,v);tabs.forEach(b=>{const on=b.dataset.vai===v;b.setAttribute('aria-selected',on);b.tabIndex=on?0:-1});
   $('fCtv').hidden=v!=='ctv';$('fPt').hidden=v!=='pt';$('fQt').hidden=v!=='qt';movePill(anim)}
@@ -331,15 +384,20 @@ const io='IntersectionObserver' in window?new IntersectionObserver(es=>es.forEac
 function reveal(root){root.querySelectorAll('[data-rv] .tile').forEach((t,k)=>{t.classList.remove('is-in');t.style.setProperty('--d',(k%3)*.08+Math.floor(k/3)*.06+'s');if(RM||!io)t.classList.add('is-in');else io.observe(t)})}
 
 /* ---- Màn ---- */
-function man(){const s=ls.get(KEY);$('vLogin').hidden=!!s;$('vApp').hidden=!s;
-  if(s){moTab(ls.get(KTAB)||'home',true);tai()}else{chonVai(ls.get(KVAI)||'ctv',false);requestAnimationFrame(()=>movePill(false))}}
+function man(){const vao=!!ls.get(KTOK);$('vLogin').hidden=vao;$('vApp').hidden=!vao;
+  if(vao){moTab(ls.get(KTAB)||'home',true);tai()}else{const s=ls.get(KEY);if(s&&!$('ctvSdt').value)$('ctvSdt').value=fmt(s);chonVai(ls.get(KVAI)||'ctv',false);requestAnimationFrame(()=>movePill(false))}}
+function dangXuat(msg){ls.set(KTOK,'');ls.set(KTAB,'');D=null;$('vMk').hidden=true;man();if(msg)$('ctvErr').textContent=msg}
 function moTab(t,lan1){TAB=t;ls.set(KTAB,t);document.querySelectorAll('.tabbar button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));
   document.querySelectorAll('#pages>.pg').forEach(p=>{const on=p.dataset.pg===t;if(on&&p.hidden){p.hidden=false;p.style.animation='none';void p.offsetWidth;p.style.animation=''}else p.hidden=!on});
   if(t==='ban')reveal($('pgBan'));if(t==='ti')reveal($('pgTi'));if(!lan1)scrollTo({top:0,behavior:RM?'auto':'smooth'})}
+function moMk(ep){MK_EP=ep;$('mkCuW').hidden=ep;$('mkThoi').hidden=ep;$('h-mk').textContent=ep?'Đặt mật khẩu riêng':'Đổi mật khẩu';
+  $('mkSub').hidden=!ep;['mkCu','mkMoi','mkLai'].forEach(i=>$(i).value='');$('mkErr').textContent='';$('vMk').hidden=false;setTimeout(()=>$(ep?'mkMoi':'mkCu').focus(),80)}
 
 function dauTrang(){const s=ls.get(KEY),d=new Date(),thu=['Chủ nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'][d.getDay()];
-  const partner=D&&+D.pct===0;$('chao').textContent='Chào '+(D&&D.ten?String(D.ten).split(' ').slice(-1)[0].replace(/\(.*\)/,'').trim()||D.ten:'bạn');
-  $('ngay').innerHTML=thu+', '+String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+' · '+(partner?'Đội Partner':'Cộng tác viên')+'<span class="sdt"> · '+fmt(s)+'</span>'}
+  const partner=D&&+D.pct===0,ten=D&&D.ten?String(D.ten):'';const goi=ten?(ten.replace(/\(.*?\)/g,'').trim().split(/\s+/).slice(-1)[0]||ten):'bạn';
+  $('chao').textContent='Chào '+goi;
+  $('ngay').textContent=thu+', '+String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+' · '+(partner?'Đội Partner':'Cộng tác viên');
+  $('accTen').textContent=ten||'Cộng tác viên';$('accSdt').textContent=fmt(s);$('accAv').textContent=(goi[0]||'C').toUpperCase()}
 
 function viecCan(today){const v=[];(D.shops||[]).forEach(k=>{const [t]=trangThai(k,today);
     if(t==='Chờ duyệt')v.push([k.shop,'Chờ Shop Gọn duyệt — nhắc shop gửi biên lai']);
@@ -348,7 +406,7 @@ function viecCan(today){const v=[];(D.shops||[]).forEach(k=>{const [t]=trangThai
     else if(k.han&&ngayCon(k.han,today)<=30)v.push([k.shop,'Còn '+ngayCon(k.han,today)+' ngày hết hạn — mời gia hạn'])});return v}
 
 function veHome(){const s=ls.get(KEY),box=$('pgHome');
-  if(!D){box.innerHTML=loi?`<section class="card"><div class="empty">${ic('alert')}<b>Chưa tải được số</b><p class="muted">${esc(loi)}</p><div class="row" style="justify-content:center"><button class="ghost" data-reload="1">${ic('reload')}Thử lại</button><button class="ghost" data-out="1">Đổi số</button></div></div></section>`
+  if(!D){box.innerHTML=loi?`<section class="card"><div class="empty">${ic('alert')}<b>Chưa tải được số</b><p class="muted">${esc(loi)}</p><div class="row" style="justify-content:center"><button class="ghost" data-reload="1">${ic('reload')}Thử lại</button><button class="ghost" data-out="1">Đăng xuất</button></div></div></section>`
     :`<section class="hero"><small>Đang tải…</small><div class="sk" style="background:rgba(255,255,255,.2);height:34px;width:60%"></div></section><section class="card"><div class="sk"></div><div class="sk" style="width:70%"></div><div class="sk" style="width:85%"></div></section>`;return}
   const today=D.today||new Date().toISOString().slice(0,10),thang=today.slice(0,7);
   const tt=(D.tt||[]),tTh=tt.filter(x=>String(x.ngay).slice(0,7)===thang);
@@ -384,25 +442,41 @@ function veQr(link){const q=$('qr');if(!q)return;const ve=()=>{q.innerHTML='';tr
   if(window.QRCode)return ve();const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';s.onload=ve;s.onerror=()=>{q.hidden=true};document.head.appendChild(s)}
 function veAll(){dauTrang();veHome();veShop()}
 async function tai(){const s=ls.get(KEY);D=null;loi='';veAll();
-  if(DEMO){setTimeout(()=>{D=sample(s);veAll()},350);return}
-  try{const r=await fetch(API+'?ctv='+encodeURIComponent(s)+'&_t='+Date.now(),{cache:'no-store'});const j=await r.json();const d=j&&j.data?j.data:j;
-    if(!d||d.ok===false)throw new Error((d&&d.msg)||'Máy chủ chưa trả số');D=d}catch(e){loi='Không tải được: '+e.message}
+  if(DEMO){setTimeout(()=>{D=sample(s);veAll();if(ls.get(KTOK)==='DEMO0')moMk(true)},350);return}
+  try{D=await ctvApi('ctvData');if(D&&D.doiMk)moMk(true)}catch(e){if(e.dangNhap)return dangXuat(e.message);loi='Không tải được: '+e.message}
   veAll()}
 
 document.addEventListener('submit',async e=>{e.preventDefault();const f=e.target;
-  if(f.id==='fCtv'){const s=sdtOk($('ctvSdt').value);if(!s){$('ctvErr').textContent='Số điện thoại chưa đúng (10 số, bắt đầu bằng 0).';return}$('ctvErr').textContent='';ls.set(KEY,s);ls.set(KTAB,'home');man();return}
+  if(f.id==='fCtv'){const s=sdtOk($('ctvSdt').value),mk=$('ctvMk').value,er=$('ctvErr');
+    if(!s){er.textContent='Số điện thoại chưa đúng (10 số, bắt đầu bằng 0).';return}if(!mk){er.textContent='Nhập mật khẩu (lần đầu là 123456).';return}
+    const b=f.querySelector('button[type=submit]');b.disabled=true;er.className='err ok';er.textContent='Đang kiểm tra…';
+    try{let d;if(DEMO)d={tok:mk===MK0?'DEMO0':'DEMO',doiMk:mk===MK0};else d=await post({act:'ctv',fn:'ctvLogin',args:[s,mk]});
+      if(!d||!d.tok)throw new Error('Máy chủ chưa trả phiên đăng nhập');
+      ls.set(KEY,s);ls.set(KTOK,d.tok);ls.set(KTAB,'home');$('ctvMk').value='';er.textContent='';man();if(d.doiMk&&!DEMO)moMk(true)}
+    catch(x){er.className='err';er.textContent=x.message}finally{b.disabled=false}return}
   if(f.id==='fPt'){const s=sdtOk($('ptSdt').value),mk=$('ptMk').value;if(!s){$('ptErr').textContent='Số điện thoại chưa đúng.';return}if(!mk){$('ptErr').textContent='Nhập mật khẩu.';return}
     if(DEMO){location.href='/partner/?demo=1';return}
-    $('ptErr').textContent='Đang kiểm tra…';const b=f.querySelector('button');b.disabled=true;
+    $('ptErr').textContent='Đang kiểm tra…';const b=f.querySelector('button[type=submit]');b.disabled=true;
     try{const r=await fetch(API,{method:'POST',body:JSON.stringify({act:'partner',fn:'partnerLogin',args:[s,mk]})});const j=await r.json();
       if(!j.ok)throw new Error(j.msg||'Sai số điện thoại hoặc mật khẩu');ls.set(KPT,j.data.tok);location.href='/partner/'}
-    catch(er){$('ptErr').textContent=er.message;b.disabled=false}}});
+    catch(er){$('ptErr').textContent=er.message;b.disabled=false}return}
+  if(f.id==='fMk'){const cu=MK_EP?MK0:$('mkCu').value,moi=$('mkMoi').value,lai=$('mkLai').value,er=$('mkErr');
+    if(!MK_EP&&!cu){er.textContent='Nhập mật khẩu đang dùng.';return}
+    if(moi.length<6){er.textContent='Mật khẩu mới cần ít nhất 6 ký tự.';return}
+    if(moi===MK0){er.textContent='Không dùng lại 123456, đặt mật khẩu khác.';return}
+    if(moi!==lai){er.textContent='Hai lần nhập mật khẩu mới chưa khớp.';return}
+    const b=f.querySelector('button[type=submit]');b.disabled=true;er.textContent='Đang lưu…';
+    try{const d=DEMO?{tok:'DEMO'}:await ctvApi('ctvDoiMatKhau',cu,moi);if(d&&d.tok)ls.set(KTOK,d.tok);$('vMk').hidden=true;toast('Đã lưu mật khẩu mới')}
+    catch(x){if(x.dangNhap)return dangXuat(x.message);er.textContent=x.message}finally{b.disabled=false}}});
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
   if(d.vai){chonVai(d.vai,true);const i=d.vai==='ctv'?$('ctvSdt'):d.vai==='pt'?$('ptSdt'):null;i&&setTimeout(()=>i.focus(),50);return}
+  if(d.eye){const i=$(d.eye);i.type=i.type==='password'?'text':'password';b.setAttribute('aria-label',i.type==='password'?'Hiện mật khẩu':'Ẩn mật khẩu');return}
   if(d.tab){moTab(d.tab);return}
   if(d.loc){LOC=d.loc;veShop();return}
   if(d.viec){$('viec').classList.toggle('mo');return}
-  if(d.out){ls.set(KEY,'');ls.set(KTAB,'');D=null;man();return}
+  if(d.doimk){moMk(false);return}
+  if(d.mkthoi){$('vMk').hidden=true;return}
+  if(d.out){dangXuat();return}
   if(d.reload){tai();toast('Đang tải lại…');return}
   if(d.copy){const t=$('ctvLink').textContent;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast('Đã chép link — dán vào Zalo gửi shop'),()=>{const r=document.createRange();r.selectNodeContents($('ctvLink'));const sel=getSelection();sel.removeAllRanges();sel.addRange(r);toast('Đã chọn link — bấm Sao chép')});return}
   if(d.nvtest){try{localStorage.setItem('shopgon_nv',JSON.stringify({sdt:'0900000000',ten:'NV test',phien:'TEST',test:1}))}catch(_){}location.href='/app/';return}
