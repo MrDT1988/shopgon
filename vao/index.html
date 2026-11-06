@@ -233,10 +233,16 @@ main.in{padding-block:16px calc(96px + env(safe-area-inset-bottom,0px));display:
       <button class="btn" type="submit">Vào</button>
       <div class="err" id="ptErr" role="alert"></div>
     </form>
-    <div id="fQt" class="frm" hidden>
-      <p class="muted" style="margin:0">Trang quản trị hỏi mã PIN.</p>
-      <a class="btn" href="/quantri/">Mở quản trị</a>
-    </div>
+    <form id="fQt" class="frm" autocomplete="on" hidden>
+      <label for="qtSdt">Số điện thoại quản trị</label>
+      <input class="f" id="qtSdt" inputmode="tel" autocomplete="username" placeholder="Số điện thoại">
+      <label for="qtMk">Mật khẩu</label>
+      <div class="fw"><input class="f" id="qtMk" type="password" autocomplete="current-password" placeholder="Mật khẩu"><button class="eye" type="button" data-eye="qtMk" aria-label="Hiện mật khẩu"><svg class="i"><use href="#i-eye"/></svg></button></div>
+      <div class="hint"><svg class="i"><use href="#i-key"/></svg><span>Lần đầu vào: mật khẩu <b>123456</b>, vào xong đặt mật khẩu riêng.</span></div>
+      <button class="btn" type="submit">Vào quản trị</button>
+      <a href="/quantri/" style="text-align:center;font-weight:700;color:var(--ac-dk);text-decoration:none;padding:10px">Vào bằng mã PIN ›</a>
+      <div class="err" id="qtErr" role="alert"></div>
+    </form>
   </section>
   <p class="lfoot">Quên mật khẩu: báo Partner hoặc quản trị Shop Gọn đặt lại.<br>Thêm trang này vào màn hình chính để mở như app.</p>
 </main>
@@ -342,10 +348,10 @@ const dmy=s=>s?s.slice(8,10)+'/'+s.slice(5,7)+'/'+s.slice(0,4):'';
 const sdtOk=s=>{let d=String(s||'').replace(/\D/g,'');if(d.startsWith('84'))d='0'+d.slice(2);if(d.length===9)d='0'+d;return /^0\d{9}$/.test(d)?d:''};
 const fmt=s=>s?s.replace(/^(\d{4})(\d{3})(\d+)$/,'$1 $2 $3'):'';
 const ls={get:k=>{try{return localStorage.getItem(k)||''}catch(_){return ''}},set:(k,v)=>{try{v?localStorage.setItem(k,v):localStorage.removeItem(k)}catch(_){}}};
-const KEY='sg_vao_ctv',KTOK='sg_vao_tok',KVAI='sg_vao_vai',KPT='sg_partner_tok',KTAB='sg_vao_tab',MK0='123456';
+const KADM='sg_admin_tok',KEY='sg_vao_ctv',KTOK='sg_vao_tok',KVAI='sg_vao_vai',KPT='sg_partner_tok',KTAB='sg_vao_tab',MK0='123456';
 const ic=n=>`<svg class="i"><use href="#i-${n}"/></svg>`;
 let tm;function toast(m){const e=$('toast');e.textContent=m;e.hidden=false;clearTimeout(tm);tm=setTimeout(()=>e.hidden=true,2400)}
-let D=null,loi='',LOC='all',TAB='home',MK_EP=false;
+let D=null,loi='',LOC='all',TAB='home',MK_EP=false,MK_QT=false;
 
 /* ---- Gọi máy chủ ---- */
 async function post(body){const r=await fetch(API,{method:'POST',body:JSON.stringify(body)});const j=await r.json();
@@ -385,12 +391,12 @@ function reveal(root){root.querySelectorAll('[data-rv] .tile').forEach((t,k)=>{t
 
 /* ---- Màn ---- */
 function man(){const vao=!!ls.get(KTOK);$('vLogin').hidden=vao;$('vApp').hidden=!vao;
-  if(vao){moTab(ls.get(KTAB)||'home',true);tai()}else{const s=ls.get(KEY);if(s&&!$('ctvSdt').value)$('ctvSdt').value=fmt(s);chonVai(ls.get(KVAI)||'ctv',false);requestAnimationFrame(()=>movePill(false))}}
+  if(vao){moTab(ls.get(KTAB)||'home',true);tai()}else{const s=ls.get(KEY);if(s&&!$('ctvSdt').value)$('ctvSdt').value=fmt(s);chonVai((location.search.match(/[?&]vai=(ctv|pt|qt)/)||[])[1]||ls.get(KVAI)||'ctv',false);requestAnimationFrame(()=>movePill(false))}}
 function dangXuat(msg){ls.set(KTOK,'');ls.set(KTAB,'');D=null;$('vMk').hidden=true;man();if(msg)$('ctvErr').textContent=msg}
 function moTab(t,lan1){TAB=t;ls.set(KTAB,t);document.querySelectorAll('.tabbar button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));
   document.querySelectorAll('#pages>.pg').forEach(p=>{const on=p.dataset.pg===t;if(on&&p.hidden){p.hidden=false;p.style.animation='none';void p.offsetWidth;p.style.animation=''}else p.hidden=!on});
   if(t==='ban')reveal($('pgBan'));if(t==='ti')reveal($('pgTi'));if(!lan1)scrollTo({top:0,behavior:RM?'auto':'smooth'})}
-function moMk(ep){MK_EP=ep;$('mkCuW').hidden=ep;$('mkThoi').hidden=ep;$('h-mk').textContent=ep?'Đặt mật khẩu riêng':'Đổi mật khẩu';
+function moMk(ep,qt){MK_EP=ep;MK_QT=!!qt;$('mkCuW').hidden=ep;$('mkThoi').hidden=ep;$('h-mk').textContent=ep?'Đặt mật khẩu riêng':'Đổi mật khẩu';
   $('mkSub').hidden=!ep;['mkCu','mkMoi','mkLai'].forEach(i=>$(i).value='');$('mkErr').textContent='';$('vMk').hidden=false;setTimeout(()=>$(ep?'mkMoi':'mkCu').focus(),80)}
 
 function dauTrang(){const s=ls.get(KEY),d=new Date(),thu=['Chủ nhật','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'][d.getDay()];
@@ -460,16 +466,24 @@ document.addEventListener('submit',async e=>{e.preventDefault();const f=e.target
     try{const r=await fetch(API,{method:'POST',body:JSON.stringify({act:'partner',fn:'partnerLogin',args:[s,mk]})});const j=await r.json();
       if(!j.ok)throw new Error(j.msg||'Sai số điện thoại hoặc mật khẩu');ls.set(KPT,j.data.tok);location.href='/partner/'}
     catch(er){$('ptErr').textContent=er.message;b.disabled=false}return}
+  if(f.id==='fQt'){const s=sdtOk($('qtSdt').value),mk=$('qtMk').value,er=$('qtErr');
+    if(!s){er.textContent='Số điện thoại chưa đúng.';return}if(!mk){er.textContent='Nhập mật khẩu (lần đầu là 123456).';return}
+    const b=f.querySelector('button[type=submit]');b.disabled=true;er.className='err ok';er.textContent='Đang kiểm tra…';
+    try{const d=DEMO?{tok:'DEMO',doiMk:mk===MK0}:await post({act:'admin',fn:'adminLogin',args:[s,mk]});if(!d||!d.tok)throw new Error('Máy chủ chưa trả phiên đăng nhập');
+      ls.set(KADM,d.tok);try{localStorage.removeItem('sg_admin_pin')}catch(_){}$('qtMk').value='';er.textContent='';
+      if(d.doiMk)moMk(true,true);else location.href='/quantri/'+(DEMO?'?demo=1':'')}
+    catch(x){er.className='err';er.textContent=/PIN/i.test(x.message)?'Máy chủ đang nâng cấp đăng nhập mật khẩu — thử lại sau ít phút.':x.message}finally{b.disabled=false}return}
   if(f.id==='fMk'){const cu=MK_EP?MK0:$('mkCu').value,moi=$('mkMoi').value,lai=$('mkLai').value,er=$('mkErr');
     if(!MK_EP&&!cu){er.textContent='Nhập mật khẩu đang dùng.';return}
     if(moi.length<6){er.textContent='Mật khẩu mới cần ít nhất 6 ký tự.';return}
     if(moi===MK0){er.textContent='Không dùng lại 123456, đặt mật khẩu khác.';return}
     if(moi!==lai){er.textContent='Hai lần nhập mật khẩu mới chưa khớp.';return}
     const b=f.querySelector('button[type=submit]');b.disabled=true;er.textContent='Đang lưu…';
-    try{const d=DEMO?{tok:'DEMO'}:await ctvApi('ctvDoiMatKhau',cu,moi);if(d&&d.tok)ls.set(KTOK,d.tok);$('vMk').hidden=true;toast('Đã lưu mật khẩu mới')}
+    try{if(MK_QT){const d=DEMO?{tok:'DEMO'}:await post({act:'admin',tok:ls.get(KADM),fn:'adminDoiMatKhau',args:[cu,moi]});if(d&&d.tok)ls.set(KADM,d.tok);$('vMk').hidden=true;toast('Đã lưu — mở quản trị…');setTimeout(()=>location.href='/quantri/'+(DEMO?'?demo=1':''),600);return}
+      const d=DEMO?{tok:'DEMO'}:await ctvApi('ctvDoiMatKhau',cu,moi);if(d&&d.tok)ls.set(KTOK,d.tok);$('vMk').hidden=true;toast('Đã lưu mật khẩu mới')}
     catch(x){if(x.dangNhap)return dangXuat(x.message);er.textContent=x.message}finally{b.disabled=false}}});
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;
-  if(d.vai){chonVai(d.vai,true);const i=d.vai==='ctv'?$('ctvSdt'):d.vai==='pt'?$('ptSdt'):null;i&&setTimeout(()=>i.focus(),50);return}
+  if(d.vai){chonVai(d.vai,true);const i=$({ctv:'ctvSdt',pt:'ptSdt',qt:'qtSdt'}[d.vai]);i&&setTimeout(()=>i.focus(),50);return}
   if(d.eye){const i=$(d.eye);i.type=i.type==='password'?'text':'password';b.setAttribute('aria-label',i.type==='password'?'Hiện mật khẩu':'Ẩn mật khẩu');return}
   if(d.tab){moTab(d.tab);return}
   if(d.loc){LOC=d.loc;veShop();return}

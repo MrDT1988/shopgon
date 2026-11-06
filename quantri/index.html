@@ -139,11 +139,11 @@ input.f{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:
   <div class="logo"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M9 7h6M9 11h6M9 15h3"/></svg></div>
   <h1>Quản trị Shop Gọn</h1><p>Nhập mã PIN để mở. Máy này sẽ nhớ, lần sau vào thẳng.</p>
   <input class="pin num" id="pinIn" inputmode="numeric" autocomplete="one-time-code" maxlength="8" aria-label="Mã PIN">
-  <button class="btn" type="submit">Mở app</button><div class="err" id="pinErr"></div></form></div>
+  <button class="btn" type="submit">Mở app</button><div class="err" id="pinErr"></div><a href="/vao/?vai=qt" style="display:block;text-align:center;margin-top:12px;font-weight:700;color:var(--pen);text-decoration:none">Đăng nhập bằng SĐT + mật khẩu ›</a></form></div>
 <script>
 const API='https://script.google.com/macros/s/AKfycbyyqlK8nFmTxO_6ZNDee0FdTZeynwzHWsgRvQKxfKI0qZKtPEve_rrP4kL9O1PWj25bJg/exec';
 const LIVE=/^https?:$/.test(location.protocol)&&!/[?&]demo/.test(location.search);
-const KPIN='sg_admin_pin';let PIN='';try{PIN=localStorage.getItem(KPIN)||''}catch(e){}
+const KPIN='sg_admin_pin',KATOK='sg_admin_tok';let PIN='',ATOK='';try{PIN=localStorage.getItem(KPIN)||'';ATOK=localStorage.getItem(KATOK)||''}catch(e){}
 const $=id=>document.getElementById(id);
 const money=n=>Math.round(n||0).toLocaleString('vi-VN')+'đ';
 const short=n=>{n=n||0;return n>=1e9?(n/1e9).toLocaleString('vi-VN',{maximumFractionDigits:2})+' tỷ':n>=1e6?(n/1e6).toLocaleString('vi-VN',{maximumFractionDigits:1})+'tr':n>=1e3?Math.round(n/1000)+'k':String(n)};
@@ -177,7 +177,7 @@ function sample(){const t=fD(new Date());const ago=n=>addD(t,-n);
     {ngay:ago(1),email:'binhthuy@gmail.com',shop:'Bình Thủy Phone',m:12,tien:1190000,loai:'Kích hoạt',ctv:'0939111222',hh:0,partner:'0939111222',hhP:833000});
   return {kh,tt,ctv,goi:[{m:12,ten:'1 năm',gia:1190000},{m:36,ten:'3 năm',gia:2690000}],hhPct:50,doiSoat:[],today:t}}
 function call(fn,...a){if(!LIVE)return Promise.resolve(fake(fn,...a));
-  return fetch(API,{method:'POST',body:JSON.stringify({act:'admin',pin:PIN,fn,args:a})}).then(r=>r.json()).then(r=>{if(r.ok)return r.data;if(r.pin){try{localStorage.removeItem(KPIN)}catch(e){}PIN='';showGate(r.msg)}throw new Error(r.msg||'Lỗi máy chủ')})}
+  return fetch(API,{method:'POST',body:JSON.stringify(Object.assign({act:'admin',fn,args:a},PIN?{pin:PIN}:{tok:ATOK}))}).then(r=>r.json()).then(r=>{if(r.ok)return r.data;if(r.doiMk){location.href='/vao/?vai=qt';throw new Error(r.msg||'Đổi mật khẩu trước')}if(r.pin){try{localStorage.removeItem(KPIN);localStorage.removeItem(KATOK)}catch(e){}PIN='';ATOK='';showGate(r.msg)}throw new Error(r.msg||'Lỗi máy chủ')})}
 function showGate(msg){$('gate').hidden=false;$('pinErr').textContent=msg||'';setTimeout(()=>$('pinIn').focus(),50)}
 document.getElementById('gateF').addEventListener('submit',e=>{e.preventDefault();const v=$('pinIn').value.replace(/\D/g,'');if(!v){$('pinErr').textContent='Nhập mã PIN';return}
   PIN=v;$('pinErr').textContent='Đang kiểm tra…';call('adminData').then(d=>{try{localStorage.setItem(KPIN,v)}catch(_){}$('gate').hidden=true;$('pinIn').value='';D=d;render()}).catch(er=>{$('pinErr').textContent=er.message;$('pinIn').select()})});
@@ -196,7 +196,7 @@ function fake(fn,a,b,c){if(fn==='adminData')return D||sample();
   if(fn==='adminXoaShop'){D.kh=D.kh.filter(r=>r.email!==a);D.tt=D.tt.filter(r=>r.email!==a);return D}
   if(fn==='adminSetStatus')k.tt=b;return D}
 let tmr;function toast(m){const e=$('toast');e.textContent=m;e.hidden=false;clearTimeout(tmr);tmr=setTimeout(()=>e.hidden=true,2300)}
-function load(){if(LIVE&&!PIN){showGate('');return}$('sub').textContent='Đang tải…';call('adminData').then(d=>{D=d;render()}).catch(e=>{$('v').innerHTML='<div class="card">Không tải được: '+esc(e.message)+'</div>'})}
+function load(){if(LIVE&&!PIN&&!ATOK){showGate('');return}$('sub').textContent='Đang tải…';call('adminData').then(d=>{D=d;render()}).catch(e=>{$('v').innerHTML='<div class="card">Không tải được: '+esc(e.message)+'</div>'})}
 const tenOf=s=>{if(!s)return '';const c=D.ctv.find(x=>x.sdt===s);return c&&c.ten?c.ten:''};
 /* 23/10: Sale 40% + Leader 10%; Leader tự bán 50% */
 const ciOf=s=>{const c=(D.ctv||[]).find(x=>x.sdt===s)||{};return{role:c.role||'',leader:c.leader||'',partner:c.partner||''}};
