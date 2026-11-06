@@ -113,6 +113,13 @@ input.f{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:
 .gate .f{text-align:left}
 select.f{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:15px}
 .lo{display:block;margin:6px auto 0;border:0;background:none;color:var(--muted);font-weight:700;font-size:13px;text-decoration:underline}
+/* 06/11: thẻ chương trình mở bán + đếm ngược suất ưu đãi */
+.prog{background:linear-gradient(135deg,#fff7e8,#ffe9c7);border:1px solid #f6d49a;border-radius:18px;padding:14px 16px;box-shadow:0 8px 20px rgba(154,92,0,.12)}
+.prog h2{color:#7a4700;margin:0 0 8px}
+.prog .cd{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}.prog .cd b{font-size:34px;font-weight:800;color:#b45309;line-height:1}.prog .cd span{font-weight:700;color:#7a4700}
+.prog .bar2{height:10px;border-radius:6px;background:#fff;margin:8px 0 10px;overflow:hidden;border:1px solid #f6d49a}.prog .bar2 i{display:block;height:100%;background:linear-gradient(90deg,#f59e0b,#c2410c)}
+.prog .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.prog .g3 div{background:#fff;border-radius:12px;padding:8px 10px;min-width:0}.prog .g3 small{display:block;color:var(--muted);font-size:11.5px}.prog .g3 b{display:block;font-size:clamp(12.5px,3.4vw,17px);white-space:nowrap}.prog .g3 em{font-style:normal;font-size:11px;color:var(--green);font-weight:700}
+.prog .g3 .hot{background:#b45309;color:#fff}.prog .g3 .hot small,.prog .g3 .hot em{color:#ffe9c7}
 </style></head>
 <body>
 <div class="app">
@@ -173,7 +180,7 @@ function sample(){const t=fD(new Date());const ago=n=>addD(t,-n);const P='093911
     [ago(Math.min(4,+t.slice(8)-1)),'Bình Thủy Phone',12,1190000,'Kích hoạt',P],[ago(Math.min(2,+t.slice(8)-1)),'Phong Điền Mobile',12,1190000,'Kích hoạt','0912000555'],[ago(0),'Thảo Nguyên Mobile',12,1190000,'Gia hạn','0912000333']]
     .map(([ngay,shop,m,tien,loai,c])=>({ngay,shop,m,tien,loai,ctv:c,hhP:Math.round(tien*.7)}));
   return {partner:{sdt:P,ten:'Anh Khoa',khuVuc:'Cần Thơ',pct:70},ctv,kh,tt,doiSoat:[{thang:pm.slice(0,7),tien:Math.round((990000*2+2690000)*.7),ngayTra:pm.slice(0,7)+'-30'}].filter(x=>x.thang!==m0.slice(0,7)),
-    goi:[{m:12,ten:'1 năm',gia:1190000},{m:36,ten:'3 năm',gia:2690000}],today:t}}
+    goi:[{m:12,ten:'1 năm',gia:1190000},{m:36,ten:'3 năm',gia:2690000}],udDaDung:23,today:t}}
 function fake(fn,a,b,c,d){if(fn==='partnerLogin')return{tok:'demo'};if(fn==='partnerData')return D||sample();
   if(fn==='partnerSaveCtv'){const s=sdtOk(a);if(!s)throw new Error('Số điện thoại không hợp lệ');if(s===D.partner.sdt)throw new Error('Đây là số của Partner');
     const x=D.ctv.find(o=>o.sdt===s),r=c==='Leader'?'Leader':'Sale';if(x){x.ten=b;x.role=r;x.leader=r==='Leader'?'':d||''}else D.ctv.push({sdt:s,ten:b,role:r,leader:r==='Leader'?'':d||'',ngay:D.today});return D}
@@ -199,6 +206,16 @@ const inM=(x,m)=>x.ngay.slice(0,7)===m;
 function sumM(m,f){const L=D.tt.filter(x=>inM(x,m)&&(!f||f(x)));return{L,dt:L.reduce((a,x)=>a+x.tien,0),nhan:L.reduce((a,x)=>a+(x.hhP||0),0),n:L.length,moi:L.filter(x=>x.loai!=='Gia hạn').length,gh:L.filter(x=>x.loai==='Gia hạn').length}}
 const pctTxt=()=>(P().pct||70)+'%';
 
+/* 06/11 anh Thái: thẻ chương trình + đếm ngược 100 suất ưu đãi (chỉ app anh + app Partner). Máy chủ trả D.udDaDung = số suất 990k đã dùng toàn hệ thống. */
+function progCard(){if(typeof D.udDaDung!=='number')return '';const T=100,da=D.udDaDung,con=Math.max(0,T-da);
+  return `<div class="prog"><h2>🔥 Chương trình mở bán Shop Gọn</h2>
+  <div class="cd">${con?`<b class="num">${con}</b><span>/ ${T} suất ưu đãi 990.000đ còn lại</span>`:'<span>Đã hết 100 suất ưu đãi 990.000đ — chỉ còn giá thường</span>'}</div>
+  <div class="bar2" role="progressbar" aria-valuenow="${da}" aria-valuemax="${T}"><i style="width:${Math.min(100,da/T*100)}%"></i></div>
+  <div class="g3"><div class="hot"><small>Ưu đãi 100 shop đầu</small><b class="num">990.000đ</b><em>gói 1 năm</em></div>
+    <div><small>Gói 1 năm</small><b class="num">1.190.000đ</b><em>12 bài truyền thông</em></div>
+    <div><small>Gói 3 năm</small><b class="num">2.690.000đ</b><em>giảm đến 880.000đ</em></div></div>
+  <small style="display:block;color:#7a4700;margin-top:8px">Suất ưu đãi dùng chung toàn hệ thống — chốt shop sớm để giữ suất.</small></div>`}
+
 /* ===== TAB 1: DOANH THU ===== */
 function vDT(){const m=thangKey(),s=sumM(m),t=D.today;
   const dung=D.kh.filter(k=>trangThai(k)==='dung'),cho=D.kh.filter(k=>trangThai(k)==='cho').length;
@@ -207,7 +224,7 @@ function vDT(){const m=thangKey(),s=sumM(m),t=D.today;
   const mx=Math.max(...C.map(c=>c.v.dt),1);
   const ds=(D.doiSoat||[]).slice().sort((a,b)=>b.thang.localeCompare(a.thang));
   const daTra=ds.find(x=>x.thang===m);
-  return `<div class="seg" role="group"><button data-thang="nay" aria-pressed="${THANG==='nay'}">Tháng này</button><button data-thang="truoc" aria-pressed="${THANG==='truoc'}">Tháng trước</button></div>
+  return progCard()+`<div class="seg" role="group"><button data-thang="nay" aria-pressed="${THANG==='nay'}">Tháng này</button><button data-thang="truoc" aria-pressed="${THANG==='truoc'}">Tháng trước</button></div>
   <div class="kpis">
     <div class="kpi hero"><div class="eb">Bạn nhận ${pctTxt()} · tháng ${+m.slice(5)}/${m.slice(0,4)}</div><div class="v num">${money(s.nhan)}</div>
       <div class="d">${daTra?'✓ Shop Gọn đã chuyển '+money(daTra.tien)+' ngày '+dmy(daTra.ngayTra):m===t.slice(0,7)?'Đối soát và chuyển tiền đầu tháng sau':'Chờ Shop Gọn đối soát'}</div></div>
@@ -220,7 +237,7 @@ function vDT(){const m=thangKey(),s=sumM(m),t=D.today;
   <div class="card"><h2>Đối soát với Shop Gọn</h2>${C.slice().reverse().filter(c=>c.v.n||ds.some(x=>x.thang===c.k)).map(c=>{const p=ds.find(x=>x.thang===c.k);
     return `<div class="row"><div class="n"><b>Tháng ${+c.k.slice(5)}/${c.k.slice(0,4)}</b><small>Doanh thu ${money(c.v.dt)} · ${c.v.n} gói</small></div><div class="r"><b class="num">${money(c.v.nhan)}</b>${p?`<span class="pill p-g">Đã nhận ${dm(p.ngayTra)}</span>`:c.k===t.slice(0,7)?'<span class="pill p-n">Đang chạy</span>':'<span class="pill p-a">Chờ chuyển</span>'}</div></div>`}).join('')||'<div class="empty">Chưa có giao dịch.</div>'}</div>
   <div class="card"><h2>Giao dịch tháng ${+m.slice(5)}</h2>${s.L.length?[...s.L].sort((a,b)=>b.ngay.localeCompare(a.ngay)).map(x=>`<div class="row"><div class="n"><b>${esc(x.shop)}</b><small>${dmy(x.ngay)} · ${esc(x.loai)} gói ${goiTen(x.m)} · ${esc(tenOf(x.ctv))}</small></div><div class="r"><b class="num">${money(x.tien)}</b><small class="num">Bạn nhận ${money(x.hhP)}</small></div></div>`).join(''):'<div class="empty">Chưa có giao dịch trong tháng.</div>'}</div>
-  <p class="note">Giá gói cố định: ${D.goi.map(g=>g.ten+' '+money(g.gia)).join(' · ')}. Shop chuyển khoản về tài khoản Shop Gọn, Shop Gọn duyệt là số tự vào đây.</p>`}
+  <p class="note">Giá gói cố định: 1 năm 1.190.000đ · 3 năm 2.690.000đ · ưu đãi 990.000đ cho 100 shop đầu. Shop chuyển khoản về tài khoản Shop Gọn, Shop Gọn duyệt là số tự vào đây.</p>`}
 
 /* ===== TAB 2: ĐỘI ===== */
 function vDoi(){const m=thangKey();
