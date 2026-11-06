@@ -2293,7 +2293,7 @@ async function layLinkWeb(){const L=await layLinkDai();if(!L)return '';const sx=
 /* 29/10 anh Thái: link ngắn GẮN MẶC ĐỊNH — app tự tạo khi mở và tự cập nhật (chạy ngầm) mỗi khi đổi giá/KM/kho, không cần bấm */
 let linkT=null,linkDang=false;
 function linkHen(ms=8000){if(XEM||NV)return;clearTimeout(linkT);linkT=setTimeout(async()=>{if(linkDang){linkHen(5000);return}linkDang=true;try{if(stock().length){const L=await layLinkWeb();if(L&&/\/s\//.test(L)&&view==='stock'&&khoTab==='km'){const el=document.querySelector('.wlinkngan');if(el)el.textContent=L.replace(/^https?:\/\//,'')}}}catch(_){}linkDang=false},ms)}
-const linkNgan=()=>{try{const x=localStorage.getItem('sg_web_link')||'';return /\/s\//.test(x)?x:''}catch(_){return ''}};
+const linkNgan=()=>{try{const x=localStorage.getItem('sg_web_link')||'';if(/\/s\//.test(x))return x;/* 06/11: máy nhân viên không có link ngắn — dùng link web shop chủ gửi về */return NV?(nvWeb()||''):''}catch(_){return ''}};
 setTimeout(()=>linkHen(1),4000);
 const CTA=l=>'👉 Truy cập ngay để tham khảo giá và khuyến mãi: '+l;
 function baiDang(link){const G={};stock().forEach(m=>{const k=gk(m.ten);(G[k]=G[k]||{k,gb:0,n:0}).n++;G[k].gb=Math.max(G[k].gb,m.giaBan||0)});
@@ -2598,7 +2598,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261105-2330';let verLuc=0;
+const BUILD='20261106-1530';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
@@ -2760,7 +2760,10 @@ const nvWeb=()=>{const w=(db.shop&&db.shop.web)||'';if(w)return w;return NV&&NV.
 function renderNvTT(){const W=nvWeb(),G={};stock().forEach(m=>{const k=gk(m.ten);const x=G[k]=G[k]||{k,n:0,gb:0};x.n++;x.gb=Math.max(x.gb,m.giaBan||0)});
   const L=Object.values(G).map(x=>({...x,km:kmCua('g|'+x.k)})).filter(x=>x.km.length).sort((a,b)=>b.n-a.n),H=db.hang.filter(h=>h.sl>0).map(h=>({h,km:kmCua('h|'+h.id)})).filter(x=>x.km.length);
   const chip=k=>`<span class="wchip">🎁 ${esc(kmChip(k))}${k.den?` <i>đến ${esc(dmy(k.den).slice(0,5))}</i>`:''}</span>`;
-  $('v-km').innerHTML=`<div class="panel qa hw2 nvtt"><div class="qh"><b>🌐 Website cửa hàng</b></div>
+  /* 06/11 anh Thái: nhân viên có thêm "Tạo tờ rơi" (chỉ tờ rơi, không có Ảnh truyền thông robot) để đăng hỗ trợ shop */
+  $('v-km').innerHTML=`<div class="panel"><h2>🗞 Tờ rơi theo tồn kho</h2><p class="ttsub">Chọn hãng + mẫu → app dựng tờ rơi 6–12 máy từ kho và khuyến mãi của shop, kèm bài đăng viết sẵn. Tải về hoặc copy ảnh đăng Zalo/Facebook.</p>
+    <button class="btn" data-trnew="1" style="width:100%">🗞 Tạo tờ rơi</button></div>${TR?renderTr():''}
+  <div class="panel qa hw2 nvtt"><div class="qh"><b>🌐 Website cửa hàng</b></div>
     ${W?`<div class="wl"><span>Link web bảng giá của shop</span><b>${esc(W.replace(/^https?:\/\//,''))}</b></div>
       <div class="wb"><button type="button" class="wopen" data-nvweb="copy">📋 Copy link</button><button type="button" class="wopen" data-nvweb="gui">📤 Gửi link khách</button><button type="button" class="wopen" data-nvweb="xem">👁 Xem website</button><button type="button" class="wopen" data-nvweb="bai">📝 Copy bài đăng KM</button></div>`
       :`<div class="pnhint">Chưa có link website. Nhờ chủ shop mở app Shop Gọn 1 lần để cập nhật link, rồi bấm <b>Tải lại</b>.</div><button class="ghost" data-nvreload="1">🔄 Tải lại</button>`}</div>
