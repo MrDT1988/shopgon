@@ -576,6 +576,42 @@ button.hit{cursor:pointer}button.hit:active{background:var(--pen-bg)}
 #v-km .kmsum button{min-height:52px;padding:6px 8px}#v-km .kmsum button b{font-size:17px;line-height:1.2}
 .hnote{font-size:12px;color:var(--muted);margin:4px 2px 0}
 @media (prefers-reduced-motion:reduce){.hrail button{transition:none}}
+/* 06/11/2026 Đệ 3 — gọn hiển thị 390px (nhánh giao-dien-gon-0611, chờ anh duyệt) */
+/* chung: dải tài khoản test mỏng, nút Thoát cách mép đều */
+#xbar.strip{min-height:36px;padding:2px 12px 2px 16px;font-size:12px}
+#xbar.strip button{min-height:30px;padding:0 12px;font-size:12px}
+/* Trang chủ: "Báo cáo ›" lên góc phải dòng số, bỏ dòng trống cuối thẻ */
+.hmo2{position:relative;padding-bottom:12px}
+.hmo2 .hmh{position:absolute;right:14px;bottom:4px}
+/* Truy cập nhanh: hàng thấp hơn, icon nhỏ hơn */
+.qa:not(.hw2) .qg button{padding:6px 2px;gap:4px}
+.qa:not(.hw2) .qg i{width:40px;height:40px;border-radius:12px}
+.qa:not(.hw2) .qg svg{width:21px;height:21px}
+/* Website & truyền thông: 4 nút viền to → 1 hàng 4 ô icon như Truy cập nhanh */
+.hw2 .wl{display:none}
+.hw2 .wb{grid-template-columns:repeat(4,1fr);gap:4px}
+.hw2 .wopen{display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:0;border-radius:12px;padding:6px 2px;margin:0;font-size:12px;font-weight:600;color:var(--ink);line-height:1.25;min-height:0}
+.hw2 .wopen .eic{width:40px;height:40px;padding:9px;border-radius:12px;background:var(--pen-soft);stroke:var(--pen);margin:0}
+/* Bán: ô tìm không bọc thêm 1 lớp thẻ trắng */
+#v-sell>.panel:has(#fSell){background:none;border:0;box-shadow:none;padding:0;margin-bottom:0}
+/* Bán: "tồn xx ngày" xám nhỏ — khách đứng cạnh không thấy chữ đỏ */
+#v-sell .hlz{color:var(--muted);font-weight:600}
+/* Kho: 2 thẻ số trong cột hẹp → gọn 1 dòng chữ */
+.hpane .kpis{gap:6px}
+.hpane .kpi{padding:8px 10px;border-radius:12px}
+.hpane .kpi .eyebrow{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px}
+.hpane .kpi .v{font-size:20px;line-height:1.2}
+.hpane .kpi .d{font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* Kho: giá bán cùng 1 hàng với nhãn, ô giá thấp — 1 màn thấy 3–4 mẫu thay vì 1,5 */
+.mg .kgline{flex-wrap:nowrap;align-items:flex-end;gap:8px;padding:0 0 10px}
+.mg .kgline>span{flex:1 1 auto;min-width:0;font-size:12px}
+.mg .kgline>:last-child{flex:0 0 112px}
+.kgline .kgia{width:112px;min-height:40px;height:40px;padding:0 10px;font-size:14px}
+.kgline .kggoi{font-size:11.5px;padding:3px 8px}
+/* Báo cáo: cột biểu đồ đậm, hôm nay nổi, ngày chưa tới mờ */
+.bars.rb .bar i{background:color-mix(in srgb,var(--pen) 55%,#fff)}
+.bars.rb .bar:has(i[style*="height:100%"]) i{background:var(--pen)}
+.bars.rb .bar:has(i[style="height:0%"]) i{background:transparent}
 </style>
 
 <header><div class="hw">
@@ -1511,11 +1547,11 @@ function renderStock0(){
 `;
   /* 23/10: vào kho điện thoại thấy bảng theo hãng trước, bấm hãng mới ra danh sách máy */
   if(stockBrand==='Tất cả'&&!stockQ.trim()&&!stockOld&&!kR){const B=BRANDS.map(b=>{const ms=st.filter(m=>m.hang===b);return{b,n:ms.length,von:ms.reduce((s2,m)=>s2+m.giaNhap,0),old:ms.filter(m=>ageDays(m)>45).length,md:new Set(ms.map(m=>m.ten)).size}}).filter(x=>x.n).sort((x,y)=>y.n-x.n);
-    kOut(`<div class="kpis"><div class="kpi"><div class="eyebrow">Tổng máy</div><div class="v num">${st.length}</div><div class="d own">Vốn ${short(st.reduce((s2,m)=>s2+m.giaNhap,0))}</div></div><div class="kpi"><div class="eyebrow">Tồn trên 45 ngày</div><div class="v num${c.r?' neg':''}">${c.r}</div><div class="d">${c.a} máy 31–45 ngày</div></div></div>
+    kOut(`<div class="kpis"><div class="kpi"><div class="eyebrow">Tổng máy</div><div class="v num">${st.length}</div><div class="d own">Vốn ${short(st.reduce((s2,m)=>s2+m.giaNhap,0))}</div></div><div class="kpi"><div class="eyebrow">Tồn &gt;45 ngày</div><div class="v num${c.r?' neg':''}">${c.r}</div><div class="d">${c.a} máy 31–45 ngày</div></div></div>
     ${(()=>{const n=new Set(st.filter(m=>!m.giaBan).map(m=>m.ten)).size;return n?`<div class="alert amber" style="margin-bottom:10px"><b>⚠ ${n} mẫu máy chưa có giá bán</b><span>Bấm vào hãng → điền ô Giá bán của mẫu đó. Nhân viên chỉ bán được máy đã có giá.</span></div>`:''})()}
     ${(()=>{const LL=db.may.filter(m=>m.tt==='loi');return LL.length?`<div class="panel" style="border:2px solid #f0d08a"><h2>🛠 ${LL.length} máy lỗi chờ bảo hành</h2><div class="list">${LL.map(m=>`<div class="row"><div class="n"><b>${esc(m.ten)}</b><small class="num">IMEI ${m.imei}</small></div><button class="ghost" data-loiok="${m.imei}">Sửa xong · về kho</button></div>`).join('')}</div></div>`:''})()}
     ${tkBang(st,B)}`);return}
-  const kTong=kR&&stockBrand==='Tất cả'&&!stockOld?`<div class="kpis"><div class="kpi"><div class="eyebrow">Tổng máy</div><div class="v num">${st.length}</div><div class="d own">Vốn ${short(st.reduce((s2,m)=>s2+m.giaNhap,0))}</div></div><div class="kpi"><div class="eyebrow">Tồn trên 45 ngày</div><div class="v num${c.r?' neg':''}">${c.r}</div><div class="d">${c.a} máy 31–45 ngày</div></div></div>
+  const kTong=kR&&stockBrand==='Tất cả'&&!stockOld?`<div class="kpis"><div class="kpi"><div class="eyebrow">Tổng máy</div><div class="v num">${st.length}</div><div class="d own">Vốn ${short(st.reduce((s2,m)=>s2+m.giaNhap,0))}</div></div><div class="kpi"><div class="eyebrow">Tồn &gt;45 ngày</div><div class="v num${c.r?' neg':''}">${c.r}</div><div class="d">${c.a} máy 31–45 ngày</div></div></div>
     ${(()=>{const n=new Set(st.filter(m=>!m.giaBan).map(m=>m.ten)).size;return n?`<div class="alert amber" style="margin-bottom:10px"><b>⚠ ${n} mẫu máy chưa có giá bán</b><span>Bấm vào hãng → điền ô Giá bán của mẫu đó. Nhân viên chỉ bán được máy đã có giá.</span></div>`:''})()}
     ${(()=>{const LL=db.may.filter(m=>m.tt==='loi');return LL.length?`<div class="panel" style="border:2px solid #f0d08a"><h2>🛠 ${LL.length} máy lỗi chờ bảo hành</h2><div class="list">${LL.map(m=>`<div class="row"><div class="n"><b>${esc(m.ten)}</b><small class="num">IMEI ${m.imei}</small></div><button class="ghost" data-loiok="${m.imei}">Sửa xong · về kho</button></div>`).join('')}</div></div>`:''})()}`:'';
   const G={};L.forEach(m=>{(G[m.ten]=G[m.ten]||[]).push(m)});
