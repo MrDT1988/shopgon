@@ -2666,7 +2666,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261107-1445';let verLuc=0;
+const BUILD='20261107-1500';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
@@ -3149,7 +3149,14 @@ document.addEventListener('input',e=>{if(e.target.id==='ttqTim'){ttqQ=e.target.v
 .ccfrm label{margin:0}
 .ccmini{border:1px solid var(--line);background:#fff;color:var(--pen);border-radius:10px;padding:6px 10px;font-weight:700;font-size:13px;cursor:pointer}
 .ccmini.bo{color:#c96a14}
+.ccmini{white-space:nowrap;flex:none}
 .seg.ccchip button{font-size:13px;padding-left:2px;padding-right:2px;white-space:nowrap;min-width:0}
+.ccb2{margin-top:8px;padding:16px 8px;font-size:17px}.ccb2 small{font-size:12px}
+.ccday{margin-top:10px;border:1px solid var(--line);border-radius:12px;padding:4px 10px}
+.ccday .r{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:baseline;padding:7px 0;border-top:1px solid var(--line);font-size:14px}.ccday .r:first-child{border-top:0}
+.ccday .r span{color:var(--muted);font-size:13px}.ccday .r b{text-align:right}.ccday .r small{color:var(--muted);font-size:12.5px;min-width:44px;text-align:right}
+.ccday .r.tot{grid-template-columns:1fr auto;font-weight:800}.ccday .r.tot b{color:var(--pen)}
+.ccnote{display:block;margin-top:8px;font-size:12.5px;color:var(--muted);line-height:1.45}
 .cctn{margin-top:12px;border:1px solid var(--line);border-radius:14px;padding:11px 12px;background:#fafcfc}
 .cctn .h{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}
 .cctn .g1{display:flex;justify-content:space-between;font-size:13.5px}.cctn .g1 span{color:var(--muted)}
@@ -3263,15 +3270,15 @@ async function ccChup(e){const f=e.target.files&&e.target.files[0];e.target.valu
     let r;if(NV.test){r={ok:true,id:'t'+Date.now(),luc:Date.now(),loai:vao?'vao':'ra',cach:30,anh:''}}else r=await nvPost({act:'nvCong',sdt:NV.sdt,phien:NV.phien||'',loai:vao?'vao':'ra',lat:vt.lat,lng:vt.lng,acc:vt.acc,anh:b64});
     if(!r.ok){if(r.dangXuat)setTimeout(nvLogout,1500);throw new Error(r.msg||'Máy chủ chưa nhận')}
     CC.cong.push({id:r.id,sdt:NV.sdt,ten:NV.ten,luc:r.luc,loai:r.loai,cach:r.cach,anh:r.anh});ccSave();
-    ccPrev=await ccDongDau(f,r);ccGpsMsg='';toast((vao?'Đã vào ca ':'Đã tan ca ')+ccHm(r.luc));if(navigator.vibrate)try{navigator.vibrate(60)}catch(_){}}
+    ccPrev=await ccDongDau(f,r);ccGpsMsg='';toast((vao?'Đã vào ca ':'Đã ra ca ')+ccHm(r.luc));if(navigator.vibrate)try{navigator.vibrate(60)}catch(_){}}
   catch(er){ccGpsMsg='';toast(er.message||'Chưa chấm công được, thử lại')}finally{ccBusy=false;render();const p=document.getElementById('ccPrev');if(p)p.scrollIntoView({behavior:'smooth',block:'start'})}}
 async function ccDongDau(f,r){const {im}=await ccNen(f,720),W=720,H=Math.round(W*Math.min(1.4,im.height/im.width||1.3)),band=150,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d'),s=Math.max(W/im.width,H/im.height);
   x.drawImage(im,(W-im.width*s)/2,(H-im.height*s)/2,im.width*s,im.height*s);const g=x.createLinearGradient(0,H-band-40,0,H);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(.3,'rgba(0,0,0,.65)');g.addColorStop(1,'rgba(0,0,0,.82)');x.fillStyle=g;x.fillRect(0,H-band-40,W,band+40);
-  const vao=r.loai==='vao',d=new Date(r.luc);x.fillStyle=vao?'#0f8d80':'#ef8a2b';x.fillRect(28,H-band+4,170,44);x.fillStyle='#fff';x.font='800 26px sans-serif';x.fillText(vao?'VÀO CA':'TAN CA',44,H-band+35);
+  const vao=r.loai==='vao',d=new Date(r.luc);x.fillStyle=vao?'#0f8d80':'#ef8a2b';x.fillRect(28,H-band+4,170,44);x.fillStyle='#fff';x.font='800 26px sans-serif';x.fillText(vao?'VÀO CA':'RA CA',44,H-band+35);
   x.font='800 54px sans-serif';x.fillText(ccHm(r.luc),214,H-band+46);x.font='600 24px sans-serif';x.fillText(dmy(iso(d))+' · '+String(db.shop.ten||'Shop').slice(0,22)+' · '+String(NV.ten||'').slice(0,14),28,H-band+90);
   x.font='500 21px sans-serif';x.fillStyle='#d5f3ec';x.fillText((r.cach>=0?'📍 Cách shop '+r.cach+'m · ':'')+'Giờ máy chủ Shop Gọn',28,H-band+124);
   const blob=await new Promise(ok=>c.toBlob(ok,'image/jpeg',.86));return {url:c.toDataURL('image/jpeg',.86),blob,ten:'cham-cong-'+(vao?'vao':'ra')+'-'+iso(d)+'-'+ccHm(r.luc).replace(':','h')+'.jpg',vao,luc:r.luc}}
-async function ccChiaSe(){if(!ccPrev)return;const file=new File([ccPrev.blob],ccPrev.ten,{type:'image/jpeg'}),txt=(ccPrev.vao?'Vào ca ':'Tan ca ')+ccHm(ccPrev.luc)+' · '+(NV.ten||'');
+async function ccChiaSe(){if(!ccPrev)return;const file=new File([ccPrev.blob],ccPrev.ten,{type:'image/jpeg'}),txt=(ccPrev.vao?'Vào ca ':'Ra ca ')+ccHm(ccPrev.luc)+' · '+(NV.ten||'');
   try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],text:txt});return}}catch(er){if(er&&er.name==='AbortError')return}
   const a=document.createElement('a');a.href=URL.createObjectURL(ccPrev.blob);a.download=ccPrev.ten;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},4000);toast('Đã lưu ảnh — mở Zalo gửi nhóm shop')}
 
@@ -3300,9 +3307,15 @@ function ccThuNhap(){const th=ccNow(),T=ccTong(NV.sdt,th),Lg=CC.luong;
    <div><span>Bonus</span><b class="num">${x.bo?money(x.bo):'—'}</b>${x.bnote?`<small>${esc(x.bnote)}</small>`:''}</div></div>
   <div class="tot"><span>${ch?'Thu nhập đã chốt':'Thu nhập tạm tính'}</span><b class="num">${money(x.tong)}</b></div></div>`}
 function ccNvCard(full){if(!NV)return '';if(!CC._l){CC._l=1;ccLoad()}if(ccMau())ccMauNap();const th=ccNow(),T=ccTong(NV.sdt,th),d=T.N.find(x=>x.ngay===todayIso()),dang=!!(d&&d.dang),ok=ccDongY();
-  const sub=dang?'Vào ca lúc '+ccHm(d.lu[d.lu.length-1].vao.luc)+' · đã làm '+ccGm(d.h):d&&d.h?'Hôm nay làm '+ccGm(d.h)+' · bấm Vào ca nếu làm thêm lượt':'Hôm nay chưa chấm công';
-  return `<div class="panel" id="ccCard"><div class="ccst"><span class="ccdot${dang?' on':''}"></span><div style="min-width:0"><b>${dang?'Đang trong ca':d&&d.h?'Đã tan ca':'Chưa vào ca'}</b><small style="display:block;color:var(--muted);font-size:12.5px">${sub}</small></div>${full?'':`<button class="ccmini" data-more="cc" style="margin-left:auto">Chi tiết ›</button>`}</div>
-  ${ok?`${ccGpsMsg?`<div class="ccgps wait">${esc(ccGpsMsg)}</div>`:''}<button type="button" class="ccbig${dang?' out':''}${ccBusy?' dis':''}" data-cccam="1"><span>📷 ${dang?'Tan ca':'Vào ca'}</span><small>Chụp mặt tại shop · giờ lấy theo máy chủ</small></button>${full?'':ccThuNhap()}`
+  /* 07/11 14h18 anh Thái: "Chấm công ngày dd/mm" + 2 nút Vào ca / Ra ca; ca nguyên chấm 1 cặp, ca gãy mỗi buổi 1 cặp → hệ thống tự cộng tổng giờ trong ngày */
+  const lu=d?d.lu:[],cuoi=lu[lu.length-1],raCuoi=[...lu].reverse().find(l=>l.ra),thu=['CN','T2','T3','T4','T5','T6','T7'][new Date().getDay()];
+  const nut=(loai)=>{const vao=loai==='vao',bat=vao?!dang:dang,t=vao?(dang?'Đã vào '+ccHm(cuoi.vao.luc):lu.length?'Vào lượt '+(lu.length+1):'Chụp mặt tại shop'):(dang?'Chụp mặt tại shop':raCuoi?'Đã ra '+ccHm(raCuoi.ra.luc):'Chưa vào ca');
+    return `<button type="button" class="ccbig ccb2${vao?'':' out'}${!bat||ccBusy?' dis':''}" data-cccam="${loai}" ${!bat?'aria-disabled="true"':''}><span>📷 ${vao?'Vào ca':'Ra ca'}</span><small>${t}</small></button>`};
+  return `<div class="panel" id="ccCard"><div class="ccst"><span class="ccdot${dang?' on':''}"></span><div style="min-width:0"><b>⏱ Chấm công ngày ${thu} ${dmy(todayIso())}</b><small style="display:block;color:var(--muted);font-size:12.5px">${dang?'Đang trong ca · từ '+ccHm(cuoi.vao.luc):lu.length?'Đã ra ca':'Hôm nay chưa chấm công'}</small></div>${full?'':`<button class="ccmini" data-more="cc" style="margin-left:auto">Chi tiết ›</button>`}</div>
+  ${ok?`${ccGpsMsg?`<div class="ccgps wait">${esc(ccGpsMsg)}</div>`:''}<div class="two" style="margin-top:2px">${nut('vao')}${nut('ra')}</div>
+  ${lu.length?`<div class="ccday">${lu.map((l,i)=>`<div class="r"><span>${lu.length>1?'Lượt '+(i+1):'Ca'}</span><b class="num">${ccHm(l.vao.luc)} → ${l.ra?ccHm(l.ra.luc):'…'}</b><small class="num">${l.ra?ccGm((l.ra.luc-l.vao.luc)/36e5):'đang làm'}</small></div>`).join('')}<div class="r tot"><span>Tổng hôm nay${lu.length>1?' · ca gãy':''}</span><b class="num">${ccGm(d.h)}</b></div></div>`:''}
+  <small class="ccnote">Ca nguyên: bấm <b>Vào ca</b> lúc đến, <b>Ra ca</b> lúc về. Ca gãy: mỗi buổi bấm 1 lần Vào + 1 lần Ra (VD sáng 8h–12h, chiều 16h–20h) — hệ thống tự cộng thành tổng giờ trong ngày.</small>
+  ${full?'':ccThuNhap()}`
     :`<div class="ccrule" style="margin-top:10px">Chấm công bằng <b>ảnh chụp trực tiếp</b> + <b>vị trí điện thoại</b> (phải ở trong ${CC.banKinh}m quanh shop). App chỉ dùng camera và vị trí lúc bạn bấm chấm công. Ảnh lưu 60 ngày cho chủ shop xem.</div><button type="button" class="btn" data-ccok="1" style="width:100%">Đồng ý và bật chấm công</button>`}
   ${ccPrev?`<div class="ccprev" id="ccPrev"><img src="${ccPrev.url}" alt="Ảnh chấm công đóng dấu giờ"><div class="two"><button class="btn" data-ccshare="1">📤 Gửi Zalo / Lưu ảnh</button><button class="ghost" data-ccprevx="1">Xong</button></div><small style="display:block;margin-top:6px;color:var(--muted)">Gửi lúc nào cũng được — giờ chấm công đã ghi lúc chụp.</small></div>`:''}</div>`}
 function ccNvQuen(){const th=ccNow(),T=ccTong(NV.sdt,th),q=T.N.filter(d=>d.quen&&!d.gt),dung=ccGtDung(NV.sdt,th);if(!q.length)return '';const d=q[q.length-1];
@@ -3391,7 +3404,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-cctab],[da
   if(d.ccls){ccMoLs=ccMoLs===d.ccls?null:d.ccls;render();return}
   if(d.ccimg){const o=document.createElement('div');o.className='ccov';o.innerHTML=`<img src="${ccAnh(d.ccimg)}" alt="Ảnh chấm công">`;o.onclick=()=>o.remove();document.body.appendChild(o);return}
   if(d.ccok){try{localStorage.setItem('shopgon_ccok','1')}catch(_){}ccViTri().catch(()=>{});render();return}
-  if(d.cccam){if(ccBusy)return;ccViTriP=NV&&NV.test?null:ccViTri();ccViTriP&&ccViTriP.catch(()=>{});ccInput().click();return}
+  if(d.cccam){if(ccBusy||b.getAttribute('aria-disabled')==='true'){if(!ccBusy)toast(d.cccam==='ra'?'Bạn chưa vào ca — bấm Vào ca trước':'Bạn đang trong ca — bấm Ra ca khi về');return}ccViTriP=NV&&NV.test?null:ccViTri();ccViTriP&&ccViTriP.catch(()=>{});ccInput().click();return}
   if(d.ccshare){ccChiaSe();return}
   if(d.ccprevx){ccPrev=null;render();return}
   if(d.cctoado){if(ccMau()){toast('Tài khoản test: shop thật bấm là lấy vị trí điện thoại đang đứng');return}ccGpsMsg='Đang lấy vị trí…';render();ccViTri().then(v=>{if(v.acc>150){ccGpsMsg='';render();toast('Vị trí chưa chính xác ('+v.acc+'m). Ra gần cửa, bật GPS rồi bấm lại.');return}ccToaDoMoi={lat:v.lat,lng:v.lng};CC.toaDo={lat:v.lat,lng:v.lng};ccGpsMsg='';ccSave();nvQueue(200);render();toast('Đã đặt vị trí shop (sai số '+v.acc+'m)')}).catch(er=>{ccGpsMsg='';render();toast(er.message)});return}});
