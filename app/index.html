@@ -1266,11 +1266,14 @@ function homeMonth(){const t=todayIso(),y=iso(Date.now()-DAY);
     :`<div class="hmg"><div><small>Doanh thu</small><b class="num">${money(r.dt)}</b><i>${r.may} máy · ${r.n-r.may} đơn khác</i></div><div class="own"><small>Lợi nhuận</small><b class="num">${money(r.loi)}</b><i>Biên ${r.dt?Math.round(r.loi/r.dt*100):0}%</i></div></div>`;
   return `<div class="hmo hmo2"><div class="hseg" role="group" aria-label="Kỳ">${['today','yest','week','month'].map(tb).join('')}</div>${body}<div class="hmh"><span>${k==='month'?'Tính từ 01/'+t.slice(5,7):''}</span><button type="button" class="hml" data-v="rpt">Báo cáo ›</button></div></div>${homeNv(K[k][1],K[k][2],K[k][0])}`}
 /* 07/11 14h34 anh Thái: dưới thẻ doanh thu → doanh thu TỪNG NHÂN VIÊN theo đúng kỳ đang chọn (Hôm nay / Hôm qua / 7 ngày / Tháng), xếp từ cao xuống — nhìn biết ai bán tốt, ai yếu */
-function homeNv(a,b,ten){const ds=db.shop.nv||[],L=live().filter(d=>d.ngay>=a&&d.ngay<=b&&d.loai!=='thu');if(!ds.length&&!L.some(d=>d.nv))return '';
+function homeNv(a,b,ten){/* tài khoản test / xem thử: 3 nhân viên ảo (giống Chấm công), đơn mẫu chia cho họ để xem thử */
+  const mau=typeof ccMau==='function'&&ccMau()&&!(db.shop.nv||[]).length,ds=mau?ccNvDs():db.shop.nv||[];
+  const hs=x=>{let h=0;for(const c of String(x))h=(h*31+c.charCodeAt(0))>>>0;return h},ai=d=>d.nv||(mau?(['0901234561','0912888168','0901234561','0912888168','0388123456',''][hs(d.bill||d.id)%6]):'');
+  const L=live().filter(d=>d.ngay>=a&&d.ngay<=b&&d.loai!=='thu').map(d=>({...d,nv:ai(d)}));if(!ds.length&&!L.some(d=>d.nv))return '';
   const ng=[...ds.map(x=>({k:x.sdt,ten:x.ten||x.sdt})),{k:'',ten:'Chủ shop'}];L.forEach(d=>{if(d.nv&&!ng.some(g=>g.k===d.nv))ng.push({k:d.nv,ten:d.nvTen||d.nv})});
   const R=ng.map(g=>{const x=L.filter(d=>(d.nv||'')===g.k),may=x.filter(d=>d.loai==='may');return {...g,dt:x.reduce((s2,d)=>s2+(+d.giaBan||0),0),dtMay:may.reduce((s2,d)=>s2+(+d.giaBan||0),0),may:may.length,don:new Set(x.map(d=>d.bill||d.id)).size}}).filter(r=>r.k||r.dt).sort((p,q)=>q.dt-p.dt);
   const mx=Math.max(1,...R.map(r=>r.dt)),tong=R.reduce((s2,r)=>s2+r.dt,0);
-  return `<div class="panel hnv"><div class="hnvh"><h2>👥 Doanh thu nhân viên · ${esc(ten)}</h2><small class="num">${short(tong)}</small></div>${R.map((r,i)=>`<div class="hnvr${r.dt?'':' zero'}"><div class="t"><b>${i<3&&r.dt?['🥇','🥈','🥉'][i]+' ':''}${esc(r.ten)}</b><small>${r.don} đơn · ${r.may} máy · PK ${short(r.dt-r.dtMay)}</small></div><b class="num v">${r.dt?short(r.dt):'—'}</b><div class="hnvb"><i style="width:${r.dt/mx*100}%"></i></div></div>`).join('')}${R.some(r=>r.k&&!r.dt)?`<small style="display:block;margin-top:6px;color:var(--amber)">Chưa bán được: ${R.filter(r=>r.k&&!r.dt).map(r=>esc(r.ten)).join(', ')}</small>`:''}</div>`}
+  return `<div class="panel hnv"><div class="hnvh"><h2>👥 Doanh thu nhân viên · ${esc(ten)}</h2>${mau?'<span class="pill a" style="margin-left:auto">mẫu</span>':''}<small class="num">${short(tong)}</small></div>${R.map((r,i)=>`<div class="hnvr${r.dt?'':' zero'}"><div class="t"><b>${i<3&&r.dt?['🥇','🥈','🥉'][i]+' ':''}${esc(r.ten)}</b><small>${r.don} đơn · ${r.may} máy · PK ${short(r.dt-r.dtMay)}</small></div><b class="num v">${r.dt?short(r.dt):'—'}</b><div class="hnvb"><i style="width:${r.dt/mx*100}%"></i></div></div>`).join('')}${R.some(r=>r.k&&!r.dt)?`<small style="display:block;margin-top:6px;color:var(--amber)">Chưa bán được: ${R.filter(r=>r.k&&!r.dt).map(r=>esc(r.ten)).join(', ')}</small>`:''}</div>`}
 function homeDay(){const t=todayIso(),y=iso(Date.now()-DAY),r=homeD==='yest'?sumRange(y,y):homeD==='week'?sumRange(iso(Date.now()-6*DAY),t):sumRange(t,t);
   const tb=(k,l)=>`<button type="button" data-hday="${k}" aria-pressed="${homeD===k}">${l}</button>`;
   return `<div class="panel hdp"><div class="seg" role="group">${tb('today','Hôm nay')}${tb('yest','Hôm qua')}${tb('week','7 ngày')}</div><div class="hdv"><small>Doanh thu</small><b class="num">${money(r.dt)}</b><i>${r.n} đơn · ${r.may} máy<span class="own"> · lời ${money(r.loi)}</span></i></div></div>`}
@@ -2674,7 +2677,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261107-1645';let verLuc=0;
+const BUILD='20261107-1655';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
