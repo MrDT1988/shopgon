@@ -165,7 +165,7 @@ async def main():
         await E("go('home')")
         ok('Trang chủ gọn: 6 lối tắt, không còn biểu đồ báo cáo', await E("document.querySelectorAll('#v-home .qg button').length===6&&!$('v-home').innerText.includes('Tình hình kinh doanh')&&!document.querySelector('#v-home .ketcard')"))
         await E("go('rpt')")
-        ok('Tab Báo cáo: có biểu đồ + 3 tab', await E("$('v-rpt').innerText.includes('Tình hình kinh doanh')&&document.querySelectorAll('#v-rpt [data-rt]').length===3"))
+        ok('Tab Báo cáo: có biểu đồ + 2 tab (Bán hàng · Lãi lỗ)', await E("$('v-rpt').innerText.includes('Tình hình kinh doanh')&&document.querySelectorAll('#v-rpt [data-rt]').length===2"))
         await E("khoHub=true;go('stock')")
         ok('Kho hàng: danh sách ≥7 mục', await E("document.querySelectorAll('#v-stock .hubl button').length>=7"))
         await pg.click('[data-kh="may"]')
