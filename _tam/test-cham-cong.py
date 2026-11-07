@@ -32,7 +32,7 @@ async def main():
         c=[x for x in SENT if x.get('act')=='nvCong']
         ok('NV: gửi nvCong có ảnh + vị trí + phiên, loại vào',c and c[0]['loai']=='vao' and c[0]['anh'].startswith('data:image/jpeg') and abs(c[0]['lat']-10.3602)<1e-6 and c[0]['phien']=='P1',c and {k:v for k,v in c[0].items() if k!='anh'})
         ok('NV: ảnh nén nhỏ (<160k ký tự)',c and len(c[0]['anh'])<160000,c and len(c[0]['anh']))
-        ok('NV: hiện ảnh đóng dấu + nút Gửi Zalo, trạng thái Đang trong ca',await pg.evaluate("!!document.querySelector('#ccPrev img')&&!!document.querySelector('[data-ccshare]')&&/Đang trong ca/.test(document.querySelector('#ccCard').textContent)"))
+        ok('NV: hiện ảnh đóng dấu + nút Gửi Zalo, trạng thái Đang trong ca',await pg.evaluate("!!document.querySelector('#ccPrev img')&&!!document.querySelector('[data-ccshare]')&&/đang trong ca/i.test(document.querySelector('#ccCard').textContent)"))
         await pg.evaluate("more='cc';go('more')");await pg.wait_for_timeout(300)
         ok('NV: trang Chấm công có lương tạm tính 1% × 10tr = 100.000đ',await pg.evaluate("/100\\.000đ/.test(document.getElementById('v-more').textContent)"))
         # vị trí xa -> chặn trước khi gửi
