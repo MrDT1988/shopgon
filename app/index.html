@@ -379,7 +379,9 @@ body.nv .hmg>div.own{display:none}body.nv .hmg{grid-template-columns:1fr}
 .nvok,.nvno{display:block;font-size:12px;margin-top:2px}.nvok{color:var(--good,#15803d)}.nvno{color:#b45309;font-weight:700}.nvmkb{flex:none;padding:7px 10px;font-size:12.5px;margin-right:4px}.nvmkrow{margin:6px 0 2px}.nvmkrow input{flex:1;min-width:0}.nvmkh{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
 .nvdem{margin-top:12px;font-size:13px;font-weight:700;color:var(--muted)}
 .ttbtn2{display:grid;grid-template-columns:1.2fr 1fr;gap:8px;margin-top:10px}.ttbtn2 button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:12px 6px}.ttbtn2 small{font-size:11.5px;font-weight:600;opacity:.85}
-.trbox{max-width:560px}.trwrap{flex:none;width:100%;aspect-ratio:1080/1350;overflow:hidden;border-radius:12px;background:#eee;position:relative}.trscale{width:1080px;height:1350px;transform-origin:0 0;position:absolute;left:0;top:0}.trnote{color:var(--muted);font-size:12.5px}.trkq{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:16px}.trkqbox{background:var(--card,#fff);border-radius:16px;padding:14px;width:100%;max-width:420px;max-height:92vh;overflow:auto;display:flex;flex-direction:column;gap:10px}.trkqbox small{color:var(--muted);font-size:12.5px}.trkqbox img{width:100%;border-radius:10px;display:block;-webkit-touch-callout:default;user-select:auto}.trbt{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.trbox{max-width:560px}
+/* 07/11 anh Thái: dải chip hãng trong tờ rơi bị bóp mất (flex cột + max-height co các khối có overflow) → không cho khối con co lại */
+.wsbox>*{flex-shrink:0}.trwrap{flex:none;width:100%;aspect-ratio:1080/1350;overflow:hidden;border-radius:12px;background:#eee;position:relative}.trscale{width:1080px;height:1350px;transform-origin:0 0;position:absolute;left:0;top:0}.trnote{color:var(--muted);font-size:12.5px}.trkq{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:16px}.trkqbox{background:var(--card,#fff);border-radius:16px;padding:14px;width:100%;max-width:420px;max-height:92vh;overflow:auto;display:flex;flex-direction:column;gap:10px}.trkqbox small{color:var(--muted);font-size:12.5px}.trkqbox img{width:100%;border-radius:10px;display:block;-webkit-touch-callout:default;user-select:auto}.trbt{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 /* 04/11 anh Thái: tờ rơi làm lại theo mẫu tờ rơi điện thoại đẹp — tiêu đề lớn + nhãn dán ngày, 1–2 máy nổi bật, băng giá, nhãn −%, dải quyền lợi; 5 mẫu khác nhau cả bố cục lẫn màu */
 .trp{--a:#0f766e;--a2:#064e3b;--bg:#ecfdf5;--card:#fff;--ink:#0f172a;--mut:#64748b;--tag:#0f766e;--tagt:#fff;--hot:#facc15;--hott:#7c2d12;--line:#d1fae5;width:1080px;height:1350px;background:var(--bg);display:flex;flex-direction:column;font-family:"Be Vietnam Pro",system-ui,sans-serif;color:var(--ink);box-sizing:border-box;position:relative;overflow:hidden}
 .trp *{box-sizing:border-box}
@@ -2666,7 +2668,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261107-1500';let verLuc=0;
+const BUILD='20261107-1530';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
