@@ -233,6 +233,26 @@ header .w>div:nth-child(2){min-width:0;flex:1}
 .mp-t span{white-space:nowrap}
 @media (max-width:600px){.mp-t{font-size:15px;gap:6px}.mp-t em{font-size:0;width:8px;height:8px;padding:0;background:#16a34a;border-radius:50%}
   .chsplit{grid-template-columns:62px minmax(0,1fr);gap:8px}.chrail{padding:3px}.chrail button{min-height:58px;padding:6px 2px;font-size:11px}.chrail button b{font-size:18px}}
+.pt-act{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}.pt-act button{padding:10px 4px;font-size:14px;white-space:nowrap;justify-content:center;min-width:0}
+.pt-paid{width:100%;justify-content:center}
+.pt-ch{margin-top:8px;padding:9px 11px;border-radius:12px;background:#e3f4f1}.pt-ch b{display:block;font-size:13.5px;color:var(--pen)}.pt-ch small{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
+.pt-ch.no{background:#fff4e5}.pt-ch.no b{color:var(--amber)}
+.pt-nh{color:var(--pen)!important;font-weight:700}
+/* 07/11 chi tiết Partner */
+.pt-c .pt-h .r small{color:var(--muted);font-size:12px}
+.pt-x{border-top:1px solid var(--line);margin-top:10px;padding-top:12px}
+.pt-chia{display:grid;grid-template-columns:1fr 1fr;gap:6px}.pt-chia>div:first-child{grid-column:1/-1;display:flex;justify-content:space-between;align-items:baseline}
+.pt-chia>div{background:var(--bg);border-radius:12px;padding:9px 10px;min-width:0}
+.pt-chia small{display:block;color:var(--muted);font-size:11.5px}.pt-chia b{display:block;font-size:16px;white-space:nowrap}
+.pt-bar{height:6px;border-radius:6px;background:var(--pen);opacity:.9;margin-top:8px;overflow:hidden}.pt-bar i{display:block;height:100%;background:#f29a3a}
+.pt-doi{background:var(--bg);border-radius:12px;padding:2px 10px 4px;margin-top:8px}
+.pt-dh{display:flex;justify-content:space-between;gap:8px;padding:9px 0 4px;font-size:14px}.pt-dh span{color:var(--muted);font-size:12.5px;font-weight:700}
+.pt-p{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+.pt-p.lv0{background:var(--bg);border:0;border-radius:12px;padding:9px 10px;margin-top:4px}
+.pt-p.lv2{padding-left:12px;border-left:3px solid var(--line)}
+.pt-p .n{min-width:0}.pt-p small{display:block;color:var(--muted);font-size:12px}.pt-p .r{text-align:right;flex-shrink:0}
+.pt-p.mo b.num{color:var(--muted)}
+.pt-tg{font-size:11px;font-weight:700;color:var(--pen);background:#e3f4f1;border-radius:6px;padding:1px 6px;margin-left:4px;white-space:nowrap}
 </style></head>
 <body>
 <div class="app">
@@ -288,12 +308,12 @@ function sample(){const t=fD(new Date());const ago=n=>addD(t,-n);
     [ago(20),'ngocanh@gmail.com','Ngọc Anh Mobile',24,1500000,'Kích hoạt','0912888168'],[ago(2),'hoangkim@gmail.com','Hoàng Kim Phone',12,1000000,'Gia hạn','0901234567'],[ago(0),'cuong@gmail.com','Cường Mobile',12,1000000,'Gia hạn','']]
     .map(([ngay,email,shop,m,tien,loai,c])=>({ngay,email,shop,m,tien,loai,ctv:c,hh:c?Math.round(tien*.5):0}));
   /* mẫu Partner khu vực (06/11) */
-  ctv.push({sdt:'0939111222',ten:'Cần Thơ',role:'Partner',khuVuc:'Cần Thơ',pct:70,ngay:ago(25)},{sdt:'0905000111',ten:'Hậu',role:'Leader',partner:'0939111222',ngay:ago(20)},{sdt:'0912000333',ten:'Tín',role:'Sale',leader:'0905000111',partner:'0939111222',ngay:ago(18)},
+  ctv.push({sdt:'0939111222',ten:'Cần Thơ',role:'Partner',khuVuc:'Cần Thơ',pct:70,chia:{ctv:40,ld:10,ldTu:50},ngay:ago(25)},{sdt:'0905000111',ten:'Hậu',role:'Leader',partner:'0939111222',ngay:ago(20)},{sdt:'0912000333',ten:'Tín',role:'Sale',leader:'0905000111',partner:'0939111222',ngay:ago(18)},{sdt:'0918000444',ten:'Ngọc',role:'Sale',leader:'0905000111',partner:'0939111222',ngay:ago(12)},{sdt:'0919000555',ten:'Bảo',role:'Sale',partner:'0939111222',ngay:ago(4)},
     {sdt:'0977333444',ten:'Vĩnh Long',role:'Partner',khuVuc:'Vĩnh Long',pct:70,ngay:ago(6)});
   kh.push({email:'minhchau@gmail.com',shop:'Minh Châu Mobile',sdt:'0292 111 222',tt:'Đã duyệt',han:addD(t,300),yeuCau:ago(22),ctv:'0912000333'},{email:'binhthuy@gmail.com',shop:'Bình Thủy Phone',sdt:'0292 123 456',tt:'Đã duyệt',han:addD(t,340),yeuCau:ago(9),ctv:'0939111222'},
-    {email:'caitrang@gmail.com',shop:'Cái Răng ĐTDĐ',sdt:'0292 555 666',tt:'Chờ duyệt',han:'',yeuCau:ago(0),ctv:'0905000111'});
+    {email:'ninhkieu@gmail.com',shop:'Ninh Kiều Mobile',sdt:'0292 777 888',tt:'Đã duyệt',han:addD(t,360),yeuCau:ago(3),ctv:'0912000333'},{email:'caitrang@gmail.com',shop:'Cái Răng ĐTDĐ',sdt:'0292 555 666',tt:'Chờ duyệt',han:'',yeuCau:ago(0),ctv:'0905000111'});
   tt.push({ngay:ago(32),email:'minhchau@gmail.com',shop:'Minh Châu Mobile',m:12,tien:990000,loai:'Kích hoạt',ctv:'0912000333',hh:0,partner:'0939111222',hhP:693000},
-    {ngay:ago(1),email:'binhthuy@gmail.com',shop:'Bình Thủy Phone',m:12,tien:1190000,loai:'Kích hoạt',ctv:'0939111222',hh:0,partner:'0939111222',hhP:833000});
+    {ngay:ago(3),email:'ninhkieu@gmail.com',shop:'Ninh Kiều Mobile',m:12,tien:1190000,loai:'Kích hoạt',ctv:'0912000333',hh:0,partner:'0939111222',hhP:833000},{ngay:ago(2),email:'caitrang@gmail.com',shop:'Phong Điền Phone',m:36,tien:2690000,loai:'Kích hoạt',ctv:'0905000111',hh:0,partner:'0939111222',hhP:1883000},{ngay:ago(1),email:'binhthuy@gmail.com',shop:'Bình Thủy Phone',m:12,tien:1190000,loai:'Kích hoạt',ctv:'0939111222',hh:0,partner:'0939111222',hhP:833000});
   return {kh,tt,ctv,goi:[{m:12,ten:'1 năm',gia:1190000},{m:36,ten:'3 năm',gia:2690000}],hhPct:50,doiSoat:[],today:t}}
 function call(fn,...a){if(!LIVE)return Promise.resolve(fake(fn,...a));
   return fetch(API,{method:'POST',body:JSON.stringify(Object.assign({act:'admin',fn,args:a},PIN?{pin:PIN}:{tok:ATOK}))}).then(r=>r.json()).then(r=>{if(r.ok)return r.data;if(r.doiMk){location.href='/vao/?vai=qt';throw new Error(r.msg||'Đổi mật khẩu trước')}if(r.pin){try{localStorage.removeItem(KPIN);localStorage.removeItem(KATOK)}catch(e){}PIN='';ATOK='';showGate(r.msg)}throw new Error(r.msg||'Lỗi máy chủ')})}
@@ -408,11 +428,43 @@ function vCtv(){const PT=vPartner();const t=D.today;const m0=t.slice(0,7);const 
   ${!blocks.length&&!lone.length?'<div class="card empty">Chưa có Leader, CTV nào. Bấm ＋ Thêm Leader để bắt đầu.</div>':''}
   <p class="note">Hoa hồng: CTV bán = CTV ${D.hhSale||40}% + Leader ${D.hhLeader||10}%; Leader tự bán ${D.hhPct}%. Gia hạn chia như lần đầu. Tính khi anh xác nhận đã nhận đủ tiền gói.</p>`}
 
+/* 07/11 anh Thái duyệt A: Partner tự đặt tỷ lệ chia cho đội (trên tiền gói): ctv = CTV bán · ld = Leader hưởng thêm khi CTV đội mình bán · ldTu = Leader tự bán. Phần còn lại trong % Partner là Partner giữ. */
+const chiaOk=ch=>ch&&[ch.ctv,ch.ld,ch.ldTu].every(v=>v!==''&&v!==null&&v!==undefined&&isFinite(+v))?{ctv:+ch.ctv,ld:+ch.ld,ldTu:+ch.ldTu}:null;
+/* 07/11 anh Thái: bấm 1 Partner → chia tiền + cây Leader/CTV + từng người tạo bao nhiêu, Partner hưởng bao nhiêu, anh giữ bao nhiêu */
+function ptChiTiet(c,pc,mk){const giu=c.dt-c.nhan,th=+mk.slice(5);
+  const nr=(g,lv)=>{const tag=g.c.role==='Partner'?'Partner tự bán':g.c.role==='Leader'?'Leader':'CTV';
+    return `<div class="pt-p lv${lv}${g.n?'':' mo'}"><div class="n"><b>${esc(g.c.role==='Partner'?(g.c.ten||'Partner'):g.c.ten||fmtSdt(g.c.sdt))} <span class="pt-tg">${tag}</span></b><small class="num">${fmtSdt(g.c.sdt)} · ${g.sh?g.dung+'/'+g.sh+' shop đang dùng':'chưa có shop'}</small></div>
+    <div class="r"><b class="num">${money(g.dt)}</b>${g.nhan!==null&&g.nhan!==undefined?(g.nhan||g.n?`<small class="num pt-nh">Nhận ${money(g.nhan)}</small>`:'<small>Chưa bán tháng '+th+'</small>'):g.n?`<small class="num">Partner ${short(g.pt)} · anh ${short(g.dt-g.pt)}</small>`:'<small>Chưa bán tháng '+th+'</small>'}</div></div>`};
+  const ng=c.ng,me=ng[0],lds=ng.filter(g=>g.c.role==='Leader'),ctvs=ng.filter(g=>g.c.role!=='Leader'&&g.c.role!=='Partner');
+  const doi=lds.map(l=>{const mem=ctvs.filter(g=>g.c.leader===l.c.sdt).sort((a,b)=>b.dt-a.dt);const dt=l.dt+mem.reduce((a,g)=>a+g.dt,0);
+    return `<div class="pt-doi"><div class="pt-dh"><b>👥 Đội ${esc(l.c.ten||fmtSdt(l.c.sdt))}</b><span class="num">${money(dt)} · ${mem.length} CTV</span></div>${nr(l,1)}${mem.map(g=>nr(g,2)).join('')||'<div class="empty" style="padding:8px 0">Đội chưa có CTV.</div>'}</div>`}).join('');
+  const le=ctvs.filter(g=>!lds.some(l=>l.c.sdt===g.c.leader));
+  return `<div class="pt-x">
+    <div class="pt-chia"><div><small>Doanh thu</small><b class="num">${money(c.dt)}</b></div><div><small>Partner ${pc}%</small><b class="num">${money(c.nhan)}</b><small>${c.tra?'✓ Đã chuyển '+dmy(c.tra.ngayTra):c.nhan?'Chưa chuyển':'—'}</small></div><div><small>Anh giữ ${100-pc}%</small><b class="num" style="color:var(--pen)">${money(c.dt-c.nhan)}</b></div></div>
+    ${(()=>{const ch=chiaOk(c.p.chia);if(!ch)return `<div class="pt-ch no"><b>Partner chưa đặt tỷ lệ chia cho đội</b><small>Khi Partner đặt trong app Partner, ở đây hiện từng người nhận bao nhiêu.</small></div>`;
+      const chi=c.ng.reduce((a,g)=>a+(g.nhan||0),0);return `<div class="pt-ch"><b>Partner chia đội: CTV ${ch.ctv}% · Leader +${ch.ld}% · Leader tự bán ${ch.ldTu}%</b><small class="num">Chi cho đội ${money(chi)} · Partner giữ lại ${money(c.nhan-chi)}</small></div>`})()}
+    <div class="pt-bar" aria-hidden="true"><i style="width:${c.dt?Math.round(c.nhan/c.dt*100):pc}%"></i></div>
+    <div class="eb" style="margin:14px 0 4px">Từng người · tháng ${th} · ${c.shops.length} shop (${c.dung} đang dùng${c.shops.filter(k=>trangThai(k)==='cho').length?', '+c.shops.filter(k=>trangThai(k)==='cho').length+' chờ duyệt':''})</div>
+    ${me.n||me.sh?nr(me,0):''}${doi}
+    ${le.length?`<div class="pt-doi"><div class="pt-dh"><b style="color:var(--amber)">Chưa có leader</b><span class="num">${le.length} CTV</span></div>${le.map(g=>nr(g,2)).join('')}</div>`:''}
+    ${!c.team.length?'<div class="empty">Partner chưa thêm Leader / CTV nào.</div>':''}
+    <p class="note" style="margin:8px 0 0">${chiaOk(c.p.chia)?'"Nhận" = tiền Partner chi cho người đó theo tỷ lệ Partner đặt (Leader gồm cả phần từ CTV trong đội). Partner tự chuyển cho đội.':'Partner nhận '+pc+'% tiền gói từng người bán, anh giữ '+(100-pc)+'%.'}</p>
+    <div class="eb" style="margin:14px 0 2px">Giao dịch tháng ${th}</div>${c.L.length?c.L.map(x=>`<div class="row"><div class="n"><b>${esc(x.shop)}</b><small>${dmy(x.ngay)} · ${esc(x.loai)} ${goiTen(x.m)} · ${esc(tenOf(x.ctv)||fmtSdt(x.ctv))}</small></div><div class="r"><b class="num">${money(x.tien)}</b><small class="num">Partner ${money(x.hhP)}</small></div></div>`).join(''):'<div class="empty">Chưa có giao dịch.</div>'}
+    ${c.nhan?`<div style="margin-top:12px">${c.tra?`<button class="ghost red pt-paid" data-paid="${c.p.sdt}" data-tien="0">Bỏ đánh dấu đã chuyển</button>`:`<button class="btn pt-paid" data-paid="${c.p.sdt}" data-tien="${c.nhan}">✓ Đánh dấu đã chuyển ${money(c.nhan)}</button>`}</div>`:''}<div class="pt-act"><button class="ghost" data-addpt="${c.p.sdt}">✏️ Sửa</button><button class="ghost" data-khoapt="${c.p.sdt}" data-v="${c.p.khoa?0:1}">${c.p.khoa?'🔓 Mở khoá':'🔒 Khoá'}</button><button class="ghost red" data-askxoa="${c.p.sdt}">🗑 Xoá</button></div>
+    ${askXoa===c.p.sdt?`<div class="ex" style="padding:10px 12px;border:2px solid var(--red-soft);margin-top:8px"><b style="color:var(--red)">Xoá Partner ${esc(c.p.khuVuc||'')}?</b><small style="display:block;color:var(--muted);margin:4px 0 8px">Xoá luôn ${c.team.length} Leader/CTV của Partner. Partner không đăng nhập được nữa. Giao dịch cũ và đối soát vẫn giữ để đối chiếu. Muốn tạm dừng thì bấm Khoá thay vì Xoá.</small><div class="act"><button class="ghost red" data-xoactv="${c.p.sdt}">🗑 Xoá hẳn</button><button class="ghost" data-askxoa="">Thôi</button></div></div>`:''}
+  </div>`}
 /* ===== TAB 4: PARTNER KHU VỰC (06/11) — anh chỉ quản Partner; Partner tự quản Leader/CTV trên shopgon.vn/partner ===== */
 function vPartner(){/* 06/11 anh Thái: Partner nằm trong tab Cộng tác viên, không tách tab */const t=D.today,m0=t.slice(0,7),x=pD(t.slice(0,8)+'15');x.setMonth(x.getMonth()-1);const mk=kyM();
   const pts=(D.ctv||[]).filter(c=>c.role==='Partner');const ds=D.doiSoat||[];
   const st=p=>{const L=D.tt.filter(x=>x.partner===p.sdt&&x.ngay.slice(0,7)===mk);const team=(D.ctv||[]).filter(c=>c.sdt!==p.sdt&&ptOf(c.sdt)===p.sdt);const shops=D.kh.filter(k=>ptOf(k.ctv)===p.sdt);
-    return{p,L,dt:L.reduce((a,x)=>a+x.tien,0),nhan:L.reduce((a,x)=>a+(x.hhP||0),0),n:L.length,team,ld:team.filter(c=>c.role==='Leader').length,shops,dung:shops.filter(k=>trangThai(k)==='dung').length,tra:ds.find(d=>d.thang===mk&&d.partner===p.sdt)}};
+    return{p,L,dt:L.reduce((a,x)=>a+x.tien,0),nhan:L.reduce((a,x)=>a+(x.hhP||0),0),n:L.length,team,ld:team.filter(c=>c.role==='Leader').length,shops,dung:shops.filter(k=>trangThai(k)==='dung').length,tra:ds.find(d=>d.thang===mk&&d.partner===p.sdt),
+      /* 07/11 anh Thái: chi tiết Partner — mỗi người trong đội: shop, gói, doanh thu, phần Partner hưởng / anh giữ */
+      ng:(()=>{const ch=chiaOk(p.chia),tv=[p,...team],dtOf=sd=>L.filter(x=>x.ctv===sd).reduce((a,x)=>a+x.tien,0);
+        return tv.map(c=>{const l=L.filter(x=>x.ctv===c.sdt),sh=shops.filter(k=>k.ctv===c.sdt),dt=dtOf(c.sdt);
+          /* 07/11: tiền người này nhận theo tỷ lệ Partner tự đặt (null = Partner chưa đặt) */
+          const coLd=c.role!=='Leader'&&c.role!=='Partner'&&team.some(t=>t.role==='Leader'&&t.sdt===c.leader);
+          const nhan=!ch||c.role==='Partner'?null:c.role==='Leader'?Math.round(dt*ch.ldTu/100+team.filter(t=>t.role!=='Leader'&&t.leader===c.sdt).reduce((a,t)=>a+dtOf(t.sdt),0)*ch.ld/100):Math.round(dt*ch.ctv/100);
+          return{c,n:l.length,dt,pt:l.reduce((a,x)=>a+(x.hhP||0),0),nhan,coLd,sh:sh.length,dung:sh.filter(k=>trangThai(k)==='dung').length}})})()}};
   const S=pts.map(st).sort((a,b)=>b.dt-a.dt);const dt=S.reduce((a,c)=>a+c.dt,0),nhan=S.reduce((a,c)=>a+c.nhan,0),conTra=S.filter(c=>c.nhan&&!c.tra).reduce((a,c)=>a+c.nhan,0);
   const ed=addPt&&addPt!=='new'?pts.find(p=>p.sdt===addPt):null;
   const form=addPt?`<div class="card" style="display:flex;flex-direction:column;gap:8px"><h2 style="margin:0">${ed?'Sửa Partner '+esc(ed.khuVuc||ed.ten||''):'Thêm Partner khu vực'}</h2>
@@ -424,11 +476,8 @@ function vPartner(){/* 06/11 anh Thái: Partner nằm trong tab Cộng tác viê
   return {form,html:`<div class="kpis"><div class="kpi hero"><div class="eb">Phải trả Partner · tháng ${+mk.slice(5)}/${mk.slice(0,4)}</div><div class="v num">${money(nhan)}</div><div class="d">${conTra?'Còn chưa chuyển '+money(conTra):nhan?'✓ Đã chuyển đủ':'Chưa phát sinh'} · doanh thu Partner ${short(dt)}</div></div>
     <div class="kpi"><div class="eb">Anh giữ lại</div><div class="v num" style="font-size:19px">${money(dt-nhan)}</div><div class="d">Thuế, phí, duy trì app</div></div>
     <div class="kpi"><div class="eb">Partner</div><div class="v num">${pts.length}</div><div class="d">${S.reduce((a,c)=>a+c.dung,0)} shop đang dùng</div></div></div>
-  ${S.map(c=>`<div class="card"><div class="top" style="cursor:pointer" data-openpt="${c.p.sdt}"><div class="n"><b style="font-size:17px">📍 ${esc(c.p.khuVuc||c.p.ten||'Chưa ghi khu vực')}${c.p.khoa?' <span class="pill p-r">Đã khoá</span>':''}</b><small class="num">${fmtSdt(c.p.sdt)} · nhận ${c.p.pct||70}% · ${c.ld} leader · ${c.team.length-c.ld} CTV</small></div><div class="r"><b class="num" style="font-size:19px;color:var(--pen)">${money(c.dt)}</b><small>${c.n} gói</small></div></div>
-    <div class="split"><div class="mini"><small>Partner nhận ${c.p.pct||70}%</small><b class="num">${money(c.nhan)}</b><small>${c.tra?'✓ Đã chuyển '+dmy(c.tra.ngayTra):c.nhan?'Chưa chuyển':'—'}</small></div><div class="mini"><small>Shop đang dùng</small><b class="num">${c.dung}/${c.shops.length}</b><small>${c.shops.filter(k=>trangThai(k)==='cho').length} chờ duyệt</small></div></div>
-    <div class="act" style="margin-top:10px">${c.nhan?(c.tra?`<button class="ghost red" data-paid="${c.p.sdt}" data-tien="0">Bỏ đánh dấu đã chuyển</button>`:`<button class="btn" data-paid="${c.p.sdt}" data-tien="${c.nhan}">✓ Đánh dấu đã chuyển ${money(c.nhan)}</button>`):''}<button class="ghost" data-addpt="${c.p.sdt}">✏️ Sửa / đổi mật khẩu</button><button class="ghost" data-khoapt="${c.p.sdt}" data-v="${c.p.khoa?0:1}">${c.p.khoa?'🔓 Mở khoá':'🔒 Khoá'}</button><button class="ghost red" data-askxoa="${c.p.sdt}">🗑 Xoá</button></div>
-    ${askXoa===c.p.sdt?`<div class="ex" style="padding:10px 12px;border:2px solid var(--red-soft);margin-top:8px"><b style="color:var(--red)">Xoá Partner ${esc(c.p.khuVuc||'')}?</b><small style="display:block;color:var(--muted);margin:4px 0 8px">Xoá luôn ${c.team.length} Leader/CTV của Partner. Partner không đăng nhập được nữa. Giao dịch cũ và đối soát vẫn giữ để đối chiếu. Muốn tạm dừng thì bấm Khoá thay vì Xoá.</small><div class="act"><button class="ghost red" data-xoactv="${c.p.sdt}">🗑 Xoá hẳn</button><button class="ghost" data-askxoa="">Thôi</button></div></div>`:''}
-    ${openPt===c.p.sdt?`<div class="ex"><div class="eb" style="margin:10px 0 2px">Giao dịch tháng ${+mk.slice(5)}</div>${c.L.length?c.L.map(x=>`<div class="row"><div class="n"><b>${esc(x.shop)}</b><small>${dmy(x.ngay)} · ${esc(x.loai)} ${goiTen(x.m)} · ${esc(tenOf(x.ctv)||fmtSdt(x.ctv))}</small></div><div class="r"><b class="num">${money(x.tien)}</b><small class="num">Partner ${money(x.hhP)}</small></div></div>`).join(''):'<div class="empty">Chưa có giao dịch.</div>'}</div>`:''}</div>`).join('')}
+  ${S.map(c=>{const o=openPt===c.p.sdt,pc=c.p.pct||70;return `<div class="card pt-c${o?' on':''}"><div class="top pt-h" style="cursor:pointer" data-openpt="${c.p.sdt}" role="button" aria-expanded="${o}"><div class="n"><b style="font-size:17px">📍 ${esc(c.p.khuVuc||c.p.ten||'Chưa ghi khu vực')}${c.p.khoa?' <span class="pill p-r">Đã khoá</span>':''}</b><small class="num">${c.n} gói · ${c.ld} leader · ${c.team.length-c.ld} CTV${c.nhan&&!c.tra?' · <span style="color:var(--amber);font-weight:700">chưa chuyển</span>':''}</small></div><div class="r"><b class="num" style="font-size:19px;color:var(--pen)">${money(c.dt)}</b><small>Doanh thu ${o?'▴':'▾'}</small></div></div>
+    ${o?ptChiTiet(c,pc,mk):''}</div>`}).join('')}
   ${!pts.length?'<div class="card empty">Chưa có Partner. Bấm ＋ Thêm Partner — Partner đăng nhập shopgon.vn/partner bằng SĐT + mật khẩu anh đặt.</div>':''}
   <p class="note">Partner nhận % trên tiền gói shop trả (cả gia hạn). Tiền shop chuyển về tài khoản Shop Gọn, anh duyệt như cũ, cuối tháng đối soát và chuyển cho Partner. Leader/CTV của Partner do Partner tự chi.</p>`}}
 

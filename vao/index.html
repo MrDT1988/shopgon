@@ -474,7 +474,7 @@ function veHome(){const s=ls.get(KEY),box=$('pgHome');
   box.innerHTML=`${v.length?`<div class="viec" id="viec"><button type="button" data-viec="1">${ic('alert')}Việc cần xử lý<span class="so">${v.length}</span></button><div class="ds list">${v.map(([a,b])=>`<div class="it"><div><b>${esc(a)}</b><small>${esc(b)}</small></div></div>`).join('')}</div></div>`:''}
     <section class="hero"><small>${partner?'Gói bán tháng '+(+thang.slice(5)):'Hoa hồng tháng '+(+thang.slice(5))}</small>
       <div class="u098-num" id="soChay"></div>
-      <p class="note">${partner?'Bạn thuộc đội Partner khu vực — hoa hồng do Partner chi trả.':`${D.pct?D.pct+'% ':''}tiền gói, cả lần đầu và gia hạn · tổng đã ghi ${money(hhAll)}`}</p>
+      <p class="note">${partner?'Bạn thuộc đội Partner khu vực — Partner chưa đặt tỷ lệ hoa hồng.':`${D.pct?D.pct+'% ':''}tiền gói, cả lần đầu và gia hạn · tổng đã ghi ${money(hhAll)}${D.ptKv?' · Partner '+esc(D.ptKv)+' chi trả':''}`}</p>
       <div class="kpis"><div class="kpi"><small>Shop đã cài</small><b>${shops.length}</b></div><div class="kpi"><small>Đang dùng</small><b>${dung}</b></div><div class="kpi"><small>Chờ tiền</small><b>${cho}</b></div></div>
     </section>
     <section class="card"><h2>Link cài app của bạn</h2><p class="sub">Shop mở link hoặc quét mã — app tự điền SĐT của bạn.</p>
@@ -499,6 +499,7 @@ function veShop(){const box=$('pgShop');if(!D){box.innerHTML=`<section class="ca
 function veQr(link){const q=$('qr');if(!q)return;const ve=()=>{q.innerHTML='';try{new QRCode(q,{text:link,width:140,height:140,correctLevel:QRCode.CorrectLevel.M})}catch(_){q.hidden=true}};
   if(window.QRCode)return ve();const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';s.onload=ve;s.onerror=()=>{q.hidden=true};document.head.appendChild(s)}
 function veAll(){dauTrang();veHome();veShop();veDoi()}
+/* 07/11 anh Thái duyệt A: người thuộc Partner — máy chủ trả D.ptKv (khu vực Partner); Partner đã đặt tỷ lệ thì D.pct/D.hhLd/tt[].hh theo tỷ lệ Partner, chưa đặt thì D.pct=0. */
 /* 06/11 22h anh Thái: tab Đội cho Leader — chỉ hiện khi máy chủ trả D.doi (Leader). Leader nhận D.hhLd% (mặc định 10%) tiền gói CTV trong đội bán, cả gia hạn.
    Dữ liệu: D.doi=[{sdt,ten,shops:[{shop,tt,han,yeuCau}],tt:[{ngay,shop,tien,loai}]}]. Đội thuộc Partner (D.pct===0) → Leader do Partner chi. */
 let KYD='nay';
@@ -513,7 +514,7 @@ function veDoi(){const box=$('pgDoi'),btn=document.querySelector('.tabbar [data-
   const thTxt='tháng '+(+ky.slice(5));
   box.innerHTML=`<section class="hero doi-hero"><small>${pt?'Gói đội bán '+thTxt:'Hoa hồng Leader từ đội · '+thTxt}</small>
       <div class="u098-num" id="soDoi"></div>
-      <p class="note">${pt?'Đội thuộc Partner khu vực — hoa hồng Leader do Partner chi trả.':ld+'% tiền gói CTV trong đội bán, cả lần đầu và gia hạn · doanh thu đội '+money(tien)}</p>
+      <p class="note">${pt?'Đội thuộc Partner khu vực — Partner chưa đặt tỷ lệ hoa hồng.':ld+'% tiền gói CTV trong đội bán, cả lần đầu và gia hạn · doanh thu đội '+money(tien)+(D.ptKv?' · Partner '+esc(D.ptKv)+' chi trả':'')}</p>
       <div class="kpis"><div class="kpi"><small>CTV</small><b>${mem.length}</b></div><div class="kpi"><small>Gói bán</small><b>${goi}</b></div><div class="kpi"><small>Shop đang dùng</small><b>${dung}</b></div></div>
     </section>
     <div class="seg2">${[['nay','Tháng này'],['truoc','Tháng trước']].map(([k,n])=>`<button type="button" data-kyd="${k}" class="${KYD===k?'on':''}">${n}</button>`).join('')}</div>

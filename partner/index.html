@@ -192,6 +192,10 @@ select.f{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius
 @media (max-width:600px){.mp-t{font-size:15px;gap:6px}.mp-t em{font-size:0;width:8px;height:8px;padding:0;background:#16a34a;border-radius:50%}
   .chsplit{grid-template-columns:62px minmax(0,1fr);gap:8px}.chrail{padding:3px}.chrail button{min-height:58px;padding:6px 2px;font-size:11px}.chrail button b{font-size:18px}}
 .chpane .row{align-items:flex-start;row-gap:6px}.chpane .row .n{flex:1 1 100%}
+.chia .cs{display:block;color:var(--muted);font-size:12.5px}.chia.no{border:2px solid var(--amber-soft)}
+.chia .cg{display:flex;flex-direction:column;gap:8px;margin:10px 0}.chia .cg label{display:flex;justify-content:space-between;align-items:center;gap:10px;font-weight:700;font-size:14px}
+.chia .cg span{display:flex;align-items:center;gap:4px;flex-shrink:0}.chia .cg input{width:72px;text-align:center}
+.nh{color:var(--pen)}
 </style></head>
 <body>
 <div class="app">
@@ -220,7 +224,7 @@ select.f{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius
 /* Partner khu vực (06/11/2026 anh Thái): Partner nhận 70% tiền gói của khu vực mình, tự quản Leader/CTV,
    tự chi cho đội. Giá cố định, tiền shop chuyển về tài khoản Shop Gọn, Shop Gọn duyệt và đối soát cuối tháng.
    Máy chủ: POST {act:'partner', fn:'partnerLogin', args:[sdt,mk]} → {tok}; sau đó {act:'partner', tok, fn, args}.
-   fn: partnerData() · partnerSaveCtv(sdt, ten, vai 'Leader'|'Sale', leaderSdt). Không trả Gmail, không trả dữ liệu bán hàng của shop. */
+   fn: partnerData() · partnerSaveCtv(sdt, ten, vai 'Leader'|'Sale', leaderSdt) · partnerSaveChia(ctv%, ld%, ldTu%) (07/11, D.partner.chia={ctv,ld,ldTu}). Không trả Gmail, không trả dữ liệu bán hàng của shop. */
 const API='https://script.google.com/macros/s/AKfycbyyqlK8nFmTxO_6ZNDee0FdTZeynwzHWsgRvQKxfKI0qZKtPEve_rrP4kL9O1PWj25bJg/exec';
 const LIVE=/^https?:$/.test(location.protocol)&&!/[?&]demo/.test(location.search);
 const KTOK='sg_partner_tok';let TOK='';try{TOK=localStorage.getItem(KTOK)||''}catch(e){}
@@ -237,7 +241,7 @@ const days=(a,b)=>Math.round((pD(a)-pD(b))/864e5);
 const goiTen=m=>m%12===0?(m/12)+' năm':m+' tháng';
 const fmtSdt=s=>s?s.replace(/^(\d{4})(\d{3})(\d+)$/,'$1 $2 $3'):'';
 const sdtOk=s=>{let d=String(s||'').replace(/\D/g,'');if(d.startsWith('84'))d='0'+d.slice(2);if(d.length===9)d='0'+d;return /^0\d{9}$/.test(d)?d:''};
-let D=null,TAB='dt',THANG='nay',KYP='thang',doiMk=false,CH_LOC='dung',Q='',addMem=false,openMem=null;
+let D=null,TAB='dt',THANG='nay',KYP='thang',doiMk=false,CH_LOC='dung',Q='',addMem=false,openMem=null,suaChia=false;
 
 /* ===== dữ liệu mẫu (?demo=1 hoặc mở file trên máy) ===== */
 function sample(){const t=fD(new Date());const ago=n=>addD(t,-n);const P='0939111222';
@@ -252,11 +256,12 @@ function sample(){const t=fD(new Date());const ago=n=>addD(t,-n);const P='093911
   const tt=[[pm+'05','Minh Châu Mobile',12,990000,'Kích hoạt','0912000333'],[pm+'12','Ninh Kiều Phone',12,990000,'Kích hoạt','0912000444'],[pm+'20','Hưng Phát Mobile',36,2690000,'Kích hoạt','0905000111'],
     [ago(Math.min(4,+t.slice(8)-1)),'Bình Thủy Phone',12,1190000,'Kích hoạt',P],[ago(Math.min(2,+t.slice(8)-1)),'Phong Điền Mobile',12,1190000,'Kích hoạt','0912000555'],[ago(0),'Thảo Nguyên Mobile',12,1190000,'Gia hạn','0912000333']]
     .map(([ngay,shop,m,tien,loai,c])=>({ngay,shop,m,tien,loai,ctv:c,hhP:Math.round(tien*.7)}));
-  return {partner:{sdt:P,ten:'Cần Thơ',khuVuc:'Cần Thơ',pct:70},ctv,kh,tt,doiSoat:[{thang:pm.slice(0,7),tien:Math.round((990000*2+2690000)*.7),ngayTra:pm.slice(0,7)+'-30'}].filter(x=>x.thang!==m0.slice(0,7)),
+  return {partner:{sdt:P,ten:'Cần Thơ',khuVuc:'Cần Thơ',pct:70,chia:{ctv:40,ld:10,ldTu:50}},ctv,kh,tt,doiSoat:[{thang:pm.slice(0,7),tien:Math.round((990000*2+2690000)*.7),ngayTra:pm.slice(0,7)+'-30'}].filter(x=>x.thang!==m0.slice(0,7)),
     goi:[{m:12,ten:'1 năm',gia:1190000},{m:36,ten:'3 năm',gia:2690000}],udDaDung:23,today:t}}
 function fake(fn,a,b,c,d){if(fn==='partnerLogin')return{tok:'demo'};if(fn==='partnerData')return D||sample();
   if(fn==='partnerSaveCtv'){const s=sdtOk(a);if(!s)throw new Error('Số điện thoại không hợp lệ');if(s===D.partner.sdt)throw new Error('Đây là số của Partner');
     const x=D.ctv.find(o=>o.sdt===s),r=c==='Leader'?'Leader':'Sale';if(x){x.ten=b;x.role=r;x.leader=r==='Leader'?'':d||''}else D.ctv.push({sdt:s,ten:b,role:r,leader:r==='Leader'?'':d||'',ngay:D.today});return D}
+  if(fn==='partnerSaveChia'){const v=[a,b,c].map(Number),pc=D.partner.pct||70;if(v.some(x=>!(x>=0)||x%1))throw new Error('Nhập số % nguyên từ 0');if(v[0]+v[1]>pc||v[2]>pc)throw new Error('Tổng chia không vượt quá '+pc+'% bạn nhận');D.partner.chia={ctv:v[0],ld:v[1],ldTu:v[2]};return D}
   if(fn==='partnerDoiMatKhau'){if(a!=='demo123')throw new Error('Mật khẩu đang dùng chưa đúng (bản mẫu: demo123)');return{tok:'demo2'}}
   throw new Error('Không rõ thao tác')}
 function call(fn,...a){if(!LIVE){try{return Promise.resolve(fake(fn,...a))}catch(e){return Promise.reject(e)}}
@@ -342,14 +347,29 @@ function acctCard(){if(!doiMk)return `<div class="act" style="justify-content:ce
     <div class="act"><button class="btn" data-luumk="1" style="flex:1">Lưu mật khẩu</button><button class="ghost" data-doimk="0">Thôi</button></div></div>`}
 
 /* ===== TAB 2: ĐỘI ===== */
+/* 07/11 anh Thái duyệt A: Partner tự đặt tỷ lệ chia cho đội, tính trên tiền gói: ctv = CTV bán · ld = Leader hưởng thêm khi CTV đội mình bán · ldTu = Leader tự bán. Partner giữ phần còn lại. */
+const chiaOk=ch=>ch&&[ch.ctv,ch.ld,ch.ldTu].every(v=>v!==''&&v!==null&&v!==undefined&&isFinite(+v))?{ctv:+ch.ctv,ld:+ch.ld,ldTu:+ch.ldTu}:null;
+function nhanOf(s,m){const ch=chiaOk(P().chia);if(!ch||s===P().sdt)return null;const c=memOf(s),dt=sumM(m,x=>x.ctv===s).dt;
+  if(c.role==='Leader')return Math.round(dt*ch.ldTu/100+D.ctv.filter(t=>t.role!=='Leader'&&t.leader===s).reduce((a,t)=>a+sumM(m,x=>x.ctv===t.sdt).dt,0)*ch.ld/100);
+  return Math.round(dt*ch.ctv/100)}
+function chiaCard(m){const ch=chiaOk(P().chia),pc=P().pct||70;
+  if(suaChia||!ch)return `<div class="card chia${ch?'':' no'}"><h2 style="margin:0 0 4px">💸 Chia hoa hồng cho đội</h2><small class="cs">Tính % trên tiền gói shop trả (cả gia hạn). Bạn nhận ${pc}% — phần không chia là bạn giữ.</small>
+    <div class="cg"><label>CTV bán<span><input class="f num" id="chCtv" inputmode="numeric" value="${ch?ch.ctv:''}" placeholder="40">%</span></label>
+    <label>Leader hưởng thêm khi CTV đội mình bán<span><input class="f num" id="chLd" inputmode="numeric" value="${ch?ch.ld:''}" placeholder="10">%</span></label>
+    <label>Leader tự bán<span><input class="f num" id="chLdTu" inputmode="numeric" value="${ch?ch.ldTu:''}" placeholder="50">%</span></label></div>
+    <div class="act"><button class="btn" data-luuchia="1" style="flex:1">Lưu tỷ lệ</button>${ch?'<button class="ghost" data-suachia="0">Thôi</button>':''}</div>
+    ${ch?'':'<small class="cs" style="margin-top:8px">Chưa đặt tỷ lệ → Leader/CTV chưa thấy hoa hồng của mình ở shopgon.vn/vao.</small>'}</div>`;
+  const chi=D.ctv.reduce((a,c)=>a+(nhanOf(c.sdt,m)||0),0),nhan=sumM(m).nhan;
+  return `<div class="card chia"><div class="top"><div class="n"><b>💸 Chia cho đội</b><small class="num">CTV ${ch.ctv}% · Leader +${ch.ld}% · Leader tự bán ${ch.ldTu}%</small></div><button class="ghost" data-suachia="1">✏️ Sửa</button></div>
+    <div class="split"><div class="mini"><small>Chi cho đội tháng ${+m.slice(5)}</small><b class="num">${money(chi)}</b></div><div class="mini"><small>Bạn giữ lại</small><b class="num" style="color:var(--pen)">${money(nhan-chi)}</b></div></div></div>`}
 function vDoi(){const m=thangKey();
-  const st=s=>{const o=sumM(m,x=>x.ctv===s);const shops=D.kh.filter(k=>k.ctv===s);return{s,ten:tenOf(s),dt:o.dt,n:o.n,shops:shops.length,dung:shops.filter(k=>trangThai(k)==='dung').length}};
+  const st=s=>{const o=sumM(m,x=>x.ctv===s);const shops=D.kh.filter(k=>k.ctv===s);return{s,ten:tenOf(s),dt:o.dt,n:o.n,nhan:nhanOf(s,m),shops:shops.length,dung:shops.filter(k=>trangThai(k)==='dung').length}};
   const leaders=D.ctv.filter(c=>c.role==='Leader');
   const blocks=leaders.map(l=>{const mem=D.ctv.filter(c=>c.role!=='Leader'&&c.leader===l.sdt).map(c=>st(c.sdt)).sort((a,b)=>b.dt-a.dt);const me=st(l.sdt);
     return{l,me,mem,dt:me.dt+mem.reduce((a,c)=>a+c.dt,0),n:me.n+mem.reduce((a,c)=>a+c.n,0)}}).sort((a,b)=>b.dt-a.dt);
   const lone=D.ctv.filter(c=>c.role!=='Leader'&&!leaders.some(l=>l.sdt===c.leader)).map(c=>st(c.sdt));
   const me=st(P().sdt);
-  const row=(c,tag)=>`<div class="row" style="flex-wrap:wrap;cursor:pointer" data-mem="${c.s}"><div class="n"><b>${esc(c.ten)}${tag?' <span class="pill p-b">'+tag+'</span>':''}</b><small class="num">${fmtSdt(c.s)} · ${c.shops} shop (${c.dung} đang dùng)</small></div><div class="r"><b class="num">${money(c.dt)}</b><small>${c.n} gói</small></div>
+  const row=(c,tag)=>`<div class="row" style="flex-wrap:wrap;cursor:pointer" data-mem="${c.s}"><div class="n"><b>${esc(c.ten)}${tag?' <span class="pill p-b">'+tag+'</span>':''}</b><small class="num">${fmtSdt(c.s)} · ${c.shops} shop (${c.dung} đang dùng)</small></div><div class="r"><b class="num">${money(c.dt)}</b><small>${c.n} gói${c.nhan!==null?' · <b class="nh">nhận '+money(c.nhan)+'</b>':''}</small></div>
     ${openMem===c.s?`<div class="ex" style="flex-basis:100%"><div class="act" style="padding:10px 0"><button class="ghost" data-link="${c.s}">📋 Chép link cài app</button>${c.s!==P().sdt?`<button class="ghost" data-edit="${c.s}">✏️ Sửa</button>`:''}</div><small style="display:block;color:var(--muted);padding-bottom:10px">Link shopgon.vn/setup?ctv=${c.s} — shop cài từ link này tự gắn về ${esc(c.ten)}.</small></div>`:''}</div>`;
   const ed=addMem&&addMem!=='ld'&&addMem!=='ctv'?D.ctv.find(x=>x.sdt===addMem):null;
   const form=addMem?`<div class="card" style="display:flex;flex-direction:column;gap:8px"><h2 style="margin:0">${ed?'Sửa '+esc(ed.ten):addMem==='ld'?'Thêm Leader':'Thêm cộng tác viên'}</h2>
@@ -359,6 +379,7 @@ function vDoi(){const m=thangKey();
   return `${mPick()}
   <div class="kpis"><div class="kpi"><div class="eb">Leader · CTV</div><div class="v num">${leaders.length} · ${D.ctv.length-leaders.length}</div><div class="d">${D.ctv.filter(c=>sumM(m,x=>x.ctv===c.sdt).n).length} người có bán tháng ${+m.slice(5)}</div></div>
     <div class="kpi"><div class="eb">Bạn tự bán</div><div class="v num" style="font-size:19px">${money(me.dt)}</div><div class="d">${me.n} gói · ${me.shops} shop</div></div></div>
+  ${chiaCard(m)}
   <div class="act"><button class="btn" data-addmem="ld">＋ Thêm Leader</button><button class="ghost" data-addmem="ctv" style="padding:11px 16px">＋ Thêm CTV</button></div>
   ${form}
   <div class="card">${row(me,'Partner')}</div>
@@ -366,7 +387,7 @@ function vDoi(){const m=thangKey();
     <div style="margin-top:6px">${row(b.me,'Leader')}${b.mem.length?b.mem.map(c=>row(c)).join(''):'<div class="empty">Chưa có CTV. Bấm ＋ Thêm CTV.</div>'}</div></div>`).join('')}
   ${lone.length?`<div class="card" style="border:2px solid var(--amber-soft)"><h2 style="color:var(--amber)">Chưa có leader (${lone.length})</h2>${lone.map(c=>row(c)).join('')}</div>`:''}
   ${!blocks.length&&!lone.length?'<div class="card empty">Chưa có ai trong đội. Bấm ＋ Thêm Leader để bắt đầu.</div>':''}
-  <p class="note">Shop Gọn chỉ tính tiền với Partner (${pctTxt()} tiền gói). Hoa hồng cho Leader/CTV do bạn tự chia — app chỉ ghi ai bán để bạn tính.</p>`}
+  <p class="note">Shop Gọn chỉ tính tiền với Partner (${pctTxt()} tiền gói). Tiền chia cho Leader/CTV bạn tự chuyển — app tính sẵn theo tỷ lệ bạn đặt, Leader/CTV xem được ở shopgon.vn/vao.</p>`}
 
 /* ===== TAB 3: CỬA HÀNG ===== */
 function pill(k){const s=trangThai(k),left=k.han?days(k.han,D.today):null;
@@ -399,6 +420,10 @@ document.addEventListener('click',e=>{if(e.target.closest('.ex')&&!e.target.clos
   if(d.doimk){doiMk=d.doimk==='1';render();if(doiMk)setTimeout(()=>{const i=$('mkCu');i&&i.scrollIntoView({block:'center'});i&&i.focus()},0);return}
   if(d.luumk){const cu=$('mkCu').value,mo=$('mkMoi').value,mo2=$('mkMoi2').value;if(!cu){toast('Nhập mật khẩu đang dùng');return}if(mo.length<6){toast('Mật khẩu mới ít nhất 6 ký tự');return}if(mo!==mo2){toast('Hai lần nhập mật khẩu mới không khớp');return}
     b.disabled=true;call('partnerDoiMatKhau',cu,mo).then(r=>{if(r&&r.tok){TOK=r.tok;try{localStorage.setItem(KTOK,TOK)}catch(_){}}doiMk=false;render();toast('Đã đổi mật khẩu')}).catch(er=>{b.disabled=false;toast(er.message)});return}
+  if('suachia' in d){suaChia=d.suachia==='1';render();return}
+  if(d.luuchia){const v=['chCtv','chLd','chLdTu'].map(i=>$(i).value.trim()),pc=P().pct||70;if(v.some(x=>!/^\d+$/.test(x))){toast('Nhập đủ 3 ô, số % nguyên');return}
+    const [a,l,t]=v.map(Number);if(a+l>pc){toast('CTV + Leader không vượt quá '+pc+'%');return}if(t>pc){toast('Leader tự bán không vượt quá '+pc+'%');return}
+    b.disabled=true;call('partnerSaveChia',a,l,t).then(x=>{D=x;suaChia=false;render();toast('Đã lưu tỷ lệ chia')}).catch(er=>{b.disabled=false;toast(/Không rõ|không hợp lệ|unknown/i.test(er.message)?'Máy chủ đang cập nhật — thử lại sau ít phút':er.message)});return}
   if(d.loc){CH_LOC=d.loc;render();return}
   if(d.link){copy('https://shopgon.vn/setup/?ctv='+d.link);return}
   if(d.edit){addMem=d.edit;openMem=null;render();$('main').scrollTop=0;return}
