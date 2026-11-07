@@ -1286,6 +1286,9 @@ function homeMonth(){const t=todayIso(),y=iso(Date.now()-DAY);
 /* 07/11 15h51 anh Thái (góp ý chủ shop): Trang chủ thấy LÃI theo kỳ — khối Nhân viên thêm lãi từng người + tổng lãi, bấm 1 người ra món đã bán;
    khối Tổng kết lãi gom theo model (SL · doanh thu · chi phí · lãi), bấm 1 model ra từng máy. KM của đơn tính vào máy cùng đơn. Chỉ chủ shop (NV có Trang chủ riêng). */
 let hnvOpen=null,hlOpen=null,hlAll=false,HL_KEYS=[];
+/* 07/11 21h anh Thái: Trang chủ — khối Nhân viên + Tổng kết lãi mặc định THU GỌN (chỉ tiêu đề, không số), bấm mới mở: đỡ dài + khách đứng cạnh không thấy lãi. Mở lại app là gọn lại. */
+let hnvShow=false,hlShow=false;
+const hGon=(k,icon,t,mo)=>`<button type="button" class="hgon${mo?' mo':''}" data-hshow="${k}" aria-expanded="${mo}"><b>${icon} ${t}</b><span>${mo?'Thu gọn ⌃':'Bấm để xem ›'}</span></button>`;
 function homeMau(){return typeof ccMau==='function'&&ccMau()&&!(db.shop.nv||[]).length}
 function homeDon(a,b){const mau=homeMau();const hs=x=>{let h=0;for(const c of String(x))h=(h*31+c.charCodeAt(0))>>>0;return h};
   const ai=d=>d.nv||(mau?(['0901234561','0912888168','0901234561','0912888168','0388123456',''][hs(d.bill||d.id)%6]):'');
@@ -1301,9 +1304,11 @@ function homeNv(a,b,ten){/* tài khoản test / xem thử: 3 nhân viên ảo (g
   const mx=Math.max(1,...R.map(r=>r.dt)),tong=R.reduce((s2,r)=>s2+r.dt,0),tLoi=R.reduce((s2,r)=>s2+r.loi,0);
   const ct=r=>{const x=[...r.x].sort((p,q)=>(q.ngay+q.gio).localeCompare(p.ngay+p.gio,undefined,{numeric:true}));const top=x.slice(0,40);
     return `<div class="hlct">${top.map(d=>hlLine(d,nhieu)).join('')}${x.length>top.length?`<small class="hlm">… còn ${x.length-top.length} dòng — xem đủ ở Báo cáo</small>`:''}<div class="hlsum hl3"><span>Doanh thu ${esc(r.ten)}</span><b class="num">${money(r.dt)}</b><span>Lãi</span><b class="num ${r.loi<0?'neg':'good'}">${money(r.loi)}</b></div></div>`};
-  return `<div class="panel hnv"><div class="hnvh"><h2>👥 Nhân viên · ${esc(ten)}</h2><div class="r">${mau?'<span class="pill a">mẫu</span>':''}<small class="num">${short(tong)}</small></div></div>${R.map((r,i)=>{const o=hnvOpen===(r.k||'_')&&r.dt;return `<div class="hnvw${o?' open':''}"><button type="button" class="hnvr${r.dt?'':' zero'}" data-hnvo="${esc(r.k||'_')}" ${r.dt?`aria-expanded="${!!o}"`:'disabled'}><div class="t"><b>${i<3&&r.dt?['🥇','🥈','🥉'][i]+' ':''}${esc(r.ten)}</b><small>${r.don} đơn · ${r.may} máy · PK ${short(r.dt-r.dtMay)}</small></div><div class="v"><b class="num">${r.dt?short(r.dt):'—'}</b>${r.dt?`<small class="num ${r.loi<0?'neg':'good'}">lãi ${short(r.loi)}</small>`:''}</div><div class="hnvb"><i style="width:${r.dt?Math.max(3,r.dt/mx*100):0}%"></i></div></button>${o?ct(r):''}</div>`}).join('')}${R.some(r=>r.k&&!r.dt)?`<small style="display:block;margin-top:6px;color:var(--amber)">Chưa bán được: ${R.filter(r=>r.k&&!r.dt).map(r=>esc(r.ten)).join(', ')}</small>`:''}
+  if(!hnvShow)return `<div class="panel hnv hgonp">${hGon('nv','👥','Nhân viên · '+esc(ten),false)}</div>`;
+  return `<div class="panel hnv">${hGon('nv','👥','Nhân viên · '+esc(ten),true)}${mau?'<span class="pill a" style="margin:4px 0 2px;display:inline-block">mẫu</span>':''}${R.map((r,i)=>{const o=hnvOpen===(r.k||'_')&&r.dt;return `<div class="hnvw${o?' open':''}"><button type="button" class="hnvr${r.dt?'':' zero'}" data-hnvo="${esc(r.k||'_')}" ${r.dt?`aria-expanded="${!!o}"`:'disabled'}><div class="t"><b>${i<3&&r.dt?['🥇','🥈','🥉'][i]+' ':''}${esc(r.ten)}</b><small>${r.don} đơn · ${r.may} máy · PK ${short(r.dt-r.dtMay)}</small></div><div class="v"><b class="num">${r.dt?short(r.dt):'—'}</b>${r.dt?`<small class="num ${r.loi<0?'neg':'good'}">lãi ${short(r.loi)}</small>`:''}</div><div class="hnvb"><i style="width:${r.dt?Math.max(3,r.dt/mx*100):0}%"></i></div></button>${o?ct(r):''}</div>`}).join('')}${R.some(r=>r.k&&!r.dt)?`<small style="display:block;margin-top:6px;color:var(--amber)">Chưa bán được: ${R.filter(r=>r.k&&!r.dt).map(r=>esc(r.ten)).join(', ')}</small>`:''}
     ${tong?`<div class="hlsum hltot hl3"><span>Doanh thu cửa hàng</span><b class="num">${money(tong)}</b><span>Lãi cửa hàng</span><b class="num ${tLoi<0?'neg':'good'}">${money(tLoi)}</b></div>`:''}${R.some(r=>r.dt)?'<small class="hlhint">Bấm vào từng người để xem đã bán gì</small>':''}</div>`}
-function homeLai(a,b,ten){const L=homeDon(a,b);if(!L.length)return '';const nhieu=a!==b;
+function homeLai(a,b,ten,luonMo){const L=homeDon(a,b);if(!L.length)return '';const nhieu=a!==b;
+  if(!luonMo&&!hlShow)return `<div class="panel hlp own hgonp">${hGon('lai','💰','Tổng kết lãi · '+esc(ten),false)}</div>`;
   const nvTen=k=>{if(!k)return '';const x=(homeMau()?ccNvDs():db.shop.nv||[]).find(n=>n.sdt===k);return x?(x.ten||k):k};
   /* gom: máy theo model (bỏ màu), món khác theo tên; KM gắn vào máy cùng đơn (không có máy → nhóm Khuyến mãi) */
   const G=new Map(),add=(k,ten,loai,d)=>{if(!G.has(k))G.set(k,{k,ten,loai,x:[],sl:0,dt:0,von:0});const g=G.get(k);g.x.push(d);g.dt+=+d.giaBan||0;g.von+=+d.giaVon||0;if(d.loai!=='km')g.sl+=(+d.sl||1)};
@@ -1314,7 +1319,7 @@ function homeLai(a,b,ten){const L=homeDon(a,b);if(!L.length)return '';const nhie
   const N=hlAll?R:R.slice(0,8);
   const ct=g=>{const x=[...g.x].sort((p,q)=>(q.ngay+q.gio).localeCompare(p.ngay+p.gio,undefined,{numeric:true}));const top=x.slice(0,40);
     return `<div class="hlct">${top.map(d=>hlLine(d,nhieu,nvTen(d.nv))).join('')}${x.length>top.length?`<small class="hlm">… còn ${x.length-top.length} dòng</small>`:''}<div class="hlsum hl3"><span>Doanh thu</span><b class="num">${money(g.dt)}</b><span>Chi phí</span><b class="num">${money(g.von)}</b><span>Lãi</span><b class="num ${g.loi<0?'neg':'good'}">${money(g.loi)}</b></div></div>`};
-  return `<div class="panel hlp own"><div class="hnvh"><h2>💰 Tổng kết lãi · ${esc(ten)}</h2><div class="r"><small class="num ${T.loi<0?'neg':'good'}">${short(T.loi)}</small></div></div>
+  return `<div class="panel hlp own">${luonMo?`<div class="hnvh"><h2>💰 Tổng kết lãi · ${esc(ten)}</h2><div class="r"><small class="num ${T.loi<0?'neg':'good'}">${short(T.loi)}</small></div></div>`:hGon('lai','💰','Tổng kết lãi · '+esc(ten),true)}
     <div class="hlhd"><span>Model / món</span><span>Doanh thu · chi phí</span><span>Lãi</span></div>
     ${N.map((g,i)=>{const o=hlOpen===g.k;return `<div class="hnvw${o?' open':''}"><button type="button" class="hlr" data-hlo="${i}" aria-expanded="${o}"><div class="t"><b>${esc(g.ten)}</b><small>${g.loai==='may'?g.sl+' máy':g.loai==='km'?g.x.length+' lần':g.sl+' cái'}</small></div><div class="m num"><span>${short(g.dt)}</span><small>vốn ${short(g.von)}</small></div><b class="num l ${g.loi<0?'neg':'good'}">${short(g.loi)}</b></button>${o?ct(g):''}</div>`}).join('')}
     ${R.length>8?`<button type="button" class="lnk hlall" data-hlall="1">${hlAll?'Thu gọn':'Xem tất cả '+R.length+' model / món'}</button>`:''}
@@ -1360,7 +1365,7 @@ function renderRpt(){const t=todayIso(), m0=t.slice(0,8)+'01';/* 07/11 16h anh T
   const old=st.filter(m=>ageDays(m)>45), hw=hangOn(), low=hw.filter(hangLow);
   let body='';
   if(rptTab==='ban')body=`
-    ${reportPanel()}${rptMode==='thang'&&rptSel&&rptSel.length===7?homeLai(rptSel+'-01',rptSel+'-31',mLbl(rptSel)):''}
+    ${reportPanel()}${rptMode==='thang'&&rptSel&&rptSel.length===7?homeLai(rptSel+'-01',rptSel+'-31',mLbl(rptSel),1):''}
     ${(()=>{/* 25/10 anh Thái: doanh thu theo người bán (chủ shop + từng nhân viên) */
     const t=todayIso(),m0=t.slice(0,8)+'01',L=live().filter(d=>d.ngay>=m0&&d.ngay<=t&&d.loai!=='thu');
     const ds=db.shop.nv||[];if(!ds.length&&!L.some(d=>d.nv))return '';
@@ -2053,6 +2058,7 @@ document.addEventListener('click',e=>{
   if(b.dataset.toggle==='todayList'){showToday=!showToday;render();return}
   if(b.dataset.v){if(b.dataset.v==='more')more='menu';if(b.dataset.v==='stock'){khoHub=true;khoTab='kho'}go(b.dataset.v);return}
   if(b.dataset.go){if(b.dataset.go==='stock')khoHub=false;if(b.dataset.filter==='may'){stockMode='may';stockBrand='Tất cả'}if(b.dataset.filter==='hang')stockMode='hang';go(b.dataset.go);return}
+  if(b.dataset.hshow){if(b.dataset.hshow==='nv'){hnvShow=!hnvShow;hnvOpen=null}else{hlShow=!hlShow;hlOpen=null;hlAll=false}render();return}
   if(b.dataset.hnvo){hnvOpen=hnvOpen===b.dataset.hnvo?null:b.dataset.hnvo;render();return}
   if(b.dataset.hlo){const k=HL_KEYS[+b.dataset.hlo];hlOpen=hlOpen===k?null:k;render();return}
   if(b.dataset.hlall){hlAll=!hlAll;render();return}
@@ -2731,7 +2737,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261107-2000';let verLuc=0;
+const BUILD='20261107-2110';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
@@ -3292,6 +3298,7 @@ details.ccnote summary{cursor:pointer;color:var(--pen);font-weight:600}
 .rket .rchi{background:#fff;border:2px solid var(--line)}.rket .rchi b{color:var(--red,#c0392b)}.rket .rchi b.z{color:var(--muted)}
 @media (max-width:360px){.rket{grid-template-columns:1.3fr 1fr;gap:6px}.rket>button{padding:10px}.rket b{font-size:16px}.rket .h{font-size:12.5px}}
 .hdl.hdl{display:block;margin:14px auto 4px;background:none;border:0;color:var(--pen);font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;padding:8px 12px;min-height:44px}
+.hgon.hgon{all:unset;box-sizing:border-box;display:flex;width:100%;justify-content:space-between;align-items:center;gap:10px;cursor:pointer;min-height:44px;-webkit-tap-highlight-color:transparent}.hgon b{font-size:16px}.hgon span{font-size:13px;font-weight:700;color:var(--pen);white-space:nowrap}.hgon:focus-visible{outline:2px solid var(--pen);outline-offset:2px;border-radius:8px}.hgonp{padding-top:8px;padding-bottom:8px}.hgon.mo{margin-bottom:4px}
 </style>
 <script>
 /* ===== 07/11 anh Thái: CHẤM CÔNG + BẢNG LƯƠNG =====
