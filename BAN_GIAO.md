@@ -350,3 +350,12 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - Anh Thái: khách đứng cạnh lúc lên đơn → không hiện lợi nhuận; NV cũng không thấy lời từng máy. Lời vẫn tự tính vào Báo cáo như cũ.
 - `#sLoi,#pLoi{display:none}` cho mọi người (trước chỉ ẩn với NV); bỏ "Giá nhập" ở thẻ máy đã chọn (màn Bán) và "giá nhập" ở món phụ kiện đã chọn (trước NV vẫn thấy dòng này); ô "Giá vốn" khi bán món ngoài kho = `label.own` (NV không thấy, bỏ trống → ước tính %).
 - Test 75/75 (có "Bán: lời = …" vẫn đúng), lưu trữ 52/52, giao diện 0 lỗi. BUILD 20261105-2330.
+
+## 48. (07/11) SAO LƯU HẰNG NGÀY + CHẤM CÔNG · LƯƠNG (anh Thái duyệt demo v4)
+- Sao lưu: tự sao lưu **mỗi ngày, giữ 14 bản** (trước: tuần, 8 bản) + mục "Lỡ xoá dữ liệu? Cách khôi phục" (3 trường hợp). BUILD 20261107-1100, đã lên main.
+- **Chấm công · Lương** (nhánh `cham-cong-luong`, BUILD 20261107-1300): khối `<style>`+`<script>` riêng trước khối đổi emoji cuối file (tìm `CHẤM CÔNG + BẢNG LƯƠNG`).
+  - NV: thẻ chấm công ở Trang chủ + Thêm › "Chấm công · Lương của tôi" (`more='cc'`). Bấm Vào ca/Tan ca → camera trực tiếp (`capture=user`) + GPS (`maximumAge:0`) → ảnh nén ≤480px gửi `act:'nvCong'` → máy chủ ghi GIỜ MÁY CHỦ, chặn ngoài 200m (+sai số ≤100m). Ảnh đóng dấu giờ máy chủ → 📤 Gửi Zalo (navigator.share / tải về). Quên tan ca → form giải trình `act:'nvGt'` (tối đa 2/tháng). Lần đầu có thẻ đồng ý camera + vị trí (`shopgon_ccok`).
+  - Chủ: Thêm › Chấm công · Lương — 📍 Đặt vị trí shop · tab Hôm nay / Tháng / Giải trình / Lương. Lương: mức chung NV shop · thưởng NV hãng (bật/tắt) · từng NV Cài (mức chung / lương riêng / NV hãng) + Bonus theo tháng · Chốt lương (chặn khi còn giải trình chờ) · Lịch sử đã chốt. Cài lương + bảng đã chốt nằm `db.shop.luong` (sổ Drive). Lượt chấm công + giải trình ở máy chủ, app chủ giữ bản sao `localStorage shopgon_cc_<email>`.
+  - Đồng bộ: `nvSync` gửi `cc:{tu,nv,toaDo?,gtKq?}` (nv = cấu hình + doanh số tháng của TỪNG NV, máy chủ chỉ trả đúng phần của NV đó), nhận `r.cc`. `nvLogin` trả `cong`.
+  - Máy chủ **v22** (code trong Project `claude/shopgon/ChamCong_v22.gs`, đã Lưu trong Apps Script, CHƯA triển khai lúc viết): tab `NhanVienCong`, `NhanVienLuong`, thư mục Drive "Shop Gọn - Ảnh chấm công" (ảnh xoá sau 60 ngày), 15 hàm cc*.
+  - Test: `_tam/test-cham-cong.py` 12/12 (máy chủ giả). Tài khoản test chủ + NV có dữ liệu mẫu.
