@@ -2666,7 +2666,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261107-1430';let verLuc=0;
+const BUILD='20261107-1445';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
@@ -3150,6 +3150,13 @@ document.addEventListener('input',e=>{if(e.target.id==='ttqTim'){ttqQ=e.target.v
 .ccmini{border:1px solid var(--line);background:#fff;color:var(--pen);border-radius:10px;padding:6px 10px;font-weight:700;font-size:13px;cursor:pointer}
 .ccmini.bo{color:#c96a14}
 .seg.ccchip button{font-size:13px;padding-left:2px;padding-right:2px;white-space:nowrap;min-width:0}
+.cctn{margin-top:12px;border:1px solid var(--line);border-radius:14px;padding:11px 12px;background:#fafcfc}
+.cctn .h{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}
+.cctn .g1{display:flex;justify-content:space-between;font-size:13.5px}.cctn .g1 span{color:var(--muted)}
+.cctn .gr{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.cctn .gr>div{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 9px;min-width:0}
+.cctn .gr span{display:block;font-size:12px;color:var(--muted)}.cctn .gr b{display:block;font-size:16px}.cctn .gr small{display:block;font-size:11.5px;color:var(--muted)}
+.cctn .tot{display:flex;justify-content:space-between;align-items:baseline;border-top:1px dashed var(--line);margin-top:10px;padding-top:8px;font-weight:800}.cctn .tot b{font-size:20px;color:var(--pen)}
 .ccrule{font-size:13px;background:var(--pen-soft);border-radius:12px;padding:9px 11px;margin-bottom:8px;line-height:1.45}
 .cccf{margin-top:8px;padding:10px;border-radius:12px;border:1px solid #f0b37a;background:#fff4e8;display:flex;flex-direction:column;gap:8px;font-size:13.5px}
 .ccov{position:fixed;inset:0;background:rgba(10,20,22,.78);display:grid;place-items:center;padding:16px;z-index:60}
@@ -3281,10 +3288,21 @@ const ccAnh=id=>id?'https://lh3.googleusercontent.com/d/'+id+'=w600':'';
 function ccLuotHtml(lu,anh){return lu.map(l=>`<div class="ccses">${anh&&l.vao.anh?`<button class="ccth" data-ccimg="${esc(l.vao.anh)}" aria-label="Ảnh vào ca"><img class="ccth" src="${ccAnh(l.vao.anh).replace('=w600','=w120')}" alt="" loading="lazy"></button>`:''}<div class="t"><b class="num">${ccHm(l.vao.luc)} → ${l.ra?ccHm(l.ra.luc):'…'}</b><small>${l.ra?ccGm((l.ra.luc-l.vao.luc)/36e5):'chưa tan ca'}${l.vao.cach>=0?' · 📍 cách shop '+l.vao.cach+'m':''}</small></div>${anh&&l.ra&&l.ra.anh?`<button class="ccth" data-ccimg="${esc(l.ra.anh)}" aria-label="Ảnh tan ca"><img class="ccth" src="${ccAnh(l.ra.anh).replace('=w600','=w120')}" alt="" loading="lazy"></button>`:''}</div>`).join('')}
 
 /* ----- trang NV ----- */
+/* 07/11 14h15 anh Thái: "Thu nhập của tôi tháng này" ngay dưới nút Vào ca — giờ công / chuẩn, lương cơ bản, doanh thu máy, doanh thu phụ kiện → thu nhập tạm tính */
+function ccThuNhap(){const th=ccNow(),T=ccTong(NV.sdt,th),Lg=CC.luong;
+  if(!Lg||Lg.thang!==th)return `<div class="cctn"><div class="h"><b>💰 Thu nhập của tôi ${ccTen(th)}</b></div><div class="g1"><span>Giờ công đã làm</span><b class="num">${ccG(T.h)}</b></div><small style="color:var(--muted)">Chủ shop chưa cài lương cho bạn.</small></div>`;
+  const ch=Lg.chot,x=ch||ccCalc({loai:Lg.loai,cb:Lg.cb,chuan:Lg.chuan,pMay:Lg.pMay,pKhac:Lg.pKhac,bonus:Lg.bonus,bnote:Lg.bnote},T.h,{may:Lg.may,khac:Lg.khac,nMay:Lg.nMay}),hang=x.loai==='hang',tr=v=>(Math.round(v/1e5)/10).toLocaleString('vi-VN')+'tr';
+  return `<div class="cctn"><div class="h"><b>💰 Thu nhập của tôi ${ccTen(th)}</b><span class="pill ${ch?'b':'g'}">${ch?'🔒 Đã chốt':'tạm tính'}</span></div>
+  <div class="g1"><span>Giờ công</span><b class="num">${ccG(hang?x.h:x.ht)} / ${x.chuan}h</b></div><div class="ccbar"><i style="width:${x.pct}%"></i></div>
+  <div class="gr"><div><span>Lương cơ bản</span><b class="num">${hang?'Không có':money(x.lg)}</b>${hang?'':`<small>${money(x.cb)} · ${money(x.dg)}/giờ</small>`}</div>
+   <div><span>Doanh thu máy</span><b class="num">${tr(x.may)}</b><small>${x.nMay?x.nMay+' máy · ':''}thưởng ${x.pMay}% = ${money(x.tm)}</small></div>
+   <div><span>Doanh thu phụ kiện</span><b class="num">${tr(x.khac)}</b><small>thưởng ${x.pKhac}% = ${money(x.tk)}</small></div>
+   <div><span>Bonus</span><b class="num">${x.bo?money(x.bo):'—'}</b>${x.bnote?`<small>${esc(x.bnote)}</small>`:''}</div></div>
+  <div class="tot"><span>${ch?'Thu nhập đã chốt':'Thu nhập tạm tính'}</span><b class="num">${money(x.tong)}</b></div></div>`}
 function ccNvCard(full){if(!NV)return '';if(!CC._l){CC._l=1;ccLoad()}if(ccMau())ccMauNap();const th=ccNow(),T=ccTong(NV.sdt,th),d=T.N.find(x=>x.ngay===todayIso()),dang=!!(d&&d.dang),ok=ccDongY();
   const sub=dang?'Vào ca lúc '+ccHm(d.lu[d.lu.length-1].vao.luc)+' · đã làm '+ccGm(d.h):d&&d.h?'Hôm nay làm '+ccGm(d.h)+' · bấm Vào ca nếu làm thêm lượt':'Hôm nay chưa chấm công';
   return `<div class="panel" id="ccCard"><div class="ccst"><span class="ccdot${dang?' on':''}"></span><div style="min-width:0"><b>${dang?'Đang trong ca':d&&d.h?'Đã tan ca':'Chưa vào ca'}</b><small style="display:block;color:var(--muted);font-size:12.5px">${sub}</small></div>${full?'':`<button class="ccmini" data-more="cc" style="margin-left:auto">Chi tiết ›</button>`}</div>
-  ${ok?`${ccGpsMsg?`<div class="ccgps wait">${esc(ccGpsMsg)}</div>`:''}<button type="button" class="ccbig${dang?' out':''}${ccBusy?' dis':''}" data-cccam="1"><span>📷 ${dang?'Tan ca':'Vào ca'}</span><small>Chụp mặt tại shop · giờ lấy theo máy chủ</small></button>`
+  ${ok?`${ccGpsMsg?`<div class="ccgps wait">${esc(ccGpsMsg)}</div>`:''}<button type="button" class="ccbig${dang?' out':''}${ccBusy?' dis':''}" data-cccam="1"><span>📷 ${dang?'Tan ca':'Vào ca'}</span><small>Chụp mặt tại shop · giờ lấy theo máy chủ</small></button>${full?'':ccThuNhap()}`
     :`<div class="ccrule" style="margin-top:10px">Chấm công bằng <b>ảnh chụp trực tiếp</b> + <b>vị trí điện thoại</b> (phải ở trong ${CC.banKinh}m quanh shop). App chỉ dùng camera và vị trí lúc bạn bấm chấm công. Ảnh lưu 60 ngày cho chủ shop xem.</div><button type="button" class="btn" data-ccok="1" style="width:100%">Đồng ý và bật chấm công</button>`}
   ${ccPrev?`<div class="ccprev" id="ccPrev"><img src="${ccPrev.url}" alt="Ảnh chấm công đóng dấu giờ"><div class="two"><button class="btn" data-ccshare="1">📤 Gửi Zalo / Lưu ảnh</button><button class="ghost" data-ccprevx="1">Xong</button></div><small style="display:block;margin-top:6px;color:var(--muted)">Gửi lúc nào cũng được — giờ chấm công đã ghi lúc chụp.</small></div>`:''}</div>`}
 function ccNvQuen(){const th=ccNow(),T=ccTong(NV.sdt,th),q=T.N.filter(d=>d.quen&&!d.gt),dung=ccGtDung(NV.sdt,th);if(!q.length)return '';const d=q[q.length-1];
