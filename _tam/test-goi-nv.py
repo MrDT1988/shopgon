@@ -22,10 +22,10 @@ async def main():
     r=await E(base+"XLIC=null;"+nv(3)+"more='nvch';go('more');[nvMax(),!!document.getElementById('fNvAdd'),document.querySelector('.nvgoi button').textContent,document.getElementById('v-more').textContent.includes('Đã đủ 3/3')]")
     print('chưa gói',r);ok+=r[0]==3 and not r[1] and 'Mua' in r[2] and r[3]
     # 2. bấm Mua: QR 500k, nội dung SG NV <sdt>
-    await E("XLIC={status:'active',sdt:'0909123456',bank:{nh:'MB Bank',acc:'0123456789',bin:'970422',name:'SHOP TEST'}};render()")
+    await E("GG.email='lkmobile.store@gmail.com';XLIC={status:'active',sdt:'0909123456',bank:{nh:'MB Bank',acc:'0123456789',bin:'970422',name:'SHOP TEST'}};render()")
     await pg.click('[data-nvgoi]');await pg.wait_for_timeout(900)
     r=await E("[document.querySelector('.nvgoi .qri').textContent,!!document.querySelector('#nvQr canvas,#nvQr img')]")
-    print('QR',r);ok+='500.000' in r[0] and 'SG NV 0909123456' in r[0]
+    print('QR',r);ok+='500.000' in r[0] and 'GOI 10 NV' in r[0]
     await E(hide);await shot('mua')
     # 3. gói còn hạn: tổng 10
     await E(base+"XLIC={status:'active',nvMax:10,nvHan:'2027-11-07'};"+nv(3)+"render()")
