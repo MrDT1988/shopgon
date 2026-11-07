@@ -226,11 +226,11 @@ async def main():
         ok('Khôi phục: app bỏ đơn sau sao lưu, có lại đơn đã xóa', not r['sau'] and r['n1'], r)
         tr = [x for x in D.f.values() if x['ap'].get('ly') == 'Trước khi khôi phục']
         ok('Trước khi khôi phục tự sao lưu bản hiện tại (không mất gì)', tr and any(len(row) > 1 and row[1] == 'sau1' for n in tr[0]['sheets'] for row in tr[0]['sheets'][n]))
-        await J("for(let i=0;i<9;i++)await GG.saoLuu('Hằng tuần');return 1")
+        await J("for(let i=0;i<15;i++)await GG.saoLuu('Hằng ngày');return 1")
         con = [x for x in D.f.values() if x['ap'].get('shopgon') == 'bk' and not x['trashed']]
-        ok('Giữ 8 bản sao lưu gần nhất, bản cũ hơn vào thùng rác', len(con) == 8, len(con))
+        ok('Giữ 14 bản sao lưu gần nhất, bản cũ hơn vào thùng rác', len(con) == 14, len(con))
         r = await J("db.shop.saoLuu='';await GG.tuSaoLuu();const a=db.shop.saoLuu;const n0=(await GG.dsSaoLuu()).length;await GG.tuSaoLuu();return {a,same:db.shop.saoLuu===a,n0}")
-        ok('Tự sao lưu hằng tuần: chưa có → sao lưu; trong 7 ngày → không sao lưu lại', r['a'] and r['same'], r)
+        ok('Tự sao lưu hằng ngày: chưa có → sao lưu; cùng ngày → không sao lưu lại', r['a'] and r['same'], r)
 
         # ---------- 4. SANG NĂM MỚI: chốt sổ 2026, chép số dư sang 2027 ----------
         await J("""const m=db.may.find(x=>x.tt==='ton');db.don.push({id:'tg9',bill:'tg9',ngay:'2026-12-28',gio:'9:00',loai:'may',imei:m.imei,ten:m.ten,giaBan:5000000,giaVon:4000000,tt:'Trả góp',tgTT:'Chờ duyệt',traTruoc:1000000,cty:'HD',khach:'Chị Sáu',bh:12,huy:null});m.tt='ban';

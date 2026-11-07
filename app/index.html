@@ -936,7 +936,7 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
       db=Object.assign(m,{v:1,sample:false});this.setBase(db);Store.save(db);
       if(changedLocal&&typeof render==='function'&&!document.querySelector('input:focus,textarea:focus'))render();
       ggStatus('Đã lưu lên Google Drive');setTimeout(()=>this.tuSaoLuu(),3000)}catch(e){ggStatus('Chưa lưu được lên Drive, sẽ thử lại');this.queue(15000)}finally{this.busy=false}},
-  /* ===== SAO LƯU: hằng tuần chép sổ năm nay vào thư mục "Shop Gọn – Sao lưu", giữ 8 bản; nút Khôi phục ===== */
+  /* ===== SAO LƯU: hằng ngày chép sổ năm nay vào thư mục "Shop Gọn – Sao lưu", giữ 14 bản; nút Khôi phục (07/11 anh Thái: tuần→ngày, 8→14 bản) ===== */
   async thuMuc(){if(this._tm)return this._tm;const q=encodeURIComponent("appProperties has { key='shopgon' and value='thumuc' } and trashed=false");
     const f=await this.api('https://www.googleapis.com/drive/v3/files?q='+q+'&fields=files(id,name)');if(f.files&&f.files.length)return this._tm=f.files[0].id;
     const c=await this.api('https://www.googleapis.com/drive/v3/files',{method:'POST',body:JSON.stringify({name:'Shop Gọn – Sao lưu',mimeType:'application/vnd.google-apps.folder',appProperties:{shopgon:'thumuc'}})});return this._tm=c.id},
@@ -944,9 +944,9 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
     const f=await this.api('https://www.googleapis.com/drive/v3/files?q='+q+'&orderBy=createdTime desc&fields=files(id,name,createdTime,appProperties)');return f.files||[]},
   async saoLuu(ly,id,nam){id=id||this.sheetId;nam=nam||this.nam;const tm=await this.thuMuc();const n=new Date();const lbl=dmy(todayIso())+' '+n.getHours()+'h'+String(n.getMinutes()).padStart(2,'0');
     const c=await this.api('https://www.googleapis.com/drive/v3/files/'+id+'/copy',{method:'POST',body:JSON.stringify({name:'Sao lưu '+(db.shop.ten||'Shop Gọn')+' – năm '+nam+' – '+lbl,parents:[tm],appProperties:{shopgon:'bk',nam:String(nam),ly:ly||'',ngay:todayIso()}})});
-    const L=await this.dsSaoLuu();for(const x of L.slice(8)){try{await this.api('https://www.googleapis.com/drive/v3/files/'+x.id,{method:'PATCH',body:JSON.stringify({trashed:true})})}catch(_){}}return c.id},
-  async tuSaoLuu(){if(NV||XEM||db.sample||!this.token||!this.sheetId||!this.nam||this._sl)return;const l=db.shop.saoLuu;if(l&&(new Date(todayIso())-new Date(l))/DAY<7)return;
-    this._sl=true;try{await this.saoLuu('Hằng tuần');db.shop.saoLuu=todayIso();Store.save(db);this.queue(1000)}catch(_){}finally{this._sl=false}},
+    const L=await this.dsSaoLuu();for(const x of L.slice(14)){try{await this.api('https://www.googleapis.com/drive/v3/files/'+x.id,{method:'PATCH',body:JSON.stringify({trashed:true})})}catch(_){}}return c.id},
+  async tuSaoLuu(){if(NV||XEM||db.sample||!this.token||!this.sheetId||!this.nam||this._sl)return;const l=db.shop.saoLuu;if(l&&(new Date(todayIso())-new Date(l))/DAY<1)return;
+    this._sl=true;try{await this.saoLuu('Hằng ngày');db.shop.saoLuu=todayIso();Store.save(db);this.queue(1000)}catch(_){}finally{this._sl=false}},
   async khoiPhuc(bkId){const L=await this.dsSaoLuu();const bk=L.find(x=>x.id===bkId);if(!bk)throw new Error('Không thấy bản sao lưu');
     if(+((bk.appProperties||{}).nam)!==this.nam)throw new Error('Bản này của năm '+((bk.appProperties||{}).nam||'?')+' — chỉ khôi phục được bản của năm '+this.nam);
     while(this.busy)await new Promise(r=>setTimeout(r,300));this.busy=true;clearTimeout(this.timer);
@@ -1740,9 +1740,15 @@ function soNamMau(){const y=+todayIso().slice(0,4),t=todayIso(),d=n=>dmy(iso(Dat
     <div class="list">${[y,y-1].map(n=>`<div class="row"><div class="n"><b>Sổ năm ${n}</b><small>${n===y?'Đang ghi':'Đã chốt · chỉ đọc'}</small></div><span class="inrow" style="gap:6px;flex:none"><button class="ghost" style="padding:8px 10px" data-mau="1">⬇️ Excel</button><button class="ghost" style="padding:8px 10px" data-mau="1">Mở</button></span></div>`).join('')}</div>
     <small style="display:block;margin-top:6px;color:var(--muted)">Bấm ⬇️ Excel để tải cả sổ năm về máy — tự lưu một bản riêng, ngoài Gmail.</small>
     <div class="eyebrow" style="margin-top:14px">Sao lưu</div>
-    <p style="margin:4px 0 10px;color:var(--muted);font-size:13px">Tự sao lưu mỗi tuần vào thư mục <b>Shop Gọn – Sao lưu</b> trong Drive, giữ 8 bản gần nhất. Lần gần nhất: <b>${d(2)}</b></p>
+    <p style="margin:4px 0 10px;color:var(--muted);font-size:13px">Tự sao lưu mỗi ngày vào thư mục <b>Shop Gọn – Sao lưu</b> trong Drive, giữ 14 bản gần nhất (2 tuần). Lần gần nhất: <b>${d(2)}</b></p>
     <div class="inrow" style="flex-wrap:wrap"><button class="ghost" data-mau="1">Sao lưu ngay</button><button class="ghost" data-mau="1">Khôi phục…</button></div>
-    <div class="list" style="margin-top:8px">${[2,9,16].map(n=>`<div class="row"><div class="n"><b class="num">${d(n)} 21h00</b><small>Năm ${y} · Hằng tuần</small></div><button class="ghost" data-mau="1">Khôi phục</button></div>`).join('')}</div></div>`}
+    <details class="slHelp" style="margin-top:10px"><summary style="cursor:pointer;font-weight:700;font-size:14px">Lỡ xoá dữ liệu? Cách khôi phục</summary>
+      <div style="font-size:13px;line-height:1.5;margin-top:6px;display:flex;flex-direction:column;gap:8px">
+      <div><b>1. Lỡ xoá, sửa sai máy, hàng, đơn</b> (trong app hoặc trong file sổ): bấm <b>Khôi phục…</b> ở trên → chọn bản sao lưu có ngày <b>trước lúc lỡ tay</b> → Đồng ý. App tự lưu bản hiện tại trước khi khôi phục, đơn bán sau đó vẫn giữ.</div>
+      <div><b>2. Lỡ xoá cả file sổ</b> “Shop Gọn …” trong Google Drive: mở drive.google.com → <b>Thùng rác</b> → nhấn giữ (hoặc chuột phải) file đó → <b>Khôi phục</b>. Google giữ thùng rác 30 ngày. Xong mở lại app.</div>
+      <div><b>3. Lỡ sửa vài ô trong file sổ Google Sheet</b>: mở file sổ trên máy tính → <b>Tệp → Lịch sử phiên bản</b> → chọn giờ trước khi sửa → Khôi phục phiên bản này.</div>
+      <div style="color:var(--muted)">Trước khi kiểm kho hoặc sửa giá cả loạt, bấm <b>Sao lưu ngay</b>. Mỗi tháng bấm <b>⬇️ Excel</b> cất 1 bản ở máy tính hoặc Zalo Cloud.</div></div></details>
+    <div class="list" style="margin-top:8px">${[0,1,2].map(n=>`<div class="row"><div class="n"><b class="num">${d(n)} 21h00</b><small>Năm ${y} · Hằng ngày</small></div><button class="ghost" data-mau="1">Khôi phục</button></div>`).join('')}</div></div>`}
 function nkMau(){const d=(n,g)=>{const x=iso(Date.now()-n*DAY);return x.slice(8,10)+'/'+x.slice(5,7)+' '+g};
   const L=[['Sửa đơn','Anh Ba · OPPO A18 4/64GB',`Giá bán: ${money(3290000)} → ${money(3190000)}`,d(0,'15:42'),'Chủ shop','iPhone 7KQ2'],['Hủy đơn','Chị Mai · Ốp lưng','Hủy: (trống) → Khách đổi ý',d(0,'11:05'),'Chủ shop','Android 3MX9'],['Xóa IMEI khỏi kho','Galaxy A17 · IMEI …482910','Giá nhập '+money(5200000),d(1,'18:20'),'Chủ shop','Android 3MX9'],['Khách trả nợ','Cô Năm · Tai nghe',`Còn nợ: ${money(400000)} → (trống)`,d(2,'09:10'),'Chủ shop','iPhone 7KQ2'],['Tải dữ liệu Excel','Sổ năm '+todayIso().slice(0,4),'ShopGon_nam'+todayIso().slice(0,4)+'.xlsx',d(3,'20:30'),'Chủ shop','Máy tính 2RYH']];
   return `<div class="panel"><h2>📜 Nhật ký thay đổi</h2><div class="alert amber" style="margin-bottom:10px"><b>Đang xem mẫu (tài khoản test)</b><span>Shop thật: app tự ghi mỗi lần sửa, hủy, xóa — ai làm, máy nào, lúc nào, trước → sau. Không có nút xóa nhật ký.</span></div>
@@ -1771,8 +1777,14 @@ function soNamPanel(){if(!GG.email||!GG.nam||NV||XEM)return '';
     <div class="list">${ys.map(y=>`<div class="row"><div class="n"><b>Sổ năm ${y}</b><small>${y===GG.nam?'Đang ghi':'Đã chốt · chỉ đọc'}</small></div><span class="inrow" style="gap:6px;flex:none"><button class="ghost" style="padding:8px 10px" data-xls="${y}">⬇️ Excel</button><a class="ghost" style="padding:8px 10px" href="https://docs.google.com/spreadsheets/d/${GG.files[y]}" target="_blank" rel="noopener">Mở</a></span></div>`).join('')}</div>
     <small style="display:block;margin-top:6px;color:var(--muted)">Bấm ⬇️ Excel để tải cả sổ năm về máy — tự lưu một bản riêng, ngoài Gmail.</small>${xlsMsg?`<small style="display:block;margin-top:6px;font-weight:600">${esc(xlsMsg)}</small>`:''}
     <div class="eyebrow" style="margin-top:14px">Sao lưu</div>
-    <p style="margin:4px 0 10px;color:var(--muted);font-size:13px">Tự sao lưu mỗi tuần vào thư mục <b>Shop Gọn – Sao lưu</b> trong Drive, giữ 8 bản gần nhất. Lần gần nhất: <b>${db.shop.saoLuu?dmy(db.shop.saoLuu):'chưa có'}</b></p>
+    <p style="margin:4px 0 10px;color:var(--muted);font-size:13px">Tự sao lưu mỗi ngày vào thư mục <b>Shop Gọn – Sao lưu</b> trong Drive, giữ 14 bản gần nhất (2 tuần). Lần gần nhất: <b>${db.shop.saoLuu?dmy(db.shop.saoLuu):'chưa có'}</b></p>
     <div class="inrow" style="flex-wrap:wrap"><button class="ghost" data-sl="ngay">Sao lưu ngay</button><button class="ghost" data-sl="ds">${slOpen?'Đóng danh sách':'Khôi phục…'}</button></div>
+    <details class="slHelp" style="margin-top:10px"><summary style="cursor:pointer;font-weight:700;font-size:14px">Lỡ xoá dữ liệu? Cách khôi phục</summary>
+      <div style="font-size:13px;line-height:1.5;margin-top:6px;display:flex;flex-direction:column;gap:8px">
+      <div><b>1. Lỡ xoá, sửa sai máy, hàng, đơn</b> (trong app hoặc trong file sổ): bấm <b>Khôi phục…</b> ở trên → chọn bản sao lưu có ngày <b>trước lúc lỡ tay</b> → Đồng ý. App tự lưu bản hiện tại trước khi khôi phục, đơn bán sau đó vẫn giữ.</div>
+      <div><b>2. Lỡ xoá cả file sổ</b> “Shop Gọn …” trong Google Drive: mở drive.google.com → <b>Thùng rác</b> → nhấn giữ (hoặc chuột phải) file đó → <b>Khôi phục</b>. Google giữ thùng rác 30 ngày. Xong mở lại app.</div>
+      <div><b>3. Lỡ sửa vài ô trong file sổ Google Sheet</b>: mở file sổ trên máy tính → <b>Tệp → Lịch sử phiên bản</b> → chọn giờ trước khi sửa → Khôi phục phiên bản này.</div>
+      <div style="color:var(--muted)">Trước khi kiểm kho hoặc sửa giá cả loạt, bấm <b>Sao lưu ngay</b>. Mỗi tháng bấm <b>⬇️ Excel</b> cất 1 bản ở máy tính hoặc Zalo Cloud.</div></div></details>
     ${slMsg?`<small id="slMsg" style="display:block;margin-top:8px;font-weight:600">${esc(slMsg)}</small>`:''}
     ${slOpen?(slDs?`<div class="list" style="margin-top:8px">${slDs.length?slDs.map(x=>{const a=x.appProperties||{};const khac=+a.nam!==GG.nam;
       return slHoi===x.id?`<div class="confirm"><b style="color:var(--red)">Khôi phục về bản ${ngayBk(x)}?</b><span style="font-size:13px">Dữ liệu năm ${GG.nam} sẽ trở về đúng lúc sao lưu. App tự sao lưu bản hiện tại trước khi khôi phục.</span><span class="inrow"><button class="ghost red" data-slok="${x.id}">Đồng ý khôi phục</button><button class="ghost" data-slno="1">Thôi</button></span></div>`
@@ -2652,7 +2664,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261106-2150';let verLuc=0;
+const BUILD='20261107-1100';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
