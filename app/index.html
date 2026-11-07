@@ -1093,6 +1093,17 @@ function reportPanel(){
 /* 07/11 16h32 anh Thái: sổ tay hướng dẫn mở được ngay trong app (Thêm › Hỗ trợ, app nhân viên, và link nhỏ ở màn Chấm công / Báo cáo) */
 function hdMo(a){const u='/huong-dan/'+(a?'#'+a:'');let w=null;try{w=window.open(u,'_blank')}catch(_){}if(w){try{w.opener=null}catch(_){}}else{try{Store.save(db)}catch(_){}location.href=u}}
 const hdLink=(a,t)=>`<button type="button" class="hdl" data-hdan="${a}">📖 ${t||'Xem hướng dẫn'}</button>`;
+/* 07/11 21h22 anh Thái: Báo cáo › Bán hàng — bỏ "Đơn hôm nay", thay bằng LỢI NHUẬN THEO NGÀY: tổng lợi nhuận tháng trên đầu, mỗi ngày 1 hàng, bấm ra chi tiết bán ngày đó */
+let lnOpen=null;
+function lnNgayPanel(){const t=todayIso(),mk=(rptMode==='thang'&&rptSel&&rptSel.length===7)?rptSel:(rptMonth||t.slice(0,7));
+  const [y,m]=mk.split('-').map(Number),cuoi=new Date(y,m,0).getDate(),den=mk===t.slice(0,7)?+t.slice(8):cuoi;
+  const TH=['CN','T2','T3','T4','T5','T6','T7'];const R=[];
+  for(let d=den;d>=1;d--){const k=mk+'-'+String(d).padStart(2,'0');const r=sumRange(k,k);R.push({k,d,dow:TH[new Date(y,m-1,d).getDay()],...r})}
+  const T=sumRange(mk+'-01',mk+'-'+String(den).padStart(2,'0'));const coBan=R.filter(r=>r.dt);const mx=Math.max(1,...R.map(r=>Math.abs(r.loi)));
+  return `<div class="panel own lnp"><div class="lnh"><div><small>Lợi nhuận ${mLbl(mk).toLowerCase()}</small><b class="num ${T.loi<0?'neg':'good'}">${money(T.loi)}</b></div><div class="r"><small>Doanh thu</small><b class="num">${short(T.dt)}</b><small>${T.may} máy · ${coBan.length} ngày có bán</small></div></div>
+    <div class="lnhd"><span>Ngày</span><span>Doanh thu</span><span>Lợi nhuận</span></div>
+    ${R.map(r=>{const o=lnOpen===r.k&&r.dt;return `<div class="hnvw${o?' open':''}"><button type="button" class="lnr${r.dt?'':' z'}" data-lno="${r.k}" ${r.dt?`aria-expanded="${!!o}"`:'disabled'}><span class="d"><b>${r.dow} ${String(r.d).padStart(2,'0')}/${String(m).padStart(2,'0')}</b>${r.k===t?'<i>hôm nay</i>':''}</span><span class="num v">${r.dt?short(r.dt):'—'}${r.dt?`<small>${r.may} máy</small>`:''}</span><span class="num l ${r.loi<0?'neg':'good'}">${r.dt?money(r.loi):'<em>Không bán</em>'}<i class="lnb"><i style="width:${r.dt?Math.max(4,Math.abs(r.loi)/mx*100):0}%"></i></i></span></button>${o?rDonNgay(r.k):''}</div>`}).join('')}
+    <small class="hlhint">Bấm vào từng ngày để xem chi tiết bán hàng ngày đó</small></div>`}
 /* 07/11 anh Thái (góp ý chủ shop): Báo cáo › Theo ngày — bấm cột ngày nào thì ngay dưới hiện đơn của đúng ngày đó, lãi từng dòng, gạch ngang + tổng */
 function rDonNgay(k){const L=live().filter(d=>d.ngay===k&&d.loai!=='thu').sort((a,b)=>String(b.gio).localeCompare(String(a.gio),undefined,{numeric:true}));
   const ten=k===todayIso()?'hôm nay':dmy(k).slice(0,5);
@@ -1376,7 +1387,7 @@ function renderRpt(){const t=todayIso(), m0=t.slice(0,8)+'01';/* 07/11 16h anh T
       <div class="nbg nbh"><span></span><span>Hôm nay</span><span>Tháng này</span></div>
       ${R.map(r=>`<div class="nbg"><b>${r.k?'👤':'🏠'} ${esc(r.ten)}</b><span class="num"><b>${short(r.h.dt)}</b><small>${r.h.don} đơn · ${r.h.may} máy</small></span><span class="num"><b>${short(r.m.dt)}</b><small>${r.m.don} đơn · ${r.m.may} máy<i class="own"> · lời ${short(r.m.loi)}</i></small></span>
         <div class="nbbar"><i style="width:${Math.max(0,r.m.dt)/mx*100}%;background:${r.k?'#14a293':'#0b5e57'}"></i></div></div>`).join('')}</div>`})()}
-    <div class="panel"><h2>Đơn hôm nay</h2>${tdDon.length?`<div class="list">${tdDon.map(d=>{const isM=d.loai==='may';const p=profitOf(d);return `<div class="row"><div class="n"><b><span class="tag ${isM?'tm':'tk'}">${isM?'Máy':esc((NHOM.find(g=>g.k===d.loai)||{}).t||(d.loai==='km'?'KM':''))}</span> ${esc(d.ten)}</b><small class="num">${d.gio} · ${d.soTien?'tiền '+money(d.soTien)+' · phí':esc(d.tt)}${d.khach?' · '+esc(d.khach):''}${isM?' · …'+d.imei.slice(-6):''}</small></div><div class="right"><b class="num">${money(d.giaBan)}</b><small class="num own ${p<0?'neg':'good'}">${p<0?'Lỗ':'Lời'} ${money(Math.abs(p))}</small></div></div>`}).join('')}</div>`:'<div class="empty">Hôm nay chưa có đơn nào.<br><button type="button" class="ghost" data-go="sell" style="margin-top:10px">Bán đơn đầu tiên</button></div>'}</div>`;
+    ${lnNgayPanel()}`;
   else if(rptTab==='lai')body=`<div class="kpis"><div class="kpi own"><div class="eyebrow">Lời hôm nay</div><div class="v num good">${money(td.loi)}</div><div class="d">Tháng này ${short(mo.loi)}</div></div> ${(()=>{const L=tdDon.filter(d=>isDv(d.loai));const tien=L.reduce((s2,d)=>s2+(d.soTien||0),0),phi=L.reduce((s2,d)=>s2+d.giaBan,0);return `<div class="kpi"><div class="eyebrow">Thu hộ hôm nay</div><div class="v num">${money(tien)}</div><div class="d">${L.length} giao dịch · phí ${short(phi)}</div></div>`})()}</div>
     <div class="panel own"><h2>Lời tháng ${rm===t.slice(0,7)?'này':rm.slice(5)+'/'+rm.slice(0,4)}</h2>${phone.length||pkRows.length?`
     ${phone.length?`<div class="grp"><div class="gh"><span class="sw sp"></span>Điện thoại<b class="num">${money(sumP)}</b></div><div class="hb">${hbRows(phone,'cp')}</div></div>`:''}
@@ -2059,6 +2070,7 @@ document.addEventListener('click',e=>{
   if(b.dataset.v){if(b.dataset.v==='more')more='menu';if(b.dataset.v==='stock'){khoHub=true;khoTab='kho'}go(b.dataset.v);return}
   if(b.dataset.go){if(b.dataset.go==='stock')khoHub=false;if(b.dataset.filter==='may'){stockMode='may';stockBrand='Tất cả'}if(b.dataset.filter==='hang')stockMode='hang';go(b.dataset.go);return}
   if(b.dataset.hshow){if(b.dataset.hshow==='nv'){hnvShow=!hnvShow;hnvOpen=null}else{hlShow=!hlShow;hlOpen=null;hlAll=false}render();return}
+  if(b.dataset.lno){lnOpen=lnOpen===b.dataset.lno?null:b.dataset.lno;rDonAll=false;render();return}
   if(b.dataset.hnvo){hnvOpen=hnvOpen===b.dataset.hnvo?null:b.dataset.hnvo;render();return}
   if(b.dataset.hlo){const k=HL_KEYS[+b.dataset.hlo];hlOpen=hlOpen===k?null:k;render();return}
   if(b.dataset.hlall){hlAll=!hlAll;render();return}
@@ -2737,7 +2749,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261107-2110';let verLuc=0;
+const BUILD='20261107-2130';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
@@ -3299,6 +3311,20 @@ details.ccnote summary{cursor:pointer;color:var(--pen);font-weight:600}
 @media (max-width:360px){.rket{grid-template-columns:1.3fr 1fr;gap:6px}.rket>button{padding:10px}.rket b{font-size:16px}.rket .h{font-size:12.5px}}
 .hdl.hdl{display:block;margin:14px auto 4px;background:none;border:0;color:var(--pen);font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;padding:8px 12px;min-height:44px}
 .hgon.hgon{all:unset;box-sizing:border-box;display:flex;width:100%;justify-content:space-between;align-items:center;gap:10px;cursor:pointer;min-height:44px;-webkit-tap-highlight-color:transparent}.hgon b{font-size:16px}.hgon span{font-size:13px;font-weight:700;color:var(--pen);white-space:nowrap}.hgon:focus-visible{outline:2px solid var(--pen);outline-offset:2px;border-radius:8px}.hgonp{padding-top:8px;padding-bottom:8px}.hgon.mo{margin-bottom:4px}
+/* 07/11 21h22: Lợi nhuận theo ngày */
+.lnh{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;padding-bottom:10px;border-bottom:2px solid var(--ink)}
+.lnh small{display:block;color:var(--muted);font-size:12px;font-weight:600}.lnh b{font-size:24px}.lnh .r{text-align:right}.lnh .r b{font-size:17px}
+.lnhd{display:grid;grid-template-columns:76px 1fr 1.25fr;gap:8px;font-size:11.5px;color:var(--muted);padding:8px 0 4px}.lnhd span:not(:first-child){text-align:right}
+.lnp button.lnr{all:unset;box-sizing:border-box;width:100%;display:grid;grid-template-columns:76px 1fr 1.25fr;gap:8px;align-items:center;padding:9px 0;min-height:44px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.lnp button.lnr:disabled{cursor:default;padding:5px 0;min-height:0;opacity:.55}
+.lnp button.lnr:focus-visible{outline:2px solid var(--pen);outline-offset:2px;border-radius:8px}
+.lnr .d b{display:block;font-size:14px}.lnr .d i{font-style:normal;font-size:11px;color:var(--pen);font-weight:700}
+.lnr .v{text-align:right;display:flex;flex-direction:column;font-size:14px}.lnr .v small{font-size:11px;color:var(--muted)}
+.lnr .l{text-align:right;font-size:15px;font-weight:800;display:flex;flex-direction:column;align-items:flex-end;gap:3px}.lnr .l em{font-style:normal;font-weight:600;font-size:12.5px;color:var(--muted)}
+.lnb{display:block;width:100%;height:4px;border-radius:3px;background:var(--line);overflow:hidden}.lnb i{display:block;height:100%;background:currentColor;margin-left:auto;border-radius:3px}
+.lnp .hnvw.open>button.lnr .d b::after{content:' ⌄';color:var(--muted)}.lnp .hnvw:not(.open)>button.lnr:not(:disabled) .d b::after{content:' ›';color:var(--muted)}
+.lnp .rdon{margin-top:0;border-top:0;padding:0 10px 8px;background:#f6f9f9;border-radius:12px;margin-bottom:10px}
+.rdh b{white-space:nowrap}@media (max-width:360px){.lnp .rdon{padding:0 8px 8px}.lnh b{font-size:21px}.lnh .r small:last-child{display:none}}
 </style>
 <script>
 /* ===== 07/11 anh Thái: CHẤM CÔNG + BẢNG LƯƠNG =====
