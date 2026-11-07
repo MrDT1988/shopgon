@@ -313,7 +313,7 @@ async def main():
           const w=ms=>new Promise(r=>setTimeout(r,ms));
           NV={sdt:'0911222333',ten:'Lan',phien:'P1'};db=nvDb({shop:OWNX.shop,may:OWNX.may.filter(m=>m.tt==='ton').map(m=>({imei:m.imei,ten:m.ten,hang:m.hang,giaBan:m.giaBan})),hang:OWNX.hang.filter(h=>h.sl>0)});
           localStorage.removeItem('shopgon_nvp');localStorage.removeItem('shopgon_nvpq');localStorage.removeItem('shopgon_nvpds');render();
-          const nut=getComputedStyle(document.querySelector('nav.tabs button[data-v=stock]')).display!=='none'&&document.querySelector('nav.tabs button[data-v=stock]').textContent.includes('Nhập hàng');
+          const nut=getComputedStyle(document.querySelector('nav.tabs button[data-v=stock]')).display!=='none'&&document.querySelector('nav.tabs button[data-v=stock]').textContent.includes('Nhập');
           document.querySelector('nav.tabs button[data-v=stock]').click();await w(100);
           const tenMay=OWNX.may.find(m=>m.tt==='ton').ten;const a=$('aTen');a.value=tenMay;a.dispatchEvent(new Event('input',{bubbles:true}));
           $('aImei').value='356938035643809\\n490154203237518';document.querySelector('#fNvpMay button[type=submit]').click();await w(100);
