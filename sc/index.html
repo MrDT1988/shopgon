@@ -1,0 +1,45 @@
+<!doctype html><html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tiến độ sửa chữa · Shop Gọn</title><meta name="robots" content="noindex">
+<style>
+:root{--bg:#eef3f4;--card:#fff;--line:#dfe4ef;--ink:#17203d;--muted:#5d6785;--pen:#0f766e;--pen-soft:#e0f2ef;--green:#15803d;--green-soft:#dcfce7;--amber:#b45309;--amber-soft:#fef3c7;--red:#b91c1c;--red-soft:#fee2e2}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:520px;margin:0 auto;padding-block:16px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.shop b{font-size:18px;display:block}.shop small{color:var(--muted)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px}.top span{color:var(--muted);font-size:13px}
+.pill{font-size:13px;font-weight:700;border-radius:999px;padding:5px 12px;white-space:nowrap}.g{background:var(--green-soft);color:var(--green)}.a{background:var(--amber-soft);color:var(--amber)}.r{background:var(--red-soft);color:var(--red)}.b{background:var(--pen-soft);color:var(--pen)}.d{background:var(--line);color:var(--muted)}
+.sp{font-size:22px;font-weight:800;line-height:1.25}.sp small{display:block;font-size:14px;font-weight:500;color:var(--muted)}
+.steps{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}.steps div{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;font-size:11.5px;color:var(--muted)}.steps i{width:100%;height:6px;border-radius:3px;background:var(--line)}.steps .on i{background:var(--pen)}.steps .cur{color:var(--ink);font-weight:700}
+.f{display:grid;grid-template-columns:110px 1fr;gap:8px;padding:6px 0;border-bottom:1px dashed var(--line)}.f span{color:var(--muted)}.f b{min-width:0;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+h2{font-size:14px;margin:0;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.tl{display:flex;flex-direction:column;gap:10px}.tl div{display:grid;grid-template-columns:14px 1fr;column-gap:10px;color:var(--muted)}.tl i{grid-row:span 2;width:10px;height:10px;margin-top:6px;border-radius:50%;background:var(--line)}.tl .on{color:var(--ink)}.tl .on i{background:var(--pen)}.tl small{font-size:12.5px;font-variant-numeric:tabular-nums}
+.msg{text-align:center;color:var(--muted);padding:40px 8px}.foot{text-align:center;color:var(--muted);font-size:12px}.foot a{color:var(--pen)}
+</style></head><body><main id="m"><div class="msg">Đang tải tiến độ sửa chữa…</div></main>
+<script>
+/* 08/11 anh Thái: khách quét QR trên biên nhận sửa chữa → xem tiến độ. Chỉ đọc. */
+(function(){
+  var SV='https://script.google.com/macros/s/AKfycbyyqlK8nFmTxO_6ZNDee0FdTZeynwzHWsgRvQKxfKI0qZKtPEve_rrP4kL9O1PWj25bJg/exec';
+  var k=(new URLSearchParams(location.search).get('k')||'').replace(/[^A-Za-z0-9]/g,'');var m=document.getElementById('m');
+  function e(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  function money(n){return (+n||0).toLocaleString('vi-VN')+'đ'}
+  function dmy(s){s=String(s||'');return s.length>=10?s.slice(8,10)+'/'+s.slice(5,7)+'/'+s.slice(0,4):s}
+  function pill(t){return t==='Sửa xong'?'g':t==='Đã trả máy'?'d':t==='Không sửa được'?'r':t==='Chờ linh kiện'?'a':'b'}
+  function show(p){var s=p.shop||{},buoc=['Đã nhận máy','Đang kiểm tra','Đang sửa','Sửa xong','Đã trả máy'],cur=p.tt==='Chờ linh kiện'?2:p.tt==='Không sửa được'?-1:buoc.indexOf(p.tt),log=(p.log||[]).slice().reverse();
+    document.title=(p.tt||'Tiến độ')+' · '+(s.ten||'Shop Gọn');
+    m.innerHTML='<div class="card"><div class="shop"><b>'+e(s.ten||'Cửa hàng')+'</b>'+(s.dc||s.dt?'<small>'+e(s.dc||'')+(s.dc&&s.dt?' · ':'')+(s.dt?'📞 '+e(s.dt):'')+'</small>':'')+'</div></div>'
+    +'<div class="card"><div class="top"><span>Phiếu sửa '+e(p.ma)+'</span><b class="pill '+pill(p.tt)+'">'+e(p.tt)+'</b></div>'
+    +'<div class="sp">'+e(p.sp||'Máy của quý khách')+'<small>'+e((p.loai||[]).join(', ')||'Sửa chữa')+(p.khach?' · khách '+e(p.khach):'')+'</small></div>'
+    +(cur>=0?'<div class="steps">'+buoc.map(function(b,j){return '<div class="'+(j<=cur?'on':'')+(j===cur?' cur':'')+'"><i></i><span>'+(b==='Đang sửa'&&p.tt==='Chờ linh kiện'?'Chờ linh kiện':b)+'</span></div>'}).join('')+'</div>':'')
+    +(p.loi?'<div class="f"><span>Mô tả lỗi</span><b>'+e(p.loi)+'</b></div>':'')
+    +'<div class="f"><span>Báo giá</span><b>'+(p.baoGia?money(p.baoGia):'Shop báo sau khi kiểm tra')+'</b></div>'
+    +(p.coc?'<div class="f"><span>Đã đặt cọc</span><b>'+money(p.coc)+'</b></div>':'')
+    +'<div class="f"><span>Ngày nhận</span><b>'+e(String(p.ngayNhan||'').slice(11,16))+' '+dmy(p.ngayNhan)+'</b></div>'
+    +(p.henTra?'<div class="f"><span>Hẹn trả</span><b>'+dmy(p.henTra)+'</b></div>':'')
+    +'<div class="f"><span>Phụ kiện kèm</span><b>'+e(p.phuKien||'Không gửi kèm phụ kiện')+'</b></div></div>'
+    +'<div class="card"><h2>Tiến độ</h2><div class="tl">'+log.map(function(x,i){return '<div class="'+(i?'':'on')+'"><i></i><span><b>'+e(x.tt)+'</b>'+(x.note?' · '+e(x.note):'')+'</span><small>'+e(String(x.luc||'').slice(11,16))+' '+dmy(x.luc)+'</small></div>'}).join('')+'</div></div>'
+    +'<p class="foot">Cập nhật lúc '+e(String(p.capNhat||'').slice(11,16))+' '+dmy(p.capNhat)+' · Trang tự làm mới mỗi 60 giây<br>Quản lý cửa hàng bằng <a href="https://shopgon.vn">Shop Gọn</a></p>'}
+  function load(){if(k.length<8){m.innerHTML='<div class="msg">Link không đúng — nhờ shop gửi lại mã QR trên biên nhận nhé.</div>';return}
+    fetch(SV+'?sc='+encodeURIComponent(k)+'&_t='+Date.now(),{cache:'no-store'}).then(function(r){return r.json()}).then(function(j){if(j&&j.ok&&j.p)show(j.p);else m.innerHTML='<div class="msg">Không tìm thấy phiếu sửa — nhờ shop kiểm tra lại nhé.</div>'}).catch(function(){m.innerHTML='<div class="msg">Chưa tải được, kiểm tra mạng rồi mở lại trang.</div>'})}
+  load();setInterval(function(){if(!document.hidden)load()},60000);
+})();
+</script></body></html>
