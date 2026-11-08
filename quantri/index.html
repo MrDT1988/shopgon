@@ -357,7 +357,7 @@ function ky(kind,t){ // trả {tu,den,ten,truoc:{tu,den}}
   const m0=t.slice(0,8)+'01';const p=pD(m0);p.setMonth(p.getMonth()-1);const pm=fD(p);const pEnd=addD(m0,-1);const dayN=+t.slice(8);const pDen=pm.slice(0,8)+String(Math.min(dayN,+pEnd.slice(8))).padStart(2,'0');
   return{tu:m0,den:t,ten:'Tháng '+(+t.slice(5,7))+'/'+t.slice(0,4),truoc:{tu:pm,den:pDen},tenTruoc:'cùng kỳ tháng trước'}}
 const inR=(s,r)=>s>=r.tu&&s<=r.den;
-function sumTT(r){const L=D.tt.filter(x=>inR(x.ngay,r));return{L,dt:L.reduce((a,x)=>a+x.tien,0),hh:L.reduce((a,x)=>a+(x.hh||0)+(x.hhL||0)+(x.hhP||0),0),n:L.length,moi:L.filter(x=>x.loai!=='Gia hạn').length,gh:L.filter(x=>x.loai==='Gia hạn').length}}
+function sumTT(r){const L=D.tt.filter(x=>inR(x.ngay,r));return{L,dt:L.reduce((a,x)=>a+x.tien,0),hh:L.reduce((a,x)=>a+(x.hh||0)+(x.hhL||0)+(x.hhP||0),0),n:L.filter(x=>x.loai!=='nv10').length,moi:L.filter(x=>x.loai!=='Gia hạn'&&x.loai!=='nv10').length,gh:L.filter(x=>x.loai==='Gia hạn').length,nv:L.filter(x=>x.loai==='nv10').length}}
 function cot(kind,t){const out=[];
   if(kind==='ngay'){for(let i=13;i>=0;i--){const d=addD(t,-i);out.push({l:i%2?'':dm(d),r:{tu:d,den:d},now:i===0})}}
   else if(kind==='tuan'){const m=monday(t);for(let i=7;i>=0;i--){const a=addD(m,-7*i);out.push({l:dm(a),r:{tu:a,den:addD(a,6)},now:i===0})}}
@@ -373,13 +373,13 @@ function vDoanhThu(){const t=D.today,K=ky(KY,t),s=sumTT(K),p=sumTT(K.truoc);
   return progCard()+`<div class="seg" role="group">${[['ngay','Ngày'],['tuan','Tuần'],['thang','Tháng']].map(([k,l])=>`<button data-ky="${k}" aria-pressed="${KY===k}">${l}</button>`).join('')}</div>
   <div class="kpis">
     <div class="kpi hero"><div class="eb">Doanh thu · ${esc(K.ten)}</div><div class="v num">${money(s.dt)}</div><div class="d">${pct(s.dt,p.dt)} so với ${K.tenTruoc} (${short(p.dt)})</div></div>
-    <div class="kpi"><div class="eb">Số app bán</div><div class="v num">${s.n}</div><div class="d">${s.moi} mới · ${s.gh} gia hạn</div></div>
+    <div class="kpi"><div class="eb">Số app bán</div><div class="v num">${s.n}</div><div class="d">${s.moi} mới · ${s.gh} gia hạn${s.nv?' · '+s.nv+' gói 10 NV':''}</div></div>
     <div class="kpi"><div class="eb">Thực thu</div><div class="v num" style="font-size:19px">${money(s.dt-s.hh)}</div><div class="d">Sau hoa hồng + Partner ${short(s.hh)}</div></div>
     <div class="kpi"><div class="eb">Shop đang dùng</div><div class="v num">${dung}</div><div class="d">${sap?sap+' shop hết hạn ≤7 ngày':'Không shop nào sắp hết hạn'}</div></div>
     <div class="kpi"><div class="eb">Chờ duyệt</div><div class="v num" style="color:${cho?'var(--amber)':'inherit'}">${cho}</div><div class="d">${cho?'<a href="#" data-goch="cho" style="color:var(--pen);font-weight:700">Duyệt ngay ›</a>':'Đã duyệt hết'}</div></div>
   </div>
   <div class="card"><h2>Doanh thu ${KY==='ngay'?'14 ngày':KY==='tuan'?'8 tuần':'6 tháng'}</h2><div class="bars">${C.map(c=>`<div class="bar${c.now?' now':''}"><em class="num">${c.v.dt?short(c.v.dt):''}</em><i style="height:${c.v.dt/mx*100}%"></i><span>${c.l}</span></div>`).join('')}</div></div>
-  <div class="card"><h2>Giao dịch · ${esc(K.ten)}</h2>${s.L.length?[...s.L].reverse().map(x=>`<div class="row"><div class="n"><b>${esc(x.shop)}</b><small>${dmy(x.ngay)} · ${esc(x.loai||'')} gói ${goiTen(x.m)}${x.partner?' · Partner '+esc(ptInfo(x.partner).khuVuc||fmtSdt(x.partner)):x.ctv?' · CTV '+ctvLbl(x.ctv):''}</small></div><div class="r"><b class="num">${money(x.tien)}</b>${x.hhP?`<small class="num">Partner ${money(x.hhP)}</small>`:(x.hh||x.hhL)?`<small class="num">HH ${money((x.hh||0)+(x.hhL||0))}</small>`:''}</div></div>`).join(''):'<div class="empty">Chưa bán gói nào trong kỳ này.</div>'}</div>`}
+  <div class="card"><h2>Giao dịch · ${esc(K.ten)}</h2>${s.L.length?[...s.L].reverse().map(x=>`<div class="row"><div class="n"><b>${esc(x.shop)}</b><small>${dmy(x.ngay)} · ${x.loai==='nv10'?'Gói 10 NV (1 năm)':esc(x.loai||'')+' gói '+goiTen(x.m)}${x.partner?' · Partner '+esc(ptInfo(x.partner).khuVuc||fmtSdt(x.partner)):x.ctv?' · CTV '+ctvLbl(x.ctv):''}</small></div><div class="r"><b class="num">${money(x.tien)}</b>${x.hhP?`<small class="num">Partner ${money(x.hhP)}</small>`:(x.hh||x.hhL)?`<small class="num">HH ${money((x.hh||0)+(x.hhL||0))}</small>`:''}</div></div>`).join(''):'<div class="empty">Chưa bán gói nào trong kỳ này.</div>'}</div>`}
 
 /* ===== TAB 2: CỘNG TÁC VIÊN ===== */
 /* 06/11 22h30 anh Thái: chọn tháng bất kỳ (‹ tháng › + bấm mở lưới 12 tháng) thay 2 nút Tháng này/Tháng trước */
