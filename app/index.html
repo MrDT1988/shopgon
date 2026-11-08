@@ -2321,7 +2321,7 @@ function scFake(o){const now=new Date(),luc=iso(now.getTime())+' '+String(now.ge
   const tt=SC_TT.includes(p.tt)?p.tt:x.tt,note=(p.note||'').trim();const ex=!!(p.k);
   Object.keys(p).forEach(k=>{if(!['k','tt','note'].includes(k))x[k]=p[k]});
   if(ex&&(tt!==x.tt||note)){x.log=(x.log||[]).concat([{tt,luc,ai,note}]);x.tt=tt}x.capNhat=luc;return Promise.resolve({ok:true,phieu:JSON.parse(JSON.stringify(x))})}
-function scApi(o){if(scDemo())return scFake(o);return nvPost({...o,...(NV?{sdt:NV.sdt,phien:NV.phien||''}:{token:GG.token})})}
+function scApi(o){if(scDemo()||(!NV&&!GG.token&&db.sample))return scFake(o);if(!NV&&!GG.token)return Promise.resolve({ok:false,msg:'Đăng nhập Gmail của shop để dùng phiếu sửa chữa'});return nvPost({...o,...(NV?{sdt:NV.sdt,phien:NV.phien||''}:{token:GG.token})})}
 async function scLoad(){scBusy=true;scErr='';try{const r=await scApi({act:'nvScDs'});if(r&&r.ok)scL=r.ds||[];else{scErr=(r&&r.msg)||'Chưa tải được phiếu sửa';if(r&&r.dangXuat&&NV)setTimeout(nvLogout,1500)}}catch(e){scErr='Chưa tải được, kiểm tra mạng'}scBusy=false;if(view==='more'&&more==='sc')render()}
 async function scSave(p,msg){scBusy=true;try{const r=await scApi({act:'nvScLuu',phieu:p});scBusy=false;if(!r||!r.ok){toast((r&&r.msg)||'Chưa lưu được');return null}const o=r.phieu;scL=scL||[];const i=scL.findIndex(x=>x.k===o.k);if(i>=0)scL[i]=o;else scL.unshift(o);if(msg)toast(msg);return o}catch(e){scBusy=false;toast('Chưa lưu được, kiểm tra mạng');return null}}
 const scShop=()=>({ten:db.shop.ten||'',dt:db.shop.dt||'',dc:db.shop.dc||''});
@@ -2919,7 +2919,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261108-1830';let verLuc=0;
+const BUILD='20261108-1845';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
