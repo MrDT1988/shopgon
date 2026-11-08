@@ -1004,10 +1004,18 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
       db=Object.assign(this.merge(null,db,rem),{v:1,sample:false});this.setBase(rem);Store.save(db);this.datChu(this.email);this.queue(500);return}
     db={v:1,sample:false,shop:rem.shop||db.shop,may:rem.may,don:rem.don,hang:rem.hang,pn:rem.pn,chi:rem.chi,nk:rem.nk||[]};this.setBase(db);Store.save(db);this.datChu(this.email)},
   /* 08/11: sổ cũ (1 file, trước 05/11) chưa tách xong → lấy lại toàn bộ dòng từ sổ cũ, gộp KHÔNG xoá dòng nào, rồi đổi tên sổ cũ thành bản lưu */
-  async layCu(){const L=this.soCu;if(!L)return false;while(this.busy)await new Promise(r=>setTimeout(r,300));this.busy=true;
+  async layCu(L){L=L||this.soCu;if(!L)return false;while(this.busy)await new Promise(r=>setTimeout(r,300));this.busy=true;
     try{try{await this.saoLuu('Trước khi lấy lại sổ cũ')}catch(_){}const rem=await this.docSoCu(L.id);this._leg=true;let u;try{u=this.merge(null,db,rem)}finally{this._leg=false}
       db=Object.assign(u,{v:1,sample:false,shop:db.shop||rem.shop});Store.save(db)}finally{this.busy=false}
-    const ok=await this.push();if(ok){try{await this.api('https://www.googleapis.com/drive/v3/files/'+L.id,{method:'PATCH',body:JSON.stringify({name:(L.name||'Shop Gọn')+' (sổ cũ – bản lưu '+dmy(todayIso())+')',appProperties:{shopgon:'cu'}})})}catch(_){}this.soCu=null}return ok}
+    const ok=await this.push();if(ok){if(((L.appProperties||{}).shopgon||'1')==='1'){try{await this.api('https://www.googleapis.com/drive/v3/files/'+L.id,{method:'PATCH',body:JSON.stringify({name:(L.name||'Shop Gọn')+' (sổ cũ – bản lưu '+dmy(todayIso())+')',appProperties:{shopgon:'cu'}})})}catch(_){}}if(this.soCu&&this.soCu.id===L.id)this.soCu=null}return ok},
+  /* 08/11: sổ cũ 1 file (trước 05/11) — dữ liệu thật trước khi tách sổ năm nằm ở đây, sao lưu hằng ngày KHÔNG chứa phần này */
+  async dsSoCu(){const q=encodeURIComponent("(appProperties has { key='shopgon' and value='1' } or appProperties has { key='shopgon' and value='cu' }) and trashed=false");
+    const f=await this.api('https://www.googleapis.com/drive/v3/files?q='+q+'&orderBy=createdTime&fields=files(id,name,createdTime,appProperties)');return f.files||[]},
+  /* đếm nhanh 1 bản sao lưu / sổ cũ để chủ shop biết bản nào có dữ liệu trước khi khôi phục */
+  async demFile(id,cu){if(!this._dem)this._dem={};if(this._dem[id])return this._dem[id];let o;
+    if(cu){const r=await this.docSoCu(id);o={may:r.may.length,don:r.don.length,hang:r.hang.length}}
+    else{const V=await this.docFile(id,this.dsSheet().filter(n=>n!==this.SH.nk&&n!==this.SH.sd));const d=this.docNam(V);o={may:d.may.length,don:d.don.length,hang:d.hang.length}}
+    return this._dem[id]=o}
 };
 async function license(email){if(!GG.LICENSE_URL)return {status:'active'};const r=await fetch(GG.LICENSE_URL+'?email='+encodeURIComponent(email));return r.json()}
 function refSale(){let r='';try{const q=new URLSearchParams(location.search).get('ctv')||new URLSearchParams(location.search).get('sale');if(q){localStorage.setItem('shopgon_ref',q);r=q}else r=localStorage.getItem('shopgon_ref')||''}catch(e){}return String(r).toUpperCase().slice(0,20)}
@@ -1935,8 +1943,10 @@ function soNamPanel(){if(!GG.email||!GG.nam||NV||XEM)return '';
       <div><b>3. Lỡ sửa vài ô trong file sổ Google Sheet</b>: mở file sổ trên máy tính → <b>Tệp → Lịch sử phiên bản</b> → chọn giờ trước khi sửa → Khôi phục phiên bản này.</div>
       <div style="color:var(--muted)">Trước khi kiểm kho hoặc sửa giá cả loạt, bấm <b>Sao lưu ngay</b>. Mỗi tháng bấm <b>⬇️ Excel</b> cất 1 bản ở máy tính hoặc Zalo Cloud.</div></div></details>
     ${slMsg?`<small id="slMsg" style="display:block;margin-top:8px;font-weight:600">${esc(slMsg)}</small>`:''}
-    ${slOpen?(slDs?`<div class="list" style="margin-top:8px">${slDs.length?slDs.map(x=>{const a=x.appProperties||{};const khac=+a.nam!==GG.nam;
-      return slHoi===x.id?`<div class="confirm"><b style="color:var(--red)">Khôi phục về bản ${ngayBk(x)}?</b><span style="font-size:13px">Dữ liệu năm ${GG.nam} sẽ trở về đúng lúc sao lưu. App tự sao lưu bản hiện tại trước khi khôi phục.</span><span class="inrow"><button class="ghost red" data-slok="${x.id}">Đồng ý khôi phục</button><button class="ghost" data-slno="1">Thôi</button></span></div>`
+    ${slOpen?(slDs?`<div class="list" style="margin-top:8px">${slDs.length?slDs.map(x=>{const a=x.appProperties||{};const khac=+a.nam!==GG.nam;const dm=GG._dem&&GG._dem[x.id];const demTxt=dm?(dm.may||dm.don||dm.hang?`Có ${dm.may} máy · ${dm.don} dòng đơn · ${dm.hang} mặt hàng`:'⚠️ Bản này TRỐNG — không có dữ liệu'):'Đang đếm dữ liệu…';
+      if(x.soCu)return slHoi===x.id?`<div class="confirm"><b>Lấy lại dữ liệu từ sổ cũ (trước 05/11)?</b><span style="font-size:13px">${demTxt}. App GỘP THÊM vào sổ hiện tại, không xoá dòng nào, sao lưu trước khi làm.</span><span class="inrow"><button class="btn" data-slcu="${x.id}">Lấy lại</button><button class="ghost" data-slno="1">Thôi</button></span></div>`
+        :`<div class="row"><div class="n"><b>Sổ cũ (trước 05/11)</b><small>${esc(x.name||'')}</small></div><button class="ghost" data-slkp="${x.id}">Lấy lại</button></div>`;
+      return slHoi===x.id?`<div class="confirm"><b style="color:var(--red)">Khôi phục về bản ${ngayBk(x)}?</b><span style="font-size:13px;font-weight:600">${demTxt}</span><span style="font-size:13px">Dữ liệu năm ${GG.nam} sẽ trở về đúng lúc sao lưu. App tự sao lưu bản hiện tại trước khi khôi phục.</span><span class="inrow"><button class="ghost red" data-slok="${x.id}">Đồng ý khôi phục</button><button class="ghost" data-slno="1">Thôi</button></span></div>`
       :`<div class="row"><div class="n"><b class="num">${ngayBk(x)}</b><small>Năm ${esc(a.nam||'?')}${a.ly?' · '+esc(a.ly):''}</small></div>${khac?'<span class="pill a">Năm khác</span>':`<button class="ghost" data-slkp="${x.id}">Khôi phục</button>`}</div>`}).join(''):'<div class="empty">Chưa có bản sao lưu nào.</div>'}</div>`:'<div class="empty">Đang tải danh sách…</div>'):''}
   </div>`}
 function lookCuHtml(q){const c=lookCu.q===q?lookCu:null;
@@ -1951,10 +1961,11 @@ function lookCuHtml(q){const c=lookCu.q===q?lookCu:null;
 document.addEventListener('click',e=>{const b=e.target.closest('[data-sl],[data-slkp],[data-slok],[data-slno],[data-imeicu]');if(!b)return;const d=b.dataset;
   if(d.imeicu){const q=d.imeicu;lookCu={q,dang:true};renderMore();GG.timImei(q).then(kq=>{lookCu={q,kq};renderMore()}).catch(()=>{lookCu={q,loi:'Chưa tìm được — kiểm tra mạng rồi thử lại.'};renderMore()});return}
   if(d.sl==='ngay'){slMsg='Đang sao lưu…';renderMore();GG.saoLuu('Bấm tay').then(()=>{db.shop.saoLuu=todayIso();save();slMsg='Đã sao lưu xong ✅';slDs=null;if(slOpen)GG.dsSaoLuu().then(L=>{slDs=L;renderMore()});renderMore()}).catch(()=>{slMsg='Chưa sao lưu được — kiểm tra mạng rồi thử lại.';renderMore()});return}
-  if(d.sl==='ds'){slOpen=!slOpen;slHoi=null;if(slOpen){slDs=null;GG.dsSaoLuu().then(L=>{slDs=L;renderMore()}).catch(()=>{slDs=[];slMsg='Chưa tải được danh sách sao lưu.';renderMore()})}renderMore();return}
-  if(d.slkp){slHoi=d.slkp;renderMore();return}
+  if(d.sl==='ds'){slOpen=!slOpen;slHoi=null;if(slOpen){slDs=null;Promise.all([GG.dsSaoLuu(),GG.dsSoCu().catch(()=>[])]).then(([L,C])=>{slDs=[...C.map(x=>({...x,soCu:1})),...L];renderMore()}).catch(()=>{slDs=[];slMsg='Chưa tải được danh sách sao lưu.';renderMore()})}renderMore();return}
+  if(d.slkp){slHoi=d.slkp;renderMore();const x=(slDs||[]).find(y=>y.id===d.slkp);if(x&&!(GG._dem&&GG._dem[x.id]))GG.demFile(x.id,!!x.soCu).then(()=>renderMore()).catch(()=>{});return}
+  if(d.slcu){const x=(slDs||[]).find(y=>y.id===d.slcu);slMsg='Đang lấy lại dữ liệu từ sổ cũ…';slHoi=null;renderMore();GG.layCu(x).then(ok=>{slMsg=ok?'Đã lấy lại dữ liệu từ sổ cũ ✅':'Chưa xong — kiểm tra mạng rồi thử lại.';slDs=null;slOpen=false;render();if(ok)toast('Đã lấy lại dữ liệu từ sổ cũ')}).catch(er=>{slMsg='Chưa lấy lại được: '+(er&&er.message||'lỗi mạng');renderMore()});return}
   if(d.slno){slHoi=null;renderMore();return}
-  if(d.slok){slMsg='Đang khôi phục…';slHoi=null;renderMore();GG.khoiPhuc(d.slok).then(bk=>{slOpen=false;slDs=null;slMsg='Đã khôi phục về bản sao lưu ✅ (bản trước khi khôi phục đã được sao lưu)';render();toast('Đã khôi phục dữ liệu')}).catch(er=>{slMsg='Chưa khôi phục được: '+(er&&er.message||'lỗi mạng');renderMore()});return}});
+  if(d.slok){slMsg='Đang khôi phục…';slHoi=null;renderMore();GG.khoiPhuc(d.slok).then(bk=>{slOpen=false;slDs=null;slMsg=(db.may.length||db.don.length||db.hang.length)?'Đã khôi phục về bản sao lưu ✅ (bản trước khi khôi phục đã được sao lưu)':'Đã khôi phục nhưng bản sao lưu này trống. Mở lại danh sách, chọn "Sổ cũ (trước 05/11)" hoặc bản có dữ liệu.';render();toast('Đã khôi phục dữ liệu')}).catch(er=>{slMsg='Chưa khôi phục được: '+(er&&er.message||'lỗi mạng');renderMore()});return}});
 function renderMore(){
   const el=$('v-more');
   if(NV&&more!=='nvme'&&more!=='cc'){more='nvme'}
@@ -2959,7 +2970,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261108-2130';let verLuc=0;
+const BUILD='20261108-2200';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
