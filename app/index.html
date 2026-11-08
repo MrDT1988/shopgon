@@ -817,7 +817,10 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
   baseKey(){return 'shopgon_base_'+this.sheetId},
   /* 09/11: bản gốc nằm ở IndexedDB (bộ đệm _bc trong bộ nhớ để gọi đồng bộ); máy chưa có IndexedDB thì vẫn dùng localStorage như cũ */
   _bc:{},
-  getBase(){const k=this.baseKey();let v=this._bc[k];if(v===undefined){try{v=JSON.parse(localStorage.getItem(k)||'null')}catch(_){v=null}}return v?JSON.parse(JSON.stringify(v)):null},
+  getBase(){const k=this.baseKey();let v=this._bc[k];if(v===undefined){try{v=JSON.parse(localStorage.getItem(k)||'null')}catch(_){v=null}}
+    /* 09/11 v4: máy thứ 2 mở sổ năm mới chưa có bản gốc → dùng bản gốc sổ năm trước (tránh gộp không bản gốc làm máy này đè số trên Drive) */
+    if(!v&&this.files&&this.nam&&this.files[this.nam-1]){const k2='shopgon_base_'+this.files[this.nam-1];v=this._bc[k2];if(v===undefined){try{v=JSON.parse(localStorage.getItem(k2)||'null')}catch(_){v=null}}}
+    return v?JSON.parse(JSON.stringify(v)):null},
   setBase(d){const k=this.baseKey(),v=JSON.parse(JSON.stringify({shop:d.shop,may:d.may,don:d.don,hang:d.hang,pn:d.pn||[],chi:d.chi||[]}));
     if(IDBS.ok){this._bc[k]=v;IDBS.set(k,v).then(r=>{if(r!==undefined){try{localStorage.removeItem(k)}catch(_){}}else{try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}}})}
     else{try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}}},
@@ -829,16 +832,20 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
      hoặc dòng giao dịch đã ra ngoài 12 tháng (vẫn còn trong sổ năm cũ). Thiếu bằng chứng xoá → GIỮ dòng, ghi lại lên Drive. */
   bia(loc,rem){const B=new Set();[...((loc&&loc.nk)||[]),...((rem&&rem.nk)||[])].forEach(o=>{let x=o&&o.xk;if(typeof x==='string')try{x=JSON.parse(x)}catch(_){x=null}if(Array.isArray(x))x.forEach(k=>B.add(String(k)))});return B},
   cuRa(t,o){/* 09/11 v4: đơn còn nợ / trả góp chưa giải ngân / phiếu còn nợ NCC KHÔNG bao giờ coi là ngoài 12 tháng */if(o&&(+o.no>0||(t==='Don'&&o.tgTT&&o.tgTT!=='Đã giải ngân'&&!o.huy)))return false;if(t==='May')return !(o.tt==='ton'||o.tt==='loi')&&!!this.nam&&String(o.ngayNhap||'9')<this.nam+'-01-01';if(t==='Hang')return false;return String(o.ngay||'9')<this.winStart()},
-  merge(base,loc,rem){const out={v:1,sample:false};const BIA=this.bia(loc,rem);
+  merge(base,loc,rem,giu){const out={v:1,sample:false};const BIA=this.bia(loc,rem);
     for(const [t,[f,key]] of Object.entries(this.T)){const B=new Map(((base&&base[f])||[]).map(o=>[String(o[key]),o])),L=new Map((loc[f]||[]).map(o=>[String(o[key]),o])),R=new Map((rem[f]||[]).map(o=>[String(o[key]),o]));
       const res=[],seen=new Set(),same=(a,b)=>a&&b&&this.rowOf(t,a)===this.rowOf(t,b);
       const pick=k=>{const b=B.get(k),l=L.get(k),r=R.get(k);
+        /* 09/11 v4: dòng đã có lệnh xoá (bia mộ) thì xoá ở MỌI nhánh — máy khác ghi bản cũ đè lên cũng không sống lại (trừ IMEI: nhập lại đúng IMEI sau khi xoá là hợp lệ) */
+        if(!giu&&t!=='May'&&BIA.has(t+'|'+k))return null;
+        /* phụ kiện: 2 máy cùng bán (kể cả cùng số lượng) → luôn cộng dồn chênh lệch */
+        if(t==='Hang'&&l&&r&&b&&+l.sl!==+b.sl&&+r.sl!==+b.sl){const J=x=>JSON.stringify(x===undefined?null:x),o={};new Set([...Object.keys(r),...Object.keys(l)]).forEach(f=>{const v=J(l[f])!==J(b[f])?l[f]:r[f];if(v!==undefined)o[f]=v});o.sl=(+r.sl||0)+(+l.sl||0)-(+b.sl||0);(this._hd=this._hd||new Set()).add(k);return o}
         if(l&&r){if(same(l,r)||same(r,b))return l;if(same(l,b))return r;
           /* 09/11 tối (v4): 2 máy cùng sửa 1 dòng → gộp TỪNG Ô (ô nào máy này đổi so với bản gốc thì lấy máy này, còn lại lấy Drive) — trước đây lấy nguyên dòng máy này, mất sửa của máy kia (vd 1 máy huỷ đơn, máy kia thêm ghi chú) */
           if(b){const o={},J=x=>JSON.stringify(x===undefined?null:x);new Set([...Object.keys(r),...Object.keys(l)]).forEach(f=>{const v=J(l[f])!==J(b[f])?l[f]:r[f];if(v!==undefined)o[f]=v});
             if(t==='Hang'){o.sl=(+r.sl||0)+(+l.sl||0)-(+b.sl||0);(this._hd=this._hd||new Set()).add(k)}return o}return l}
-        if(l&&!r)return b&&same(l,b)&&(BIA.has(t+'|'+k)||this.cuRa(t,l))?null:l;  // Drive thiếu: chỉ xoá theo khi có lệnh xoá thật
-        if(r&&!l)return b&&same(r,b)&&BIA.has(t+'|'+k)?null:r;                     // máy này thiếu: chỉ xoá trên Drive khi máy này đã bấm xoá
+        if(l&&!r)return !giu&&b&&same(l,b)&&(BIA.has(t+'|'+k)||this.cuRa(t,l))?null:l;  // Drive thiếu: chỉ xoá theo khi có lệnh xoá thật
+        if(r&&!l)return !giu&&b&&same(r,b)&&BIA.has(t+'|'+k)?null:r;                     // máy này thiếu: chỉ xoá trên Drive khi máy này đã bấm xoá
         return null};
       [...L.keys(),...R.keys()].forEach(k=>{if(seen.has(k))return;seen.add(k);const v=pick(k);if(v)res.push(v)});out[f]=res;
       /* 09/11 v4: đơn NV do CẢ 2 máy cùng nhận (cùng mã nv-…, bản gốc chưa có) → phụ kiện bị trừ 2 lần, cộng lại 1 lần */
@@ -847,6 +854,9 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
         const i=res.indexOf(h);if(h&&hb&&hl&&hr&&this._hd.has(String(o.hangId))&&+hl.sl<+hb.sl&&+hr.sl<+hb.sl)res[i]={...h,sl:(+h.sl||0)+(+o.sl||1)}});this._nv2=null}}
     const bs=(base&&base.shop)||{},ls=loc.shop||{},rs=rem.shop||ls;const sh={};
     new Set([...Object.keys(ls),...Object.keys(rs)]).forEach(k=>{const J=x=>JSON.stringify(x===undefined?null:x);sh[k]=J(ls[k])!==J(bs[k])?ls[k]:rs[k]});
+    /* 09/11 v4: danh sách phiếu NV chờ duyệt / kết quả duyệt gộp theo từng phiếu (trước đây lấy cả mảng của 1 máy → mất phiếu máy kia) */
+    ['pnCho','nhapKq'].forEach(k=>{const A=x=>Array.isArray(x)?x:[],b0=new Set(A(bs[k]).map(o=>String(o&&o.id))),l0=new Map(A(ls[k]).map(o=>[String(o&&o.id),o])),r0=new Map(A(rs[k]).map(o=>[String(o&&o.id),o]));
+      if(!l0.size&&!r0.size)return;const res=[];new Set([...l0.keys(),...r0.keys()]).forEach(id=>{const inL=l0.has(id),inR=r0.has(id);if(b0.has(id)&&(!inL||!inR))return;res.push(inL?l0.get(id):r0.get(id))});sh[k]=res});
     Object.keys(sh).forEach(k=>{if(sh[k]===undefined)delete sh[k]});out.shop=sh;
     /* nhật ký: chỉ cộng thêm, không bao giờ xóa theo máy khác */const NKm=new Map();[...(rem.nk||[]),...(loc.nk||[])].forEach(o=>{if(o&&o.id)NKm.set(String(o.id),o)});out.nk=[...NKm.values()].sort((a,b)=>String(a.t).localeCompare(String(b.t)));return out},
   /* ===== 05/11 anh Thái: SỔ THEO NĂM — mỗi năm 1 file Google, mỗi tháng 1 sheet (T01…T12), app hiện lũy kế tối đa 12 tháng liền kề.
@@ -904,15 +914,18 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
      Nay: (1) sheet thiếu dòng/cột thì nới ra trước, (2) GHI ĐÈ dữ liệu mới, (3) xong mới xoá phần thừa bên dưới. Đứt ở bước nào sổ cũng không bị trống. */
   async luoi(id){if(this._gr&&this._gr.id===id)return this._gr.g;const r=await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${id}?fields=sheets.properties(sheetId,title,gridProperties)`);const g={};(r.sheets||[]).forEach(x=>{const p=x.properties;g[p.title]={sid:p.sheetId,r:(p.gridProperties||{}).rowCount||1000,c:(p.gridProperties||{}).columnCount||26}});this._gr={id,g};return g},
   cot(n){let t='';n=Math.max(1,n);while(n>0){const m=(n-1)%26;t=String.fromCharCode(65+m)+t;n=Math.floor((n-1)/26)}return t},
-  async ghiFile(id,S){const names=Object.keys(S);if(!names.length)return;let G=await this.luoi(id);
+  async ghiFile(id,S,daGhi){const names=Object.keys(S);if(!names.length)return;let G=await this.luoi(id);
     const add=[];names.forEach(n=>{const g=G[n];if(!g)return;const need=S[n].length+1,w=Math.max(1,...S[n].map(r=>r.length));if(need>g.r)add.push({appendDimension:{sheetId:g.sid,dimension:'ROWS',length:need-g.r+500}});if(w>g.c)add.push({appendDimension:{sheetId:g.sid,dimension:'COLUMNS',length:w-g.c+2}})});
     if(add.length){await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${id}:batchUpdate`,{method:'POST',body:JSON.stringify({requests:add})});this._gr=null;G=await this.luoi(id)}
     const W=n=>Math.max(1,...S[n].map(r=>r.length));
     await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${id}/values:batchUpdate`,{method:'POST',body:JSON.stringify({valueInputOption:'RAW',data:names.map(n=>{/* 09/11 v4: ghi luôn dòng trống đè phần đuôi cũ trong CÙNG 1 lệnh → mạng rớt trước bước xoá đuôi cũng không còn dòng cũ sót */
       const oldH=(id===this.sheetId&&this._raw&&this._raw[n])?this._raw[n].length:0;const V=S[n].length?S[n].map(r=>{const a=r.slice();while(a.length<W(n))a.push('');return a}):[['']];
       while(V.length<oldH)V.push(Array(W(n)).fill(''));return {range:this.q(n)+'!A1',values:V}})})});
+    /* 09/11 v4: dữ liệu đã lên Drive → cập nhật bản gốc NGAY (bước xoá đuôi có lỗi cũng không làm lần sau trừ kho 2 lần) */
+    if(daGhi)try{daGhi()}catch(_){}
+    try{
     const clr=[];names.forEach(n=>{const g=G[n];if(!g)return;const h=Math.max(1,S[n].length),w=W(n);if(h<g.r)clr.push(this.q(n)+'!A'+(h+1)+':'+this.cot(g.c)+g.r);if(w<g.c)clr.push(this.q(n)+'!'+this.cot(w+1)+'1:'+this.cot(g.c)+h)});
-    if(clr.length)await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${id}/values:batchClear`,{method:'POST',body:JSON.stringify({ranges:clr})})},
+    if(clr.length)await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${id}/values:batchClear`,{method:'POST',body:JSON.stringify({ranges:clr})})}catch(e){if(!daGhi)throw e}},
   /* 08/11 KHOÁ AN TOÀN: lần gộp nào làm mất quá nhiều dòng (≥10 dòng và ≥20% dữ liệu) thì DỪNG, sao lưu, hỏi chủ shop */
   mat(loc,rem,m){let n=0,tot=0;const BIA=this.bia(loc,rem);for(const [t,[f,key]] of Object.entries(this.T)){const O=new Map();[...(rem[f]||[]),...(loc[f]||[])].forEach(o=>O.set(String(o[key]),o));const L=new Set((loc[f]||[]).map(o=>String(o[key]))),R=new Set((rem[f]||[]).map(o=>String(o[key]))),M=new Set((m[f]||[]).map(o=>String(o[key])));
       const U=new Set([...L,...R]);U.forEach(k=>{if(!M.has(k)&&!BIA.has(t+'|'+k)&&!this.cuRa(t,O.get(k)))n++});tot+=Math.max(L.size,R.size)}
@@ -935,14 +948,14 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
       [['Don','don'],['Phieu','pn'],['Chi','chi']].forEach(([t,f])=>o[f].forEach(x=>snap.set(t+'|'+x.id,this.rowOf(t,x))));this._cu={key,don:o.don,pn:o.pn,chi:o.chi};this._cuSnap=snap}
     return this._cu},
   async readRemote(){if(this.nam&&this.namNay()>this.nam&&!this._chuyen&&!(this.gioSai&&this._gio&&Date.now()-this._gio.luc<36e5)){await this.moSo()}
-    await this.ensure();const V=await this.docFile(this.sheetId,this.dsSheet());this._raw=V;const o=this.docNam(V);this._ntIds=o.nt;const cu=await this.docCu();
+    await this.ensure();const V=await this.docFile(this.sheetId,this.dsSheet());this._raw=V;this._rev=String((((V[this.SH.cd]||[])[2])||[])[1]||'');const o=this.docNam(V);this._ntIds=o.nt;const cu=await this.docCu();
     [['don','id'],['pn','id'],['chi','id']].forEach(([f,k])=>{const have=new Set(o[f].map(x=>String(x[k])));cu[f].forEach(x=>{if(!have.has(String(x[k])))o[f].push(x)})});
     return {shop:o.shop,may:o.may,don:o.don,hang:o.hang,pn:o.pn,chi:o.chi,nk:o.nk,empty:!o.co}},
   /* dựng nội dung các sheet của sổ năm `nam` từ dữ liệu d (không đụng sheet Số dư) */
   dungSheet(d,nam){const S={};S[this.SH.cd]=[['shop'],[JSON.stringify(d.shop||{})]];
     S[this.SH.h]=[[...this.cols.Hang,'them'],...(d.hang||[]).map(o=>this.enc('Hang',o))];
     S[this.SH.m]=[[...this.cols.May,'them'],...(d.may||[]).map(o=>this.enc('May',o))];
-    S[this.SH.nk]=[[...this.cols.Nk,'them'],...(d.nk||[]).filter(o=>+String(o.t||'').slice(0,4)===nam).sort((a,b)=>String(a.t).localeCompare(String(b.t))).map(o=>this.enc('Nk',o))];
+    S[this.SH.nk]=[[...this.cols.Nk,'them'],...(d.nk||[]).filter(o=>+String(o.t||'').slice(0,4)===nam||(o&&o.xk)).sort((a,b)=>String(a.t).localeCompare(String(b.t))).map(o=>this.enc('Nk',o))];
     const TS=[this.SH.nt,...Array.from({length:12},(_,i)=>this.thang(i+1))];TS.forEach(n=>S[n]=[this.tcols()]);
     [['Don','don'],['Phieu','pn'],['Chi','chi']].forEach(([t,f])=>(d[f]||[]).forEach(o=>{const ng=String(o.ngay||todayIso());const y=+ng.slice(0,4)||nam;let n;
       if(y>=nam)n=this.thang(Math.min(12,Math.max(1,+ng.slice(5,7)||1)));
@@ -968,7 +981,7 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
     const t=sd.t;R.push(['TỔNG máy tồn','','',String(t.mayN),String(t.mayVon),''],['TỔNG phụ kiện','','',String(t.pkSl),String(t.pkVon),''],['TỔNG khách nợ','','','',String(t.khachNo),''],['TỔNG trả góp chờ','','','',String(t.tgCho),''],['TỔNG nợ nhà cung cấp','','','',String(t.nccNo),'']);return R},
   soSanh(a,b){const K=['mayN','mayVon','pkSl','pkVon','khachNo','tgCho','nccNo','imei','bill','pn'];const sai=K.filter(k=>String(a[k])!==String(b[k]));return {khop:!sai.length,sai}},
   /* 01/01: chốt sổ năm cũ, chép số dư sang sổ năm mới, kiểm tra khớp 100% */
-  async chuyenNam(P,F,Y){this._chuyen=true;try{
+  async chuyenNam(P,F,Y){this._chuyen=true;const s0=JSON.stringify(db);try{
       await this.ensureId(F[P]);const V0=await this.docFile(F[P],this.dsSheet());const cu=this.docNam(V0);
       this.sheetId=F[P];this.nam=P;const base=this.getBase();
       const d=(base&&!db.sample&&(db.don.length||db.may.length))?this.merge(base,db,{...cu,empty:false}):{...cu,shop:cu.shop||db.shop};
@@ -979,7 +992,7 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
       const sd=this.soDu(dCu,Y);
       const r=await this.taoNam(Y);if(r&&r.trung){const F2=await this.dsNam();this.dungNam(Y,F2);this._chuyen=false;return}
       const id=r;const shop={...(d.shop||{})};
-      const moi={shop,nk:[NK.dong('Chốt sổ năm '+P,'Sổ năm '+Y,'Chép số dư sang sổ mới')],hang:sd.hang,may:[...sd.may,...(d.may||[]).filter(m=>!(m.tt==='ton'||m.tt==='loi')&&String(m.ngayNhap||'')>=Y+'-01-01')],
+      const moi={shop,nk:[NK.dong('Chốt sổ năm '+P,'Sổ năm '+Y,'Chép số dư sang sổ mới'),...(d.nk||[]).filter(o=>o&&o.xk)],hang:sd.hang,may:[...sd.may,...(d.may||[]).filter(m=>!(m.tt==='ton'||m.tt==='loi')&&String(m.ngayNhap||'')>=Y+'-01-01')],
         don:[...sd.don,...d.don.filter(x=>!laNam(x,P))],pn:[...sd.pn,...(d.pn||[]).filter(x=>!laNam(x,P))],chi:(d.chi||[]).filter(x=>!laNam(x,P))};
       this.dungNam(Y,{...F,[Y]:id});
       const S=this.dungSheet(moi,Y);const SD=this.sdRows(sd,Y,'Chép tự động từ sổ năm '+P+' lúc '+dmy(todayIso()),shop);S[this.SH.sd]=SD;await this.ghiFile(id,S);
@@ -990,7 +1003,9 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
       shop.soNam={...this.kq};moi.shop=shop;
       await this.ghiFile(id,{[this.SH.sd]:[...SD,['KIỂM TRA',khop?'KHỚP 100%':'LỆCH: '+kt.sai.join(', '),'Số dư cuối năm '+P+' = đầu năm '+Y,'','',dmy(todayIso())]],[this.SH.cd]:[['shop'],[JSON.stringify(shop)]]});
       try{await this.saoLuu('Chốt năm '+P,F[P],P)}catch(_){}
-      db={v:1,sample:false,...moi};this.setBase(db);Store.save(db);
+      const nd={v:1,sample:false,...moi};this.setBase(nd);
+      /* 09/11 v4: bán/sửa trong lúc đang chốt năm → gộp lại, không mất */
+      db=JSON.stringify(db)!==s0?Object.assign(this.merge(JSON.parse(s0),db,nd),{v:1,sample:false}):nd;Store.save(db);if(db!==nd)this.queue(800);
     }finally{this._chuyen=false}},
   /* sổ cũ 1 file (trước 05/11) → tách 1 lần sang sổ năm, giữ file cũ làm bản lưu */
   async docSoCu(id){const r0=await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${id}?fields=sheets.properties.title`);const have=(r0.sheets||[]).map(x=>x.properties.title);
@@ -1012,12 +1027,16 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
     const shop={...(d.shop||{}),soNam:{...this.kq}};await this.ghiFile(id,{[this.SH.cd]:[['shop'],[JSON.stringify(shop)]]});
     db={v:1,sample:false,shop,may:o.may,don:o.don,hang:o.hang,pn:o.pn,chi:o.chi};this.setBase(db);Store.save(db)},
   async push(){if(TAB_DONG)return false;if(this.busy){this.queue();return}if(this.chan&&!this.ep){ggStatus('Đang tạm dừng lưu lên Drive — xem cảnh báo ở Trang chủ');return}this.busy=true;try{const rem=await this.readRemote();const base=this.getBase();const ep=this.ep;this.ep=null;
-      const m=rem.empty?{...db,pn:db.pn||[],chi:db.chi||[]}:ep==='giu'?this.merge(null,db,rem):this.merge(base,db,rem);const s0=JSON.stringify(db);
-      if(!ep&&!rem.empty){const k=this.mat(db,rem,m);if(k){this.chan={...k,loai:'mat'};ggStatus('Tạm dừng lưu lên Drive');try{await this.saoLuu('Trước khi gộp mất '+k.n+' dòng')}catch(_){}if(typeof render==='function')render();return false}}
+      const s0=JSON.stringify(db),L0=JSON.parse(s0);/* 09/11 v4: gộp trên BẢN CHÉP — bán trong lúc đang ghi không lẫn vào bản gốc */
+      const m=rem.empty?{...L0,pn:L0.pn||[],chi:L0.chi||[]}:ep==='giu'?this.merge(base,L0,rem,true):this.merge(base,L0,rem);
+      if(!ep&&!rem.empty){const k=this.mat(L0,rem,m);if(k){this.chan={...k,loai:'mat'};ggStatus('Tạm dừng lưu lên Drive');try{await this.saoLuu('Trước khi gộp mất '+k.n+' dòng')}catch(_){}if(typeof render==='function')render();return false}}
       if(ep==='xoa'){try{await this.saoLuu('Trước khi xoá theo yêu cầu')}catch(_){}}
       const changedLocal=JSON.stringify([m.may.length,m.don.length,m.hang.length,(m.pn||[]).length,(m.chi||[]).length])!==JSON.stringify([db.may.length,db.don.length,db.hang.length,(db.pn||[]).length,(db.chi||[]).length])||m.hang.some((h,i)=>{const o=db.hang.find(x=>x.id===h.id);return !o||o.sl!==h.sl});
-      const S=this.dungSheet(m,this.nam);const doi={};Object.keys(S).forEach(n=>{if(JSON.stringify(this.tr(S[n]))!==JSON.stringify(this.tr(this._raw[n]||[])))doi[n]=S[n]});
-      if(Object.keys(doi).length)await this.ghiFile(this.sheetId,doi);
+      const S=this.dungSheet(m,this.nam);const tok=Date.now().toString(36)+Math.random().toString(36).slice(2,6);S[this.SH.cd]=[...S[this.SH.cd],['rev',tok]];const doi={};Object.keys(S).forEach(n=>{if(JSON.stringify(this.tr(S[n]))!==JSON.stringify(this.tr(this._raw[n]||[])))doi[n]=S[n]});
+      /* 09/11 v4: KHOÁ LẠC QUAN — ngay trước khi ghi, đọc lại mã phiên bản (ô rev trang Cài đặt). Máy khác vừa ghi chen → KHÔNG ghi đè, đọc lại Drive và gộp lại */
+      if(Object.keys(doi).length&&!rem.empty){const C=await this.docFile(this.sheetId,[this.SH.cd]);const rv=String((((C[this.SH.cd]||[])[2])||[])[1]||'');if(rv!==this._rev){this._ghiLai=(this._ghiLai||0)+1;if(this._ghiLai<=3){this.ep=ep;this.busy=false;return await this.push()}}}
+      this._ghiLai=0;
+      if(Object.keys(doi).length)await this.ghiFile(this.sheetId,doi,()=>this.setBase(m));else this.setBase(m);
       /* 08/11 tối: thao tác làm trong lúc đang ghi Drive (bán, sửa, đơn nhân viên) → gộp lại, không ghi đè mất */
       const doiTL=JSON.stringify(db)!==s0;const nd=doiTL?this.merge(JSON.parse(s0),db,m):m;
       db=Object.assign(nd,{v:1,sample:false});this.setBase(m);Store.save(db);this.datChu(this.email);this.het=false;const coChan=!!this.chan;this.chan=null;if(doiTL)this.queue(800);
@@ -1238,7 +1257,10 @@ function rDonNgay(k){const L=live().filter(d=>d.ngay===k&&d.loai!=='thu').sort((
    Nhân viên: nhập SĐT → lấy tồn kho → bán → đơn gửi lên máy chủ (mất mạng thì xếp hàng gửi lại). */
 const nvPost=o=>fetch(GG.LICENSE_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(o)}).then(r=>r.json());
 let nvAckN=[];/* 08/11: phiếu nhập NV báo nhận ngay (chờ chủ duyệt trong Cài đặt) */
-function nvAckOk(){const b=GG.getBase();const B=new Set(((b&&b.don)||[]).map(x=>String(x.bill)));return [...new Set([...nvAck.filter(id=>B.has(String(id))),...nvAckN])]}
+function nvAckOk(){const b=GG.getBase();const B=new Set(((b&&b.don)||[]).map(x=>String(x.bill)));
+  /* 09/11 v4: phiếu nhập NV cũng chỉ báo nhận khi đã lên Drive (trong danh sách chờ duyệt hoặc đã thành phiếu nhập) */
+  const P=new Set([...(((b&&b.shop&&b.shop.pnCho)||[]).map(x=>String(x&&x.id))),...(((b&&b.pn)||[]).map(x=>String(x&&x.nvp)))]);
+  return [...new Set([...nvAck.filter(id=>B.has(String(id))),...nvAckN.filter(id=>P.has(String(id)))])]}
 let nvNhapMoi=0,nvTimer=null,nvBusy=false,nvAck=[],nvLastMsg='',nvMkOpen=-1,nvCoMk={};
 /* 02/11 anh Thái: mật khẩu nhân viên — chủ shop đặt, gửi lên máy chủ 1 lần (máy chủ lưu dạng mã hóa), không lưu vào sổ Drive */
 /* 02/11 anh Thái: mỗi shop tối đa 3 nhân viên (gói hiện tại); cần thêm thì nâng gói — tính sau */
@@ -3046,7 +3068,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261109-0030';let verLuc=0;
+const BUILD='20261109-0130';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
