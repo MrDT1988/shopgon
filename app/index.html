@@ -778,7 +778,9 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
   login(silent){const run=()=>new Promise((ok,bad)=>{this.tc=google.accounts.oauth2.initTokenClient({client_id:this.CLIENT_ID,scope:this.SCOPES,login_hint:this.email||undefined,callback:r=>r.error?bad(r):ok(r),error_callback:e=>bad(e)});this.tc.requestAccessToken({prompt:silent?'':(this.needConsent?'consent':'select_account')})});
     return (window.google&&google.accounts?run():this.load().then(run)).then(async r=>{if(!google.accounts.oauth2.hasGrantedAllScopes(r,'https://www.googleapis.com/auth/drive.file')){this.needConsent=true;throw {where:'scope'}}this.needConsent=false;this.token=r.access_token;
     const u=await this.api('https://www.googleapis.com/oauth2/v3/userinfo');this.email=u.email;try{localStorage.setItem('shopgon_gg',JSON.stringify({email:this.email}));localStorage.setItem('shopgon_tk',JSON.stringify({t:this.token,e:this.email,x:Date.now()+(Math.min(+r.expires_in||3600,3600)-300)*1000}))}catch(e){}})},
-  async api(url,opt={}){const r=await fetch(url,{...opt,headers:{Authorization:'Bearer '+this.token,'Content-Type':'application/json',...(opt.headers||{})}});if(!r.ok)throw new Error(r.status+' '+(await r.text()).slice(0,200));return r.status===204?{}:r.json()},
+  async api(url,opt={},re){const r=await fetch(url,{...opt,headers:{Authorization:'Bearer '+this.token,'Content-Type':'application/json',...(opt.headers||{})}});
+    if(r.status===401&&!re&&this.email){try{await this.login(true);this.het=false;return this.api(url,opt,1)}catch(_){if(!this.het){this.het=true;try{if(typeof render==='function')render()}catch(_){}}}}
+    if(!r.ok)throw new Error(r.status+' '+(await r.text()).slice(0,200));return r.status===204?{}:r.json()},
   cols:{May:['imei','ten','hang','giaNhap','giaBan','ngayNhap','ncc','tt','pn'],Don:['id','bill','ngay','gio','loai','imei','hangId','ten','hang','sl','giaBan','giaVon','soTien','tt','khach','sdt','bh','note','uocTinh','huy','no','tra','doi','nv','nvTen','traSl','traTu'],Hang:['id','ten','nhom','loai','sl','min','giaNhap','giaBan','ngayNhap'],Phieu:['id','ngay','gio','ncc','tong','nMay','dong','no','loai','note'],Chi:['id','ngay','gio','loai','tien','note'],Nk:['id','t','ai','may','viec','ma','ct']},
   /* 25/10 anh Thái — sửa lỗi 2 máy: trước khi ghi, đọc lại sổ trên Drive rồi GỘP 3 chiều (bản gốc lần đồng bộ trước · máy này · sổ trên Drive)
      theo từng dòng (máy theo IMEI, đơn/hàng/phiếu/chi theo id). Phụ kiện 2 máy cùng bán thì cộng dồn chênh lệch số lượng. */
@@ -871,10 +873,11 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
   datChu(e){try{if(e)localStorage.setItem('shopgon_owner',e)}catch(_){}},
   /* đọc 1 sổ năm → {shop,hang,may,don,pn,chi} */
   docNam(V){const o={shop:null,hang:[],may:[],don:[],pn:[],chi:[],nk:[],co:false,nt:new Set()};const C=V[this.SH.cd]||[];try{o.shop=C[1]&&C[1][0]?JSON.parse(C[1][0]):null}catch(_){}
-    const rows=(n,t,f)=>{const A=V[n]||[];if(A.length>1)o.co=true;if(!A.length)return;const [h,...R]=A;R.forEach(x=>{if(!x.some(v=>v!==''))return;o[f].push(this.dec(t,h,x))})};
+    const KK={May:'imei',Hang:'id',Nk:'id',Don:'id',Phieu:'id',Chi:'id'},SEEN={};const moi=(t,r)=>{const s=SEEN[t]=SEEN[t]||new Set(),k=String(r[KK[t]]);if(k!==''&&k!=='undefined'&&s.has(k))return false;s.add(k);return true};
+    const rows=(n,t,f)=>{const A=V[n]||[];if(A.length>1)o.co=true;if(!A.length)return;const [h,...R]=A;R.forEach(x=>{if(!x.some(v=>v!==''))return;const r=this.dec(t,h,x);if(moi(t,r))o[f].push(r)})};
     rows(this.SH.h,'Hang','hang');rows(this.SH.m,'May','may');rows(this.SH.nk,'Nk','nk');
     const BT={};Object.entries(this.BANG).forEach(([t,b])=>BT[b]=t);const F={Don:'don',Phieu:'pn',Chi:'chi'};
-    [this.SH.nt,...Array.from({length:12},(_,i)=>this.thang(i+1))].forEach(n=>{const A=V[n]||[];if(A.length>1)o.co=true;if(!A.length)return;const [h,...R]=A;R.forEach(x=>{const t=BT[x[0]];if(!t)return;const r=this.dec(t,h,x);o[F[t]].push(r);if(n===this.SH.nt)o.nt.add(t+'|'+r.id)})});
+    [this.SH.nt,...Array.from({length:12},(_,i)=>this.thang(i+1))].forEach(n=>{const A=V[n]||[];if(A.length>1)o.co=true;if(!A.length)return;const [h,...R]=A;R.forEach(x=>{const t=BT[x[0]];if(!t)return;const r=this.dec(t,h,x);if(!moi(t,r))return;o[F[t]].push(r);if(n===this.SH.nt)o.nt.add(t+'|'+r.id)})});
     if(C.length)o.co=true;return o},
   /* sổ năm cũ (đã chốt): chỉ đọc các tháng còn trong 12 tháng gần nhất; giữ ảnh chụp để biết đơn nào bị sửa sau khi chốt */
   async docCu(){const P=this.nam-1,id=this.files[P];const ws=this.winStart();if(!id||ws.slice(0,4)>String(P)){this._cuSnap=new Map();return {don:[],pn:[],chi:[]}}
@@ -960,13 +963,15 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
     const shop={...(d.shop||{}),soNam:{...this.kq}};await this.ghiFile(id,{[this.SH.cd]:[['shop'],[JSON.stringify(shop)]]});
     db={v:1,sample:false,shop,may:o.may,don:o.don,hang:o.hang,pn:o.pn,chi:o.chi};this.setBase(db);Store.save(db)},
   async push(){if(this.busy){this.queue();return}if(this.chan&&!this.ep){ggStatus('Đang tạm dừng lưu lên Drive — xem cảnh báo ở Trang chủ');return}this.busy=true;try{const rem=await this.readRemote();const base=this.getBase();const ep=this.ep;this.ep=null;
-      const m=rem.empty?{...db,pn:db.pn||[],chi:db.chi||[]}:ep==='giu'?this.merge(null,db,rem):this.merge(base,db,rem);
+      const m=rem.empty?{...db,pn:db.pn||[],chi:db.chi||[]}:ep==='giu'?this.merge(null,db,rem):this.merge(base,db,rem);const s0=JSON.stringify(db);
       if(!ep&&!rem.empty){const k=this.mat(db,rem,m);if(k){this.chan={...k,loai:'mat'};ggStatus('Tạm dừng lưu lên Drive');try{await this.saoLuu('Trước khi gộp mất '+k.n+' dòng')}catch(_){}if(typeof render==='function')render();return false}}
       if(ep==='xoa'){try{await this.saoLuu('Trước khi xoá theo yêu cầu')}catch(_){}}
       const changedLocal=JSON.stringify([m.may.length,m.don.length,m.hang.length,(m.pn||[]).length,(m.chi||[]).length])!==JSON.stringify([db.may.length,db.don.length,db.hang.length,(db.pn||[]).length,(db.chi||[]).length])||m.hang.some((h,i)=>{const o=db.hang.find(x=>x.id===h.id);return !o||o.sl!==h.sl});
       const S=this.dungSheet(m,this.nam);const doi={};Object.keys(S).forEach(n=>{if(JSON.stringify(this.tr(S[n]))!==JSON.stringify(this.tr(this._raw[n]||[])))doi[n]=S[n]});
       if(Object.keys(doi).length)await this.ghiFile(this.sheetId,doi);
-      db=Object.assign(m,{v:1,sample:false});this.setBase(db);Store.save(db);this.datChu(this.email);const coChan=!!this.chan;this.chan=null;
+      /* 08/11 tối: thao tác làm trong lúc đang ghi Drive (bán, sửa, đơn nhân viên) → gộp lại, không ghi đè mất */
+      const doiTL=JSON.stringify(db)!==s0;const nd=doiTL?this.merge(JSON.parse(s0),db,m):m;
+      db=Object.assign(nd,{v:1,sample:false});this.setBase(m);Store.save(db);this.datChu(this.email);this.het=false;const coChan=!!this.chan;this.chan=null;if(doiTL)this.queue(800);
       if((changedLocal||coChan)&&typeof render==='function'&&!document.querySelector('input:focus,textarea:focus'))render();
       ggStatus('Đã lưu lên Google Drive');setTimeout(()=>this.tuSaoLuu(),3000);return true}catch(e){ggStatus('Chưa lưu được lên Drive, sẽ thử lại');this.queue(15000);return false}finally{this.busy=false}},
   /* ===== SAO LƯU: hằng ngày chép sổ năm nay vào thư mục "Shop Gọn – Sao lưu", giữ 14 bản; nút Khôi phục (07/11 anh Thái: tuần→ngày, 8→14 bản) ===== */
@@ -1177,6 +1182,8 @@ function rDonNgay(k){const L=live().filter(d=>d.ngay===k&&d.loai!=='thu').sort((
    Chủ shop: app gửi danh sách NV + tồn kho (giá bán, không giá vốn) lên máy chủ Shop Gọn, kéo đơn NV về sổ Drive của shop.
    Nhân viên: nhập SĐT → lấy tồn kho → bán → đơn gửi lên máy chủ (mất mạng thì xếp hàng gửi lại). */
 const nvPost=o=>fetch(GG.LICENSE_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(o)}).then(r=>r.json());
+let nvAckN=[];/* 08/11: phiếu nhập NV báo nhận ngay (chờ chủ duyệt trong Cài đặt) */
+function nvAckOk(){const b=GG.getBase();const B=new Set(((b&&b.don)||[]).map(x=>String(x.bill)));return [...new Set([...nvAck.filter(id=>B.has(String(id))),...nvAckN])]}
 let nvNhapMoi=0,nvTimer=null,nvBusy=false,nvAck=[],nvLastMsg='',nvMkOpen=-1,nvCoMk={};
 /* 02/11 anh Thái: mật khẩu nhân viên — chủ shop đặt, gửi lên máy chủ 1 lần (máy chủ lưu dạng mã hóa), không lưu vào sổ Drive */
 /* 02/11 anh Thái: mỗi shop tối đa 3 nhân viên (gói hiện tại); cần thêm thì nâng gói — tính sau */
@@ -1213,11 +1220,11 @@ function nvApply(o){if(o&&o.kind==='nhap'){/* 04/11 phiếu nhập của nhân v
 async function nvSync(){if(nvBusy||NV||XEM||!GG.token||db.sample)return;nvBusy=true;
   try{const ton={shop:{ten:db.shop.ten,bh:db.shop.bh,pct:db.shop.pct,mod:db.shop.mod,brands:db.shop.brands,bank:db.shop.bank,kho:db.shop.kho,km:kmChay(),web:linkNgan()},
       may:stock().map(m=>({imei:m.imei,ten:m.ten,hang:m.hang,giaBan:m.giaBan||0})),hang:db.hang.filter(h=>h.sl>0).map(h=>({id:h.id,ten:h.ten,nhom:h.nhom,loai:h.loai,sl:h.sl,giaBan:h.giaBan||0,min:h.min}))};
-    const mq=nvMkQ(),gui=Object.keys(mq),kq=(db.shop.nhapKq||[]).slice();const ccP=typeof ccPay==='function'?sgTry(ccPay):null;const r=await nvPost({act:'nvSync',token:GG.token,nv:(db.shop.nv||[]).map(x=>mq[x.sdt]?{...x,mk:mq[x.sdt]}:x),ton,ack:nvAck,nhapKq:kq,...(ccP?{cc:ccP}:{})});
+    const mq=nvMkQ(),gui=Object.keys(mq),kq=(db.shop.nhapKq||[]).slice();const ccP=typeof ccPay==='function'?sgTry(ccPay):null;const ackGui=nvAckOk();const r=await nvPost({act:'nvSync',token:GG.token,nv:(db.shop.nv||[]).map(x=>mq[x.sdt]?{...x,mk:mq[x.sdt]}:x),ton,ack:ackGui,nhapKq:kq,...(ccP?{cc:ccP}:{})});
     if(!r.ok){nvLastMsg='Chưa đồng bộ được: '+(r.msg||'lỗi máy chủ');return}
     if(r.cc&&typeof ccNhan==='function')sgTry(()=>ccNhan(r.cc,ccP));
     {const q=nvMkQ();gui.forEach(k=>{if(q[k]===mq[k])delete q[k]});nvMkSet(q)}nvCoMk={};(r.nv||[]).forEach(x=>nvCoMk[x.sdt]=!!x.coMk);
-    if(kq.length){db.shop.nhapKq=(db.shop.nhapKq||[]).filter(x=>!kq.some(y=>y.id===x.id));Store.save(db)}nvAck=[];nvNhapMoi=0;let n=0;(r.don||[]).forEach(o=>{n+=nvApply(o);nvAck.push(o.id)});
+    if(kq.length){db.shop.nhapKq=(db.shop.nhapKq||[]).filter(x=>!kq.some(y=>y.id===x.id));Store.save(db)}nvAck=nvAck.filter(id=>!ackGui.includes(id));nvAckN=nvAckN.filter(id=>!ackGui.includes(id));nvNhapMoi=0;let n=0;(r.don||[]).forEach(o=>{n+=nvApply(o);if(o&&o.kind==='nhap'){if(!nvAckN.includes(o.id))nvAckN.push(o.id)}else if(!nvAck.includes(o.id))nvAck.push(o.id)});
     if(nvNhapMoi){Store.save(db);if(GG.token&&GG.sheetId)GG.queue();toast('📥 Nhân viên gửi '+nvNhapMoi+' phiếu nhập — vào Kho hàng để duyệt');if(!n)render()}
     if(r.trung&&r.trung.length)toast('Số '+r.trung.join(', ')+' đang là nhân viên của shop khác');
     nvLastMsg='Đồng bộ lúc '+new Date().toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'})+(n?' · nhận '+n+' đơn nhân viên':'');
@@ -1418,6 +1425,7 @@ function homeDay(){const t=todayIso(),y=iso(Date.now()-DAY),r=homeD==='yest'?sum
   return `<div class="panel hdp"><div class="seg" role="group">${tb('today','Hôm nay')}${tb('yest','Hôm qua')}${tb('week','7 ngày')}</div><div class="hdv"><small>Doanh thu</small><b class="num">${money(r.dt)}</b><i>${r.n} đơn · ${r.may} máy<span class="own"> · lời ${money(r.loi)}</span></i></div></div>`}
 /* 08/11 anh Thái: cảnh báo khi app TẠM DỪNG lưu Drive để chống mất dữ liệu */
 function chanBar(){if(NV||XEM||DEMO)return '';const c=GG.chan;
+  if(GG.het)return `<div class="alert red chanb"><b>Phiên đăng nhập Google đã hết — đơn mới chỉ đang lưu trên máy này</b><span>Bấm đăng nhập lại để app lưu tiếp lên Google Drive. Không xoá dữ liệu trình duyệt, không đổi máy cho tới khi đăng nhập lại.</span><div class="inrow" style="margin-top:8px"><button class="btn" data-gg="login">Đăng nhập lại Google</button></div></div>`;
   if(c&&c.loai==='mat')return `<div class="alert red chanb"><b>Đã tạm dừng lưu lên Google Drive để giữ an toàn dữ liệu</b><span>Lần đồng bộ này sẽ làm mất ${c.n} / ${c.tot} dòng dữ liệu (có thể do mạng chập, hoặc máy khác vừa xoá). App đã sao lưu sẵn trên Drive. Không chắc thì chọn "Giữ hết".</span><div class="inrow" style="flex-wrap:wrap;margin-top:8px"><button class="btn" data-chan="giu">Giữ hết, không xoá dòng nào</button><button class="ghost red" data-chan="xoa">Tôi vừa xoá thật, cho xoá</button></div></div>`;
   if(c&&c.loai==='gmail')return `<div class="alert red chanb"><b>Gmail ${esc(GG.email)} chưa có dữ liệu của shop</b><span>Dữ liệu đang có trên máy này là của Gmail <b>${esc(c.cu)}</b>. App chưa chép sang để tránh lẫn sổ. Nếu đăng nhập nhầm, bấm đăng nhập lại Gmail cũ.</span><div class="inrow" style="flex-wrap:wrap;margin-top:8px"><button class="btn" data-gg="other">Đăng nhập lại Gmail cũ</button><button class="ghost" data-chan="chep">Chép dữ liệu sang Gmail mới</button></div></div>`;
   if(GG.soCu)return `<div class="alert amber chanb"><b>Còn sổ cũ chưa chuyển hết sang sổ năm ${GG.nam}</b><span>Nếu thấy thiếu đơn, thiếu máy từ trước 05/11, bấm để lấy lại toàn bộ từ sổ cũ. App gộp thêm, không xoá dòng nào và sao lưu trước.</span><div class="inrow" style="margin-top:8px"><button class="btn" data-chan="socu">Lấy lại dữ liệu từ sổ cũ</button></div></div>`;
@@ -1869,7 +1877,7 @@ var NK={snap:null,B:[['Don','don'],['May','may'],['Hang','hang'],['Phieu','pn'],
   chup(){if(!db||db.sample||XEM||NV){this.snap=null;return}const m=new Map();this.B.forEach(([t,f])=>(db[f]||[]).forEach(o=>m.set(this.key(t,o),JSON.stringify(o))));this.snap=m},
   may(){let k='';try{k=localStorage.getItem('sg_may')||'';if(!k){k=Math.random().toString(36).slice(2,6).toUpperCase();localStorage.setItem('sg_may',k)}}catch(_){}const ua=navigator.userAgent;return (/iPhone|iPad/.test(ua)?'iPhone':/Android/.test(ua)?'Android':'Máy tính')+' '+k},
   dong(viec,ma,ct){const n=new Date();return {id:uid(),t:todayIso()+' '+String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0'),ai:NV?'NV '+(NV.ten||''):'Chủ shop',may:this.may(),viec,ma,ct:ct||''}},
-  them(viec,ma,ct,xk){if(!db||db.sample||XEM)return;const r=this.dong(viec,ma,ct);if(xk&&xk.length)r.xk=xk.slice(0,1500);(db.nk=db.nk||[]).push(r)},
+  them(viec,ma,ct,xk){if(!db||db.sample||XEM)return;const r=this.dong(viec,ma,ct);if(xk&&xk.length)r.xk=xk.slice(0,1000);(db.nk=db.nk||[]).push(r)},
   gt(k,v){if(v===null||v===undefined||v==='')return '(trống)';if(this.TIEN.has(k)&&!isNaN(+v))return money(+v);if(typeof v==='object')return k==='dong'?(Array.isArray(v)?v.length+' dòng':'…'):JSON.stringify(v).slice(0,40);return String(v).slice(0,60)},
   nhan(t,o){return t==='Don'?(o.khach||'Khách lẻ')+' · '+(o.ten||'')+' · '+dmy(o.ngay):t==='May'?(o.ten||'')+' · IMEI …'+String(o.imei).slice(-6):t==='Hang'?(o.ten||''):t==='Phieu'?'Phiếu nhập '+(o.ncc||'')+' · '+dmy(o.ngay):(o.loai||'Chi')+' · '+dmy(o.ngay)},
   ghi(){if(XEM||NV||!db||db.sample)return;if(!this.snap){this.chup();return}
@@ -2974,7 +2982,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261108-2330';let verLuc=0;
+const BUILD='20261108-2345';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
