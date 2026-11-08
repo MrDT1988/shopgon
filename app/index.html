@@ -786,14 +786,18 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
   baseKey(){return 'shopgon_base_'+this.sheetId},
   getBase(){try{return JSON.parse(localStorage.getItem(this.baseKey())||'null')}catch(_){return null}},
   setBase(d){try{localStorage.setItem(this.baseKey(),JSON.stringify({shop:d.shop,may:d.may,don:d.don,hang:d.hang,pn:d.pn||[],chi:d.chi||[]}))}catch(_){}},
-  merge(base,loc,rem){const out={v:1,sample:false};
+  /* 08/11 tối anh Thái — CHỐNG MẤT DỮ LIỆU v2: gộp chỉ được XOÁ 1 dòng khi Nhật ký có lệnh xoá đúng dòng đó (bia mộ xk),
+     hoặc dòng giao dịch đã ra ngoài 12 tháng (vẫn còn trong sổ năm cũ). Thiếu bằng chứng xoá → GIỮ dòng, ghi lại lên Drive. */
+  bia(loc,rem){const B=new Set();[...((loc&&loc.nk)||[]),...((rem&&rem.nk)||[])].forEach(o=>{let x=o&&o.xk;if(typeof x==='string')try{x=JSON.parse(x)}catch(_){x=null}if(Array.isArray(x))x.forEach(k=>B.add(String(k)))});return B},
+  cuRa(t,o){if(t==='May')return !(o.tt==='ton'||o.tt==='loi')&&!!this.nam&&String(o.ngayNhap||'9')<this.nam+'-01-01';if(t==='Hang')return false;return String(o.ngay||'9')<this.winStart()},
+  merge(base,loc,rem){const out={v:1,sample:false};const BIA=this.bia(loc,rem);
     for(const [t,[f,key]] of Object.entries(this.T)){const B=new Map(((base&&base[f])||[]).map(o=>[String(o[key]),o])),L=new Map((loc[f]||[]).map(o=>[String(o[key]),o])),R=new Map((rem[f]||[]).map(o=>[String(o[key]),o]));
       const res=[],seen=new Set(),same=(a,b)=>a&&b&&this.rowOf(t,a)===this.rowOf(t,b);
       const pick=k=>{const b=B.get(k),l=L.get(k),r=R.get(k);
         if(l&&r){if(same(l,r)||same(r,b))return l;if(same(l,b))return r;
           if(t==='Hang'&&b){return {...l,sl:(+r.sl||0)+(+l.sl||0)-(+b.sl||0)}}return l}
-        if(l&&!r)return b&&same(l,b)?null:l;        // Drive đã xóa, máy này không sửa → xóa theo
-        if(r&&!l)return b&&same(r,b)?null:r;        // máy này đã xóa, Drive không sửa → xóa
+        if(l&&!r)return b&&same(l,b)&&(BIA.has(t+'|'+k)||this.cuRa(t,l))?null:l;  // Drive thiếu: chỉ xoá theo khi có lệnh xoá thật
+        if(r&&!l)return b&&same(r,b)&&BIA.has(t+'|'+k)?null:r;                     // máy này thiếu: chỉ xoá trên Drive khi máy này đã bấm xoá
         return null};
       [...L.keys(),...R.keys()].forEach(k=>{if(seen.has(k))return;seen.add(k);const v=pick(k);if(v)res.push(v)});out[f]=res}
     const bs=(base&&base.shop)||{},ls=loc.shop||{},rs=rem.shop||ls;const sh={};
@@ -859,8 +863,8 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
     const clr=[];names.forEach(n=>{const g=G[n];if(!g)return;const h=Math.max(1,S[n].length),w=W(n);if(h<g.r)clr.push(this.q(n)+'!A'+(h+1)+':'+this.cot(g.c)+g.r);if(w<g.c)clr.push(this.q(n)+'!'+this.cot(w+1)+'1:'+this.cot(g.c)+h)});
     if(clr.length)await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${id}/values:batchClear`,{method:'POST',body:JSON.stringify({ranges:clr})})},
   /* 08/11 KHOÁ AN TOÀN: lần gộp nào làm mất quá nhiều dòng (≥10 dòng và ≥20% dữ liệu) thì DỪNG, sao lưu, hỏi chủ shop */
-  mat(loc,rem,m){let n=0,tot=0;for(const [,[f,key]] of Object.entries(this.T)){const L=new Set((loc[f]||[]).map(o=>String(o[key]))),R=new Set((rem[f]||[]).map(o=>String(o[key]))),M=new Set((m[f]||[]).map(o=>String(o[key])));
-      const U=new Set([...L,...R]);U.forEach(k=>{if(!M.has(k))n++});tot+=Math.max(L.size,R.size)}
+  mat(loc,rem,m){let n=0,tot=0;const BIA=this.bia(loc,rem);for(const [t,[f,key]] of Object.entries(this.T)){const O=new Map();[...(rem[f]||[]),...(loc[f]||[])].forEach(o=>O.set(String(o[key]),o));const L=new Set((loc[f]||[]).map(o=>String(o[key]))),R=new Set((rem[f]||[]).map(o=>String(o[key]))),M=new Set((m[f]||[]).map(o=>String(o[key])));
+      const U=new Set([...L,...R]);U.forEach(k=>{if(!M.has(k)&&!BIA.has(t+'|'+k)&&!this.cuRa(t,O.get(k)))n++});tot+=Math.max(L.size,R.size)}
     return n>=10&&n>=tot*0.2?{n,tot}:null},
   chan:null,ep:null,soCu:null,
   chu(){try{return localStorage.getItem('shopgon_owner')||''}catch(_){return ''}},
@@ -973,7 +977,7 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
     const f=await this.api('https://www.googleapis.com/drive/v3/files?q='+q+'&orderBy=createdTime desc&fields=files(id,name,createdTime,appProperties)');return f.files||[]},
   async saoLuu(ly,id,nam){id=id||this.sheetId;nam=nam||this.nam;const tm=await this.thuMuc();const n=new Date();const lbl=dmy(todayIso())+' '+n.getHours()+'h'+String(n.getMinutes()).padStart(2,'0');
     const c=await this.api('https://www.googleapis.com/drive/v3/files/'+id+'/copy',{method:'POST',body:JSON.stringify({name:'Sao lưu '+(db.shop.ten||'Shop Gọn')+' – năm '+nam+' – '+lbl,parents:[tm],appProperties:{shopgon:'bk',nam:String(nam),ly:ly||'',ngay:todayIso()}})});
-    const L=await this.dsSaoLuu();for(const x of L.slice(14)){try{await this.api('https://www.googleapis.com/drive/v3/files/'+x.id,{method:'PATCH',body:JSON.stringify({trashed:true})})}catch(_){}}return c.id},
+    const L0=await this.dsSaoLuu(),ngay=x=>/^(Hằng ngày|Bấm tay)$/.test((x.appProperties||{}).ly||'');const L=[...L0.filter(ngay).slice(14),...L0.filter(x=>!ngay(x)).slice(10)];for(const x of L){try{await this.api('https://www.googleapis.com/drive/v3/files/'+x.id,{method:'PATCH',body:JSON.stringify({trashed:true})})}catch(_){}}return c.id},
   async tuSaoLuu(){if(NV||XEM||db.sample||!this.token||!this.sheetId||!this.nam||this._sl)return;const l=db.shop.saoLuu;if(l&&(new Date(todayIso())-new Date(l))/DAY<1)return;
     this._sl=true;try{await this.saoLuu('Hằng ngày');db.shop.saoLuu=todayIso();Store.save(db);this.queue(1000)}catch(_){}finally{this._sl=false}},
   async khoiPhuc(bkId){const L=await this.dsSaoLuu();const bk=L.find(x=>x.id===bkId);if(!bk)throw new Error('Không thấy bản sao lưu');
@@ -996,7 +1000,7 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
     return out},
   queue(ms=2500){clearTimeout(this.timer);this.timer=setTimeout(()=>this.push(),ms)},
   /* mở app: có bản gốc thì gộp (giữ đơn bán lúc mất mạng), chưa có thì lấy sổ trên Drive */
-  async pull(){const rem=await this.readRemote();const base=this.getBase();const loc=!db.sample&&(db.don.length||db.may.length);
+  async pull(){const rem=await this.readRemote();const base=this.getBase();const loc=!db.sample&&(db.don.length||db.may.length||db.hang.length||(db.pn||[]).length||(db.chi||[]).length);
     if(base&&loc){const m=this.merge(base,db,rem);if(!rem.empty&&this.mat(db,rem,m)){this.chan={...this.mat(db,rem,m),loai:'mat'};return}db=m;this.setBase(rem);Store.save(db);this.datChu(this.email);this.queue(500);return}
     /* 08/11: máy đang có dữ liệu mà chưa có bản gốc của sổ này (đổi sổ năm, tách sổ lỗi, đổi Gmail) → KHÔNG đè bằng sổ trên Drive */
     if(loc){const c=this.chu();if(c&&c!==this.email){this.chan={loai:'gmail',cu:c};return}
@@ -1865,22 +1869,22 @@ var NK={snap:null,B:[['Don','don'],['May','may'],['Hang','hang'],['Phieu','pn'],
   chup(){if(!db||db.sample||XEM||NV){this.snap=null;return}const m=new Map();this.B.forEach(([t,f])=>(db[f]||[]).forEach(o=>m.set(this.key(t,o),JSON.stringify(o))));this.snap=m},
   may(){let k='';try{k=localStorage.getItem('sg_may')||'';if(!k){k=Math.random().toString(36).slice(2,6).toUpperCase();localStorage.setItem('sg_may',k)}}catch(_){}const ua=navigator.userAgent;return (/iPhone|iPad/.test(ua)?'iPhone':/Android/.test(ua)?'Android':'Máy tính')+' '+k},
   dong(viec,ma,ct){const n=new Date();return {id:uid(),t:todayIso()+' '+String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0'),ai:NV?'NV '+(NV.ten||''):'Chủ shop',may:this.may(),viec,ma,ct:ct||''}},
-  them(viec,ma,ct){if(!db||db.sample||XEM)return;(db.nk=db.nk||[]).push(this.dong(viec,ma,ct))},
+  them(viec,ma,ct,xk){if(!db||db.sample||XEM)return;const r=this.dong(viec,ma,ct);if(xk&&xk.length)r.xk=xk.slice(0,1500);(db.nk=db.nk||[]).push(r)},
   gt(k,v){if(v===null||v===undefined||v==='')return '(trống)';if(this.TIEN.has(k)&&!isNaN(+v))return money(+v);if(typeof v==='object')return k==='dong'?(Array.isArray(v)?v.length+' dòng':'…'):JSON.stringify(v).slice(0,40);return String(v).slice(0,60)},
   nhan(t,o){return t==='Don'?(o.khach||'Khách lẻ')+' · '+(o.ten||'')+' · '+dmy(o.ngay):t==='May'?(o.ten||'')+' · IMEI …'+String(o.imei).slice(-6):t==='Hang'?(o.ten||''):t==='Phieu'?'Phiếu nhập '+(o.ncc||'')+' · '+dmy(o.ngay):(o.loai||'Chi')+' · '+dmy(o.ngay)},
   ghi(){if(XEM||NV||!db||db.sample)return;if(!this.snap){this.chup();return}
     const cur=new Map();this.B.forEach(([t,f])=>(db[f]||[]).forEach(o=>cur.set(this.key(t,o),[t,o])));
-    const coMoi=[...cur.keys()].some(k=>!this.snap.has(k)&&/^(Don|Phieu)\|/.test(k));const OUT=[];const them=(v,m,c,t,o)=>OUT.push({v,m,c,t,o});
+    const coMoi=[...cur.keys()].some(k=>!this.snap.has(k)&&/^(Don|Phieu)\|/.test(k));const OUT=[];const them=(v,m,c,t,o,xk)=>OUT.push({v,m,c,t,o,xk});
     this.snap.forEach((s0,k)=>{const t=k.split('|')[0];const a=JSON.parse(s0);const c=cur.get(k);
-      if(!c){if(t==='May'&&coMoi&&a.tt!=='ton')return;them(t==='Don'?'Xóa đơn':t==='May'?'Xóa IMEI khỏi kho':t==='Hang'?'Xóa món hàng':t==='Phieu'?'Xóa phiếu nhập':'Xóa khoản chi',this.nhan(t,a),t==='Don'?'Giá bán '+money(+a.giaBan||0):t==='May'?'Giá nhập '+money(+a.giaNhap||0):t==='Phieu'?'Tổng '+money(+a.tong||0):t==='Chi'?money(+a.tien||0):'',t,a);return}
+      if(!c){if(t==='May'&&coMoi&&a.tt!=='ton')return;them(t==='Don'?'Xóa đơn':t==='May'?'Xóa IMEI khỏi kho':t==='Hang'?'Xóa món hàng':t==='Phieu'?'Xóa phiếu nhập':'Xóa khoản chi',this.nhan(t,a),t==='Don'?'Giá bán '+money(+a.giaBan||0):t==='May'?'Giá nhập '+money(+a.giaNhap||0):t==='Phieu'?'Tổng '+money(+a.tong||0):t==='Chi'?money(+a.tien||0):'',t,a,k);return}
       const b=c[1];if(JSON.stringify(b)===s0)return;
       const ch=[...new Set([...Object.keys(a),...Object.keys(b)])].filter(f=>f[0]!=='_'&&f!=='tgLog'&&JSON.stringify(a[f]??'')!==JSON.stringify(b[f]??''));if(!ch.length)return;
       if(coMoi&&((t==='May'&&ch.every(f=>f==='tt'))||(t==='Hang'&&ch.every(f=>f==='sl'))))return;
       const viec=t==='Don'?(ch.includes('huy')&&b.huy?'Hủy đơn':ch.includes('tra')?'Trả hàng':ch.includes('doi')?'Đổi máy':ch.includes('no')&&!(+b.no)?'Khách trả nợ':'Sửa đơn'):t==='May'?'Sửa máy trong kho':t==='Hang'?(ch.every(f=>f==='sl')?'Chỉnh số lượng phụ kiện':'Sửa món hàng'):t==='Phieu'?'Sửa phiếu nhập':'Sửa khoản chi';
       them(viec,this.nhan(t,b),ch.slice(0,6).map(f=>(this.TEN[f]||f)+': '+this.gt(f,a[f])+' → '+this.gt(f,b[f])).join(' · '),t,b)});
     /* gộp: cùng 1 việc trên nhiều máy cùng tên (vd đổi giá cả lô) → 1 dòng */
-    const G=new Map();OUT.forEach(x=>{const k=x.t==='May'?x.v+'|'+(x.o.ten||'')+'|'+x.c:'_'+G.size;const g=G.get(k);if(g){g.n++;g.im.push(String(x.o.imei).slice(-6))}else G.set(k,{...x,n:1,im:[String((x.o||{}).imei||'').slice(-6)]})});
-    G.forEach(x=>this.them(x.v,x.n>1?(x.o.ten||'')+' · '+x.n+' máy (…'+x.im.slice(0,5).join(', …')+(x.n>5?'…':'')+')':x.m,x.c));
+    const G=new Map();OUT.forEach(x=>{const k=x.t==='May'?x.v+'|'+(x.o.ten||'')+'|'+x.c:'_'+G.size;const g=G.get(k);if(g){g.n++;g.im.push(String(x.o.imei).slice(-6));if(x.xk)g.xks.push(x.xk)}else G.set(k,{...x,n:1,im:[String((x.o||{}).imei||'').slice(-6)],xks:x.xk?[x.xk]:[]})});
+    G.forEach(x=>this.them(x.v,x.n>1?(x.o.ten||'')+' · '+x.n+' máy (…'+x.im.slice(0,5).join(', …')+(x.n>5?'…':'')+')':x.m,x.c,x.xks));
     this.chup()}};
 setTimeout(()=>{try{NK.chup()}catch(_){}},0);
 /* ===== 05/11: IMEI BÁN 2 LẦN (2 máy cùng mất mạng) — phát hiện sau đồng bộ, báo đỏ trang chủ ===== */
@@ -2970,7 +2974,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261108-2200';let verLuc=0;
+const BUILD='20261108-2330';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
