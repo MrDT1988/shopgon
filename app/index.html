@@ -683,7 +683,7 @@ let memory=null;
 let XEM=false,XLIC=null,xTimer=null,NV=null;
 const LocalStore={
   load(){try{const s=localStorage.getItem(KEY);return s?JSON.parse(s):null}catch(e){return memory}},
-  save(db){if(XEM)return;memory=db;try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){}if(typeof NK!=='undefined'&&NK)NK.chup()}
+  save(db){if(XEM)return;memory=db;try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){/* 08/11: bộ nhớ trình duyệt đầy — báo 1 lần thay vì im lặng */if(!this._dw){this._dw=1;setTimeout(()=>{try{toast('Bộ nhớ trình duyệt trên máy đã đầy. Dữ liệu vẫn lưu trên Google Drive — nên cài Shop Gọn như app để máy không tự xoá.')}catch(_){}},800)}}if(typeof NK!=='undefined'&&NK)NK.chup()}
 };
 const Store=LocalStore;
 
@@ -834,7 +834,7 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
   async moSo(){const Y=this.namNay();let F=await this.dsNam();
     if(!Object.keys(F).length){const L=await this.timSoCu();if(L){await this.tachSoCu(L,Y);return false}
       const r=await this.taoNam(Y);if(r&&r.trung){this.dungNam(Y,await this.dsNam());return false}this.dungNam(Y,{[Y]:r});return true}
-    if(F[Y]){this.dungNam(Y,F);return false}
+    if(F[Y]){this.dungNam(Y,F);try{const L=await this.timSoCu();this.soCu=L||null}catch(_){}return false}
     const truoc=Object.keys(F).map(Number).filter(y=>y<Y);
     if(!truoc.length){const y=Math.min(...Object.keys(F).map(Number));this.dungNam(y,F);return false}
     await this.chuyenNam(Math.max(...truoc),F,Y);return false},
@@ -847,9 +847,24 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
   async ensure(){if(this._ens===this.sheetId)return;const r=await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${this.sheetId}?fields=sheets.properties.title`);const have=(r.sheets||[]).map(x=>x.properties.title);const need=this.dsSheet().filter(t=>!have.includes(t));if(need.length)await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${this.sheetId}:batchUpdate`,{method:'POST',body:JSON.stringify({requests:need.map(t=>({addSheet:{properties:{title:t,gridProperties:{rowCount:1000,columnCount:40}}}}))})});this._ens=this.sheetId},
   async docFile(id,names){const r=await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${id}/values:batchGet?`+names.map(n=>'ranges='+encodeURIComponent(this.q(n))).join('&'));
     const V={};names.forEach((n,i)=>V[n]=((r.valueRanges||[])[i]||{}).values||[]);return V},
-  async ghiFile(id,S){const names=Object.keys(S);if(!names.length)return;
-    await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${id}/values:batchClear`,{method:'POST',body:JSON.stringify({ranges:names.map(n=>this.q(n))})});
-    await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${id}/values:batchUpdate`,{method:'POST',body:JSON.stringify({valueInputOption:'RAW',data:names.filter(n=>S[n].some(r=>r.some(v=>v!==''))).map(n=>({range:this.q(n)+'!A1',values:S[n]}))})})},
+  /* 08/11 anh Thái — CHỐNG MẤT DỮ LIỆU: trước đây xoá trắng sheet rồi mới ghi, mạng rớt giữa 2 bước là sheet trống → máy khác gộp theo và xoá luôn.
+     Nay: (1) sheet thiếu dòng/cột thì nới ra trước, (2) GHI ĐÈ dữ liệu mới, (3) xong mới xoá phần thừa bên dưới. Đứt ở bước nào sổ cũng không bị trống. */
+  async luoi(id){if(this._gr&&this._gr.id===id)return this._gr.g;const r=await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${id}?fields=sheets.properties(sheetId,title,gridProperties)`);const g={};(r.sheets||[]).forEach(x=>{const p=x.properties;g[p.title]={sid:p.sheetId,r:(p.gridProperties||{}).rowCount||1000,c:(p.gridProperties||{}).columnCount||26}});this._gr={id,g};return g},
+  cot(n){let t='';n=Math.max(1,n);while(n>0){const m=(n-1)%26;t=String.fromCharCode(65+m)+t;n=Math.floor((n-1)/26)}return t},
+  async ghiFile(id,S){const names=Object.keys(S);if(!names.length)return;let G=await this.luoi(id);
+    const add=[];names.forEach(n=>{const g=G[n];if(!g)return;const need=S[n].length+1,w=Math.max(1,...S[n].map(r=>r.length));if(need>g.r)add.push({appendDimension:{sheetId:g.sid,dimension:'ROWS',length:need-g.r+500}});if(w>g.c)add.push({appendDimension:{sheetId:g.sid,dimension:'COLUMNS',length:w-g.c+2}})});
+    if(add.length){await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${id}:batchUpdate`,{method:'POST',body:JSON.stringify({requests:add})});this._gr=null;G=await this.luoi(id)}
+    const W=n=>Math.max(1,...S[n].map(r=>r.length));
+    await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${id}/values:batchUpdate`,{method:'POST',body:JSON.stringify({valueInputOption:'RAW',data:names.map(n=>({range:this.q(n)+'!A1',values:S[n].length?S[n].map(r=>{const a=r.slice();while(a.length<W(n))a.push('');return a}):[['']]}))})});
+    const clr=[];names.forEach(n=>{const g=G[n];if(!g)return;const h=Math.max(1,S[n].length),w=W(n);if(h<g.r)clr.push(this.q(n)+'!A'+(h+1)+':'+this.cot(g.c)+g.r);if(w<g.c)clr.push(this.q(n)+'!'+this.cot(w+1)+'1:'+this.cot(g.c)+h)});
+    if(clr.length)await this.api(`https://sheets.googleapis.com/v4/spreadsheets/${id}/values:batchClear`,{method:'POST',body:JSON.stringify({ranges:clr})})},
+  /* 08/11 KHOÁ AN TOÀN: lần gộp nào làm mất quá nhiều dòng (≥10 dòng và ≥20% dữ liệu) thì DỪNG, sao lưu, hỏi chủ shop */
+  mat(loc,rem,m){let n=0,tot=0;for(const [,[f,key]] of Object.entries(this.T)){const L=new Set((loc[f]||[]).map(o=>String(o[key]))),R=new Set((rem[f]||[]).map(o=>String(o[key]))),M=new Set((m[f]||[]).map(o=>String(o[key])));
+      const U=new Set([...L,...R]);U.forEach(k=>{if(!M.has(k))n++});tot+=Math.max(L.size,R.size)}
+    return n>=10&&n>=tot*0.2?{n,tot}:null},
+  chan:null,ep:null,soCu:null,
+  chu(){try{return localStorage.getItem('shopgon_owner')||''}catch(_){return ''}},
+  datChu(e){try{if(e)localStorage.setItem('shopgon_owner',e)}catch(_){}},
   /* đọc 1 sổ năm → {shop,hang,may,don,pn,chi} */
   docNam(V){const o={shop:null,hang:[],may:[],don:[],pn:[],chi:[],nk:[],co:false,nt:new Set()};const C=V[this.SH.cd]||[];try{o.shop=C[1]&&C[1][0]?JSON.parse(C[1][0]):null}catch(_){}
     const rows=(n,t,f)=>{const A=V[n]||[];if(A.length>1)o.co=true;if(!A.length)return;const [h,...R]=A;R.forEach(x=>{if(!x.some(v=>v!==''))return;o[f].push(this.dec(t,h,x))})};
@@ -940,14 +955,16 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
     if(!sai.length){try{await this.api('https://www.googleapis.com/drive/v3/files/'+L.id,{method:'PATCH',body:JSON.stringify({name:(L.name||'Shop Gọn')+' (sổ cũ – bản lưu '+dmy(todayIso())+')',appProperties:{shopgon:'cu'}})})}catch(_){}}
     const shop={...(d.shop||{}),soNam:{...this.kq}};await this.ghiFile(id,{[this.SH.cd]:[['shop'],[JSON.stringify(shop)]]});
     db={v:1,sample:false,shop,may:o.may,don:o.don,hang:o.hang,pn:o.pn,chi:o.chi};this.setBase(db);Store.save(db)},
-  async push(){if(this.busy){this.queue();return}this.busy=true;try{const rem=await this.readRemote();const base=this.getBase();
-      const m=rem.empty?{...db,pn:db.pn||[],chi:db.chi||[]}:this.merge(base,db,rem);
+  async push(){if(this.busy){this.queue();return}if(this.chan&&!this.ep){ggStatus('Đang tạm dừng lưu lên Drive — xem cảnh báo ở Trang chủ');return}this.busy=true;try{const rem=await this.readRemote();const base=this.getBase();const ep=this.ep;this.ep=null;
+      const m=rem.empty?{...db,pn:db.pn||[],chi:db.chi||[]}:ep==='giu'?this.merge(null,db,rem):this.merge(base,db,rem);
+      if(!ep&&!rem.empty){const k=this.mat(db,rem,m);if(k){this.chan={...k,loai:'mat'};ggStatus('Tạm dừng lưu lên Drive');try{await this.saoLuu('Trước khi gộp mất '+k.n+' dòng')}catch(_){}if(typeof render==='function')render();return false}}
+      if(ep==='xoa'){try{await this.saoLuu('Trước khi xoá theo yêu cầu')}catch(_){}}
       const changedLocal=JSON.stringify([m.may.length,m.don.length,m.hang.length,(m.pn||[]).length,(m.chi||[]).length])!==JSON.stringify([db.may.length,db.don.length,db.hang.length,(db.pn||[]).length,(db.chi||[]).length])||m.hang.some((h,i)=>{const o=db.hang.find(x=>x.id===h.id);return !o||o.sl!==h.sl});
       const S=this.dungSheet(m,this.nam);const doi={};Object.keys(S).forEach(n=>{if(JSON.stringify(this.tr(S[n]))!==JSON.stringify(this.tr(this._raw[n]||[])))doi[n]=S[n]});
       if(Object.keys(doi).length)await this.ghiFile(this.sheetId,doi);
-      db=Object.assign(m,{v:1,sample:false});this.setBase(db);Store.save(db);
-      if(changedLocal&&typeof render==='function'&&!document.querySelector('input:focus,textarea:focus'))render();
-      ggStatus('Đã lưu lên Google Drive');setTimeout(()=>this.tuSaoLuu(),3000)}catch(e){ggStatus('Chưa lưu được lên Drive, sẽ thử lại');this.queue(15000)}finally{this.busy=false}},
+      db=Object.assign(m,{v:1,sample:false});this.setBase(db);Store.save(db);this.datChu(this.email);const coChan=!!this.chan;this.chan=null;
+      if((changedLocal||coChan)&&typeof render==='function'&&!document.querySelector('input:focus,textarea:focus'))render();
+      ggStatus('Đã lưu lên Google Drive');setTimeout(()=>this.tuSaoLuu(),3000);return true}catch(e){ggStatus('Chưa lưu được lên Drive, sẽ thử lại');this.queue(15000);return false}finally{this.busy=false}},
   /* ===== SAO LƯU: hằng ngày chép sổ năm nay vào thư mục "Shop Gọn – Sao lưu", giữ 14 bản; nút Khôi phục (07/11 anh Thái: tuần→ngày, 8→14 bản) ===== */
   async thuMuc(){if(this._tm)return this._tm;const q=encodeURIComponent("appProperties has { key='shopgon' and value='thumuc' } and trashed=false");
     const f=await this.api('https://www.googleapis.com/drive/v3/files?q='+q+'&fields=files(id,name)');if(f.files&&f.files.length)return this._tm=f.files[0].id;
@@ -979,9 +996,18 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
     return out},
   queue(ms=2500){clearTimeout(this.timer);this.timer=setTimeout(()=>this.push(),ms)},
   /* mở app: có bản gốc thì gộp (giữ đơn bán lúc mất mạng), chưa có thì lấy sổ trên Drive */
-  async pull(){const rem=await this.readRemote();const base=this.getBase();
-    if(base&&!db.sample&&(db.don.length||db.may.length)){db=this.merge(base,db,rem);this.setBase(rem);Store.save(db);this.queue(500);return}
-    db={v:1,sample:false,shop:rem.shop||db.shop,may:rem.may,don:rem.don,hang:rem.hang,pn:rem.pn,chi:rem.chi,nk:rem.nk||[]};this.setBase(db);Store.save(db)}
+  async pull(){const rem=await this.readRemote();const base=this.getBase();const loc=!db.sample&&(db.don.length||db.may.length);
+    if(base&&loc){const m=this.merge(base,db,rem);if(!rem.empty&&this.mat(db,rem,m)){this.chan={...this.mat(db,rem,m),loai:'mat'};return}db=m;this.setBase(rem);Store.save(db);this.datChu(this.email);this.queue(500);return}
+    /* 08/11: máy đang có dữ liệu mà chưa có bản gốc của sổ này (đổi sổ năm, tách sổ lỗi, đổi Gmail) → KHÔNG đè bằng sổ trên Drive */
+    if(loc){const c=this.chu();if(c&&c!==this.email){this.chan={loai:'gmail',cu:c};return}
+      if(rem.empty){this.datChu(this.email);this.queue(500);return}
+      db=Object.assign(this.merge(null,db,rem),{v:1,sample:false});this.setBase(rem);Store.save(db);this.datChu(this.email);this.queue(500);return}
+    db={v:1,sample:false,shop:rem.shop||db.shop,may:rem.may,don:rem.don,hang:rem.hang,pn:rem.pn,chi:rem.chi,nk:rem.nk||[]};this.setBase(db);Store.save(db);this.datChu(this.email)},
+  /* 08/11: sổ cũ (1 file, trước 05/11) chưa tách xong → lấy lại toàn bộ dòng từ sổ cũ, gộp KHÔNG xoá dòng nào, rồi đổi tên sổ cũ thành bản lưu */
+  async layCu(){const L=this.soCu;if(!L)return false;while(this.busy)await new Promise(r=>setTimeout(r,300));this.busy=true;
+    try{try{await this.saoLuu('Trước khi lấy lại sổ cũ')}catch(_){}const rem=await this.docSoCu(L.id);this._leg=true;let u;try{u=this.merge(null,db,rem)}finally{this._leg=false}
+      db=Object.assign(u,{v:1,sample:false,shop:db.shop||rem.shop});Store.save(db)}finally{this.busy=false}
+    const ok=await this.push();if(ok){try{await this.api('https://www.googleapis.com/drive/v3/files/'+L.id,{method:'PATCH',body:JSON.stringify({name:(L.name||'Shop Gọn')+' (sổ cũ – bản lưu '+dmy(todayIso())+')',appProperties:{shopgon:'cu'}})})}catch(_){}this.soCu=null}return ok}
 };
 async function license(email){if(!GG.LICENSE_URL)return {status:'active'};const r=await fetch(GG.LICENSE_URL+'?email='+encodeURIComponent(email));return r.json()}
 function refSale(){let r='';try{const q=new URLSearchParams(location.search).get('ctv')||new URLSearchParams(location.search).get('sale');if(q){localStorage.setItem('shopgon_ref',q);r=q}else r=localStorage.getItem('shopgon_ref')||''}catch(e){}return String(r).toUpperCase().slice(0,20)}
@@ -1008,7 +1034,7 @@ function showPending(lic,justSent){if(!XEM)lockApp();const w=document.getElement
   :`<h1>Chưa kiểm tra được kích hoạt</h1><p>Máy chủ Shop Gọn chưa trả lời đúng. Dữ liệu của shop vẫn nguyên trong Google Drive. Bấm "Kiểm tra lại" sau vài giây.</p>
     <button class="btn" style="width:100%" data-gg="recheck">Kiểm tra lại</button>`}
   <small id="wMsg"></small>${XEM?'<button class="wlink" data-gg="xem">Xem thử tiếp</button>':''}<button class="wlink" data-gg="other">Đăng nhập Gmail khác</button></div>`;drawPay(lic)}
-async function afterLogin(){welcomeMsg('Đang kiểm tra kích hoạt…');let lic;try{lic=await license(GG.email)}catch(e){throw {where:'may'}}GG.ctv=lic.ctv||'';XLIC=lic;
+async function afterLogin(){GG.chan=null;GG.soCu=null;welcomeMsg('Đang kiểm tra kích hoạt…');let lic;try{lic=await license(GG.email)}catch(e){throw {where:'may'}}GG.ctv=lic.ctv||'';XLIC=lic;
   if(lic.status==='none'||lic.status==='pending'){xemMode();xemBar();xemPoll();showPending(lic);return false}
   if(lic.status!=='active'){if(XEM)xemBar();showPending(lic);return false}
   const wasXem=XEM;let created;
@@ -1016,7 +1042,8 @@ async function afterLogin(){welcomeMsg('Đang kiểm tra kích hoạt…');let l
   welcomeMsg('Đang chuẩn bị sổ dữ liệu trong Drive…');
   if(wasXem){const nd=emptyDb();nd.shop.ten=String(lic.shop||'').trim();const keep=db;db=nd;try{created=await GG.moSo()}catch(e){db=keep;xemBar();throw {where:'drive',code:String(e&&e.message||'').slice(0,3)}}XEM=false}
   else{try{created=await GG.moSo()}catch(e){throw {where:'drive',code:String(e&&e.message||'').slice(0,3)}}}
-  if(created){if(db.sample){const shop=db.shop;db=emptyDb();db.shop={...emptyDb().shop,ten:shop.ten&&!shop.ten.includes('(mẫu)')?shop.ten:''}}await GG.push()}
+  if(created){if(db.sample){const shop=db.shop;db=emptyDb();db.shop={...emptyDb().shop,ten:shop.ten&&!shop.ten.includes('(mẫu)')?shop.ten:''}}
+    const c0=GG.chu();if(!db.sample&&(db.don.length||db.may.length)&&c0&&c0!==GG.email)GG.chan={loai:'gmail',cu:c0};else await GG.push()}
   else await GG.pull();
   try{localStorage.setItem('shopgon_gg',JSON.stringify({email:GG.email,sheetId:GG.sheetId}))}catch(e){}
   closeWelcome();xemBar();render();toast(wasXem?'Shop Gọn đã kích hoạt — bắt đầu nhập tồn và bán hàng':'Đã kết nối '+GG.email);return true}
@@ -1377,6 +1404,16 @@ function homeLai(a,b,ten,luonMo){const L=homeDon(a,b);if(!L.length)return '';con
 function homeDay(){const t=todayIso(),y=iso(Date.now()-DAY),r=homeD==='yest'?sumRange(y,y):homeD==='week'?sumRange(iso(Date.now()-6*DAY),t):sumRange(t,t);
   const tb=(k,l)=>`<button type="button" data-hday="${k}" aria-pressed="${homeD===k}">${l}</button>`;
   return `<div class="panel hdp"><div class="seg" role="group">${tb('today','Hôm nay')}${tb('yest','Hôm qua')}${tb('week','7 ngày')}</div><div class="hdv"><small>Doanh thu</small><b class="num">${money(r.dt)}</b><i>${r.n} đơn · ${r.may} máy<span class="own"> · lời ${money(r.loi)}</span></i></div></div>`}
+/* 08/11 anh Thái: cảnh báo khi app TẠM DỪNG lưu Drive để chống mất dữ liệu */
+function chanBar(){if(NV||XEM||DEMO)return '';const c=GG.chan;
+  if(c&&c.loai==='mat')return `<div class="alert red chanb"><b>Đã tạm dừng lưu lên Google Drive để giữ an toàn dữ liệu</b><span>Lần đồng bộ này sẽ làm mất ${c.n} / ${c.tot} dòng dữ liệu (có thể do mạng chập, hoặc máy khác vừa xoá). App đã sao lưu sẵn trên Drive. Không chắc thì chọn "Giữ hết".</span><div class="inrow" style="flex-wrap:wrap;margin-top:8px"><button class="btn" data-chan="giu">Giữ hết, không xoá dòng nào</button><button class="ghost red" data-chan="xoa">Tôi vừa xoá thật, cho xoá</button></div></div>`;
+  if(c&&c.loai==='gmail')return `<div class="alert red chanb"><b>Gmail ${esc(GG.email)} chưa có dữ liệu của shop</b><span>Dữ liệu đang có trên máy này là của Gmail <b>${esc(c.cu)}</b>. App chưa chép sang để tránh lẫn sổ. Nếu đăng nhập nhầm, bấm đăng nhập lại Gmail cũ.</span><div class="inrow" style="flex-wrap:wrap;margin-top:8px"><button class="btn" data-gg="other">Đăng nhập lại Gmail cũ</button><button class="ghost" data-chan="chep">Chép dữ liệu sang Gmail mới</button></div></div>`;
+  if(GG.soCu)return `<div class="alert amber chanb"><b>Còn sổ cũ chưa chuyển hết sang sổ năm ${GG.nam}</b><span>Nếu thấy thiếu đơn, thiếu máy từ trước 05/11, bấm để lấy lại toàn bộ từ sổ cũ. App gộp thêm, không xoá dòng nào và sao lưu trước.</span><div class="inrow" style="margin-top:8px"><button class="btn" data-chan="socu">Lấy lại dữ liệu từ sổ cũ</button></div></div>`;
+  return ''}
+document.addEventListener('click',async e=>{const b=e.target.closest('[data-chan]');if(!b)return;const k=b.dataset.chan;b.disabled=true;
+  if(k==='giu'||k==='xoa'){GG.ep=k;toast(k==='giu'?'Đang gộp giữ lại tất cả dữ liệu…':'Đang lưu theo dữ liệu máy này…');const ok=await GG.push();toast(ok?'Đã lưu an toàn lên Google Drive':'Chưa lưu được, kiểm tra mạng rồi thử lại');render();return}
+  if(k==='chep'){GG.chan=null;GG.datChu(GG.email);const ok=await GG.push();toast(ok?'Đã chép dữ liệu sang Gmail '+GG.email:'Chưa lưu được, thử lại');render();return}
+  if(k==='socu'){toast('Đang lấy lại dữ liệu từ sổ cũ…');const ok=await GG.layCu();toast(ok?'Đã lấy lại dữ liệu từ sổ cũ':'Chưa xong, kiểm tra mạng rồi thử lại');render();return}});
 function renderHome(){if(NV){renderNvHome();return}
   const t=todayIso(), y=iso(Date.now()-DAY), m0=t.slice(0,8)+'01';
   const td=sumRange(t,t), yd=sumRange(y,y);
@@ -1385,7 +1422,7 @@ function renderHome(){if(NV){renderNvHome();return}
   const start=homeStart();
   /* 02/11 anh Thái: trang chủ gọn như Sổ Bán Hàng — số liệu chi tiết chuyển sang tab Báo cáo */
   $('v-home').innerHTML=`
-  ${homeMonth()}${homeSearch()}${homeTodo()}${start}
+  ${chanBar()}${homeMonth()}${homeSearch()}${homeTodo()}${start}
   ${db.sample&&!XEM&&!DEMO?`<div class="alert amber"><b>Đang xem dữ liệu mẫu.</b><span>Bấm thử thoải mái. Khi dùng thật, vào Thêm → Cài đặt → Bắt đầu dữ liệu thật.</span></div>`:''}
   ${homeQuick()}${homeWeb()}`;
   $('v-home').insertAdjacentHTML('afterbegin',pnChoBar()+trungBar());
@@ -2055,7 +2092,7 @@ function renderMore(){
       <button class="btn" type="submit">Lưu cài đặt</button></form></div>
     <div class="panel"><h2>Dữ liệu</h2>
       <p style="margin:0 0 10px;color:var(--muted);font-size:13px">${db.sample?'Đang dùng dữ liệu mẫu. Bắt đầu thật sẽ xóa dữ liệu mẫu, giữ lại cài đặt.':'Dữ liệu đang lưu trên điện thoại này. Bản chính thức sẽ lưu trong Google Drive của shop.'}</p>
-      ${resetAsk?`<div class="confirm"><b style="color:var(--red)">${db.sample?'Xóa dữ liệu mẫu và bắt đầu thật?':'Xóa toàn bộ dữ liệu trên máy này?'}</b><span class="inrow"><button class="ghost red" data-reset="ok">Đồng ý</button><button class="ghost" data-reset="no">Thôi</button></span></div>`:`<button class="ghost ${db.sample?'':'red'}" data-reset="ask">${db.sample?'Bắt đầu dữ liệu thật':'Xóa dữ liệu trên máy'}</button>`}
+      ${resetAsk?`<div class="confirm"><b style="color:var(--red)">${db.sample?(GG.token&&GG.sheetId?'Bỏ dữ liệu mẫu và mở lại sổ thật trên Google Drive?':'Xóa dữ liệu mẫu và bắt đầu thật?'):(GG.token&&GG.sheetId?'Xoá TOÀN BỘ dữ liệu, cả sổ trên Google Drive của shop? App sẽ sao lưu trước khi xoá.':'Xóa toàn bộ dữ liệu trên máy này?')}</b><span class="inrow"><button class="ghost red" data-reset="ok">Đồng ý</button><button class="ghost" data-reset="no">Thôi</button></span></div>`:`<button class="ghost ${db.sample?'':'red'}" data-reset="ask">${db.sample?'Bắt đầu dữ liệu thật':GG.token&&GG.sheetId?'Xoá toàn bộ dữ liệu (cả trên Drive)':'Xóa dữ liệu trên máy'}</button>`}
       <button class="ghost" data-reset="sample" style="margin-top:8px">Nạp lại dữ liệu mẫu</button></div>
     <div class="panel"><h2>Kết nối Google Drive</h2>${GG.email?`<p style="margin:0 0 8px;font-size:14px">Đang kết nối: <b>${esc(GG.email)}</b></p><small id="ggState" style="color:var(--muted)">Dữ liệu tự lưu lên Google Drive của shop</small>
       <div class="inrow" style="margin-top:10px;flex-wrap:wrap"><a class="ghost" href="https://docs.google.com/spreadsheets/d/${GG.sheetId}" target="_blank" rel="noopener">Mở sổ dữ liệu</a><button class="ghost red" data-gg="logout">Đăng xuất</button></div>`
@@ -2163,7 +2200,9 @@ document.addEventListener('click',e=>{
   if(b.dataset.cancelok){const r=$('cReason').value.trim();if(!r){$('cReason').focus();toast('Ghi lý do hủy trước');return}
     const d=db.don.find(x=>x.id===b.dataset.cancelok);if(d.loai==='thu'){const m=db.may.find(x=>x.imei===d.imei);if(m&&m.tt!=='ton'){toast('Máy cũ này đã bán lại, không hủy được');return}db.may=db.may.filter(x=>!(x.imei===d.imei&&x.tt==='ton'))}d.huy=r;if(d.loai==='may'){const m=db.may.find(x=>x.imei===d.imei);if(m)m.tt='ton';if(d.imei)giuImei([d.imei],'mo')}if(d.hangId){const h=db.hang.find(x=>x.id===d.hangId);if(h)h.sl+=d.sl||1}cancelId=null;save();render();toast('Đã hủy đơn');return}
   if(b.dataset.reset){const k=b.dataset.reset;if(k==='ask'){resetAsk=true;render();return}if(k==='no'){resetAsk=false;render();return}
-    if(k==='ok'){const shop=db.sample?{...emptyDb().shop}:db.shop;db=emptyDb();db.shop=shop;resetAsk=false;save();toast('Đã sẵn sàng dùng thật');go('add');return}
+    if(k==='ok'){const wasS=db.sample,shop=wasS?{...emptyDb().shop}:db.shop;resetAsk=false;
+      if(wasS&&GG.token&&GG.sheetId){db=emptyDb();db.shop=shop;Store.save(db);toast('Đang mở lại sổ thật trên Google Drive…');GG.pull().then(()=>{render();toast('Đã mở sổ thật của shop')}).catch(()=>toast('Chưa tải được sổ, kiểm tra mạng rồi thử lại'));go('home');return}
+      db=emptyDb();db.shop=shop;if(!wasS&&GG.token&&GG.sheetId)GG.ep='xoa';save();toast(wasS?'Đã sẵn sàng dùng thật':'Đã xoá dữ liệu · bản sao lưu vẫn còn trong Drive');go('add');return}
     if(k==='sample'){db=sampleDb();save();resetAsk=false;toast('Đã nạp dữ liệu mẫu');go('home');return}}
   if(b.dataset.scan){openScan(b.dataset.scan);return}
   if(b.dataset.thu){thuOpen=true;render();setTimeout(()=>$('tTen')&&$('tTen').focus(),0);return}
@@ -2846,6 +2885,7 @@ document.addEventListener('submit',e=>{if(!XEM||e.target.id==='fNvLogin')return;
 document.addEventListener('click',e=>{if(!XEM)return;const b=e.target.closest('form button[type=submit],form button:not([type]),[data-rcpay],[data-rcdone],[data-rcprint],[data-cancelok],[data-suaok],[data-xoaok],[data-delimeiok],[data-nccpay],[data-nttra],[data-kkhsave],[data-trok],[data-reset],[data-more="bg"],[data-more="tt"],[data-more="giahan"],[data-more="ctv"]');if(!b||b.closest('#fNvLogin'))return;e.preventDefault();e.stopImmediatePropagation();showKh()},true);
 render();
 (function boot(){let gs=null,seen=null;try{gs=JSON.parse(localStorage.getItem('shopgon_gg')||'null');seen=localStorage.getItem('shopgon_seen')}catch(e){}
+  try{if(gs&&gs.email&&!localStorage.getItem('shopgon_owner'))localStorage.setItem('shopgon_owner',gs.email)}catch(_){}  /* 08/11: ghi nhớ Gmail chủ sổ của dữ liệu trên máy */
   if(DEMO){if(TEST){const b=$('xbar');if(b){b.hidden=false;b.className='ok';b.classList.add('strip');b.innerHTML='<span class="t"><b>Tài khoản test</b> · dữ liệu mẫu trên máy này</span><button data-gg="thoattest">Thoát</button>'}const md=$('mode');if(md)md.style.display='none'}else demoBar();return}
   /* 02/11: chế độ nhân viên chạy SAU khi nạp hết các khối script (trước đây vẽ màn Bán quá sớm → lỗi nv0/KM is not defined, màn trắng) */
   {let s0=null;try{s0=JSON.parse(localStorage.getItem('shopgon_nv')||'null')}catch(_){}if(s0&&s0.sdt){if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',nvBoot);else nvBoot();return}}
@@ -2919,7 +2959,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261108-1845';let verLuc=0;
+const BUILD='20261108-2130';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
