@@ -45,7 +45,7 @@ class Drive:
         if m and method == 'GET': return {'sheets': [{'properties': {'title': t}} for t in s.f[m.group(1)]['sheets']]}
         m = re.match(r'/v4/spreadsheets/(\w+):batchUpdate$', p)
         if m:
-            for rq in body.get('requests', []): s.f[m.group(1)]['sheets'][rq['addSheet']['properties']['title']] = []
+            for rq in [r for r in body.get('requests', []) if 'addSheet' in r]: s.f[m.group(1)]['sheets'][rq['addSheet']['properties']['title']] = []
             return {}
         m = re.match(r'/v4/spreadsheets/(\w+)/values:(\w+)$', p)
         if m:
@@ -64,7 +64,16 @@ class Drive:
                 for r in body['ranges']:
                     n = s.sheet_name(r)
                     if n not in sh: raise KeyError(n)
-                    sh[n] = []
+                    # 09/11: xoá đúng vùng (A5:Z99 = từ dòng 5; Q1:Z9 = cột từ Q) như Google, không xoá trắng cả trang
+                    rg = unquote(r).split('!')[1] if '!' in unquote(r) else ''
+                    mm = re.match(r'([A-Z]+)(\d+):([A-Z]+)(\d+)$', rg)
+                    if not mm: sh[n] = []; continue
+                    ci = lambda c: sum((ord(ch) - 64) * 26 ** i for i, ch in enumerate(reversed(c))) - 1
+                    c0, r0, c1, r1 = ci(mm.group(1)), int(mm.group(2)) - 1, ci(mm.group(3)), int(mm.group(4)) - 1
+                    for ri in range(r0, min(r1 + 1, len(sh[n]))):
+                        row = sh[n][ri]
+                        for cj in range(c0, min(c1 + 1, len(row))): row[cj] = ''
+                    while sh[n] and not any(v != '' for v in sh[n][-1]): sh[n].pop()
                 return {}
             if act == 'batchUpdate':
                 for d in body['data']:

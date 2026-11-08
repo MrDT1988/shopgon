@@ -681,9 +681,35 @@ const KEY=DEMO?'shopgon_demo3':'shopgon_v1';
 let memory=null;
 /* 25/10 anh Thái: bản chính thức cho vào XEM THỬ ngay (dữ liệu mẫu, không lưu), đăng nhập Gmail lúc nào cũng được; anh duyệt (nhận tiền) mới mở tính năng thật */
 let XEM=false,XLIC=null,xTimer=null,NV=null;
+/* 09/11 anh Thái — BỘ NHỚ MÁY → IndexedDB. localStorage chỉ ~5MB (sổ + bản gốc nhân đôi → shop lớn đầy trong năm đầu).
+   Sổ: ghi CẢ HAI (IndexedDB luôn có bản mới nhất; localStorage giữ để mở nhanh + trang Bảng giá đọc). localStorage đầy → bỏ bản cũ ở đó, chạy bằng IndexedDB.
+   Bản gốc đồng bộ (shopgon_base_*): chuyển hẳn sang IndexedDB, xoá khỏi localStorage → nhả ~nửa bộ nhớ. Mở app: chọn bản có dấu _luu mới hơn. */
+const IDBS={db:null,ok:false,
+  mo(){if(this._p)return this._p;this._p=new Promise(res=>{let xong=0;const fin=v=>{if(!xong){xong=1;res(v)}};setTimeout(()=>fin(null),2500);
+    try{const r=indexedDB.open('shopgon',1);r.onupgradeneeded=()=>{try{r.result.createObjectStore('kv')}catch(_){}};
+      r.onsuccess=()=>{this.db=r.result;this.ok=true;try{this.db.onversionchange=()=>{try{this.db.close()}catch(_){}this.ok=false}}catch(_){}fin(this.db)};r.onerror=()=>fin(null);r.onblocked=()=>fin(null)}catch(_){fin(null)}});return this._p},
+  tx(m,f){return new Promise(res=>{if(!this.ok||!this.db){res(undefined);return}try{const t=this.db.transaction('kv',m),o=t.objectStore('kv');const q=f(o);t.oncomplete=()=>res(q&&'result' in q?q.result:true);t.onerror=t.onabort=()=>res(undefined)}catch(_){res(undefined)}})},
+  get(k){return this.tx('readonly',o=>o.get(k))},
+  set(k,v){return this.tx('readwrite',o=>o.put(v,k))},   /* put chép (structured clone) ngay lúc gọi → ghi đúng trạng thái lúc save */
+  del(k){return this.tx('readwrite',o=>o.delete(k))},
+  async tatCa(pre){const ks=(await this.tx('readonly',o=>o.getAllKeys()))||[];const out={};for(const k of ks)if(String(k).startsWith(pre))out[k]=await this.get(k);return out}
+};
 const LocalStore={
+  idb:false,   /* true = localStorage đầy, sổ đang chạy bằng IndexedDB */
   load(){try{const s=localStorage.getItem(KEY);return s?JSON.parse(s):null}catch(e){return memory}},
-  save(db){if(XEM)return;memory=db;try{localStorage.setItem(KEY,JSON.stringify(db))}catch(e){/* 08/11: bộ nhớ trình duyệt đầy — báo 1 lần thay vì im lặng */if(!this._dw){this._dw=1;setTimeout(()=>{try{toast('Bộ nhớ trình duyệt trên máy đã đầy. Dữ liệu vẫn lưu trên Google Drive — nên cài Shop Gọn như app để máy không tự xoá.')}catch(_){}},800)}}if(typeof NK!=='undefined'&&NK)NK.chup()}
+  save(db){if(XEM)return;memory=db;if(db&&!db.sample)this.goc=db;if(this.san){try{db._luu=Math.max(Date.now(),(db._luu||0)+1)}catch(_){}}   /* lưu trước khi IndexedDB sẵn sàng (vd giá tự động lúc vẽ lần đầu) không đóng dấu mới → không đè bản IndexedDB mới hơn */
+    if(IDBS.ok&&this.san)IDBS.set(KEY,db).then(r=>{if(r===undefined&&this.idb)this.bao()});
+    try{localStorage.setItem(KEY,JSON.stringify(db));this.idb=false}catch(e){
+      /* 08/11 + 09/11: localStorage đầy — bỏ bản cũ ở đó (để lần sau không mở nhầm bản cũ), sổ chạy bằng IndexedDB */
+      if(IDBS.ok&&this.san){if(!this.idb){this.idb=true;try{localStorage.removeItem(KEY)}catch(_){}}}else this.bao()}},
+  bao(){if(this._dw)return;this._dw=1;setTimeout(()=>{try{toast('Bộ nhớ trình duyệt trên máy đã đầy. Dữ liệu vẫn lưu trên Google Drive — nên cài Shop Gọn như app để máy không tự xoá.')}catch(_){}},800)},
+  /* Mở app: đọc IndexedDB, chuyển bản gốc cũ khỏi localStorage, trả về sổ mới hơn bản đang mở (nếu có) */
+  ready:null,
+  async khoi(dangMo){const d=await IDBS.mo();if(!d)return null;
+    try{await GG.napBase()}catch(_){}
+    const r=await IDBS.get(KEY);
+    if(r&&typeof r==='object'&&(r.may||r.don)&&(!dangMo||(r._luu||0)>(dangMo._luu||0)))return r;
+    return null}
 };
 const Store=LocalStore;
 
@@ -752,8 +778,9 @@ function sampleDb(){
 }
 function emptyDb(){return {v:1,sample:false,hang:[],pn:[],chi:[],shop:{ten:'',pct:{pk:40,sim:10,sua:45,khac:20},bh:12},may:[],don:[]}}
 
-const firstOpen=!Store.load();
+let firstOpen=!Store.load();
 let db=Store.load()||sampleDb();
+Store.goc=firstOpen?null:db;   /* 09/11: sổ thật trên máy lúc mở app (trước khi màn xem thử thay bằng dữ liệu mẫu) */
 /* 05/11 anh Thái: dữ liệu mẫu/shop test tự dời ngày theo hôm nay, xem thử luôn có số hôm nay */
 function doiNgayMau(d){try{if(!d||!d.sample||!Array.isArray(d.don)||!d.don.length)return d;const mx=d.don.reduce((m,x)=>x&&x.ngay>m?x.ngay:m,'');const t=todayIso();if(!mx||mx>=t)return d;const k=Math.round((Date.parse(t)-Date.parse(mx))/DAY);if(!(k>0))return d;Object.keys(d).forEach(a=>{if(Array.isArray(d[a]))d[a].forEach(o=>{if(o&&typeof o==='object')Object.keys(o).forEach(f=>{if(/^ngay/i.test(f)&&typeof o[f]==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(o[f]))o[f]=iso(Date.parse(o[f])+k*DAY)})})})}catch(e){}return d}
 db=doiNgayMau(db);
@@ -786,8 +813,16 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
      theo từng dòng (máy theo IMEI, đơn/hàng/phiếu/chi theo id). Phụ kiện 2 máy cùng bán thì cộng dồn chênh lệch số lượng. */
   T:{May:['may','imei'],Don:['don','id'],Hang:['hang','id'],Phieu:['pn','id'],Chi:['chi','id']},
   baseKey(){return 'shopgon_base_'+this.sheetId},
-  getBase(){try{return JSON.parse(localStorage.getItem(this.baseKey())||'null')}catch(_){return null}},
-  setBase(d){try{localStorage.setItem(this.baseKey(),JSON.stringify({shop:d.shop,may:d.may,don:d.don,hang:d.hang,pn:d.pn||[],chi:d.chi||[]}))}catch(_){}},
+  /* 09/11: bản gốc nằm ở IndexedDB (bộ đệm _bc trong bộ nhớ để gọi đồng bộ); máy chưa có IndexedDB thì vẫn dùng localStorage như cũ */
+  _bc:{},
+  getBase(){const k=this.baseKey();let v=this._bc[k];if(v===undefined){try{v=JSON.parse(localStorage.getItem(k)||'null')}catch(_){v=null}}return v?JSON.parse(JSON.stringify(v)):null},
+  setBase(d){const k=this.baseKey(),v=JSON.parse(JSON.stringify({shop:d.shop,may:d.may,don:d.don,hang:d.hang,pn:d.pn||[],chi:d.chi||[]}));
+    if(IDBS.ok){this._bc[k]=v;IDBS.set(k,v).then(r=>{if(r!==undefined){try{localStorage.removeItem(k)}catch(_){}}else{try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}}})}
+    else{try{localStorage.setItem(k,JSON.stringify(v))}catch(_){}}},
+  async napBase(){const o=await IDBS.tatCa('shopgon_base_');for(const k in o)if(this._bc[k]===undefined)this._bc[k]=o[k];
+    for(let i=localStorage.length-1;i>=0;i--){const k=localStorage.key(i);if(!k||!k.startsWith('shopgon_base_'))continue;
+      if(this._bc[k]===undefined){let v=null;try{v=JSON.parse(localStorage.getItem(k)||'null')}catch(_){}if(!v)continue;if((await IDBS.set(k,v))===undefined)continue;this._bc[k]=v}
+      try{localStorage.removeItem(k)}catch(_){}}},
   /* 08/11 tối anh Thái — CHỐNG MẤT DỮ LIỆU v2: gộp chỉ được XOÁ 1 dòng khi Nhật ký có lệnh xoá đúng dòng đó (bia mộ xk),
      hoặc dòng giao dịch đã ra ngoài 12 tháng (vẫn còn trong sổ năm cũ). Thiếu bằng chứng xoá → GIỮ dòng, ghi lại lên Drive. */
   bia(loc,rem){const B=new Set();[...((loc&&loc.nk)||[]),...((rem&&rem.nk)||[])].forEach(o=>{let x=o&&o.xk;if(typeof x==='string')try{x=JSON.parse(x)}catch(_){x=null}if(Array.isArray(x))x.forEach(k=>B.add(String(k)))});return B},
@@ -1051,13 +1086,17 @@ function showPending(lic,justSent){if(!XEM)lockApp();const w=document.getElement
   :`<h1>Chưa kiểm tra được kích hoạt</h1><p>Máy chủ Shop Gọn chưa trả lời đúng. Dữ liệu của shop vẫn nguyên trong Google Drive. Bấm "Kiểm tra lại" sau vài giây.</p>
     <button class="btn" style="width:100%" data-gg="recheck">Kiểm tra lại</button>`}
   <small id="wMsg"></small>${XEM?'<button class="wlink" data-gg="xem">Xem thử tiếp</button>':''}<button class="wlink" data-gg="other">Đăng nhập Gmail khác</button></div>`;drawPay(lic)}
-async function afterLogin(){GG.chan=null;GG.soCu=null;welcomeMsg('Đang kiểm tra kích hoạt…');let lic;try{lic=await license(GG.email)}catch(e){throw {where:'may'}}GG.ctv=lic.ctv||'';XLIC=lic;
+async function afterLogin(){try{await Store.ready}catch(_){}GG.chan=null;GG.soCu=null;welcomeMsg('Đang kiểm tra kích hoạt…');let lic;try{lic=await license(GG.email)}catch(e){throw {where:'may'}}GG.ctv=lic.ctv||'';XLIC=lic;
   if(lic.status==='none'||lic.status==='pending'){xemMode();xemBar();xemPoll();showPending(lic);return false}
   if(lic.status!=='active'){if(XEM)xemBar();showPending(lic);return false}
   const wasXem=XEM;let created;
   if(XEM){clearInterval(xTimer);xemBar('Shop Gọn đã kích hoạt — đang tạo sổ dữ liệu trong Google Drive…')}
   welcomeMsg('Đang chuẩn bị sổ dữ liệu trong Drive…');
-  if(wasXem){const nd=emptyDb();nd.shop.ten=String(lic.shop||'').trim();const keep=db;db=nd;try{created=await GG.moSo()}catch(e){db=keep;xemBar();throw {where:'drive',code:String(e&&e.message||'').slice(0,3)}}XEM=false}
+  /* 09/11 anh Thái — CHỐNG MẤT DỮ LIỆU: mở lại app trước đây bỏ sổ trên máy (db=rỗng) rồi lấy nguyên Drive → đơn bán chưa kịp lên Drive (mất mạng, tắt app trong 2,5 giây) bị mất.
+     Nay: sổ trên máy đúng Gmail này thì giữ lại, để bước đồng bộ GỘP 3 chiều với Drive (bản gốc · máy · Drive). */
+  if(wasXem){const g=Store.goc,c0=GG.chu(),coSo=g&&!g.sample&&Array.isArray(g.don)&&Array.isArray(g.may)&&(g.don.length||g.may.length||(g.hang||[]).length||(g.pn||[]).length||(g.chi||[]).length);
+    let coGoc=Object.keys(GG._bc).length>0;try{coGoc=coGoc||Object.keys(localStorage).some(k=>k.startsWith('shopgon_base_'))}catch(_){}   /* máy đã từng đồng bộ (có bản gốc) mới gộp được an toàn; chưa có thì lấy Drive như cũ */
+    const nd=coSo&&coGoc&&c0&&c0===GG.email?g:emptyDb();if(nd!==g)nd.shop.ten=String(lic.shop||'').trim();const keep=db;db=nd;try{created=await GG.moSo()}catch(e){db=keep;xemBar();throw {where:'drive',code:String(e&&e.message||'').slice(0,3)}}XEM=false}
   else{try{created=await GG.moSo()}catch(e){throw {where:'drive',code:String(e&&e.message||'').slice(0,3)}}}
   if(created){if(db.sample){const shop=db.shop;db=emptyDb();db.shop={...emptyDb().shop,ten:shop.ten&&!shop.ten.includes('(mẫu)')?shop.ten:''}}
     const c0=GG.chu();if(!db.sample&&(db.don.length||db.may.length)&&c0&&c0!==GG.email)GG.chan={loai:'gmail',cu:c0};else await GG.push()}
@@ -2907,7 +2946,7 @@ document.addEventListener('click',e=>{if(e.target.closest('[data-more="hd"]')){e
 document.addEventListener('submit',e=>{if(!XEM||e.target.id==='fNvLogin')return;e.preventDefault();e.stopImmediatePropagation();showKh()},true);
 document.addEventListener('click',e=>{if(!XEM)return;const b=e.target.closest('form button[type=submit],form button:not([type]),[data-rcpay],[data-rcdone],[data-rcprint],[data-cancelok],[data-suaok],[data-xoaok],[data-delimeiok],[data-nccpay],[data-nttra],[data-kkhsave],[data-trok],[data-reset],[data-more="bg"],[data-more="tt"],[data-more="giahan"],[data-more="ctv"]');if(!b||b.closest('#fNvLogin'))return;e.preventDefault();e.stopImmediatePropagation();showKh()},true);
 render();
-(function boot(){let gs=null,seen=null;try{gs=JSON.parse(localStorage.getItem('shopgon_gg')||'null');seen=localStorage.getItem('shopgon_seen')}catch(e){}
+function boot(){let gs=null,seen=null;try{gs=JSON.parse(localStorage.getItem('shopgon_gg')||'null');seen=localStorage.getItem('shopgon_seen')}catch(e){}
   try{if(gs&&gs.email&&!localStorage.getItem('shopgon_owner'))localStorage.setItem('shopgon_owner',gs.email)}catch(_){}  /* 08/11: ghi nhớ Gmail chủ sổ của dữ liệu trên máy */
   if(DEMO){if(TEST){const b=$('xbar');if(b){b.hidden=false;b.className='ok';b.classList.add('strip');b.innerHTML='<span class="t"><b>Tài khoản test</b> · dữ liệu mẫu trên máy này</span><button data-gg="thoattest">Thoát</button>'}const md=$('mode');if(md)md.style.display='none'}else demoBar();return}
   /* 02/11: chế độ nhân viên chạy SAU khi nạp hết các khối script (trước đây vẽ màn Bán quá sớm → lỗi nv0/KM is not defined, màn trắng) */
@@ -2924,7 +2963,11 @@ render();
     else if(gs&&gs.email){GG.sheetId=gs.sheetId||'';showLogin(gs.email)}
     else showLogin();
     setInterval(()=>{if(GG.email&&!XEM)license(GG.email).then(l=>{if(l.status==='locked'||l.status==='expired'){Store.save(db);showPending(l)}}).catch(()=>{})},6*3600*1000);
-  } else if(firstOpen&&!seen)showWelcome();})();
+  } else if(firstOpen&&!seen)showWelcome();}
+/* 09/11: chờ IndexedDB (tối đa 2,5 giây) rồi mới chạy — sổ trong IndexedDB mới hơn thì dùng sổ đó */
+Store.ready=Store.khoi(firstOpen?null:db).then(d=>{if(d){db=doiNgayMau(d);firstOpen=false;Store.goc=db;if(!db.hang)db.hang=db.sample?sampleDb().hang:[];try{render()}catch(_){}}else if(!firstOpen&&IDBS.ok)IDBS.set(KEY,db)/* sổ trên localStorage mới hơn / chưa có ở IndexedDB → chép sang */}).catch(()=>{}).then(()=>{Store.san=true});
+Store.ready.then(()=>{try{if(navigator.storage&&navigator.storage.persist&&!DEMO)navigator.storage.persist().catch(()=>{})}catch(_){}},()=>{});
+Store.ready.then(boot,boot);
 </script>
 
 <script>
@@ -2982,7 +3025,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261108-2345';let verLuc=0;
+const BUILD='20261109-0030';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}

@@ -401,8 +401,23 @@ function khopKho(h, ten) {
   if (tot && dl) { var b = (tot.bienThe || []).find(function (x) { return x.dl.replace(/GB/gi, '').indexOf(dl.replace(/GB/gi, '')) >= 0; }); if (b) dl = b.dl; }
   return { sp: tot, ten: tot ? tot.ten : goc, dl: dl };
 }
+/* 09/11: app có thể đã chuyển sổ sang IndexedDB (localStorage đầy) → đọc thêm từ đó */
+var DB_IDB = null;
+function docIdb(cb) {
+  if (DB_IDB !== null) { cb(); return; }
+  if (/[?&]demo=1/.test(location.search) || !window.indexedDB) { DB_IDB = false; cb(); return; }
+  var xong = false, fin = function (o) { if (xong) return; xong = true; DB_IDB = o || false; cb(); };
+  setTimeout(function () { fin(null); }, 2000);
+  try { var q = indexedDB.open('shopgon', 1); q.onupgradeneeded = function () { try { q.result.createObjectStore('kv'); } catch (e) { } };
+    q.onsuccess = function () { try { var g = q.result.transaction('kv', 'readonly').objectStore('kv').get('shopgon_v1'); g.onsuccess = function () { fin(g.result); }; g.onerror = function () { fin(null); }; } catch (e) { fin(null); } };
+    q.onerror = function () { fin(null); };
+  } catch (e) { fin(null); }
+}
 function layTon(tuDong) {
-  var r = docDb(); if (!r) { if (tuDong) return; alert('Trên máy này chưa có tồn kho app Shop Gọn. Mở app (hoặc app demo) trước rồi quay lại.'); return; }
+  if (DB_IDB === null) { docIdb(function () { layTon(tuDong); }); return; }
+  var r = docDb();
+  if (DB_IDB && DB_IDB.may && DB_IDB.may.some(function (m) { return m.tt === 'ton'; }) && (!r || r.key !== 'shopgon_v1' || (DB_IDB._luu || 0) > ((r.db && r.db._luu) || 0))) r = { db: DB_IDB, key: 'shopgon_v1' };
+  if (!r) { if (tuDong) return; alert('Trên máy này chưa có tồn kho app Shop Gọn. Mở app (hoặc app demo) trước rồi quay lại.'); return; }
   if (!KHO) { alert('Kho máy chưa tải xong, đợi 2 giây rồi bấm lại.'); return; }
   if (!tuDong && (DS.length || PK.some(function (x) { return x.t; })) && !confirm('Thay bảng hiện tại bằng tồn kho trong app?')) return;
   var nhom = {};
