@@ -1687,7 +1687,7 @@ function renderSell(){
   if(sellMode==='sc'&&!on('sua'))sellMode='may';
   if(cartOpen&&sellMode!=='tra'){$('v-sell').innerHTML=`<button type="button" class="back" data-cclose="1">‹ Tiếp tục chọn hàng</button><h2 class="cxt">Xác nhận đơn</h2>${renderCart()}`;return}
   $('v-sell').innerHTML=`
-  ${sellMode==='tra'?`<button type="button" class="back" data-sm="may">‹ Về màn bán hàng</button>`:`<div class="seg top ssm${pkTabOn()&&on('sua')?' s4':''}" role="group"><button data-sm="may" aria-pressed="${sellMode==='may'}">Điện thoại<small>${stock().length}</small></button>${pkTabOn()?`<button data-sm="pk" aria-pressed="${sellMode==='pk'}">Phụ kiện<small>${db.hang.filter(h=>h.sl>0&&PK_G.includes(h.nhom)).length}</small></button>`:''}<button data-sm="dv" aria-pressed="${sellMode==='dv'}">Dịch vụ khác</button>${on('sua')?`<button data-sm="sc" aria-pressed="${sellMode==='sc'}">Sửa chữa${scL?`<small>${scL.filter(p=>!['Đã trả máy','Không sửa được'].includes(p.tt)).length}</small>`:''}</button>`:''}</div>`}
+  ${sellMode==='tra'?`<button type="button" class="back" data-sm="may">‹ Về màn bán hàng</button>`:`<div class="seg top ssm" role="group"><button data-sm="may" aria-pressed="${sellMode==='may'||sellMode==='pk'}">${pkTabOn()?'Điện thoại & PK':'Điện thoại'}</button><button data-sm="dv" aria-pressed="${sellMode==='dv'}">Dịch vụ khác</button>${on('sua')?`<button data-sm="sc" aria-pressed="${sellMode==='sc'}">Sửa chữa${scL?`<small>${scL.filter(p=>!['Đã trả máy','Không sửa được'].includes(p.tt)).length}</small>`:''}</button>`:''}</div>${(sellMode==='may'||sellMode==='pk')&&pkTabOn()?`<div class="seg ssub" role="group"><button data-sm="may" aria-pressed="${sellMode==='may'}">📱 Điện thoại <small>${stock().length}</small></button><button data-sm="pk" aria-pressed="${sellMode==='pk'}">🎧 Phụ kiện <small>${db.hang.filter(h=>h.sl>0&&PK_G.includes(h.nhom)).length}</small></button></div>`:''}`}
   ${sellMode==='sc'?'<div id="sellSc"></div>':sellMode==='may'&&!NV||sellMode==='may'?`
   <div class="panel"><form id="fSell" autocomplete="off">
     ${m?`<button type="button" class="back" data-sclr="1">‹ Chọn máy khác</button><label>IMEI<span class="inrow"><input id="sImei" inputmode="search" value="${esc(sellImei)}"><button type="button" class="icon" data-scan="sImei" aria-label="Quét IMEI"><svg viewBox="0 0 24 24"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 8v8M10 8v8M13 8v8M17 8v8"/></svg></button></span></label>`
@@ -3690,9 +3690,13 @@ details.ccnote summary{cursor:pointer;color:var(--pen);font-weight:600}
 .nvgoi{margin-top:12px;padding:12px 14px;border:1px dashed var(--pen-line,#cde9e1);border-radius:14px;background:var(--pen-bg,#f0faf7);display:flex;flex-direction:column;gap:8px}
 .nvgoi.on{border-style:solid}.nvgoi .h{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap}.nvgoi .h b{font-size:15px}.nvgoi .h span{font-weight:800;color:var(--pen,#0f766e)}
 .nvgoi>small{font-size:12.5px;line-height:1.5;color:var(--muted)}.nvgoi .nvgh{text-align:center;font-size:12px;color:var(--muted)}.nvgoi .btn,.nvgoi .ghost{width:100%}
-/* 09/11 anh Thái: Bán hàng 4 tab (Điện thoại · Phụ kiện · Dịch vụ khác · Sửa chữa) — chữ xuống 2 dòng, số dưới chữ, không chồng nhau */
-.seg.top.ssm.s4 button{white-space:normal!important;font-size:13.5px!important;line-height:1.2;padding:8px 2px!important}
-.seg.top.ssm.s4 button small{display:block;margin:2px 0 0!important}
+/* 09/11 anh Thái: Bán hàng 3 tab (Điện thoại & PK · Dịch vụ khác · Sửa chữa); trong tab 1 có thanh con Điện thoại / Phụ kiện */
+.seg.top.ssm button{white-space:normal!important;line-height:1.2}
+@media (max-width:370px){.seg.top.ssm button{font-size:14px!important}}
+.seg.ssub{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 0 10px;padding:4px;border-radius:12px;background:var(--pen-soft,#e6f2f0);border:0;box-shadow:none}
+.seg.ssub button{font-size:14px;font-weight:700;padding:9px 4px;min-height:40px;border-radius:9px;white-space:nowrap;background:none;color:var(--muted);box-shadow:none}
+.seg.ssub button[aria-pressed="true"]{background:#fff;color:var(--pen-dk);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+.seg.ssub button small{font-weight:600;font-size:12px;opacity:.85}
 </style>
 <script>
 /* ===== 07/11 anh Thái: CHẤM CÔNG + BẢNG LƯƠNG =====
