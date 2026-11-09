@@ -397,7 +397,7 @@ figcaption{font-size:12.5px;color:var(--muted);text-align:center;max-width:230px
     <ol style="margin:0;padding-left:20px">
       <li>Cài Shop Gọn <b>như app</b> trên <b>mọi máy</b> (Android: ⋮ › Thêm vào màn hình chính · iPhone: mở bằng <b>Safari</b> › Chia sẻ › Thêm vào MH chính).<br><span class="note">iPhone mở bằng trình duyệt mà không cài có thể bị máy tự xoá bộ nhớ → mất đơn chưa kịp lên Drive.</span></li>
       <li>Mọi máy đăng nhập <b>đúng 1 Gmail của shop</b>, tích quyền <b>Google Drive</b>.<br><span class="note">Gmail khác = sổ khác, số liệu tách đôi.</span></li>
-      <li>Bán xong <b>để app mở vài giây có mạng</b> trước khi tắt — thấy dòng <i>Đã lưu lên Google Drive</i> là xong.<br><span class="note">Mất mạng vẫn bán được, đơn nằm trên máy và tự lên Drive khi có mạng lại — đừng xoá app/xoá dữ liệu trình duyệt lúc đó.</span></li>
+      <li>Bán xong <b>để app mở vài giây có mạng</b> trước khi tắt — thấy dòng <i>Đã lưu lên Google Drive</i> là xong.<br><span class="note">Mất mạng vẫn mở app và bán được (máy đã cài như app và từng mở sổ), đơn nằm trên máy và tự lên Drive khi có mạng lại — đừng xoá app/xoá dữ liệu trình duyệt lúc đó.</span></li>
       <li>Thấy thẻ đỏ <b>Đăng nhập lại Google</b> → bấm ngay.<br><span class="note">Không bấm thì máy vẫn bán nhưng không lên Drive.</span></li>
       <li>Mỗi máy <b>chỉ mở 1 cửa sổ</b> Shop Gọn (không vừa app vừa trình duyệt, không 2 tab).<br><span class="note">Mở 2 chỗ: cửa sổ cũ tự dừng, báo <i>Shop Gọn đang mở ở chỗ khác</i>.</span></li>
       <li>Có bản mới (app tự tải lại) → mở lại app <b>trên mọi máy</b> 1 lần.<br><span class="note">Máy chạy bản cũ không có các bản sửa chống mất mới nhất.</span></li>
@@ -408,9 +408,17 @@ figcaption{font-size:12.5px;color:var(--muted);text-align:center;max-width:230px
     <p>Sổ sách nằm trong Google Drive của chủ shop: mỗi năm 1 file, mỗi tháng 1 trang. App hiện số 12 tháng gần nhất và tự sao lưu mỗi ngày.</p>
     <ul>
       <li><span class="k">Sổ dữ liệu · Sao lưu</span>: xem sổ từng năm, <b>Tải Excel</b>, <b>Sao lưu ngay</b>, <b>Khôi phục</b> (giữ 14 bản gần nhất). Ngày 01/01 app tự sang sổ năm mới và chép số dư.</li>
-      <li><span class="pt">Tự giữ dữ liệu:</span> Shop Gọn không giữ bản sao ngoài Gmail của shop. Chủ shop nên tải Excel định kỳ để tự lưu.</li>
+      <li id="ngoai-gmail"><span class="k">🔐 Sao lưu ngoài Gmail (mã hoá)</span>: bật 1 lần ở <b>Sổ dữ liệu · Sao lưu</b> → app tạo <b>Mã shop</b> + <b>Mã khôi phục</b>. Mỗi ngày app gửi 1 bản sổ năm đã <b>khoá bằng Mã khôi phục</b> lên máy chủ Shop Gọn, giữ 14 bản — Shop Gọn cũng không đọc được.<br><span class="note">Mất Gmail / bị hack / lỡ xoá cả Drive: đăng nhập Gmail mới → Sổ dữ liệu · Sao lưu › <b>Khôi phục bằng mã…</b> → nhập 2 mã. <b>Mất Mã khôi phục thì bản này không mở được</b> — lưu ảnh mã, ghi giấy cất két. Vẫn nên tải Excel mỗi tháng.</span></li>
       <li><span class="k">Tra IMEI · Bảo hành</span>: tra được cả máy bán năm cũ.</li>
       <li><span class="k">Nhật ký thay đổi</span>: ai sửa, huỷ, xoá gì · lúc nào · trên máy nào.</li>
+      <li id="lich-su-phien-ban"><span class="k">Lịch sử phiên bản Google Sheets</span> — lỡ sửa / xoá vài ô ngay trong file sổ: Google tự giữ lịch sử mọi lần sửa.
+        <ol style="margin:4px 0 0;padding-left:18px">
+          <li>Thêm › Sổ dữ liệu · Sao lưu › bấm <b>Mở</b> ở sổ năm (làm trên <b>máy tính</b>; điện thoại mở bằng Chrome › ⋮ › tích <b>Trang web cho máy tính</b>).</li>
+          <li>Trong file: <b>Tệp → Lịch sử phiên bản → Xem lịch sử phiên bản</b>.</li>
+          <li>Cột bên phải chọn giờ <b>trước lúc lỡ tay</b> → <b>Khôi phục phiên bản này</b>.</li>
+          <li>Mở lại Shop Gọn trên mọi máy để app đọc lại sổ.</li>
+        </ol>
+        <span class="note">App Google Sheets trên điện thoại không có mục này. Lỡ xoá cả file: drive.google.com › Thùng rác › Khôi phục (giữ 30 ngày). Lỡ xoá trong app: dùng <b>Khôi phục…</b> ở mục Sao lưu.</span></li>
       <li><span class="pt">Chống bán trùng IMEI:</span> khi có mạng, app giữ IMEI đang bán 10 phút để 2 máy không bán cùng 1 máy. Nếu vẫn trùng (lúc mất mạng), Trang chủ báo dải đỏ để huỷ đơn sau hoặc đổi IMEI.</li>
       <li><span class="pt">2 máy cùng dùng:</span> app tự đồng bộ khoảng 90 giây/lần, mỗi lần mở lại app, và tự đọc lại sau 20 giây để ghi bù nếu 2 máy ghi cùng lúc. 2 máy cùng sửa 1 đơn: giữ cả 2 phần sửa; 2 máy cùng bán 1 phụ kiện: trừ kho đủ cả 2.</li>
       <li><span class="pt">Mở lại app:</span> đơn bán lúc mất mạng (chưa lên Drive) vẫn được giữ và tự gộp lên Drive khi đăng nhập lại.</li>

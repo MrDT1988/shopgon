@@ -1071,7 +1071,7 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
       const doiTL=JSON.stringify(db)!==s0;const nd=doiTL?this.merge(JSON.parse(s0),db,m):m;
       db=Object.assign(nd,{v:1,sample:false});this.setBase(m);Store.save(db);this.datChu(this.email);this.het=false;const coChan=!!this.chan;this.chan=null;if(doiTL)this.queue(800);
       if((changedLocal||coChan)&&typeof render==='function'&&!document.querySelector('input:focus,textarea:focus'))render();
-      ggStatus('Đã lưu lên Google Drive');if(!doiTL)SK.len();setTimeout(()=>this.tuSaoLuu(),3000);if(kiem)setTimeout(()=>SK.gui(),4000);
+      ggStatus('Đã lưu lên Google Drive');if(!doiTL)SK.len();setTimeout(()=>this.tuSaoLuu(),3000);setTimeout(()=>{if(typeof BK!=='undefined')BK.gui().catch(()=>{})},9000);if(kiem)setTimeout(()=>SK.gui(),4000);
       /* 09/11 v4: 2 máy ghi chen nhau thì máy ghi sau có thể đè mất dòng của máy kia trên Drive → 20 giây sau tự đọc lại 1 lần, thiếu dòng nào của máy này thì ghi bù */
       if(this._laKiem)this._laKiem=false;else{clearTimeout(this._tk);this._tk=setTimeout(()=>{this._laKiem=true;if(!this.busy)this.push();else this._laKiem=false},20000)}return true}catch(e){SK.tang('loi');ggStatus('Chưa lưu được lên Drive, sẽ thử lại');this.queue(15000);return false}finally{this.busy=false}},
   /* ===== SAO LƯU: hằng ngày chép sổ năm nay vào thư mục "Shop Gọn – Sao lưu", giữ 14 bản; nút Khôi phục (07/11 anh Thái: tuần→ngày, 8→14 bản) ===== */
@@ -1085,10 +1085,10 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
     const L0=await this.dsSaoLuu(),ngay=x=>/^(Hằng ngày|Bấm tay)$/.test((x.appProperties||{}).ly||'');const L=[...L0.filter(ngay).slice(14),...L0.filter(x=>!ngay(x)).slice(10)];for(const x of L){try{await this.api('https://www.googleapis.com/drive/v3/files/'+x.id,{method:'PATCH',body:JSON.stringify({trashed:true})})}catch(_){}}return c.id},
   async tuSaoLuu(){if(NV||XEM||db.sample||!this.token||!this.sheetId||!this.nam||this._sl)return;const l=db.shop.saoLuu;if(l&&(new Date(todayIso())-new Date(l))/DAY<1)return;
     this._sl=true;try{await this.saoLuu('Hằng ngày');db.shop.saoLuu=todayIso();Store.save(db);this.queue(1000)}catch(_){}finally{this._sl=false}},
-  async khoiPhuc(bkId){const L=await this.dsSaoLuu();const bk=L.find(x=>x.id===bkId);if(!bk)throw new Error('Không thấy bản sao lưu');
+  async khoiPhuc(bkId,V0,ten0){let bk;if(V0)bk={name:ten0||'ngoài Gmail',appProperties:{nam:String(this.nam)}};else{const L=await this.dsSaoLuu();bk=L.find(x=>x.id===bkId)}if(!bk)throw new Error('Không thấy bản sao lưu');
     if(+((bk.appProperties||{}).nam)!==this.nam)throw new Error('Bản này của năm '+((bk.appProperties||{}).nam||'?')+' — chỉ khôi phục được bản của năm '+this.nam);
     while(this.busy)await new Promise(r=>setTimeout(r,300));this.busy=true;clearTimeout(this.timer);
-    try{await this.saoLuu('Trước khi khôi phục');const ds=this.dsSheet().filter(n=>n!==this.SH.nk);const V=await this.docFile(bkId,ds);const S={};ds.forEach(n=>S[n]=V[n]&&V[n].length?V[n]:[['']]);
+    try{await this.saoLuu('Trước khi khôi phục');const ds=this.dsSheet().filter(n=>n!==this.SH.nk);const V=V0||await this.docFile(bkId,ds);const S={};ds.forEach(n=>S[n]=V[n]&&V[n].length?V[n]:[['']]);
       await this.ghiFile(this.sheetId,S);this._raw=null;const o=this.docNam(await this.docFile(this.sheetId,this.dsSheet()));const cu=await this.docCu();
       [['don','id'],['pn','id'],['chi','id']].forEach(([f,k])=>{const have=new Set(o[f].map(x=>String(x[k])));cu[f].forEach(x=>{if(!have.has(String(x[k])))o[f].push(x)})});
       const nk0=[...(o.nk||[]),...((db.nk||[]).filter(x=>!(o.nk||[]).some(y=>y.id===x.id)))];db={v:1,sample:false,shop:o.shop||db.shop,may:o.may,don:o.don,hang:o.hang,pn:o.pn,chi:o.chi,nk:nk0};this.setBase(db);Store.save(db);NK.them('Khôi phục dữ liệu','Bản sao lưu '+(bk.name||''),'Sổ năm '+this.nam+' trở về đúng lúc sao lưu');Store.save(db);this.queue(500);return bk}finally{this.busy=false}},
@@ -1154,6 +1154,7 @@ function showPending(lic,justSent){if(!XEM)lockApp();const w=document.getElement
 async function afterLogin(){try{await Store.ready}catch(_){}GG.chan=null;GG.soCu=null;welcomeMsg('Đang kiểm tra kích hoạt…');let lic;try{lic=await license(GG.email)}catch(e){throw {where:'may'}}GG.ctv=lic.ctv||'';XLIC=lic;
   if(lic.status==='none'||lic.status==='pending'){xemMode();xemBar();xemPoll();showPending(lic);return false}
   if(lic.status!=='active'){if(XEM)xemBar();showPending(lic);return false}
+  try{localStorage.setItem('sg_licok',JSON.stringify({e:GG.email,t:Date.now()}))}catch(_){}
   const wasXem=XEM;let created;
   if(XEM){clearInterval(xTimer);xemBar('Shop Gọn đã kích hoạt — đang tạo sổ dữ liệu trong Google Drive…')}
   welcomeMsg('Đang chuẩn bị sổ dữ liệu trong Drive…');
@@ -1167,7 +1168,7 @@ async function afterLogin(){try{await Store.ready}catch(_){}GG.chan=null;GG.soCu
     const c0=GG.chu();if(!db.sample&&(db.don.length||db.may.length)&&c0&&c0!==GG.email)GG.chan={loai:'gmail',cu:c0};else await GG.push()}
   else await GG.pull();
   try{localStorage.setItem('shopgon_gg',JSON.stringify({email:GG.email,sheetId:GG.sheetId}))}catch(e){}
-  closeWelcome();xemBar();render();toast(wasXem?'Shop Gọn đã kích hoạt — bắt đầu nhập tồn và bán hàng':'Đã kết nối '+GG.email);return true}
+  GG.OFF=false;closeWelcome();xemBar();render();toast(wasXem?'Shop Gọn đã kích hoạt — bắt đầu nhập tồn và bán hàng':'Đã kết nối '+GG.email);return true}
 /* 24/10: Zalo/Facebook/TikTok mở link trong trình duyệt riêng, Google không cho đăng nhập ở đó (báo lỗi 400) → hướng dẫn mở bằng Chrome/Safari */
 const INAPP=/Zalo|FBAN|FBAV|FB_IAB|FBIOS|Instagram|Messenger|Line\/|musical_ly|TikTok|Bytedance|; wv\)/i.test(navigator.userAgent);
 const IOS=/iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -1532,6 +1533,7 @@ function homeDay(){const t=todayIso(),y=iso(Date.now()-DAY),r=homeD==='yest'?sum
   return `<div class="panel hdp"><div class="seg" role="group">${tb('today','Hôm nay')}${tb('yest','Hôm qua')}${tb('week','7 ngày')}</div><div class="hdv"><small>Doanh thu</small><b class="num">${money(r.dt)}</b><i>${r.n} đơn · ${r.may} máy<span class="own"> · lời ${money(r.loi)}</span></i></div></div>`}
 /* 08/11 anh Thái: cảnh báo khi app TẠM DỪNG lưu Drive để chống mất dữ liệu */
 function chanBar(){if(NV||XEM||DEMO)return '';const c=GG.chan;
+  if(GG.OFF)return `<div class="alert amber chanb"><b>📴 Đang mất mạng — vẫn bán được bình thường</b><span>Đơn lưu trên máy này. Có mạng lại app tự lưu lên Google Drive. Không xoá app, không xoá dữ liệu trình duyệt lúc này.</span></div>`;
   if(GG.het)return `<div class="alert red chanb"><b>Phiên đăng nhập Google đã hết — đơn mới chỉ đang lưu trên máy này</b><span>Bấm đăng nhập lại để app lưu tiếp lên Google Drive. Không xoá dữ liệu trình duyệt, không đổi máy cho tới khi đăng nhập lại.</span><div class="inrow" style="margin-top:8px"><button class="btn" data-gg="login">Đăng nhập lại Google</button></div></div>`;
   if(c&&c.loai==='mat')return `<div class="alert red chanb"><b>Đã tạm dừng lưu lên Google Drive để giữ an toàn dữ liệu</b><span>Lần đồng bộ này sẽ làm mất ${c.n} / ${c.tot} dòng dữ liệu (có thể do mạng chập, hoặc máy khác vừa xoá). App đã sao lưu sẵn trên Drive. Không chắc thì chọn "Giữ hết".</span><div class="inrow" style="flex-wrap:wrap;margin-top:8px"><button class="btn" data-chan="giu">Giữ hết, không xoá dòng nào</button><button class="ghost red" data-chan="xoa">Tôi vừa xoá thật, cho xoá</button></div></div>`;
   if(c&&c.loai==='gmail')return `<div class="alert red chanb"><b>Gmail ${esc(GG.email)} chưa có dữ liệu của shop</b><span>Dữ liệu đang có trên máy này là của Gmail <b>${esc(c.cu)}</b>. App chưa chép sang để tránh lẫn sổ. Nếu đăng nhập nhầm, bấm đăng nhập lại Gmail cũ.</span><div class="inrow" style="flex-wrap:wrap;margin-top:8px"><button class="btn" data-gg="other">Đăng nhập lại Gmail cũ</button><button class="ghost" data-chan="chep">Chép dữ liệu sang Gmail mới</button></div></div>`;
@@ -2028,7 +2030,7 @@ function soNamMau(){const y=+todayIso().slice(0,4),t=todayIso(),d=n=>dmy(iso(Dat
       <div style="font-size:13px;line-height:1.5;margin-top:6px;display:flex;flex-direction:column;gap:8px">
       <div><b>1. Lỡ xoá, sửa sai máy, hàng, đơn</b> (trong app hoặc trong file sổ): bấm <b>Khôi phục…</b> ở trên → chọn bản sao lưu có ngày <b>trước lúc lỡ tay</b> → Đồng ý. App tự lưu bản hiện tại trước khi khôi phục, đơn bán sau đó vẫn giữ.</div>
       <div><b>2. Lỡ xoá cả file sổ</b> “Shop Gọn …” trong Google Drive: mở drive.google.com → <b>Thùng rác</b> → nhấn giữ (hoặc chuột phải) file đó → <b>Khôi phục</b>. Google giữ thùng rác 30 ngày. Xong mở lại app.</div>
-      <div><b>3. Lỡ sửa vài ô trong file sổ Google Sheet</b>: mở file sổ trên máy tính → <b>Tệp → Lịch sử phiên bản</b> → chọn giờ trước khi sửa → Khôi phục phiên bản này.</div>
+      <div><b>3. Lỡ sửa / xoá vài ô trong file sổ Google Sheet</b>: Google tự giữ lịch sử mọi lần sửa của file. Bấm <b>Mở</b> ở sổ năm (máy tính; điện thoại mở bằng Chrome › ⋮ › <b>Trang web cho máy tính</b>) → <b>Tệp → Lịch sử phiên bản → Xem lịch sử phiên bản</b> → chọn giờ trước khi sửa → <b>Khôi phục phiên bản này</b> → mở lại app. App Google Sheets trên điện thoại không có mục này.</div>
       <div style="color:var(--muted)">Trước khi kiểm kho hoặc sửa giá cả loạt, bấm <b>Sao lưu ngay</b>. Mỗi tháng bấm <b>⬇️ Excel</b> cất 1 bản ở máy tính hoặc Zalo Cloud.</div></div></details>
     <div class="list" style="margin-top:8px">${[0,1,2].map(n=>`<div class="row"><div class="n"><b class="num">${d(n)} 21h00</b><small>Năm ${y} · Hằng ngày</small></div><button class="ghost" data-mau="1">Khôi phục</button></div>`).join('')}</div></div>`}
 function nkMau(){const d=(n,g)=>{const x=iso(Date.now()-n*DAY);return x.slice(8,10)+'/'+x.slice(5,7)+' '+g};
@@ -2047,6 +2049,80 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-trung],[da
   if(d.nkloc){nkLoc=d.nkloc;nkN=100;renderMore();return}
   if(d.nkthem){nkN+=100;renderMore();return}
   if(d.xls){const y=+d.xls;xlsMsg='Đang tải sổ năm '+y+'…';renderMore();GG.taiExcel(y).then(ten=>{NK.them('Tải dữ liệu Excel','Sổ năm '+y,ten);save();xlsMsg='Đã tải '+ten+' ✅ — lưu file này ở chỗ an toàn (máy tính, USB, Zalo Cloud).';renderMore()}).catch(er=>{xlsMsg='Chưa tải được: '+(er&&er.message||'lỗi mạng');renderMore()});return}});
+/* ===== 09/11 anh Thái — LỚP 6 CHỐNG MẤT: SAO LƯU MÃ HOÁ NGOÀI GMAIL SHOP =====
+   Mỗi ngày 1 bản sổ năm (giá trị mọi trang) → nén → khoá AES-GCM bằng Mã khôi phục (chỉ shop giữ) → gửi máy chủ Shop Gọn, giữ 14 bản.
+   Máy chủ chỉ giữ khối đã khoá + bản băm của mã xác minh → Shop Gọn không đọc được dữ liệu. Mất Gmail / bị hack / xoá sạch Drive: Mã shop + Mã khôi phục là lấy lại. */
+const BK={CH:'ABCDEFGHJKLMNPQRSTUVWXYZ23456789',moi:null,kp:null,msg:'',xem:false,_g:false,
+  ngau(n){const a=crypto.getRandomValues(new Uint8Array(n));return Array.from(a,x=>this.CH[x&31]).join('')},
+  chuan(s){return String(s||'').toUpperCase().replace(/[^A-Z0-9]/g,'')},
+  dep(c){return this.chuan(c).replace(/(.{4})(?=.)/g,'$1-')},
+  hopLe(ma,code){return /^SG[A-HJ-NP-Z2-9]{6}$/.test(ma)&&new RegExp('^['+this.CH+']{16}$').test(code)},
+  hex(b){return Array.from(new Uint8Array(b),x=>x.toString(16).padStart(2,'0')).join('')},
+  async khoa(ma,code){const enc=new TextEncoder();const k0=await crypto.subtle.importKey('raw',enc.encode(this.chuan(code)),'PBKDF2',false,['deriveBits']);
+    const bits=new Uint8Array(await crypto.subtle.deriveBits({name:'PBKDF2',hash:'SHA-256',salt:enc.encode('shopgon-bk|'+ma),iterations:150000},k0,512));
+    const key=await crypto.subtle.importKey('raw',bits.slice(0,32),'AES-GCM',false,['encrypt','decrypt']);
+    const xac=this.hex(await crypto.subtle.digest('SHA-256',bits.slice(32)));return {key,xac}},
+  b64(u){let s='';for(let i=0;i<u.length;i+=32768)s+=String.fromCharCode.apply(null,u.subarray(i,i+32768));return btoa(s)},
+  ub64(s){const b=atob(s),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return u},
+  async nen(u,ra){const C=ra?globalThis.DecompressionStream:globalThis.CompressionStream;if(!C)return null;return new Uint8Array(await new Response(new Blob([u]).stream().pipeThrough(new C('gzip'))).arrayBuffer())},
+  async dong(obj,ma,code){const {key}=await this.khoa(ma,code);let u=new TextEncoder().encode(JSON.stringify(obj)),gz=0;const z=await this.nen(u);if(z){u=z;gz=1}
+    const iv=crypto.getRandomValues(new Uint8Array(12));const ct=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv},key,u));
+    const out=new Uint8Array(14+ct.length);out[0]=1;out[1]=gz;out.set(iv,2);out.set(ct,14);return this.b64(out)},
+  async mo(b64,ma,code){const u=this.ub64(b64);if(u[0]!==1)throw new Error('Bản sao lưu không đúng định dạng');const {key}=await this.khoa(ma,code);let p;
+    try{p=new Uint8Array(await crypto.subtle.decrypt({name:'AES-GCM',iv:u.slice(2,14)},key,u.slice(14)))}catch(_){throw new Error('Sai Mã khôi phục')}
+    if(u[1]){const r=await this.nen(p,1);if(!r)throw new Error('Trình duyệt này chưa giải nén được — mở bằng Chrome mới');p=r}return JSON.parse(new TextDecoder().decode(p))},
+  async post(o){const r=await fetch(GG.LICENSE_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(o)}).then(x=>x.json());if(!r||!r.ok)throw new Error((r&&r.msg)||'Máy chủ chưa nhận');return r},
+  coThe(){return !NV&&!XEM&&!TAB_DONG&&!DEMO&&GG.LICENSE_URL&&GG.token&&GG.sheetId&&GG.nam&&db&&!db.sample},
+  async gui(ep){const b=db&&db.shop&&db.shop.bk;if(this._g||!this.coThe()||!b||!b.ma||!b.code)return false;if(!ep&&b.ngay===todayIso())return false;if(!ep&&!navigator.onLine)return false;
+    this._g=true;try{const V=await GG.docFile(GG.sheetId,GG.dsSheet());const so=Object.values(V).reduce((a,v)=>a+v.length,0);
+      const d=await this.dong({v:1,nam:GG.nam,ten:db.shop.ten||'',luc:Date.now(),V},b.ma,b.code);const {xac}=await this.khoa(b.ma,b.code);
+      await this.post({act:'bk',token:GG.token,ma:b.ma,xac,nam:GG.nam,ngay:todayIso(),shop:db.shop.ten||'',dong:so,d});
+      b.ngay=todayIso();b.kb=Math.round(d.length*3/4/1024);Store.save(db);GG.queue(1500);return true}
+    finally{this._g=false}},
+  bat(){this.moi={ma:'SG'+this.ngau(6),code:this.ngau(16)};this.xem=false},
+  async luu(){const m=this.moi;if(!m)return;db.shop.bk={ma:m.ma,code:m.code,bat:todayIso()};this.moi=null;save();NK.them('Bật sao lưu ngoài Gmail','Mã shop '+m.ma,'Bản sao mã hoá mỗi ngày');save();return this.gui(true)},
+  async ds(ma,code){ma=this.chuan(ma);code=this.chuan(code);if(!this.hopLe(ma,code))throw new Error('Mã shop (SG + 6 ký tự) hoặc Mã khôi phục (16 ký tự) chưa đúng');
+    const {xac}=await this.khoa(ma,code);const r=await this.post({act:'bkds',ma,xac});return r.ds||[]},
+  async khoiPhuc(ma,code,id){ma=this.chuan(ma);code=this.chuan(code);const {xac}=await this.khoa(ma,code);const r=await this.post({act:'bklay',ma,xac,id});const o=await this.mo(r.d,ma,code);
+    if(!o||!o.V)throw new Error('Bản sao lưu trống');if(+o.nam!==+GG.nam)throw new Error('Bản này của sổ năm '+o.nam+' — chỉ khôi phục được bản của năm '+GG.nam);
+    await GG.khoiPhuc(null,o.V,'ngoài Gmail '+ma+' · '+new Date(o.luc).toLocaleString('vi-VN'));db.shop.bk={...(db.shop.bk||{}),ma,code,bat:(db.shop.bk&&db.shop.bk.bat)||todayIso()};save();return o},
+  anh(){const b=db.shop.bk||this.moi;if(!b)return;const c=document.createElement('canvas');c.width=900;c.height=520;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,900,520);
+    x.fillStyle='#0f766e';x.fillRect(0,0,900,90);x.fillStyle='#fff';x.font='bold 40px sans-serif';x.fillText('Shop Gọn — Mã khôi phục dữ liệu',36,60);
+    x.fillStyle='#111';x.font='28px sans-serif';x.fillText('Shop: '+(db.shop.ten||''),36,150);x.fillText('Mã shop:',36,220);x.font='bold 46px monospace';x.fillText(b.ma,250,222);
+    x.font='28px sans-serif';x.fillText('Mã khôi phục:',36,300);x.font='bold 46px monospace';x.fillText(this.dep(b.code),36,365);
+    x.fillStyle='#b42318';x.font='24px sans-serif';x.fillText('Cất kỹ ảnh này. Mất Gmail vẫn lấy lại được dữ liệu bằng 2 mã trên.',36,440);x.fillText('Ai có 2 mã này đọc được dữ liệu shop — không gửi người lạ.',36,478);
+    c.toBlob(bl=>{const a=document.createElement('a');a.href=URL.createObjectURL(bl);a.download='ShopGon_MaKhoiPhuc_'+b.ma+'.png';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},4000)},'image/png')},
+  html(){const b=db.shop.bk,m=this.moi,k=this.kp,nut='class="ghost" style="padding:8px 10px"';
+    const maBox=(ma,code)=>`<div style="background:var(--soft,#f4f6fa);border-radius:12px;padding:10px 12px;margin:8px 0"><small style="display:block;color:var(--muted)">Mã shop</small><b class="num" style="font-size:20px;letter-spacing:1px">${esc(ma)}</b><small style="display:block;color:var(--muted);margin-top:6px">Mã khôi phục</small><b class="num" style="font-size:20px;letter-spacing:1px;word-break:break-all">${esc(this.dep(code))}</b></div>`;
+    let h='';
+    if(m)h=`<div class="confirm"><b>Cất 2 mã này ngay</b>${maBox(m.ma,m.code)}<span style="font-size:13px">Mất Mã khôi phục thì bản sao ngoài Gmail <b>không mở được</b> — Shop Gọn cũng không lấy lại được. Lưu ảnh mã, ghi ra giấy cất két, gửi Zalo Cloud của chủ shop.</span>
+      <span class="inrow" style="flex-wrap:wrap"><button ${nut} data-bk="chep">Chép mã</button><button ${nut} data-bk="anh">Lưu ảnh mã</button></span>
+      <label style="display:flex;flex-direction:row;gap:10px;align-items:center;justify-content:flex-start;width:100%;font-size:14px;font-weight:700;margin:4px 0;text-align:left"><input type="checkbox" id="bkDaCat" style="width:20px;height:20px;min-height:0;margin:0;padding:0;flex:none"><span>Tôi đã cất Mã khôi phục</span></label>
+      <span class="inrow"><button class="btn" data-bk="luu">Bật sao lưu ngoài Gmail</button><button class="ghost" data-bk="huy">Thôi</button></span></div>`;
+    else if(b&&b.ma)h=`<p style="margin:4px 0 8px;color:var(--muted);font-size:13px"><b style="color:var(--green,#067647)">Đang bật</b> · Mã shop <b class="num">${esc(b.ma)}</b> · Lần gần nhất: <b>${b.ngay?dmy(b.ngay):'chưa gửi'}</b>${b.kb?' · '+b.kb+' KB':''}</p>
+      ${this.xem?maBox(b.ma,b.code):''}<div class="inrow" style="flex-wrap:wrap"><button ${nut} data-bk="gui">Gửi bản sao ngay</button><button ${nut} data-bk="xem">${this.xem?'Ẩn mã':'Xem mã khôi phục'}</button>${this.xem?`<button ${nut} data-bk="anh">Lưu ảnh mã</button>`:''}<button ${nut} data-bk="kp">${k?'Đóng':'Khôi phục…'}</button></div>`;
+    else h=`<p style="margin:4px 0 8px;color:var(--muted);font-size:13px">Thêm 1 bản sao <b>mỗi ngày nằm ngoài Gmail của shop</b>, khoá bằng <b>Mã khôi phục</b> chỉ chủ shop giữ — Shop Gọn cũng không đọc được. Mất Gmail, bị hack, lỡ xoá cả Drive vẫn lấy lại được.</p>
+      <div class="inrow" style="flex-wrap:wrap"><button class="btn" data-bk="bat">🔐 Bật &amp; tạo Mã khôi phục</button><button ${nut} data-bk="kp">${k?'Đóng':'Khôi phục bằng mã…'}</button></div>`;
+    if(k)h+=`<div class="confirm" style="margin-top:8px"><b>Khôi phục từ bản sao ngoài Gmail</b><span style="font-size:13px">Dùng khi mất Gmail cũ / dữ liệu Drive bị xoá. Dữ liệu sổ năm ${GG.nam} trở về đúng lúc sao lưu; app tự sao lưu bản hiện tại trước.</span>
+      <label style="width:100%">Mã shop<input id="bkMa" value="${esc(k.ma||'')}" placeholder="SG……" autocapitalize="characters"></label><label style="width:100%">Mã khôi phục<input id="bkCode" value="${esc(k.code?this.dep(k.code):'')}" placeholder="XXXX-XXXX-XXXX-XXXX" autocapitalize="characters"></label>
+      <button class="ghost" data-bk="tim">Xem các bản sao</button>
+      ${k.dang?'<div class="empty">Đang tải…</div>':''}${k.ds?(k.ds.length?`<div class="list">${k.ds.map(x=>k.hoi===x.id?`<div class="confirm"><b style="color:var(--red)">Khôi phục về bản ${dmy(x.ngay)}?</b><span class="inrow"><button class="ghost red" data-bkok="${esc(x.id)}">Đồng ý khôi phục</button><button class="ghost" data-bkno="1">Thôi</button></span></div>`
+        :`<div class="row"><div class="n"><b class="num">${dmy(x.ngay)}</b><small>Sổ năm ${esc(x.nam)} · ${esc(x.kb)} KB</small></div>${+x.nam===GG.nam?`<button class="ghost" data-bkhoi="${esc(x.id)}">Khôi phục</button>`:'<span class="pill a">Năm khác</span>'}</div>`).join('')}</div>`:'<div class="empty">Chưa có bản sao nào cho mã này.</div>'):''}</div>`;
+    return h+(this.msg?`<small style="display:block;margin-top:8px;font-weight:600">${esc(this.msg)}</small>`:'')}};
+document.addEventListener('click',e=>{const t=e.target.closest('[data-bk],[data-bkhoi],[data-bkok],[data-bkno]');if(!t)return;const d=t.dataset,B=BK,lai=()=>renderMore();
+  const loi=er=>{B.msg='Chưa xong: '+(er&&er.message||'lỗi mạng');if(B.kp)B.kp.dang=false;lai()};
+  if(d.bk==='bat'){B.bat();B.msg='';lai();return}
+  if(d.bk==='huy'){B.moi=null;lai();return}
+  if(d.bk==='chep'){const b=B.moi||db.shop.bk;try{navigator.clipboard.writeText('Shop Gọn · Mã shop '+b.ma+' · Mã khôi phục '+B.dep(b.code));toast('Đã chép mã')}catch(_){toast('Chưa chép được — chụp màn hình')}return}
+  if(d.bk==='anh'){B.anh();return}
+  if(d.bk==='luu'){const c=$('bkDaCat');if(!c||!c.checked){toast('Tích "Tôi đã cất Mã khôi phục" trước');return}B.msg='Đang gửi bản sao đầu tiên…';lai();B.luu().then(()=>{B.msg='Đã bật · bản sao đầu tiên đã gửi ✅';lai()}).catch(loi);return}
+  if(d.bk==='gui'){B.msg='Đang gửi bản sao…';lai();B.gui(true).then(ok=>{B.msg=ok?'Đã gửi bản sao ngoài Gmail ✅':'Chưa gửi được — kiểm tra mạng / đăng nhập Google';lai()}).catch(loi);return}
+  if(d.bk==='xem'){B.xem=!B.xem;lai();return}
+  if(d.bk==='kp'){const b=db.shop.bk;B.kp=B.kp?null:{ma:b&&b.ma||'',code:b&&b.code||''};B.msg='';lai();return}
+  if(d.bk==='tim'){const k=B.kp;k.ma=$('bkMa').value;k.code=$('bkCode').value;k.dang=true;k.ds=null;k.hoi=null;lai();B.ds(k.ma,k.code).then(L=>{k.dang=false;k.ds=L;lai()}).catch(loi);return}
+  if(d.bkhoi){B.kp.hoi=d.bkhoi;lai();return}
+  if(d.bkno){B.kp.hoi=null;lai();return}
+  if(d.bkok){const k=B.kp;B.msg='Đang khôi phục…';k.hoi=null;lai();B.khoiPhuc(k.ma,k.code,d.bkok).then(()=>{B.kp=null;B.msg='Đã khôi phục từ bản sao ngoài Gmail ✅ (bản trước khi khôi phục đã được sao lưu trong Drive)';render();toast('Đã khôi phục dữ liệu')}).catch(loi);return}});
 /* ===== 05/11 anh Thái: SỔ THEO NĂM · SAO LƯU · KHÔI PHỤC · TRA IMEI CÁC NĂM CŨ ===== */
 let slOpen=false,slDs=null,slMsg='',slHoi=null,lookCu={q:''};
 function soNamPanel(){if(!GG.email||!GG.nam||NV||XEM)return '';
@@ -2061,11 +2137,13 @@ function soNamPanel(){if(!GG.email||!GG.nam||NV||XEM)return '';
     <div class="eyebrow" style="margin-top:14px">Sao lưu</div>
     <p style="margin:4px 0 10px;color:var(--muted);font-size:13px">Tự sao lưu mỗi ngày vào thư mục <b>Shop Gọn – Sao lưu</b> trong Drive, giữ 14 bản gần nhất (2 tuần). Lần gần nhất: <b>${db.shop.saoLuu?dmy(db.shop.saoLuu):'chưa có'}</b></p>
     <div class="inrow" style="flex-wrap:wrap"><button class="ghost" data-sl="ngay">Sao lưu ngay</button><button class="ghost" data-sl="ds">${slOpen?'Đóng danh sách':'Khôi phục…'}</button></div>
+    <div class="eyebrow" style="margin-top:14px">🔐 Sao lưu ngoài Gmail (mã hoá)</div>
+    ${BK.html()}
     <details class="slHelp" style="margin-top:10px"><summary style="cursor:pointer;font-weight:700;font-size:14px">Lỡ xoá dữ liệu? Cách khôi phục</summary>
       <div style="font-size:13px;line-height:1.5;margin-top:6px;display:flex;flex-direction:column;gap:8px">
       <div><b>1. Lỡ xoá, sửa sai máy, hàng, đơn</b> (trong app hoặc trong file sổ): bấm <b>Khôi phục…</b> ở trên → chọn bản sao lưu có ngày <b>trước lúc lỡ tay</b> → Đồng ý. App tự lưu bản hiện tại trước khi khôi phục, đơn bán sau đó vẫn giữ.</div>
       <div><b>2. Lỡ xoá cả file sổ</b> “Shop Gọn …” trong Google Drive: mở drive.google.com → <b>Thùng rác</b> → nhấn giữ (hoặc chuột phải) file đó → <b>Khôi phục</b>. Google giữ thùng rác 30 ngày. Xong mở lại app.</div>
-      <div><b>3. Lỡ sửa vài ô trong file sổ Google Sheet</b>: mở file sổ trên máy tính → <b>Tệp → Lịch sử phiên bản</b> → chọn giờ trước khi sửa → Khôi phục phiên bản này.</div>
+      <div><b>3. Lỡ sửa / xoá vài ô trong file sổ Google Sheet</b>: Google tự giữ lịch sử mọi lần sửa của file. Bấm <b>Mở</b> ở sổ năm (máy tính; điện thoại mở bằng Chrome › ⋮ › <b>Trang web cho máy tính</b>) → <b>Tệp → Lịch sử phiên bản → Xem lịch sử phiên bản</b> → chọn giờ trước khi sửa → <b>Khôi phục phiên bản này</b> → mở lại app. App Google Sheets trên điện thoại không có mục này.</div>
       <div style="color:var(--muted)">Trước khi kiểm kho hoặc sửa giá cả loạt, bấm <b>Sao lưu ngay</b>. Mỗi tháng bấm <b>⬇️ Excel</b> cất 1 bản ở máy tính hoặc Zalo Cloud.</div></div></details>
     ${slMsg?`<small id="slMsg" style="display:block;margin-top:8px;font-weight:600">${esc(slMsg)}</small>`:''}
     ${slOpen?(slDs?`<div class="list" style="margin-top:8px">${slDs.length?slDs.map(x=>{const a=x.appProperties||{};const khac=+a.nam!==GG.nam;const dm=GG._dem&&GG._dem[x.id];const demTxt=dm?(dm.may||dm.don||dm.hang?`Có ${dm.may} máy · ${dm.don} dòng đơn · ${dm.hang} mặt hàng`:'⚠️ Bản này TRỐNG — không có dữ liệu'):'Đang đếm dữ liệu…';
@@ -3023,6 +3101,18 @@ document.addEventListener('click',e=>{if(e.target.closest('[data-more="hd"]')){e
 document.addEventListener('submit',e=>{if(!XEM||e.target.id==='fNvLogin')return;e.preventDefault();e.stopImmediatePropagation();showKh()},true);
 document.addEventListener('click',e=>{if(!XEM)return;const b=e.target.closest('form button[type=submit],form button:not([type]),[data-rcpay],[data-rcdone],[data-rcprint],[data-cancelok],[data-suaok],[data-xoaok],[data-delimeiok],[data-nccpay],[data-nttra],[data-kkhsave],[data-trok],[data-reset],[data-more="bg"],[data-more="tt"],[data-more="giahan"],[data-more="ctv"]');if(!b||b.closest('#fNvLogin'))return;e.preventDefault();e.stopImmediatePropagation();showKh()},true);
 render();
+/* 09/11 anh Thái — LỚP 1 CHỐNG MẤT: mất mạng (hoặc máy chủ không trả lời) vẫn MỞ được app và bán trên sổ của máy.
+   Điều kiện: máy này đã từng mở sổ đúng Gmail đó (Store.goc) và đã kiểm kích hoạt thành công trong 7 ngày. Đơn chỉ lưu trên máy (GG.token=null nên không ghi Drive);
+   có mạng lại: còn phiên Google thì tự đồng bộ (afterLogin → gộp 3 chiều), hết phiên thì hiện thẻ đỏ Đăng nhập lại. */
+async function moOffline(gs){try{await Store.ready}catch(_){}
+  let lk=null;try{lk=JSON.parse(localStorage.getItem('sg_licok')||'null')}catch(_){}
+  const g=Store.goc;if(!gs||!gs.email||!lk||lk.e!==gs.email||Date.now()-lk.t>7*DAY)return false;
+  if(!g||g.sample||!Array.isArray(g.don)||!Array.isArray(g.may)||GG.chu()!==gs.email)return false;
+  XEM=false;db=g;GG.email=gs.email;GG.sheetId=gs.sheetId||'';GG.token=null;GG.OFF=true;
+  try{clearInterval(xTimer)}catch(_){}closeWelcome();xemBar();render();toast('Đang mất mạng — vẫn bán được, đơn lưu trên máy');return true}
+window.addEventListener('online',()=>{if(!GG.OFF||NV)return;let tk=null;try{tk=JSON.parse(localStorage.getItem('shopgon_tk')||'null')}catch(_){}
+  if(tk&&tk.x>Date.now()&&tk.e===GG.email){GG.token=tk.t;afterLogin().then(ok=>{if(ok){GG.OFF=false;render()}}).catch(()=>{GG.token=null})}
+  else{GG.OFF=false;GG.het=true;render();toast('Có mạng lại — bấm Đăng nhập lại Google để lưu đơn lên Drive')}});
 function boot(){let gs=null,seen=null;try{gs=JSON.parse(localStorage.getItem('shopgon_gg')||'null');seen=localStorage.getItem('shopgon_seen')}catch(e){}
   try{if(gs&&gs.email&&!localStorage.getItem('shopgon_owner'))localStorage.setItem('shopgon_owner',gs.email)}catch(_){}  /* 08/11: ghi nhớ Gmail chủ sổ của dữ liệu trên máy */
   if(DEMO){if(TEST){const b=$('xbar');if(b){b.hidden=false;b.className='ok';b.classList.add('strip');b.innerHTML='<span class="t"><b>Tài khoản test</b> · dữ liệu mẫu trên máy này</span><button data-gg="thoattest">Thoát</button>'}const md=$('mode');if(md)md.style.display='none'}else demoBar();return}
@@ -3033,10 +3123,11 @@ function boot(){let gs=null,seen=null;try{gs=JSON.parse(localStorage.getItem('sh
     xemMode();lockApp();
     if(!INAPP)GG.load().catch(()=>{});
     let tk=null;try{tk=JSON.parse(localStorage.getItem('shopgon_tk')||'null')}catch(e){}
-    if(gs&&tk&&tk.x>Date.now()&&tk.e===gs.email){GG.email=gs.email;GG.sheetId=gs.sheetId||'';GG.token=tk.t;showLoad('Đang mở sổ dữ liệu của shop…');
-      afterLogin().catch(e=>{GG.token=null;showLogin(gs.email,ggErr(e))})}
+    if(!navigator.onLine&&gs&&gs.email){showLoad('Máy đang mất mạng — mở sổ trên máy…');moOffline(gs).then(ok=>{if(!ok)showLogin(gs.email,'Máy đang mất mạng. Có mạng lại rồi bấm Đăng nhập.')})}
+    else if(gs&&tk&&tk.x>Date.now()&&tk.e===gs.email){GG.email=gs.email;GG.sheetId=gs.sheetId||'';GG.token=tk.t;showLoad('Đang mở sổ dữ liệu của shop…');
+      afterLogin().catch(e=>{GG.token=null;if(e&&e.where==='may')moOffline(gs).then(ok=>{if(!ok)showLogin(gs.email,ggErr(e))});else showLogin(gs.email,ggErr(e))})}
     else if(gs&&gs.email&&!INAPP&&!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){GG.email=gs.email;GG.sheetId=gs.sheetId||'';showLoad('Đang đăng nhập lại…');
-      GG.login(true).then(()=>afterLogin()).catch(()=>{showLogin(gs.email)})}
+      GG.login(true).then(()=>afterLogin()).catch(()=>{moOffline(gs).then(ok=>{if(!ok)showLogin(gs.email)})})}
     else if(gs&&gs.email){GG.sheetId=gs.sheetId||'';showLogin(gs.email)}
     else showLogin();
     setInterval(()=>{if(GG.email&&!XEM)license(GG.email).then(l=>{if(l.status==='locked'||l.status==='expired'){Store.save(db);showPending(l)}}).catch(()=>{})},6*3600*1000);
@@ -3121,7 +3212,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='scSp'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261109-1400';let verLuc=0;
+const BUILD='20261109-1430';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
