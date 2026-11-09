@@ -1132,7 +1132,7 @@ refSale();
 async function sendRequest(){const shop=(document.getElementById('rqShop')||{}).value||'',sdt=(document.getElementById('rqSdt')||{}).value||'',sale=(document.getElementById('rqSale')||{}).value||'';
   if(!shop.trim()){welcomeMsg('Nhập tên shop trước khi gửi.');return}
   try{await fetch(GG.LICENSE_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({email:GG.email,shop:shop.trim(),sdt:sdt.trim(),ctv:sale.trim()})});db.shop.ten=shop.trim();Store.save(db);
-    try{localStorage.setItem('shopgon_sdt',sdt.trim())}catch(_){}license(GG.email).then(l=>{XLIC=l;xemBar();xemPoll();showPending(l,true)}).catch(()=>{XLIC={status:'pending'};xemBar();showPending(XLIC,true)})}catch(e){welcomeMsg('Chưa gửi được, kiểm tra mạng rồi thử lại.')}}
+    try{localStorage.setItem('shopgon_sdt',sdt.trim())}catch(_){}license(GG.email).then(l=>{XLIC=l;if(l.status==='active'){clearInterval(xTimer);welcomeMsg('✅ Đã mở dùng thử 7 ngày miễn phí. Đang mở app…');afterLogin().catch(er=>welcomeMsg(ggErr(er)));return}xemBar();xemPoll();showPending(l,true)}).catch(()=>{XLIC={status:'pending'};xemBar();showPending(XLIC,true)})}catch(e){welcomeMsg('Chưa gửi được, kiểm tra mạng rồi thử lại.')}}
 function showPending(lic,justSent){if(!XEM)lockApp();const w=document.getElementById('welcome');w.hidden=false;
   const st=lic.status;
   w.innerHTML=`<div class="wc"><div class="wlogo"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
@@ -1541,6 +1541,10 @@ document.addEventListener('click',async e=>{const b=e.target.closest('[data-chan
   if(k==='giu'||k==='xoa'){GG.ep=k;toast(k==='giu'?'Đang gộp giữ lại tất cả dữ liệu…':'Đang lưu theo dữ liệu máy này…');const ok=await GG.push();toast(ok?'Đã lưu an toàn lên Google Drive':'Chưa lưu được, kiểm tra mạng rồi thử lại');render();return}
   if(k==='chep'){GG.chan=null;GG.datChu(GG.email);const ok=await GG.push();toast(ok?'Đã chép dữ liệu sang Gmail '+GG.email:'Chưa lưu được, thử lại');render();return}
   if(k==='socu'){toast('Đang lấy lại dữ liệu từ sổ cũ…');const ok=await GG.layCu();toast(ok?'Đã lấy lại dữ liệu từ sổ cũ':'Chưa xong, kiểm tra mạng rồi thử lại');render();return}});
+/* 09/11 anh Thái: shop đăng ký xong được dùng thử 7 ngày (máy chủ tự Tạm duyệt). Nhắc chuyển khoản + báo Sale để anh xác nhận tiền */
+function tamBar(){const l=XLIC;if(!l||!l.tam||l.status!=='active'||XEM||DEMO||NV)return '';
+  const con=l.han?Math.max(0,Math.round((new Date(l.han)-new Date(todayIso()))/864e5)):null;
+  return `<div class="alert amber" style="margin-bottom:12px"><b>🎁 Đang dùng thử miễn phí${l.han?' tới '+dmy(l.han)+(con!=null&&!isNaN(con)?' (còn '+con+' ngày)':''):''}</b><span>Chuyển khoản gói rồi báo Sale/CTV đã cài app cho shop — Shop Gọn xác nhận là dùng chính thức, dữ liệu giữ nguyên. Hết hạn chưa chuyển khoản app sẽ tạm khoá.</span><button class="btn" data-more="giahan" style="margin-top:8px">💳 Chuyển khoản kích hoạt</button></div>`}
 function renderHome(){if(NV){renderNvHome();return}
   const t=todayIso(), y=iso(Date.now()-DAY), m0=t.slice(0,8)+'01';
   const td=sumRange(t,t), yd=sumRange(y,y);
@@ -1549,7 +1553,7 @@ function renderHome(){if(NV){renderNvHome();return}
   const start=homeStart();
   /* 02/11 anh Thái: trang chủ gọn như Sổ Bán Hàng — số liệu chi tiết chuyển sang tab Báo cáo */
   $('v-home').innerHTML=`
-  ${chanBar()}${homeMonth()}${homeSearch()}${homeTodo()}${start}
+  ${chanBar()}${tamBar()}${homeMonth()}${homeSearch()}${homeTodo()}${start}
   ${db.sample&&!XEM&&!DEMO?`<div class="alert amber"><b>Đang xem dữ liệu mẫu.</b><span>Bấm thử thoải mái. Khi dùng thật, vào Thêm → Cài đặt → Bắt đầu dữ liệu thật.</span></div>`:''}
   ${homeQuick()}${homeWeb()}`;
   $('v-home').insertAdjacentHTML('afterbegin',pnChoBar()+trungBar());
@@ -2658,7 +2662,7 @@ function sdtShop(lic){let s=(lic&&lic.sdt)||'';if(!s)try{s=localStorage.getItem(
 function qlBlock(g,G){const g1=(G||[]).find(x=>+x.m===12);const n=Math.round((+g.m||12)/12),bai=n*12;const L=['App quản lý bán hàng đủ tính năng: IMEI, kho, bảo hành, lời lỗ, hóa đơn QR','Website mini — bảng giá online gửi khách qua Zalo','Thiết kế hình sản phẩm, kho ảnh máy chính hãng tự cập nhật','<b>'+bai+' bài truyền thông</b> Shop Gọn thiết kế sẵn (1 bài/tháng)','Sale cài app, <b>nhập tồn lần đầu tối đa 50 mã</b> hàng bán chạy, giá trị cao + hướng dẫn sử dụng','Dữ liệu nằm trong Google Drive của chính shop'];
   return `<div style="background:#f0faf7;border:1px solid #cde9e1;border-radius:14px;padding:10px 12px;font-size:12.5px;line-height:1.45">${g.giaGoc?`<div style="background:#fff4dc;border-radius:10px;padding:7px 9px;margin-bottom:8px;color:#7a4d00;font-weight:700">🎁 Ưu đãi 100 shop đầu tiên: <s style="font-weight:500">${(+g.giaGoc).toLocaleString('vi-VN')}đ</s> → ${(+g.gia).toLocaleString('vi-VN')}đ${g.conLai?' · còn '+g.conLai+' suất':''}</div>`:''}<b>Gói ${esc(g.ten)} gồm:</b><ul style="margin:6px 0 0;padding-left:18px">${L.map(x=>`<li>${x}</li>`).join('')}</ul><div style="margin-top:6px;color:#0b5e57;font-weight:700">≈ ${(Math.round(g.gia/(365*n)/100)*100).toLocaleString('vi-VN')}đ/ngày${n>1&&g1?' · tiết kiệm '+((g1.giaGoc||g1.gia)*n-g.gia).toLocaleString('vi-VN')+'đ so với mua '+n+' lần gói 1 năm':''}</div><div style="margin-top:6px;color:#667">Shop trên 50 mã hàng: thương lượng với Sale gói hỗ trợ nhập full shop.</div></div>`}
 function payBlock(lic){const G=(lic&&lic.goi)||[];if(!G.length)return '';const bk=lic.bank;const i0=Math.min(payGoi,G.length-1),g=G[i0];const nd=ndCk(g.ten);
-  return `<div style="width:100%;text-align:left;border-top:1px dashed var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px"><b>${lic.status==='active'?'Thanh toán gia hạn':'Thanh toán để kích hoạt'}</b>
+  return `<div style="width:100%;text-align:left;border-top:1px dashed var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px"><b>${lic.status==='active'&&!lic.tam?'Thanh toán gia hạn':lic.tam?'Thanh toán để dùng chính thức':'Thanh toán để kích hoạt'}</b>
   <div class="seg" role="group">${G.map((x,i)=>`<button type="button" data-paygoi="${i}" aria-pressed="${i===i0}">${esc(x.ten)}<br><small class="num">${short(x.gia)}</small></button>`).join('')}</div>
   ${qlBlock(g,G)}
   ${bk&&bk.acc&&bk.bin?`<div class="qrbox"><div id="payQr" style="padding:10px;background:#fff;border:1px solid var(--line);border-radius:14px;min-height:220px;min-width:220px;display:grid;place-items:center"></div><div class="qri"><b>${esc(bk.nh||'')}</b><span class="num">${esc(bk.acc)}</span><span>${esc(bk.name||'')}</span><span class="num">Số tiền: <b>${money(g.gia)}</b></span><span class="num">Nội dung: <b>${esc(nd)}</b></span></div></div><small style="text-align:center">Quét mã bằng app ngân hàng, giữ nguyên số tiền và nội dung.</small>`
@@ -2666,7 +2670,7 @@ function payBlock(lic){const G=(lic&&lic.goi)||[];if(!G.length)return '';const b
 function drawPay(lic){payLic=lic;const bk=lic&&lic.bank,G=(lic&&lic.goi)||[];if(!bk||!bk.acc||!bk.bin||!G.length)return;const g=G[Math.min(payGoi,G.length-1)];const nd=ndCk(g.ten);
   loadQr().then(()=>{const q=$('payQr');if(!q)return;q.innerHTML='';new QRCode(q,{text:vietqr(bk.bin,bk.acc,g.gia,nd),width:200,height:200,correctLevel:QRCode.CorrectLevel.M})}).catch(()=>{const q=$('payQr');if(q)q.textContent='Không tải được mã QR, kiểm tra mạng.'})}
 /* 23/10: Thêm › Gia hạn — shop đang dùng chuyển khoản gia hạn + gửi ủy nhiệm chi, không bị khóa app */
-function renderGh(){const b=$('ghBox');if(!b||!payLic)return;const l=payLic;b.innerHTML=`<h2>Gia hạn Shop Gọn</h2>${l.han?`<p style="margin:0 0 6px">Hạn hiện tại: <b>${dmy(l.han)}</b>. Gia hạn xong, hạn mới cộng nối tiếp.</p>`:''}`+(payBlock(l)||'<div class="empty">Chưa có thông tin gói, liên hệ Shop Gọn.</div>');drawPay(l)}
+function renderGh(){const b=$('ghBox');if(!b||!payLic)return;const l=payLic;b.innerHTML=`<h2>${l.tam?'Kích hoạt chính thức Shop Gọn':'Gia hạn Shop Gọn'}</h2>${l.tam?`<p style="margin:0 0 6px">Đang dùng thử tới <b>${dmy(l.han)}</b>. Chuyển khoản theo mã QR bên dưới rồi <b>báo Sale/CTV</b> — Shop Gọn xác nhận là dùng chính thức, dữ liệu giữ nguyên.</p>`:l.han?`<p style="margin:0 0 6px">Hạn hiện tại: <b>${dmy(l.han)}</b>. Gia hạn xong, hạn mới cộng nối tiếp.</p>`:''}`+(payBlock(l)||'<div class="empty">Chưa có thông tin gói, liên hệ Shop Gọn.</div>');drawPay(l)}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-paygoi]');if(!b||!payLic)return;payGoi=+b.dataset.paygoi;if(view==='more'&&more==='giahan'&&$('ghBox'))renderGh();else showPending(payLic)});
 /* 23/10: bản demo có nút "QR cho shop" — shop quét bằng điện thoại của shop, đăng nhập Gmail trên máy shop (không đăng nhập trên máy Sale) */
 document.addEventListener('click',e=>{if(e.target.closest('[data-demoqrx]')){$('rc').hidden=true;return}if(!e.target.closest('#demoQr'))return;const ref=refSale();const url='https://shopgon.vn/app/'+(ref?'?ctv='+encodeURIComponent(ref):'');const el=$('rc');el.hidden=false;
@@ -3117,7 +3121,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='scSp'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261109-1310';let verLuc=0;
+const BUILD='20261109-1400';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
