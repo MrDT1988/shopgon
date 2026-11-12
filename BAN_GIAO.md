@@ -367,3 +367,9 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - Dòng có IMEI (1 ô nhiều serial cách dấu phẩy cũng được) → máy; dòng ở tab "Dien thoai"/nhóm "điện thoại" mà thiếu IMEI → dòng máy `can` (phải quét). Còn lại → hàng khác (nhóm Sim → sim, Linh kiện → sua, còn lại pk); tồn 0 bỏ qua.
 - `xlsVaoPhieu()` đổ vào **PN nháp** (không lưu kho ngay): bỏ IMEI đã có trong kho/phiếu, gộp máy cùng tên+giá, gộp hàng trùng tên; 1 NCC duy nhất thì điền sẵn NCC. Chỉ CỘNG, không ghi đè tồn.
 - Test `/tmp` (file mẫu + giả KiotViet + CSV Sapo): 5 máy + 5 món vào kho đúng, bỏ 1 IMEI trùng, bỏ 1 dòng tồn 0, 0 lỗi. test-toan-bo 73/75 (2 lỗi có sẵn từ trước, không liên quan). BUILD 20261112-1900.
+
+## 61. (12/11 19h45) File mẫu nhập tồn chọn máy từ kho máy (anh Thái)
+- `app/mau-nhap-ton.xlsx` giờ DỰNG TỪ `kho/kho-may.json` bằng `build/mau-nhap-ton.py` (openpyxl): tab Dien thoai chọn **Hãng → Tên máy (danh sách theo hãng, tên đặt `H_<Hãng>`) → Cấu hình → Màu** (OFFSET/MATCH vào tab ẩn `DM`). Gõ tay máy ngoài danh sách vẫn được (cảnh báo kiểu "warning"). Apple hiện là "iPhone" như app. Phụ kiện vẫn gõ tự do.
+- Robot kho máy (`kho-may.yml`, bước Lưu kết quả) chạy lại script sau mỗi lần cập nhật kho → file mẫu luôn có máy mới.
+- App: `xKhop(ten,cấu hình,màu)` khớp về đúng tên kho máy của app (`KM`: "Tên CFG - Màu", máy 1 màu không ghi màu) → có ảnh, giá niêm yết; `kmLoad()` trước khi đọc file. Toast báo "n mẫu tên ngoài kho máy (kiểm lại tên)".
+- Kiểm: công thức danh sách tính đúng trong LibreOffice (OPPO 41 máy; A6 Pro → 2 cấu hình, 3 màu); test nhập 4 máy khớp đúng tên app; test-toan-bo 73/75 (2 lỗi cũ). BUILD 20261112-1945.

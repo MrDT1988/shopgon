@@ -3073,6 +3073,12 @@ function xlsCot(row){const m={},used=new Set();const H=row.map(xN).map(h=>h.repl
 const xNum=v=>{if(typeof v==='number')return Math.round(v);const t=String(v??'').replace(/[^\d,.\-]/g,'');if(!t)return 0;return Math.round(+t.replace(/[.,](?=\d{3}(\D|$))/g,'').replace(',','.'))||0};
 const X_MAU=new Set(['861234567890123','356789012345678']);
 function xlsNhom(v){const t=xN(v);if(/sim|the cao/.test(t))return 'sim';if(/linh kien|sua|man hinh|pin thay/.test(t))return 'sua';return 'pk'}
+/* 12/11 anh Thái: tên máy chọn từ danh sách trong file mẫu (Hãng → Tên máy → Cấu hình → Màu) → khớp đúng tên trong kho máy của app (có ảnh, có giá niêm yết) */
+const xDl=d=>String(d||'').replace(/\s/g,'').replace(/GB\+/i,'+').replace(/\+/,'/').toLowerCase();
+function xKhop(t,cf,mu){if(!KM||!KM.length)return null;const T=xN(t);const ex=KM.find(x=>xN(x.ten)===T);if(ex&&!cf&&!mu)return ex;
+  const L=KM.filter(x=>xN(x.base)===T);if(!L.length)return ex||null;const c=xDl(cf),m=xN(mu);
+  const R=L.filter(x=>(!x.cfg||!c||xDl(x.cfg)===c)&&(!x.mau||!m||xN(x.mau)===m));
+  if(R.length===1)return R[0];const R2=R.filter(x=>(!x.cfg||xDl(x.cfg)===c)&&(!x.mau||xN(x.mau)===m));return R2.length===1?R2[0]:null}
 function xlsDoc(wb){const may=[],hang=[];let boQua=0,mau=0,khongTen=0;
   for(const sn of wb.SheetNames){const R=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,raw:true,defval:''});if(!R.length)continue;
     let hi=-1,C=null;for(let i=0;i<Math.min(R.length,15);i++){const c=xlsCot(R[i]);if(c.ten!==undefined&&(c.sl!==undefined||c.imei!==undefined||c.gn!==undefined||c.gb!==undefined)){hi=i;C=c;break}}
@@ -3081,33 +3087,34 @@ function xlsDoc(wb){const may=[],hang=[];let boQua=0,mau=0,khongTen=0;
       const ten0=String(g('ten')??'').trim();const im=String(g('imei')??'');if(!ten0){if(im.trim())khongTen++;continue}
       const imeis=[...new Set((im.match(/[0-9A-Za-z]{8,20}/g)||[]).filter(x=>/\d{6,}/.test(x)))];
       if(imeis.some(x=>X_MAU.has(x))){mau++;continue}
-      let ten=ten0;const cf=String(g('cfg')||'').trim(),mu=String(g('mau')||'').trim();if(cf&&!xN(ten).includes(xN(cf)))ten+=' '+cf;if(mu&&!xN(ten).includes(xN(mu)))ten+=' - '+mu;
+      let ten=ten0;const cf=String(g('cfg')||'').trim(),mu=String(g('mau')||'').trim();const kc=xKhop(ten0,cf,mu);
+      if(kc){ten=kc.ten}else{if(cf&&!xN(ten).includes(xN(cf)))ten+=' '+cf;if(mu&&!xN(ten).includes(xN(mu)))ten+=' - '+mu}
       const gn=xNum(g('gn')),gb=xNum(g('gb')),sl=C.sl!==undefined?xNum(g('sl')):(imeis.length||1);
-      if(imeis.length||(laDt&&C.imei!==undefined)||/dien thoai|smartphone/.test(xN(g('nhom')))){let hg=String(g('hang')||'').trim();if(!hg){hg=guessBrand(ten);if(!hg||hg==='Khác')hg=guessBrand2(ten)||'Khác'}
-        may.push({ten,hang:hg,gn,gb,imeis,can:imeis.length?0:Math.max(0,sl),ncc:String(g('ncc')||'').trim()});continue}
+      if(imeis.length||(laDt&&C.imei!==undefined)||/dien thoai|smartphone/.test(xN(g('nhom')))){let hg=kc?(kc.hang==='Apple'?'iPhone':kc.hang):String(g('hang')||'').trim();if(hg==='Khác')hg='';if(!hg){hg=guessBrand(ten);if(!hg||hg==='Khác')hg=guessBrand2(ten)||'Khác'}
+        may.push({ten,hang:hg,gn,gb,imeis,can:imeis.length?0:Math.max(0,sl),ncc:String(g('ncc')||'').trim(),ngoai:!kc&&!!(KM&&KM.length)});continue}
       if(!(sl>0)){boQua++;continue}
       hang.push({ten,nhom:C.nhom!==undefined?xlsNhom(g('nhom')):'pk',sl,gn,gb,min:C.min!==undefined&&g('min')!==''?xNum(g('min')):5})}}
   return {may,hang,boQua,mau,khongTen}}
 function xlsVaoPhieu(K){const daCo=new Set(db.may.map(m=>m.imei));PN.dong.forEach(d=>(d.imeis||[]).forEach(x=>daCo.add(x)));
-  let nMay=0,trung=0,canQuet=0,nccs=new Set();const nhom={};
+  let nMay=0,trung=0,canQuet=0,nccs=new Set(),ngoai=new Set();const nhom={};
   K.may.forEach(x=>{const moi=x.imeis.filter(i=>{if(daCo.has(i)){trung++;return false}daCo.add(i);return true});
     if(x.imeis.length&&!moi.length)return;if(x.ncc)nccs.add(x.ncc);const k=x.ten+'|'+x.hang+'|'+x.gn+'|'+x.gb;
-    const d=nhom[k]||(nhom[k]={t:'may',ten:x.ten,hang:x.hang,gn:x.gn,gb:x.gb,imeis:[],can:0});d.imeis.push(...moi);nMay+=moi.length;if(!x.imeis.length){d.can+=x.can;canQuet+=x.can}});
+    const d=nhom[k]||(nhom[k]={t:'may',ten:x.ten,hang:x.hang,gn:x.gn,gb:x.gb,imeis:[],can:0});if(x.ngoai)ngoai.add(x.ten);d.imeis.push(...moi);nMay+=moi.length;if(!x.imeis.length){d.can+=x.can;canQuet+=x.can}});
   Object.values(nhom).forEach(d=>{if(d.can)d.can+=d.imeis.length;else delete d.can;PN.dong.push(d)});
   const gop={};K.hang.forEach(x=>{const k=norm(x.ten)+'|'+x.nhom;if(gop[k]){gop[k].sl+=x.sl;return}gop[k]={...x}});
   const H=Object.values(gop);H.forEach(x=>{const h=db.hang.find(h=>norm(h.ten)===norm(x.ten));
     PN.dong.push({t:'hang',id:h?h.id:'',ten:h?h.ten:x.ten,nhom:h?h.nhom:x.nhom,loai:h?h.loai:'',sl:x.sl,gn:x.gn||(h?h.giaNhap:0),gb:x.gb||(h?h.giaBan:0),min:h?h.min:x.min})});
   if(!PN.ncc&&nccs.size===1)PN.ncc=[...nccs][0];
-  return {nMay,nMau:Object.keys(nhom).length,nHang:H.length,slHang:H.reduce((t,x)=>t+x.sl,0),trung,canQuet}}
+  return {ngoai:ngoai.size,nMay,nMau:Object.keys(nhom).length,nHang:H.length,slHang:H.reduce((t,x)=>t+x.sl,0),trung,canQuet}}
 document.addEventListener('change',async e=>{const t=e.target;if(t.id!=='xlsIn'||!t.files||!t.files[0])return;const f=t.files[0];
   if(f.size>8e6){toast('File quá lớn (tối đa 8MB)');t.value='';return}
   xlsBusy=true;renderAdd();let msg='';
   try{const X=await xlsLib();const buf=await f.arrayBuffer();const wb=/\.csv$/i.test(f.name)?X.read(new TextDecoder('utf-8').decode(buf),{type:'string',raw:true}):X.read(buf,{type:'array',raw:true});
-    const K=xlsDoc(wb);
+    try{await kmLoad()}catch(_){}const K=xlsDoc(wb);
     if(!K.may.length&&!K.hang.length){msg=K.mau?'File chỉ có 2 dòng ví dụ — điền hàng của shop rồi up lại':'Không thấy cột Tên hàng / Số lượng / IMEI — dùng file mẫu Shop Gọn cho chắc'}
     else{const r=xlsVaoPhieu(K);pnSave();addMode='may';
       const p=[];if(r.nMay)p.push(`${r.nMay} máy (${r.nMau} mẫu)`);if(r.nHang)p.push(`${r.nHang} món · ${r.slHang} cái`);
-      msg=p.length?`Đã đưa vào phiếu: ${p.join(' + ')}`:'Không có hàng mới';if(r.trung)msg+=` · bỏ ${r.trung} IMEI đã có`;if(r.canQuet)msg+=` · ${r.canQuet} máy thiếu IMEI cần quét`;if(K.boQua)msg+=` · bỏ ${K.boQua} dòng tồn 0`;
+      msg=p.length?`Đã đưa vào phiếu: ${p.join(' + ')}`:'Không có hàng mới';if(r.trung)msg+=` · bỏ ${r.trung} IMEI đã có`;if(r.canQuet)msg+=` · ${r.canQuet} máy thiếu IMEI cần quét`;if(K.boQua)msg+=` · bỏ ${K.boQua} dòng tồn 0`;if(r.ngoai)msg+=` · ${r.ngoai} mẫu tên ngoài kho máy (kiểm lại tên)`;
       if(p.length)msg+=' — xem lại rồi bấm Lưu phiếu'}}
   catch(_){msg='Chưa đọc được file — kiểm tra mạng, hoặc lưu lại dạng .xlsx rồi thử lại'}
   xlsBusy=false;t.value='';renderAdd();window.scrollTo(0,0);toast(msg)});
@@ -3276,7 +3283,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='scSp'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261112-1900';let verLuc=0;
+const BUILD='20261112-1945';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
