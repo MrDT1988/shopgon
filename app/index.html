@@ -1767,8 +1767,8 @@ function renderAdd0(){
   const hOn=khoOn().length>0;if(!hOn&&addMode==='hang')addMode='may';
   const hLbl=khoOn().length>1?'hàng khác':khoName[khoOn()[0]?.k]||'';
   /* 25/10 anh Thái: 3 cách nhập chung 1 hàng — Điện thoại · Hàng khác · Ảnh hóa đơn */
-  const seg=`<div class="schips eq" role="group"><button type="button" class="chip" data-am="may" aria-pressed="${addMode==='may'}">Điện thoại</button>${hOn?`<button type="button" class="chip" data-am="hang" aria-pressed="${addMode==='hang'}">${hLbl.charAt(0).toUpperCase()+hLbl.slice(1)}</button>`:''}<button type="button" class="chip" data-am="ocr" aria-pressed="${addMode==='ocr'}">Ảnh hóa đơn</button></div>`;
-  if(addMode==='ocr'){$('v-add').innerHTML=`<div class="panel" style="display:flex;flex-direction:column;gap:10px">${seg}${ocrBtn()}</div>`;return}
+  const seg=`<div class="schips eq" role="group"><button type="button" class="chip" data-am="may" aria-pressed="${addMode==='may'}">Điện thoại</button>${hOn?`<button type="button" class="chip" data-am="hang" aria-pressed="${addMode==='hang'}">${hLbl.charAt(0).toUpperCase()+hLbl.slice(1)}</button>`:''}<button type="button" class="chip" data-am="ocr" aria-pressed="${addMode==='ocr'}">Ảnh / Excel</button></div>`;
+  if(addMode==='ocr'){$('v-add').innerHTML=`<div class="panel" style="display:flex;flex-direction:column;gap:10px">${seg}${ocrBtn()}${xlsBtn()}</div>`;return}
   if(addMode==='hang'){const names=[...new Set(db.hang.map(h=>h.ten))].sort();const pre=addPre&&db.hang.find(h=>h.id===addPre);
     $('v-add').innerHTML=`<div class="panel">${seg}<h2>Nhập ${khoOn().map(g=>g.t.toLowerCase()).join(', ')}</h2><form id="fAddH" autocomplete="off">
     <label>Tên món<small>Gõ tên mới nếu là hàng mới, hoặc chọn từ gợi ý</small><input id="hTen" list="dlH" placeholder="VD: Cường lực iPhone 15, Sim 0868 123 789, Pin iPhone 11" value="${pre?esc(pre.ten):''}"><small class="hint" id="hHint"></small><datalist id="dlH">${names.map(n=>`<option value="${esc(n)}">`).join('')}</datalist></label>
@@ -3047,6 +3047,70 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||
     const h=db.hang.find(h=>h.id===x.match)||db.hang.find(h=>norm(h.ten)===norm(x.ten));
     PN.dong.push({t:'hang',id:h?h.id:'',ten:h?h.ten:x.ten.trim(),nhom:h?h.nhom:(x.nhom||'pk'),loai:h?h.loai:'',sl:x.sl,gn:x.giaNhap||(h?h.giaNhap:0),gb:h?h.giaBan:0,min:h?h.min:5})});
   ocrItems=null;addMode='may';pnSave();renderAdd();window.scrollTo(0,0);toast(`Đã đưa ${L.length} dòng vào phiếu`+(nM?` · quét IMEI cho ${nM} mẫu máy`:''))});
+/* 12/11 anh Thái "làm đi": NHẬP TỒN TỪ EXCEL — file mẫu Shop Gọn (/app/mau-nhap-ton.xlsx) HOẶC file xuất từ phần mềm khác (KiotViet, Sapo, Sổ Bán Hàng…).
+   Tự nhận cột theo tiêu đề → đổ vào PHIẾU NHẬP nháp (shop xem lại, sửa, rồi Lưu phiếu như thường). Máy: mỗi IMEI 1 máy; IMEI đã có trong kho/phiếu bỏ qua. Hàng khác: trùng tên cộng dồn khi lưu. Chỉ CỘNG thêm, không ghi đè tồn cũ. */
+let xlsBusy=false;
+function xlsBtn(){return `<label class="btn" style="display:flex;flex-direction:row;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-size:15.5px;background:#fff;color:var(--pen-dk,#0b5e57);border:1.5px solid currentColor">${xlsBusy?'⏳ Đang đọc file…':'📄 Nhập từ Excel'}<input type="file" accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv" id="xlsIn" hidden ${xlsBusy?'disabled':''}></label>
+  <small style="color:var(--muted);text-align:center;margin-top:-4px;line-height:1.45">Dùng <a href="/app/mau-nhap-ton.xlsx" download="ShopGon_Mau_Nhap_Ton.xlsx" style="font-weight:700;color:var(--pen-dk,#0b5e57)">file mẫu Shop Gọn</a> hoặc file tồn kho xuất từ KiotViet, Sapo… — app tự nhận cột Tên hàng, Số lượng, Giá nhập/vốn, Giá bán, IMEI/Serial. Hàng vào <b>phiếu nhập</b> để xem lại trước khi lưu.</small>`}
+function xlsLib(){if(window.XLSX)return Promise.resolve(window.XLSX);return new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';s.onload=()=>window.XLSX?ok(window.XLSX):no(new Error('lib'));s.onerror=()=>no(new Error('lib'));document.head.appendChild(s)})}
+const xN=v=>noMark(String(v??'')).toLowerCase().replace(/\s+/g,' ').trim();
+/* bảng nhận cột: [khóa, mẫu khớp đúng, mẫu chứa] — xét theo thứ tự, mỗi cột chỉ nhận 1 khóa */
+const XCOT=[['imei',['imei','serial','so serial','imei serial','imei/serial','so imei','ma imei'],['imei','serial']],
+  ['min',['ton toi thieu','dinh muc ton','ton it nhat'],['toi thieu','dinh muc']],
+  ['gn',['gia nhap','gia von','gia goc','don gia nhap','gia von tb'],['gia nhap','gia von']],
+  ['gb',['gia ban','gia ban le','gia le','don gia ban','gia ban niem yet'],['gia ban']],
+  ['sl',['so luong','sl','ton','ton kho','so luong ton','ton cuoi ky','sl ton','ton hien tai'],['so luong','ton kho']],
+  ['ncc',['nha cung cap','ncc'],['nha cung cap']],
+  ['nhom',['nhom','nhom hang','loai hang','danh muc','nhom san pham'],['nhom hang','danh muc']],
+  ['cfg',['cau hinh','dung luong','ram rom','bo nho'],['cau hinh','dung luong']],
+  ['mau',['mau','mau sac'],['mau sac']],
+  ['hang',['hang','thuong hieu','nhan hieu','hang sx','hang san xuat'],['thuong hieu','nhan hieu']],
+  ['ten',['ten may','ten hang','ten san pham','san pham','ten','ten hang hoa','hang hoa','model','ten mat hang'],['ten']]];
+function xlsCot(row){const m={},used=new Set();const H=row.map(xN).map(h=>h.replace(/\*/g,'').trim());
+  for(const [k,eq] of XCOT){const i=H.findIndex((h,j)=>!used.has(j)&&h&&eq.includes(h));if(i>=0){m[k]=i;used.add(i)}}
+  for(const [k,,ct] of XCOT){if(m[k]!==undefined)continue;const i=H.findIndex((h,j)=>!used.has(j)&&h&&ct.some(c=>h.includes(c))&&!(k==='ten'&&/ma |^ma$/.test(h)));if(i>=0){m[k]=i;used.add(i)}}
+  return m}
+const xNum=v=>{if(typeof v==='number')return Math.round(v);const t=String(v??'').replace(/[^\d,.\-]/g,'');if(!t)return 0;return Math.round(+t.replace(/[.,](?=\d{3}(\D|$))/g,'').replace(',','.'))||0};
+const X_MAU=new Set(['861234567890123','356789012345678']);
+function xlsNhom(v){const t=xN(v);if(/sim|the cao/.test(t))return 'sim';if(/linh kien|sua|man hinh|pin thay/.test(t))return 'sua';return 'pk'}
+function xlsDoc(wb){const may=[],hang=[];let boQua=0,mau=0,khongTen=0;
+  for(const sn of wb.SheetNames){const R=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,raw:true,defval:''});if(!R.length)continue;
+    let hi=-1,C=null;for(let i=0;i<Math.min(R.length,15);i++){const c=xlsCot(R[i]);if(c.ten!==undefined&&(c.sl!==undefined||c.imei!==undefined||c.gn!==undefined||c.gb!==undefined)){hi=i;C=c;break}}
+    if(hi<0)continue;const laDt=/dien thoai|phone|may/.test(xN(sn));
+    for(let i=hi+1;i<R.length&&i<hi+3001;i++){const r=R[i],g=k=>C[k]===undefined?'':r[C[k]];
+      const ten0=String(g('ten')??'').trim();const im=String(g('imei')??'');if(!ten0){if(im.trim())khongTen++;continue}
+      const imeis=[...new Set((im.match(/[0-9A-Za-z]{8,20}/g)||[]).filter(x=>/\d{6,}/.test(x)))];
+      if(imeis.some(x=>X_MAU.has(x))){mau++;continue}
+      let ten=ten0;const cf=String(g('cfg')||'').trim(),mu=String(g('mau')||'').trim();if(cf&&!xN(ten).includes(xN(cf)))ten+=' '+cf;if(mu&&!xN(ten).includes(xN(mu)))ten+=' - '+mu;
+      const gn=xNum(g('gn')),gb=xNum(g('gb')),sl=C.sl!==undefined?xNum(g('sl')):(imeis.length||1);
+      if(imeis.length||(laDt&&C.imei!==undefined)||/dien thoai|smartphone/.test(xN(g('nhom')))){let hg=String(g('hang')||'').trim();if(!hg){hg=guessBrand(ten);if(!hg||hg==='Khác')hg=guessBrand2(ten)||'Khác'}
+        may.push({ten,hang:hg,gn,gb,imeis,can:imeis.length?0:Math.max(0,sl),ncc:String(g('ncc')||'').trim()});continue}
+      if(!(sl>0)){boQua++;continue}
+      hang.push({ten,nhom:C.nhom!==undefined?xlsNhom(g('nhom')):'pk',sl,gn,gb,min:C.min!==undefined&&g('min')!==''?xNum(g('min')):5})}}
+  return {may,hang,boQua,mau,khongTen}}
+function xlsVaoPhieu(K){const daCo=new Set(db.may.map(m=>m.imei));PN.dong.forEach(d=>(d.imeis||[]).forEach(x=>daCo.add(x)));
+  let nMay=0,trung=0,canQuet=0,nccs=new Set();const nhom={};
+  K.may.forEach(x=>{const moi=x.imeis.filter(i=>{if(daCo.has(i)){trung++;return false}daCo.add(i);return true});
+    if(x.imeis.length&&!moi.length)return;if(x.ncc)nccs.add(x.ncc);const k=x.ten+'|'+x.hang+'|'+x.gn+'|'+x.gb;
+    const d=nhom[k]||(nhom[k]={t:'may',ten:x.ten,hang:x.hang,gn:x.gn,gb:x.gb,imeis:[],can:0});d.imeis.push(...moi);nMay+=moi.length;if(!x.imeis.length){d.can+=x.can;canQuet+=x.can}});
+  Object.values(nhom).forEach(d=>{if(d.can)d.can+=d.imeis.length;else delete d.can;PN.dong.push(d)});
+  const gop={};K.hang.forEach(x=>{const k=norm(x.ten)+'|'+x.nhom;if(gop[k]){gop[k].sl+=x.sl;return}gop[k]={...x}});
+  const H=Object.values(gop);H.forEach(x=>{const h=db.hang.find(h=>norm(h.ten)===norm(x.ten));
+    PN.dong.push({t:'hang',id:h?h.id:'',ten:h?h.ten:x.ten,nhom:h?h.nhom:x.nhom,loai:h?h.loai:'',sl:x.sl,gn:x.gn||(h?h.giaNhap:0),gb:x.gb||(h?h.giaBan:0),min:h?h.min:x.min})});
+  if(!PN.ncc&&nccs.size===1)PN.ncc=[...nccs][0];
+  return {nMay,nMau:Object.keys(nhom).length,nHang:H.length,slHang:H.reduce((t,x)=>t+x.sl,0),trung,canQuet}}
+document.addEventListener('change',async e=>{const t=e.target;if(t.id!=='xlsIn'||!t.files||!t.files[0])return;const f=t.files[0];
+  if(f.size>8e6){toast('File quá lớn (tối đa 8MB)');t.value='';return}
+  xlsBusy=true;renderAdd();let msg='';
+  try{const X=await xlsLib();const buf=await f.arrayBuffer();const wb=/\.csv$/i.test(f.name)?X.read(new TextDecoder('utf-8').decode(buf),{type:'string',raw:true}):X.read(buf,{type:'array',raw:true});
+    const K=xlsDoc(wb);
+    if(!K.may.length&&!K.hang.length){msg=K.mau?'File chỉ có 2 dòng ví dụ — điền hàng của shop rồi up lại':'Không thấy cột Tên hàng / Số lượng / IMEI — dùng file mẫu Shop Gọn cho chắc'}
+    else{const r=xlsVaoPhieu(K);pnSave();addMode='may';
+      const p=[];if(r.nMay)p.push(`${r.nMay} máy (${r.nMau} mẫu)`);if(r.nHang)p.push(`${r.nHang} món · ${r.slHang} cái`);
+      msg=p.length?`Đã đưa vào phiếu: ${p.join(' + ')}`:'Không có hàng mới';if(r.trung)msg+=` · bỏ ${r.trung} IMEI đã có`;if(r.canQuet)msg+=` · ${r.canQuet} máy thiếu IMEI cần quét`;if(K.boQua)msg+=` · bỏ ${K.boQua} dòng tồn 0`;
+      if(p.length)msg+=' — xem lại rồi bấm Lưu phiếu'}}
+  catch(_){msg='Chưa đọc được file — kiểm tra mạng, hoặc lưu lại dạng .xlsx rồi thử lại'}
+  xlsBusy=false;t.value='';renderAdd();window.scrollTo(0,0);toast(msg)});
 /* 23/10: bản demo — nút QR đăng ký nằm trên thanh tên shop, bấm là hiện QR */
 function demoBar(){const m=$('mode');if(!m)return;m.hidden=true;const b=document.createElement('button');b.id='demoQr';b.textContent='📱 QR đăng ký';b.style.cssText='background:#fff;color:#0b5e57;border:0;border-radius:999px;padding:8px 14px;font-weight:800;font-size:13px;white-space:nowrap;flex:none;box-shadow:0 2px 6px rgba(0,0,0,.18)';m.after(b)}
 const GLOGO=`<svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.9 6.1C12.5 13.6 17.8 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.6 5.9c4.4-4.1 7-10.1 7-17.6z"/><path fill="#FBBC05" d="M10.6 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.6-5.9c-2.1 1.4-4.9 2.3-8.3 2.3-6.2 0-11.5-4.1-13.4-9.9l-7.9 6.1C6.6 42.6 14.6 48 24 48z"/></svg>`;
@@ -3212,7 +3276,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='scSp'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261109-1430';let verLuc=0;
+const BUILD='20261112-1900';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}

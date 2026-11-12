@@ -359,3 +359,11 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
   - Đồng bộ: `nvSync` gửi `cc:{tu,nv,toaDo?,gtKq?}` (nv = cấu hình + doanh số tháng của TỪNG NV, máy chủ chỉ trả đúng phần của NV đó), nhận `r.cc`. `nvLogin` trả `cong`.
   - Máy chủ **v22** (code trong Project `claude/shopgon/ChamCong_v22.gs`, anh Triển khai 07/11 13h58, gọi thử route sống OK): tab `NhanVienCong`, `NhanVienLuong`, thư mục Drive "Shop Gọn - Ảnh chấm công" (ảnh xoá sau 60 ngày), 15 hàm cc*.
   - Test: `_tam/test-cham-cong.py` 12/12 (máy chủ giả). Tài khoản test chủ + NV có dữ liệu mẫu.
+
+## 60. (12/11 19h) NHẬP TỒN TỪ EXCEL (anh Thái "làm đi")
+- Nhập hàng › chip **"Ảnh / Excel"** (trước "Ảnh hóa đơn") có thêm nút **📄 Nhập từ Excel** (`xlsBtn()`, input `#xlsIn`) + link tải **/app/mau-nhap-ton.xlsx** (3 tab: Dien thoai · Phu kien · Huong dan; IMEI dạng chữ; 2 dòng ví dụ tự bỏ qua theo IMEI mẫu `X_MAU`).
+- Thư viện SheetJS 0.18.5 nạp lười từ cdnjs khi bấm (`xlsLib()`). Đọc .xlsx/.xls/.csv ≤8MB, ≤3000 dòng/tab.
+- `xlsCot()` nhận cột theo tiêu đề (bỏ dấu): Tên hàng/Tên sản phẩm/Model · Số lượng/Tồn kho · Giá nhập/Giá vốn · Giá bán · IMEI/Serial · Thương hiệu · Nhóm hàng · Cấu hình · Màu · NCC · Tồn tối thiểu → chạy cả file KiotViet/Sapo. Dòng tiêu đề tìm trong 15 dòng đầu.
+- Dòng có IMEI (1 ô nhiều serial cách dấu phẩy cũng được) → máy; dòng ở tab "Dien thoai"/nhóm "điện thoại" mà thiếu IMEI → dòng máy `can` (phải quét). Còn lại → hàng khác (nhóm Sim → sim, Linh kiện → sua, còn lại pk); tồn 0 bỏ qua.
+- `xlsVaoPhieu()` đổ vào **PN nháp** (không lưu kho ngay): bỏ IMEI đã có trong kho/phiếu, gộp máy cùng tên+giá, gộp hàng trùng tên; 1 NCC duy nhất thì điền sẵn NCC. Chỉ CỘNG, không ghi đè tồn.
+- Test `/tmp` (file mẫu + giả KiotViet + CSV Sapo): 5 máy + 5 món vào kho đúng, bỏ 1 IMEI trùng, bỏ 1 dòng tồn 0, 0 lỗi. test-toan-bo 73/75 (2 lỗi có sẵn từ trước, không liên quan). BUILD 20261112-1900.
