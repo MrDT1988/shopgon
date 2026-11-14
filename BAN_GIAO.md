@@ -380,6 +380,7 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - Test `_tam/test-chia-dieu-chuyen.py` 40/40 (390 + 1280px), test-toan-bo 73/75 (2 lỗi cũ). BUILD 20261114-1600.
 - Chưa làm: chia hàng cho phụ kiện; phiếu xuất sỉ riêng (đơn chia dùng hóa đơn thường).
 
+<<<<<<< HEAD
 ## 63. (14/11 16h–17h) CHUỖI CỬA HÀNG — 1 chủ nhiều shop con, mỗi shop 1 Gmail (anh Thái duyệt, đợt 1) — nhánh `chuoi-cua-hang`
 - **Thêm › 🏬 Chuỗi cửa hàng** (`more='chuoi'`, chủ shop): shop mẹ **Tạo chuỗi** → mã `CGxxxxx` → shop con nhập mã **Xin vào** → shop mẹ **Duyệt / Từ chối / Bỏ**; shop con **Rời chuỗi**; shop mẹ xoá chuỗi khi hết shop con. Lưu đệm `localStorage sg_chuoi_<email>`. Tài khoản test/demo: chuỗi mẫu `CH_MAU`, không gọi máy chủ (`chMau()`).
 - **Điều chuyển trong chuỗi:** tab Chuyển đi có chip shop trong chuỗi (chọn sẵn shop đầu) + "Shop ngoài chuỗi" (gõ tên, gửi link như mục 62). Shop trong chuỗi: `pn.toiEmail` + `act:'ckGui'` (phiếu JSON) → shop nhận thấy ở tab **Nhận hàng › Phiếu đến từ chuỗi** (`ckHop`, app tự kiểm 6 giây sau khi mở + 5 phút/lần, toast + dòng ở Kho hub). **Nhận** gọi `ckNhan` TRƯỚC rồi mới cộng kho; **Hủy** gọi `ckHuy` trước — shop nhận đã nhận thì máy chủ chặn. Lịch sử hiện Chờ nhận / Đã nhận. Link/QR vẫn kèm làm dự phòng.
@@ -399,3 +400,13 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - Shop **phương đông** (tranphuphuong1978@gmail.com, CTV 0795913942) bị 2 dòng trùng ở tab Cửa hàng (2 yêu cầu cách nhau 1 giây) → anh bấm Xoá → mất cả 2. Đã chép lại dòng "Tạm duyệt" (hạn dùng thử 20/11/2026) từ tab `DaXoa` vào `KhachHang` (dòng 5, SĐT giữ số 0). Dòng "Chờ duyệt" trùng không chép lại. Không có giao dịch nào bị xoá.
 - Cách khôi phục lần sau: tab `DaXoa` (sheet "Shop Gọn - Khách hàng") giữ JSON dòng gốc → chép lại đúng dòng vào `KhachHang`/`ThanhToan`; ô SĐT phải để dạng chữ (giữ số 0).
 - Máy chủ **Phiên bản 47** (16h47): `doPost` khoá LockService trước `find_(email)` → 2 yêu cầu đăng ký cùng lúc không còn tạo 2 dòng.
+=======
+## 66. (14/11 17h) MÃ VẠCH PHỤ KIỆN (anh Thái) — nhánh `ma-vach-pk`
+- Món hàng có trường `h.ma` (lưu cột `them` tab Hàng hóa; gửi kèm tồn cho NV qua `nvSync`). Mã tự tạo `SG` + 6 số theo thứ tự (`mvMoi`); món có sẵn mã trên hộp (EAN) thì quét/gõ vào — chặn trùng.
+- **Kho hàng › 🏷 Mã vạch phụ kiện** (`more='mv'`, chủ shop, khi bật phụ kiện): Tạo mã cho món chưa có · tìm món · số tem từng món (−/+, "Số tem = số tồn") · Sửa mã (quét) · khổ tem **Cuộn 40×30 / Cuộn 50×30 / A4 decal 65 tem (5×13, 38,1×21,2mm)** · có/không in giá · xem trước · **In** = iframe ẩn + `print()` (tem: tên shop, tên món, mã vạch, mã chữ, giá).
+- Mã vạch **Code 128-B** tự vẽ SVG (`mvSvg`, bảng `C128`) — đã giải mã lại bằng zxing đúng.
+- **Bán:** ô tìm phụ kiện có nút quét (`data-scan="pQ"`); gõ/quét đúng mã ở ô phụ kiện **hoặc ô tìm máy** (máy quét cầm tay gõ + Enter) → `cartStep` +1, xoá ô, toast; món chưa có giá → mở form nhập giá. NV dùng được.
+- Sửa món (Phiếu đã nhập › Sửa) có ô **Mã vạch** + nút quét.
+- Test `_tam/test-ma-vach.py` 22/22 (390 + 1280, cần `pip install zxing-cpp pillow`), toàn bộ 73/75 (2 lỗi cũ), chia-dieu-chuyen 40/40. BUILD 20261114-1900.
+- 14/11 17h10: anh "OK lên main cả 2" → gộp `chuoi-cua-hang` + `ma-vach-pk` lên main, BUILD 20261114-2000; test chia 40/40 · chuỗi 24/24 · doanh thu chuỗi 20/20 · mã vạch 22/22 · toàn bộ 73/75.
+>>>>>>> ma-vach-pk
