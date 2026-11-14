@@ -3286,7 +3286,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='scSp'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261114-1700';let verLuc=0;
+const BUILD='20261114-1800';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
@@ -4123,6 +4123,100 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||
 /* tự kiểm phiếu đến: 6 giây sau khi mở app, rồi 5 phút/lần khi app đang mở */
 setTimeout(()=>{if(typeof NV!=='undefined'&&!NV){chNap();chHop()}},6000);
 setInterval(()=>{if(!document.hidden&&typeof NV!=='undefined'&&!NV)chHop()},300000);
+</script>
+<style>
+/* 14/11 đợt 2: doanh thu chuỗi cho shop mẹ */
+.cstab{display:flex;gap:6px;margin:0 0 10px}.cstab button{flex:1;font-size:13.5px;padding:8px 6px;min-height:38px}
+.cstab button[aria-pressed="true"],.cschip button[aria-pressed="true"]{border-color:var(--pen);background:var(--pen-bg);color:var(--pen-dk);font-weight:800}
+.cschip{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}.cschip button{flex:1 1 auto;font-size:13px;padding:7px 8px;min-height:34px}
+.cskpi{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 10px}
+.cskpi div{background:#f8fafc;border-radius:10px;padding:9px 8px;text-align:center}.cskpi small{display:block;font-size:11.5px;color:var(--muted)}.cskpi b{font-size:16px}
+button.csrow{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--line,#e5e7eb);border-radius:12px;padding:10px 12px;margin:0 0 8px;color:inherit;box-shadow:none}
+.csrow .t{display:flex;justify-content:space-between;gap:8px;align-items:baseline}.csrow .t b{font-size:14.5px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.csrow .t .num{font-size:15px;font-weight:800;color:var(--pen-dk);flex:0 0 auto}
+.csrow small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.csbar{height:6px;border-radius:4px;background:#eef2f7;margin-top:7px;overflow:hidden}.csbar i{display:block;height:100%;background:var(--pen);border-radius:4px}
+.csold{color:#b45309!important}
+.csday{display:flex;align-items:flex-end;gap:5px;height:90px;margin:8px 0 4px}.csday div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.csday i{display:block;width:100%;background:var(--pen);border-radius:4px 4px 0 0;min-height:2px}.csday small{font-size:10.5px;color:var(--muted);margin-top:3px}
+.cshome{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:#fff;border:1.5px solid var(--pen-line,#cde7e3);border-radius:14px;padding:11px 13px;margin:0 0 12px;color:inherit;box-shadow:none}
+.cshome .n{flex:1;min-width:0}.cshome .n small{display:block;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cshome .num{font-size:17px;font-weight:800;color:var(--pen-dk)}
+</style>
+<script>
+/* ===== 14/11 anh Thái "làm đi" — ĐỢT 2: SHOP MẸ XEM DOANH THU SHOP CON (máy chủ v24) =====
+   Shop con (đã vào chuỗi) tự gửi SỐ TÓM TẮT (act ckSo) khi số đổi, ≤ 2 phút/lần: theo ngày 62 ngày [doanh thu, lời, số đơn, máy] +
+   theo tháng + tồn (máy, vốn, khách nợ) + top 5 mẫu tháng. KHÔNG gửi đơn, khách, IMEI.
+   Shop mẹ: Thêm › Chuỗi cửa hàng › tab Doanh thu (act chuoiSo) — kỳ Hôm nay/Hôm qua/7 ngày/Tháng (so cùng kỳ), xếp hạng, chi tiết shop;
+   đơn NV còn chờ trên máy chủ (chưa về sổ shop con) được cộng thêm. Shop con KHÔNG xem doanh thu shop khác (anh Thái duyệt). */
+const CS={tab:'shop',ky:'hn',sel:'',ds:null,luc:0,busy:false,msg:'',guiH:'',guiLuc:0};
+function csTom(){const L=live().filter(d=>d.loai!=='thu'),ng={},th={},bil={},t=todayIso(),from=iso(Date.now()-61*DAY);
+  L.forEach(d=>{const n=d.ngay||'';if(!n)return;const k=n.slice(0,7),b=d.bill||d.id;
+    const add=(o,key)=>{const x=o[key]=o[key]||[0,0,0,0];x[0]+=+d.giaBan||0;x[1]+=profitOf(d);if(d.loai==='may')x[3]++;const bk=key+'|'+b;if(!bil[bk]){bil[bk]=1;x[2]++}};
+    if(n>=from&&n<=t)add(ng,n);if(k>=iso(Date.now()-95*DAY).slice(0,7))add(th,k)});
+  const st=stock(),m0=t.slice(0,8)+'01',top={};L.filter(d=>d.loai==='may'&&d.ngay>=m0).forEach(d=>{const k=gk(d.ten);top[k]=(top[k]||0)+1});
+  let no=0;try{no=khachDs().reduce((s,o)=>s+Math.max(0,o.no||0),0)}catch(_){}
+  return {v:1,ngay:ng,thang:th,ton:{may:st.length,von:st.reduce((s,m)=>s+(+m.giaNhap||0),0),no,lau:st.filter(m=>ageDays(m)>45).length},top:Object.entries(top).sort((a,b)=>b[1]-a[1]).slice(0,5)}}
+async function csGui(ep){if(NV||chMau()||!GG.token)return;chNap();if((!CH.d||(CH.d.tt!=='ok'&&!CH.d.laChu))&&Date.now()-(CH.luc||0)>1800000){CH.luc=Date.now();await chTai()}const d=CH.d;if(!d||(d.tt!=='ok'&&!d.laChu))return;
+  if(!ep&&Date.now()-CS.guiLuc<120000)return;const so=csTom(),h=JSON.stringify(so);if(h===CS.guiH&&!ep)return;
+  const r=await chGoi({act:'ckSo',so});if(r&&r.ok){CS.guiH=h;CS.guiLuc=Date.now()}}
+setTimeout(()=>{if(typeof NV!=='undefined'&&!NV)csGui(1)},9000);
+setInterval(()=>{if(!document.hidden&&typeof NV!=='undefined'&&!NV)csGui()},60000);
+/* kỳ → [từ, đến] và kỳ so sánh */
+function csKy(k){const t=todayIso(),d=n=>iso(Date.now()-n*DAY);
+  if(k==='hq')return {a:d(1),b:d(1),ten:'Hôm qua',sa:d(2),sb:d(2),sten:'hôm kia'};
+  if(k==='7n')return {a:d(6),b:t,ten:'7 ngày',sa:d(13),sb:d(7),sten:'7 ngày trước'};
+  if(k==='th'){const m0=t.slice(0,8)+'01',p=new Date(m0+'T00:00:00');p.setMonth(p.getMonth()-1);const pa=iso(p),dd=+t.slice(8,10),pe=new Date(p);pe.setDate(Math.min(dd,new Date(p.getFullYear(),p.getMonth()+1,0).getDate()));return {a:m0,b:t,ten:'Tháng này',sa:pa,sb:iso(pe),sten:'cùng kỳ tháng trước'}}
+  return {a:t,b:t,ten:'Hôm nay',sa:d(1),sb:d(1),sten:'hôm qua'}}
+function csTong(s,a,b){const o={dt:0,loi:0,don:0,may:0,cho:0};const ng=(s.so&&s.so.ngay)||{};
+  Object.keys(ng).forEach(k=>{if(k>=a&&k<=b){const x=ng[k];o.dt+=+x[0]||0;o.loi+=+x[1]||0;o.don+=+x[2]||0;o.may+=+x[3]||0}});
+  Object.keys(s.nvCho||{}).forEach(k=>{if(k>=a&&k<=b){const x=s.nvCho[k];o.dt+=+x.dt||0;o.don+=+x.don||0;o.may+=+x.may||0;o.cho+=+x.don||0}});return o}
+function csMau(){const t=Date.now(),ng=(base,lo)=>{const o={};for(let i=0;i<40;i++){const k=iso(t-i*DAY),f=0.55+((i*7+lo)%9)/10;o[k]=[Math.round(base*f/1e5)*1e5,Math.round(base*f*0.08/1e4)*1e4,Math.max(1,Math.round(6*f)),Math.max(0,Math.round(4*f))]}if(lo===3)o[iso(t)]=[0,0,0,0];return o};
+  const luc=new Date(t-7*60000).toLocaleTimeString('vi-VN',{hour:'2-digit',minute:'2-digit'});
+  return [{email:'lkmobile@gmail.com',ten:'LK Mobile Store (shop mẹ)',chu:true,luc,so:csTom(),nvCho:{}},
+    {email:'lk.chogao@gmail.com',ten:'LK Mobile Chợ Gạo',luc,so:{ngay:ng(42e6,1),ton:{may:23,von:186e6,no:4.5e6,lau:3},top:[['OPPO A6 Pro 8/256GB',9],['OPPO Reno15 F 5G',6],['iPhone 15 128GB',3]]},nvCho:{[todayIso()]:{dt:5990000,don:1,may:1}}},
+    {email:'lk.goden@gmail.com',ten:'LK Mobile Gò Đen',luc:'14:05',so:{ngay:ng(25e6,3),ton:{may:15,von:98e6,no:0,lau:6},top:[['OPPO A5i',5],['Samsung Galaxy A17',3]]},nvCho:{}}]}
+async function csTai(){if(chMau()){CS.ds=csMau();CS.luc=Date.now();return}CS.busy=true;CS.msg='';renderMore();await csGui(1);const r=await chGoi({act:'chuoiSo'});CS.busy=false;
+  if(r&&r.ok){CS.ds=(r.shops||[]).map(s=>s.chu?{...s,so:csTom(),luc:'bây giờ',nvCho:{}}:s);CS.luc=Date.now()}else CS.msg=(r&&r.msg)||'Không tải được doanh thu chuỗi';renderMore()}
+const csLuc=s=>s.luc?(/^\d{4}-\d\d-\d\d \d/.test(s.luc)?(s.luc.slice(0,10)===todayIso()?s.luc.slice(11):dmy(s.luc.slice(0,10))+' '+s.luc.slice(11)):s.luc):'chưa gửi số';
+const csCu=s=>/^\d{4}-\d\d-\d\d \d/.test(s.luc||'')&&s.luc.slice(0,10)<todayIso();
+function csPage(){const K=csKy(CS.ky),L=(CS.ds||[]).map(s=>({s,o:csTong(s,K.a,K.b),p:csTong(s,K.sa,K.sb)}));
+  if(CS.sel){const x=L.find(r=>r.s.email===CS.sel);if(x)return csChiTiet(x.s)}
+  const T=L.reduce((a,r)=>({dt:a.dt+r.o.dt,loi:a.loi+r.o.loi,may:a.may+r.o.may,don:a.don+r.o.don,pdt:a.pdt+r.p.dt}),{dt:0,loi:0,may:0,don:0,pdt:0});
+  L.sort((a,b)=>b.o.dt-a.o.dt);const mx=Math.max(1,...L.map(r=>r.o.dt)),chua=L.filter(r=>!r.o.don).map(r=>r.s.ten||r.s.email);
+  const pct=T.pdt?Math.round((T.dt/T.pdt-1)*100):null;
+  return `<div class="cschip">${[['hn','Hôm nay'],['hq','Hôm qua'],['7n','7 ngày'],['th','Tháng']].map(([k,t])=>`<button type="button" class="ghost" data-csky="${k}" aria-pressed="${CS.ky===k}">${t}</button>`).join('')}</div>
+    ${CS.msg?`<div class="err">${esc(CS.msg)}</div>`:''}${!CS.ds?`<div class="empty">${CS.busy?'Đang tải doanh thu các shop…':'Chưa có số.'}</div>`:`
+    <div class="cskpi"><div><small>Doanh thu chuỗi</small><b class="num">${short(T.dt)}</b></div><div><small>Lời</small><b class="num">${short(T.loi)}</b></div><div><small>Máy bán</small><b class="num">${T.may}</b></div></div>
+    <small style="display:block;color:var(--muted);margin:-4px 0 10px">${K.ten}: ${T.don} đơn${pct!==null?` · ${pct>=0?'▲':'▼'} ${Math.abs(pct)}% so ${K.sten}`:''}</small>
+    ${CS.ky==='hn'&&chua.length?`<div class="alert amber" style="margin-bottom:10px"><b>Chưa bán đơn nào hôm nay</b><span>${chua.map(esc).join(', ')}</span></div>`:''}
+    ${L.map((r,i)=>`<button type="button" class="csrow" data-cssel="${esc(r.s.email)}"><div class="t"><b>${i+1}. ${esc(r.s.ten||r.s.email)}</b><span class="num">${money(r.o.dt)}</span></div><small>${r.o.don} đơn · ${r.o.may} máy · lời ${short(r.o.loi)}${r.o.cho?` · ${r.o.cho} đơn NV chờ về sổ`:''}</small><small class="${csCu(r.s)?'csold':''}">Cập nhật ${esc(csLuc(r.s))}${csCu(r.s)?' — shop chưa mở app hôm nay':''}</small><div class="csbar"><i style="width:${Math.round(r.o.dt/mx*100)}%"></i></div></button>`).join('')}`}
+    <button class="ghost" data-csload="1" style="width:100%;margin-top:4px"${CS.busy?' disabled':''}>🔄 Tải lại số các shop</button>
+    <small style="display:block;margin-top:8px;color:var(--muted)">Mỗi shop con tự gửi số khi app có mạng (khoảng 1–2 phút sau khi bán). Đơn nhân viên chưa về sổ vẫn được cộng; lời của đơn đó tính khi về sổ.</small>`}
+function csChiTiet(s){const so=s.so||{},ng=so.ngay||{},ton=so.ton||{},D=[];for(let i=6;i>=0;i--){const k=iso(Date.now()-i*DAY),x=ng[k]||[0,0,0,0],c=(s.nvCho||{})[k];D.push({k,dt:(+x[0]||0)+(c?+c.dt||0:0)})}
+  const mx=Math.max(1,...D.map(x=>x.dt)),M=csTong(s,todayIso().slice(0,8)+'01',todayIso());
+  return `<button type="button" class="back" data-cssel="">‹ Tất cả shop</button><h2 style="margin:4px 0 2px">${esc(s.ten||s.email)}</h2><small style="color:var(--muted)">${esc(s.email)} · cập nhật ${esc(csLuc(s))}</small>
+    <div class="cskpi" style="margin-top:10px"><div><small>Tháng này</small><b class="num">${short(M.dt)}</b></div><div><small>Lời tháng</small><b class="num">${short(M.loi)}</b></div><div><small>Máy bán</small><b class="num">${M.may}</b></div></div>
+    <b style="font-size:13.5px">Doanh thu 7 ngày</b><div class="csday">${D.map(x=>`<div><i style="height:${Math.round(x.dt/mx*100)}%"></i><small>${x.k.slice(8)}/${x.k.slice(5,7)}</small></div>`).join('')}</div>
+    <div class="cskpi"><div><small>Máy tồn</small><b class="num">${ton.may||0}</b></div><div><small>Vốn tồn</small><b class="num">${short(ton.von||0)}</b></div><div><small>Khách nợ</small><b class="num">${short(ton.no||0)}</b></div></div>
+    ${ton.lau?`<small class="csold" style="display:block;margin:-4px 0 8px">${ton.lau} máy tồn trên 45 ngày</small>`:''}
+    ${(so.top||[]).length?`<b style="font-size:13.5px">Mẫu bán chạy tháng này</b><div class="list" style="margin-top:6px">${so.top.map(([t,n])=>`<div class="row"><div class="n"><b>${esc(t)}</b></div><b class="num">${n} máy</b></div>`).join('')}</div>`:''}`}
+/* trang Chuỗi: shop mẹ có 2 tab Shop | Doanh thu */
+const _chuoiPage0=chuoiPage;
+chuoiPage=function(){chNap();const d=CH.d;if(!d||!d.laChu)return _chuoiPage0();
+  const tabs=`<div class="cstab"><button type="button" class="ghost" data-cstab="shop" aria-pressed="${CS.tab==='shop'}">🏬 Shop trong chuỗi</button><button type="button" class="ghost" data-cstab="dt" aria-pressed="${CS.tab==='dt'}">📊 Doanh thu</button></div>`;
+  if(CS.tab!=='dt')return tabs+_chuoiPage0();if(!CS.ds&&!CS.busy)setTimeout(csTai,0);
+  return tabs+`<div class="panel">${csPage()}</div>`};
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||NV)return;const d=b.dataset;
+  if(d.cstab){CS.tab=d.cstab;CS.sel='';renderMore();window.scrollTo(0,0);return}
+  if(d.csky){CS.ky=d.csky;renderMore();return}
+  if(d.cssel!==undefined){CS.sel=d.cssel;renderMore();window.scrollTo(0,0);return}
+  if(d.csload){csTai();return}
+  if(d.cshome){more='chuoi';CS.tab='dt';CS.sel='';go('more');return}});
+/* Trang chủ shop mẹ: thẻ "Chuỗi hôm nay" (dùng số đã tải gần nhất, tự tải lại tối đa 5 phút/lần) */
+const _renderHome0=renderHome;
+renderHome=function(){_renderHome0();if(NV)return;chNap();const d=CH.d;if(!d||!d.laChu)return;
+  if(!chMau()&&GG.token&&!CS.busy&&Date.now()-CS.luc>300000){CS.luc=Date.now();chGoi({act:'chuoiSo'}).then(r=>{if(r&&r.ok){CS.ds=(r.shops||[]).map(s=>s.chu?{...s,so:csTom(),luc:'bây giờ',nvCho:{}}:s);if(view==='home')render()}})}
+  if(chMau()&&!CS.ds)CS.ds=csMau();if(!CS.ds)return;const t=todayIso(),L=CS.ds.map(s=>({s,o:csTong(s,t,t)})).sort((a,b)=>b.o.dt-a.o.dt),tot=L.reduce((a,r)=>a+r.o.dt,0);
+  const v=$('v-home');if(!v)return;v.insertAdjacentHTML('afterbegin',`<button type="button" class="cshome" data-cshome="1"><span style="font-size:22px">🏬</span><span class="n"><b>Chuỗi hôm nay · ${L.length} shop</b><small>${L[0]&&L[0].o.dt?'Đứng đầu: '+esc(L[0].s.ten||L[0].s.email):'Chưa shop nào bán'}</small></span><span class="num">${short(tot)}</span><span class="chev">›</span></button>`)};
 </script>
 <script>
 /* ===== 07/11 anh Thái: CHẤM CÔNG + BẢNG LƯƠNG =====
