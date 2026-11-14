@@ -394,3 +394,8 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - **Đơn NV chưa về sổ:** máy chủ cộng đơn `moi` trong tab đơn NV (`nvd_`) theo ngày vào doanh thu/đơn/máy (chưa có lời) — ghi "n đơn NV chờ về sổ".
 - **Máy chủ v24 ĐÃ TRIỂN KHAI 14/11 16h34** (Phiên bản 46, giữ URL): `chSoGhi_` (ckSo) + `chSoDoc_` (chuoiSo, chỉ shop mẹ) · tab `ChuoiSo` (email, ma, json, luc) · 203 hàm. Mã: Project `claude/shopgon/Chuoi_v24.gs`.
 - Tài khoản test: chuỗi mẫu 3 shop (`csMau`). Test `_tam/test-chuoi-doanh-thu.py` 20/20, test-chuoi 24/24, chia-dieu-chuyen 40/40, toàn bộ 73/75 (2 lỗi cũ), quét hiển thị 360px 0 lỗi. BUILD 20261114-1800.
+
+## 65. (14/11 16h45) Khôi phục shop xoá nhầm + chống đăng ký trùng Gmail
+- Shop **phương đông** (tranphuphuong1978@gmail.com, CTV 0795913942) bị 2 dòng trùng ở tab Cửa hàng (2 yêu cầu cách nhau 1 giây) → anh bấm Xoá → mất cả 2. Đã chép lại dòng "Tạm duyệt" (hạn dùng thử 20/11/2026) từ tab `DaXoa` vào `KhachHang` (dòng 5, SĐT giữ số 0). Dòng "Chờ duyệt" trùng không chép lại. Không có giao dịch nào bị xoá.
+- Cách khôi phục lần sau: tab `DaXoa` (sheet "Shop Gọn - Khách hàng") giữ JSON dòng gốc → chép lại đúng dòng vào `KhachHang`/`ThanhToan`; ô SĐT phải để dạng chữ (giữ số 0).
+- Máy chủ **Phiên bản 47** (16h47): `doPost` khoá LockService trước `find_(email)` → 2 yêu cầu đăng ký cùng lúc không còn tạo 2 dòng.
