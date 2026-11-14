@@ -44,7 +44,7 @@ async def main():
       ims=await E("stock().slice(0,2).map(x=>x.imei)")
       for i in ims: await E(f"dcAdd('{i}')")
       hid=await E("(db.hang.find(h=>h.sl>1)||{}).id||''")
-      await pg.fill('#dcToi','LK Mobile 2')
+      await E("DC.toiE='';DC.ngoai=true;renderMore()"); await pg.fill('#dcToi','LK Mobile 2')
       if hid:
         await pg.select_option('#dcH',hid); await pg.fill('#dcSl','1'); await pg.click('[data-dcpk="1"]'); await pg.wait_for_timeout(100)
       await pg.screenshot(path=f'/tmp/dck_{w}.png',full_page=True)
