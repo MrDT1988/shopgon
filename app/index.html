@@ -1327,7 +1327,7 @@ function nvApply(o){if(o&&o.kind==='nhap'){/* 04/11 phiếu nhập của nhân v
   return 1}
 async function nvSync(){if(nvBusy||NV||XEM||!GG.token||db.sample)return;nvBusy=true;
   try{const ton={shop:{ten:db.shop.ten,bh:db.shop.bh,pct:db.shop.pct,mod:db.shop.mod,brands:db.shop.brands,bank:db.shop.bank,kho:db.shop.kho,km:kmChay(),web:linkNgan()},
-      may:stock().map(m=>({imei:m.imei,ten:m.ten,hang:m.hang,giaBan:m.giaBan||0})),hang:db.hang.filter(h=>h.sl>0).map(h=>({id:h.id,ten:h.ten,nhom:h.nhom,loai:h.loai,sl:h.sl,giaBan:h.giaBan||0,min:h.min}))};
+      may:stock().map(m=>({imei:m.imei,ten:m.ten,hang:m.hang,giaBan:m.giaBan||0})),hang:db.hang.filter(h=>h.sl>0).map(h=>({id:h.id,ten:h.ten,nhom:h.nhom,loai:h.loai,sl:h.sl,giaBan:h.giaBan||0,min:h.min,...(h.ma?{ma:h.ma}:{})}))};
     const mq=nvMkQ(),gui=Object.keys(mq),kq=(db.shop.nhapKq||[]).slice();const ccP=typeof ccPay==='function'?sgTry(ccPay):null;const ackGui=nvAckOk();const r=await nvPost({act:'nvSync',token:GG.token,nv:(db.shop.nv||[]).map(x=>mq[x.sdt]?{...x,mk:mq[x.sdt]}:x),ton,ack:ackGui,nhapKq:kq,...(ccP?{cc:ccP}:{})});
     if(!r.ok){nvLastMsg='Chưa đồng bộ được: '+(r.msg||'lỗi máy chủ');return}
     if(r.cc&&typeof ccNhan==='function')sgTry(()=>ccNhan(r.cc,ccP));
@@ -1406,7 +1406,7 @@ document.addEventListener('submit',async e=>{const f=e.target;if(f.id!=='fNvLogi
 /* 02/11 học "Quản lý kho" của Sổ Bán Hàng: Kho = danh sách đơn giản, bấm vào từng mục */
 let khoHub=false;
 function renderKhoHub(){const st=stock(),old=st.filter(m=>ageDays(m)>45).length,hw=hangOn(),low=hw.filter(hangLow).length,von=st.reduce((x,m)=>x+m.giaNhap,0),hOn=khoOn().length>0,nk=kmChay().length;
-  const R=[['data-kh="add"','⬇️','Nhập hàng','Máy theo IMEI, phụ kiện, thu máy cũ'],['data-kh="may"','📱','Tồn kho điện thoại',st.length+' máy'+(old?' · '+old+' máy tồn lâu':'')],...(hOn?[['data-kh="hang"','🎧','Tồn kho phụ kiện',hw.filter(h=>h.sl>0).length+' món'+(low?' · '+low+' sắp hết':'')]]:[]),['data-kh="da"','🧾','Phiếu đã nhập','Xem, sửa phiếu nhập theo ngày'],['data-more="kk"','✅','Kiểm kho','Quét IMEI đối chiếu tồn'],['data-more="ncc"','🚚','Nhà cung cấp','Công nợ, trả tiền, trả hàng'],...(NV?[]:[['data-more="dck"','🔁','Điều chuyển kho','Chuyển hàng qua shop khác của bạn']]),['data-more="look"','🔎','Tra IMEI · Bảo hành','Máy bán cho ai, còn bảo hành']];
+  const R=[['data-kh="add"','⬇️','Nhập hàng','Máy theo IMEI, phụ kiện, thu máy cũ'],['data-kh="may"','📱','Tồn kho điện thoại',st.length+' máy'+(old?' · '+old+' máy tồn lâu':'')],...(hOn?[['data-kh="hang"','🎧','Tồn kho phụ kiện',hw.filter(h=>h.sl>0).length+' món'+(low?' · '+low+' sắp hết':'')]]:[]),['data-kh="da"','🧾','Phiếu đã nhập','Xem, sửa phiếu nhập theo ngày'],['data-more="kk"','✅','Kiểm kho','Quét IMEI đối chiếu tồn'],['data-more="ncc"','🚚','Nhà cung cấp','Công nợ, trả tiền, trả hàng'],...(NV||!hOn?[]:[['data-more="mv"','🏷','Mã vạch phụ kiện','In tem dán · bán chỉ cần quét']]),...(NV?[]:[['data-more="dck"','🔁','Điều chuyển kho','Chuyển hàng qua shop khác của bạn']]),['data-more="look"','🔎','Tra IMEI · Bảo hành','Máy bán cho ai, còn bảo hành']];
   $('v-stock').innerHTML=`<div class="kpis kh3"><div class="kpi"><div class="eyebrow">Máy tồn</div><div class="v num">${st.length}</div></div><div class="kpi"><div class="eyebrow">Phụ kiện</div><div class="v num">${hw.reduce((a,h)=>a+Math.max(0,h.sl),0)}</div></div><div class="kpi own"><div class="eyebrow">Vốn tồn</div><div class="v num">${short(von)}</div></div></div>
   <div class="panel hubl">${R.map(([a,ic,t,sub])=>`<button ${a}><span class="hi">${ic}</span><span class="n"><b>${t}</b><small>${esc(sub)}</small></span><span class="chev">›</span></button>`).join('')}</div>`}
 function renderStock(){if(khoHub){renderKhoHub();$('v-stock').insertAdjacentHTML('afterbegin',pnChoBar());return}renderStock0();$('v-stock').insertAdjacentHTML('afterbegin',pnChoBar());const v=$('v-stock');if(v)v.insertAdjacentHTML('afterbegin','<button class="back" data-kh="hub">‹ Kho hàng</button>')}
@@ -1735,7 +1735,7 @@ function pkFormIn(){
   const q=pkQ.trim().toLowerCase();
   const cand=isStockNhom(pkNhom)&&!it?db.hang.filter(h=>h.nhom===pkNhom&&h.sl-cartQty(h.id)>0&&(!q||h.ten.toLowerCase().includes(q))).sort((x,y)=>x.ten.localeCompare(y.ten,'vi')).slice(0,60):[];
   return `<div class="panel"><form id="fPk" autocomplete="off">
-    ${isStockNhom(pkNhom)&&!it?`<div class="gsb sb"><svg viewBox="0 0 24 24"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-5-5"/></svg><input id="pQ" inputmode="search" autocomplete="off" placeholder="${pkNhom==='sua'?'Tìm linh kiện trong kho…':'Tìm tên món, VD: cường lực…'}" value="${esc(pkQ)}"></div>
+    ${isStockNhom(pkNhom)&&!it?`<div class="gsb sb"><svg viewBox="0 0 24 24"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-5-5"/></svg><input id="pQ" inputmode="search" autocomplete="off" placeholder="${pkNhom==='sua'?'Tìm linh kiện trong kho…':'Tìm tên món hoặc quét mã vạch…'}" value="${esc(pkQ)}"><button type="button" class="gsc" data-scan="pQ" aria-label="Quét mã vạch phụ kiện"><svg viewBox="0 0 24 24"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 8v8M10 8v8M13 8v8M17 8v8"/></svg></button></div>
       ${cand.length?`<div class="pgrid">${cand.map(h=>{const left=h.sl-cartQty(h.id),inC=cartQty(h.id),ic=h.nhom==='sua'?'🔧':h.nhom==='sim'?'📶':hIcon(h.ten);const body=`<span class="pi">${ic}</span><b>${esc(h.ten)}</b><span class="pp num">${h.giaBan?money(h.giaBan):'Nhập giá'}</span>`;
         return `<div class="pt${inC?' on':''}">${h.giaBan?`<button type="button" class="ptb" data-pkadd="${h.id}">${body}</button>`:`<button type="button" class="ptb" data-pkpick="${h.id}">${body}</button>`}${inC?`<span class="stp"><button type="button" data-pkdec="${h.id}" aria-label="Bớt">−</button><b class="num">${inC}</b><button type="button" data-pkadd="${h.id}" aria-label="Thêm">+</button></span>`:`<small>Trong kho: ${left}</small>`}</div>`}).join('')}</div><small style="display:block;color:var(--muted);margin-top:8px">Bấm vào món để thêm vào đơn, dùng − + để đổi số lượng.</small>`:`<div class="empty">${q?'Không có món nào khớp. Thử gõ tên khác.':'Kho chưa có món này.'}${q?'':'<br><button type="button" class="ghost" data-go="add" style="margin-top:10px">Nhập hàng ngay</button>'}</div>`}
       <div class="eyebrow" style="margin-top:4px">${pkNhom==='sua'?'Hoặc ghi đơn sửa không lấy linh kiện trong kho':'Hoặc bán món không có trong kho'}</div>`:''}
@@ -2204,6 +2204,7 @@ function renderMore(){
   if(more==='solieu'){el.innerHTML=back+(soNamPanel()||((XEM||DEMO||db.sample)?soNamMau():'')||`<div class="panel"><h2>Sổ dữ liệu · Sao lưu</h2><p style="margin:0 0 10px;color:var(--muted);font-size:13px">${GG.email?'Chưa mở được sổ năm trong Google Drive. Bấm mở lại; nếu vẫn không được, chụp màn hình gửi người cài app.':'Đăng nhập Google để dữ liệu lưu vào sổ trong Drive của shop.'}</p>${GG.email?'<button class="btn" data-gg="recheck" style="width:100%">Mở lại sổ dữ liệu</button>':''}</div>`);return}
   if(more==='ncc'){el.innerHTML=back+renderNcc();return}
   if(more==='kk'){el.innerHTML=back+renderKiemKho();return}
+  if(more==='mv'){el.innerHTML=back+mvPage();return}
   if(more==='dck'){el.innerHTML=back+dcPage();if(DC.link&&DC.tab==='di')setTimeout(dcQrVe,0);return}
   if(more==='ttq'){el.innerHTML=back+renderTtq();setTimeout(ttqDot,0);return}
   if(more==='look'){
@@ -2975,6 +2976,7 @@ function renderDaNhap(){const v=$('v-add');
     <label>Tên món<input id="ehTen" value="${esc(h.ten)}"></label>
     <div class="two"><label>Số lượng tồn<input id="ehSl" inputmode="numeric" value="${h.sl}"></label><label>Báo sắp hết khi còn<input id="ehMin" inputmode="numeric" value="${h.min||0}"></label></div>
     <div class="two"><label>Giá nhập / cái<input id="ehGN" inputmode="numeric" class="num" value="${h.giaNhap.toLocaleString('vi-VN')}"></label><label>Giá bán / cái<input id="ehGB" inputmode="numeric" class="num" value="${h.giaBan?h.giaBan.toLocaleString('vi-VN'):''}"></label></div>
+    <label>Mã vạch<small>Quét mã có sẵn trên hộp, hoặc bỏ trống — app tự tạo khi in tem (Kho hàng › Mã vạch phụ kiện)</small><span class="inrow"><input id="ehMa" value="${esc(h.ma||'')}" placeholder="VD: 8936012345678"><button type="button" class="icon" data-scan="ehMa" aria-label="Quét mã vạch"><svg viewBox="0 0 24 24"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 8v8M10 8v8M13 8v8M17 8v8"/></svg></button></span></label>
     <div class="err" id="ehErr"></div><div class="inrow"><button class="btn" type="submit" style="flex:1">Lưu thay đổi</button><button class="ghost red" type="button" data-delh="${esc(h.id)}">Xóa món</button></div></form></div>`;return}
   const L={},add=(d,x)=>(L[d]=L[d]||[]).push(x);const PS=db.pn||[],inPn=new Set(PS.flatMap(p=>(p.dong||[]).filter(x=>x.t==='hang').map(x=>x.id)));
   PS.filter(p=>!p.loai).forEach(p=>add(p.ngay,{t:'pn',p}));
@@ -3010,6 +3012,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
 document.addEventListener('submit',e=>{const f=e.target;if(f.id!=='fEdLo'&&f.id!=='fEdH')return;e.preventDefault();
   if(f.id==='fEdH'){const h=db.hang.find(x=>x.id===edH),err=$('ehErr');if(!h)return;const ten=$('ehTen').value.trim(),gn=parseMoney($('ehGN').value);
     if(!ten){err.textContent='Nhập tên món.';return}if(!gn){err.textContent='Nhập giá nhập.';return}
+    {const ma=mvNorm(($('ehMa')||{}).value),tr=ma&&db.hang.find(x=>x!==h&&mvNorm(x.ma)===ma);if(tr){err.textContent='Mã vạch này đang dùng cho '+tr.ten+'.';return}h.ma=ma}
     Object.assign(h,{ten,sl:parseMoney($('ehSl').value),min:parseMoney($('ehMin').value),giaNhap:gn,giaBan:parseMoney($('ehGB').value)});edH=null;save();render();toast('Đã lưu '+ten);return}
   const ms=db.may.filter(m=>loKey(m)===edLo),err=$('eErr');if(!ms.length)return;const ten=$('eTen').value.trim(),gn=parseMoney($('eGN').value);
   const lines=[...new Set($('eImei').value.split(/[\s,;]+/).map(x=>x.replace(/\D/g,'')).filter(Boolean))];
@@ -3285,7 +3288,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='scSp'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261114-1600';let verLuc=0;
+const BUILD='20261114-1900';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
@@ -4065,6 +4068,90 @@ document.addEventListener('input',e=>{const t=e.target;if(t.id!=='dcIn'||NV)retu
 (function(){let ck='';try{ck=new URLSearchParams(location.search).get('ck')||'';if(ck){sessionStorage.setItem('sg_ck',ck);history.replaceState(null,'',location.pathname+location.search.replace(/[?&]ck=[^&]*/,'').replace(/^&/,'?'))}else ck=sessionStorage.getItem('sg_ck')||''}catch(_){}
   if(!ck)return;let n=0;const t=setInterval(async()=>{n++;if(n>40){clearInterval(t);return}if(typeof NV==='undefined'||NV||!db||!db.shop)return;clearInterval(t);
     DC.tab='nhan';DC.code=location.origin+'/app/?ck='+ck;DC.msg='';try{DC.xem=await dcMo(ck)}catch(er){DC.msg=er.message}more='dck';go('more')},500)})();
+</script>
+<style>
+/* ===== 14/11 anh Thái: MÃ VẠCH PHỤ KIỆN ===== */
+.mvrow{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--line,#eef0f3)}
+.mvrow .n{flex:1;min-width:0}.mvrow .n b{display:block;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mvrow .n small{display:block;font-size:12px;color:var(--muted)}.mvrow .n small.no{color:#b45309}
+.mvrow .n small code{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--ink,#111)}
+.mvstp{display:flex;align-items:center;gap:4px;flex:0 0 auto}.mvstp button{width:32px;height:32px;min-height:32px;padding:0;border-radius:9px;font-size:17px;font-weight:800}
+.mvstp input{width:44px;text-align:center;padding:6px 2px;min-height:32px}
+.mvopt{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 10px}.mvopt label{margin:0}
+.mvprev{display:flex;justify-content:center;margin:6px 0 10px}.mvprev .tem{border:1px dashed #cbd5e1;border-radius:6px;background:#fff;padding:4px 6px;width:190px;text-align:center}
+.mvprev .tem svg{width:100%;height:46px;display:block}.mvprev .tem b{display:block;font-size:11px;line-height:1.25;max-height:28px;overflow:hidden}.mvprev .tem span{font-size:10px;font-family:ui-monospace,Menlo,monospace}.mvprev .tem i{font-style:normal;font-weight:800;font-size:12px;display:block}
+.mvedit{display:flex;gap:6px;margin:6px 0 2px}.mvedit input{flex:1;min-width:0}
+</style>
+<script>
+/* ===== 14/11 anh Thái: MÃ VẠCH PHỤ KIỆN =====
+   Mỗi món hàng (db.hang) có h.ma (lưu cột "them" của sổ). Không có mã thì app tạo "SG" + 6 số, theo thứ tự.
+   Món có sẵn mã vạch trên hộp (EAN…) thì quét/gõ mã đó vào (Sửa món hoặc màn Mã vạch) — không phải in tem.
+   In tem: Kho hàng › 🏷 Mã vạch phụ kiện — chọn số tem từng món, khổ tem (cuộn 40×30, 50×30 hoặc A4 decal 65 tem), có/không in giá.
+   Mã in là Code 128 (máy quét cầm tay và camera app đều đọc được).
+   Bán: màn Bán quét/gõ đúng mã (ô tìm phụ kiện hoặc ô tìm máy, máy quét cầm tay gõ + Enter) → món tự vào đơn. Nhân viên dùng được. */
+const C128=('212222 222122 222221 121223 121322 131222 122213 122312 132212 221213 221312 231212 112232 122132 122231 113222 123122 123221 223211 221132 221231 213212 223112 312131 311222 321122 321221 312212 322112 322211 212123 212321 232121 111323 131123 131321 112313 132113 132311 211313 231113 231311 112133 112331 132131 113123 113321 133121 313121 211331 231131 213113 213311 213131 311123 311321 331121 312113 312311 332111 314111 221411 431111 111224 111422 121124 121421 141122 141221 112214 112412 122114 122411 142112 142211 241211 221114 413111 241112 134111 111242 121142 121241 114212 124112 124211 411212 421112 421211 212141 214121 412121 111143 111341 131141 114113 114311 411113 411311 113141 114131 311141 411131 211412 211214 211232 2331112').split(' ');
+function mvSvg(txt,h){txt=String(txt||'').replace(/[^\x20-\x7e]/g,'');const v=[104];for(const c of txt)v.push(c.charCodeAt(0)-32);
+  let s=104;for(let i=1;i<v.length;i++)s+=i*v[i];v.push(s%103,106);
+  let x=10,r='';v.forEach(k=>{const p=C128[k];for(let i=0;i<p.length;i++){const w=+p[i];if(i%2===0)r+=`<rect x="${x}" y="0" width="${w}" height="${h||50}"/>`;x+=w}});
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${x+10} ${h||50}" preserveAspectRatio="none" shape-rendering="crispEdges"><rect width="100%" height="100%" fill="#fff"/><g fill="#000">${r}</g></svg>`}
+const mvNorm=s=>String(s||'').trim().replace(/\s+/g,'').toUpperCase();
+function mvTim(code){const c=mvNorm(code);if(c.length<4)return null;return db.hang.find(h=>h.ma&&mvNorm(h.ma)===c)||null}
+function mvMoi(){let n=0;db.hang.forEach(h=>{const m=/^SG(\d{6})$/.exec(mvNorm(h.ma));if(m)n=Math.max(n,+m[1])});return 'SG'+String(n+1).padStart(6,'0')}
+function mvTaoHet(L){let k=0;(L||db.hang).forEach(h=>{if(!h.ma){h.ma=mvMoi();k++}});if(k)save();return k}
+/* ---- màn Mã vạch phụ kiện (Kho hàng) ---- */
+const MV={q:'',sl:{},kho:'c40',gia:true,sua:''};
+function mvPage(){const q=nv0(MV.q.trim()),hw=db.hang.filter(h=>h.nhom!=='km'),L=hw.filter(h=>!q||nv0(h.ten).includes(q)||mvNorm(h.ma).includes(mvNorm(MV.q))).sort((a,b)=>(b.sl>0)-(a.sl>0)||a.ten.localeCompare(b.ten,'vi'));
+  const chua=hw.filter(h=>!h.ma).length,tong=Object.values(MV.sl).reduce((s,n)=>s+(+n||0),0),h0=hw.find(h=>MV.sl[h.id]>0)||hw[0];
+  return `<div class="panel"><h2>🏷 Mã vạch phụ kiện</h2><p style="margin:0 0 10px;font-size:13.5px;line-height:1.5;color:var(--muted)">In tem mã vạch dán lên phụ kiện → lúc bán chỉ cần <b>quét</b> là món vào đơn. Món có sẵn mã vạch trên hộp thì bấm <b>Sửa mã</b> quét mã đó vào, khỏi in tem.</p>
+    ${chua?`<button class="btn" data-mvtao="1" style="width:100%;margin-bottom:10px">Tạo mã cho ${chua} món chưa có mã</button>`:''}
+    <div class="gsb sb"><svg viewBox="0 0 24 24"><path d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-5-5"/></svg><input id="mvQ" inputmode="search" autocomplete="off" value="${esc(MV.q)}" placeholder="Tìm tên món hoặc mã…"></div>
+    <div class="inrow" style="margin:8px 0 4px"><button class="ghost" data-mvall="1" style="flex:1">Số tem = số tồn</button><button class="ghost" data-mvnone="1" style="flex:1">Bỏ hết</button></div>
+    <div>${L.length?L.map(h=>{const n=+MV.sl[h.id]||0;return `<div class="mvrow"><div class="n"><b>${esc(h.ten)}</b>${h.ma?`<small>Mã <code>${esc(h.ma)}</code> · tồn ${h.sl}${h.giaBan?' · '+money(h.giaBan):''}</small>`:`<small class="no">Chưa có mã · tồn ${h.sl}</small>`}<button type="button" class="wlink" data-mvsua="${esc(h.id)}" style="padding:0;font-size:12px">${MV.sua===h.id?'Đóng':'Sửa mã'}</button>
+      ${MV.sua===h.id?`<div class="mvedit"><input id="mvMa" value="${esc(h.ma||'')}" placeholder="Quét mã trên hộp hoặc gõ"><button type="button" class="icon" data-scan="mvMa" aria-label="Quét mã"><svg viewBox="0 0 24 24"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 8v8M10 8v8M13 8v8M17 8v8"/></svg></button><button type="button" class="btn" data-mvluu="${esc(h.id)}">Lưu</button></div>`:''}</div>
+      <div class="mvstp"><button type="button" class="ghost" data-mvdec="${esc(h.id)}" aria-label="Bớt tem">−</button><input class="num" inputmode="numeric" data-mvsl="${esc(h.id)}" value="${n||''}" placeholder="0" aria-label="Số tem"><button type="button" class="ghost" data-mvinc="${esc(h.id)}" aria-label="Thêm tem">+</button></div></div>`}).join(''):'<div class="empty">Chưa có phụ kiện trong kho.</div>'}</div></div>
+    <div class="panel"><h2>In tem · ${tong} tem</h2><div class="mvopt"><label>Khổ tem<select id="mvKho"><option value="c40"${MV.kho==='c40'?' selected':''}>Cuộn 40×30</option><option value="c50"${MV.kho==='c50'?' selected':''}>Cuộn 50×30</option><option value="a4"${MV.kho==='a4'?' selected':''}>A4 · 65 tem</option></select></label>
+      <label>In giá bán<select id="mvGia"><option value="1"${MV.gia?' selected':''}>Có in giá</option><option value="0"${!MV.gia?' selected':''}>Không in giá</option></select></label></div>
+      ${h0?`<div class="mvprev">${mvTem(h0)}</div>`:''}
+      <div class="err" id="mvErr"></div><button class="btn" data-mvin="1" style="width:100%"${tong?'':' disabled'}>🖨 In ${tong} tem</button>
+      <small style="display:block;margin-top:8px;color:var(--muted)">Máy in tem nhiệt: chọn đúng khổ giấy trong hộp in, tỉ lệ 100%, bỏ lề. Món chưa có mã sẽ được tạo mã lúc in.</small></div>`}
+function mvTem(h){const ma=h.ma||mvMoi();return `<div class="tem"><b>${esc(h.ten)}</b>${mvSvg(ma,50)}<span>${esc(ma)}</span>${MV.gia&&h.giaBan?`<i>${money(h.giaBan)}</i>`:''}</div>`}
+function mvIn(){const L=db.hang.filter(h=>(+MV.sl[h.id]||0)>0);if(!L.length)return;mvTaoHet(L);
+  const kho=MV.kho,shop=esc(db.shop.ten||''),T=[];L.forEach(h=>{for(let i=0;i<Math.min(500,+MV.sl[h.id]);i++)T.push(h)});
+  const sz=kho==='c50'?{w:50,h:30}:kho==='a4'?{w:38.1,h:21.2}:{w:40,h:30};
+  const one=h=>`<div class="t"><div class="s">${shop}</div><div class="n">${esc(h.ten)}</div>${mvSvg(h.ma,40)}<div class="m">${esc(h.ma)}${MV.gia&&h.giaBan?` · <b>${money(h.giaBan)}</b>`:''}</div></div>`;
+  const css=kho==='a4'?`@page{size:A4;margin:10.7mm 4.65mm}body{margin:0}.g{display:grid;grid-template-columns:repeat(5,${sz.w}mm);grid-auto-rows:${sz.h}mm;column-gap:2.5mm}`
+    :`@page{size:${sz.w}mm ${sz.h}mm;margin:0}body{margin:0}.g{display:block}.t{page-break-after:always;break-after:page}`;
+  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Tem mã vạch</title><style>${css}
+    *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}body{font-family:Arial,Helvetica,sans-serif;color:#000}
+    .t{width:${sz.w}mm;height:${sz.h}mm;padding:1.2mm 1.6mm;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+    .s{font-size:${kho==='a4'?5:6}pt;line-height:1.1;max-width:100%;white-space:nowrap;overflow:hidden}.n{font-size:${kho==='a4'?6:7.5}pt;font-weight:700;line-height:1.15;max-height:2.3em;overflow:hidden;max-width:100%}
+    .t svg{width:100%;height:${kho==='a4'?7:11}mm;display:block;margin:.6mm 0 .3mm}.m{font-size:${kho==='a4'?5.5:7}pt;font-family:'Courier New',monospace;white-space:nowrap}.m b{font-family:Arial,sans-serif}
+    </style></head><body><div class="g">${T.map(one).join('')}</div></body></html>`;
+  let f=document.getElementById('mvFrame');if(f)f.remove();f=document.createElement('iframe');f.id='mvFrame';f.setAttribute('aria-hidden','true');f.style.cssText='position:fixed;right:0;bottom:0;width:1px;height:1px;border:0;opacity:0';document.body.appendChild(f);
+  const d=f.contentWindow.document;d.open();d.write(html);d.close();setTimeout(()=>{try{f.contentWindow.focus();f.contentWindow.print()}catch(_){toast('Không mở được hộp in')}},350);
+  toast('Đang mở hộp in '+T.length+' tem')}
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;if(NV)return;
+  if(d.mvtao){const k=mvTaoHet();renderMore();toast('Đã tạo mã cho '+k+' món');return}
+  if(d.mvall){db.hang.filter(h=>h.nhom!=='km').forEach(h=>{if(h.sl>0)MV.sl[h.id]=h.sl});renderMore();return}
+  if(d.mvnone){MV.sl={};renderMore();return}
+  if(d.mvinc||d.mvdec){const id=d.mvinc||d.mvdec;MV.sl[id]=Math.max(0,(+MV.sl[id]||0)+(d.mvinc?1:-1));const y=scrollY;renderMore();scrollTo(0,y);return}
+  if(d.mvsua){MV.sua=MV.sua===d.mvsua?'':d.mvsua;const y=scrollY;renderMore();scrollTo(0,y);const i=$('mvMa');if(i)i.focus();return}
+  if(d.mvluu){const h=db.hang.find(x=>x.id===d.mvluu),v=mvNorm(($('mvMa')||{}).value);if(!h)return;const tr=v&&db.hang.find(x=>x!==h&&mvNorm(x.ma)===v);
+    if(tr){toast('Mã này đang dùng cho '+tr.ten);return}h.ma=v;MV.sua='';save();const y=scrollY;renderMore();scrollTo(0,y);toast(v?'Đã lưu mã '+v:'Đã bỏ mã');return}
+  if(d.mvin){mvIn();return}});
+document.addEventListener('input',e=>{const t=e.target;
+  if(t.id==='mvQ'){MV.q=t.value;renderMore();const i=$('mvQ');if(i){i.focus();i.setSelectionRange(i.value.length,i.value.length)}return}
+  if(t.dataset&&t.dataset.mvsl){MV.sl[t.dataset.mvsl]=parseMoney(t.value);const k=document.querySelector('[data-mvin]');if(k){const n=Object.values(MV.sl).reduce((s,x)=>s+(+x||0),0);k.textContent='🖨 In '+n+' tem';k.disabled=!n}return}
+  if(t.id==='pQ'||t.id==='sImei'){mvBan(t.value,t.id)}});
+document.addEventListener('change',e=>{const t=e.target;if(t.id==='mvKho'){MV.kho=t.value;renderMore();return}if(t.id==='mvGia'){MV.gia=t.value==='1';renderMore();return}});
+document.addEventListener('keydown',e=>{if(e.key!=='Enter')return;const t=e.target;if(t.id==='pQ'||t.id==='sImei'){if(mvBan(t.value,t.id))e.preventDefault()}
+  if(t.id==='mvMa'){e.preventDefault();const b=document.querySelector('[data-mvluu]');if(b)b.click()}});
+/* ---- bán: quét đúng mã → món vào đơn ---- */
+function mvBan(v,src){const h=mvTim(v);if(!h)return false;
+  if(h.sl-cartQty(h.id)<=0){toast(h.ten+': hết hàng trong kho');return true}
+  if(!h.giaBan){pkNhom=h.nhom;pkPick=h.id;pkQ='';sellMode=PK_G.includes(h.nhom)?'pk':sellMode;sellImei='';render();toast('Nhập giá bán cho '+h.ten);return true}
+  if(src==='sImei')sellImei='';pkQ='';cartStep(h.id,1);render();toast('➕ '+h.ten+' · '+money(h.giaBan));
+  const i=$(src);if(i){i.value='';i.focus()}return true}
 </script>
 <script>
 /* ===== 07/11 anh Thái: CHẤM CÔNG + BẢNG LƯƠNG =====

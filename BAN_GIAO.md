@@ -379,3 +379,12 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - **Điều chuyển kho** (Kho hàng › 🔁 Điều chuyển kho, `more='dck'`, chủ shop): mỗi shop 1 Gmail/sổ riêng. Shop gửi: chọn máy (bắn IMEI/gõ tên) + phụ kiện → **Tạo phiếu** = `pn{loai:'chuyen',toi,dong}`, máy `tt='chuyen'`, phụ kiện trừ kho → LINK `/app/?ck=<gzip base64url>` + QR (≤1.800 ký tự). Dữ liệu nằm trong link, KHÔNG qua máy chủ Shop Gọn. Shop nhận mở link (giữ qua đăng nhập bằng sessionStorage `sg_ck`) → tab Nhận hàng → **Nhận vào kho** = phiếu nhập NCC "Chuyển từ <shop>", `no:0`, `ckId` chặn nhận 2 lần; máy đã có giá bán ở shop nhận thì giữ giá cũ. Lịch sử: QR gửi lại · Hủy phiếu (trả kho; chỉ khi shop nhận chưa bấm Nhận). Phiếu chuyển đi không hiện ở Nhà cung cấp; Tra IMEI hiện "Đã chuyển kho".
 - Test `_tam/test-chia-dieu-chuyen.py` 40/40 (390 + 1280px), test-toan-bo 73/75 (2 lỗi cũ). BUILD 20261114-1600.
 - Chưa làm: chia hàng cho phụ kiện; phiếu xuất sỉ riêng (đơn chia dùng hóa đơn thường).
+
+## 66. (14/11 17h) MÃ VẠCH PHỤ KIỆN (anh Thái) — nhánh `ma-vach-pk`
+- Món hàng có trường `h.ma` (lưu cột `them` tab Hàng hóa; gửi kèm tồn cho NV qua `nvSync`). Mã tự tạo `SG` + 6 số theo thứ tự (`mvMoi`); món có sẵn mã trên hộp (EAN) thì quét/gõ vào — chặn trùng.
+- **Kho hàng › 🏷 Mã vạch phụ kiện** (`more='mv'`, chủ shop, khi bật phụ kiện): Tạo mã cho món chưa có · tìm món · số tem từng món (−/+, "Số tem = số tồn") · Sửa mã (quét) · khổ tem **Cuộn 40×30 / Cuộn 50×30 / A4 decal 65 tem (5×13, 38,1×21,2mm)** · có/không in giá · xem trước · **In** = iframe ẩn + `print()` (tem: tên shop, tên món, mã vạch, mã chữ, giá).
+- Mã vạch **Code 128-B** tự vẽ SVG (`mvSvg`, bảng `C128`) — đã giải mã lại bằng zxing đúng.
+- **Bán:** ô tìm phụ kiện có nút quét (`data-scan="pQ"`); gõ/quét đúng mã ở ô phụ kiện **hoặc ô tìm máy** (máy quét cầm tay gõ + Enter) → `cartStep` +1, xoá ô, toast; món chưa có giá → mở form nhập giá. NV dùng được.
+- Sửa món (Phiếu đã nhập › Sửa) có ô **Mã vạch** + nút quét.
+- Test `_tam/test-ma-vach.py` 22/22 (390 + 1280, cần `pip install zxing-cpp pillow`), toàn bộ 73/75 (2 lỗi cũ), chia-dieu-chuyen 40/40. BUILD 20261114-1900.
+- ⚠ Nhánh `chuoi-cua-hang` (BUILD 1800) tách từ main trước nhánh này → khi lên main lần lượt phải gộp BUILD lấy số lớn nhất + chạy lại test.
