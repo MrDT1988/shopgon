@@ -1,0 +1,1931 @@
+{
+"capNhat": "2026-11-17",
+"tong": 317,
+"ds": [
+{
+"id": 1,
+"nhom": "Giới thiệu & giá gói",
+"q": "Shop Gọn là gì?",
+"a": "App quản lý bán hàng cho shop điện thoại: bán bằng IMEI, biết lời thật từng máy, quản kho, nhân viên, công nợ, kèm tờ rơi và website bảng giá riêng cho shop. Chạy ngay trên điện thoại hoặc máy tính tại shopgon.vn/app."
+},
+{
+"id": 2,
+"nhom": "Giới thiệu & giá gói",
+"q": "Shop Gọn khác KiotViet, Sapo chỗ nào?",
+"a": "Shop Gọn làm riêng cho shop điện thoại: quản từng máy theo IMEI, lời từng máy, bảo hành theo IMEI. Gói nào cũng có sẵn website bảng giá, tờ rơi và ảnh truyền thông — các phần mềm khác phải lên gói cao mới có website. Giá rẻ hơn nhiều lần."
+},
+{
+"id": 3,
+"nhom": "Giới thiệu & giá gói",
+"q": "Giá Shop Gọn bao nhiêu?",
+"a": "Gói 1 năm 1.190.000đ · gói 3 năm 2.690.000đ (giảm đến 880.000đ so với mua 3 lần gói 1 năm). 100 shop đầu tiên chỉ 990.000đ/năm."
+},
+{
+"id": 4,
+"nhom": "Giới thiệu & giá gói",
+"q": "Ưu đãi 990.000đ là sao?",
+"a": "100 shop đầu tiên kích hoạt gói 1 năm chỉ trả 990.000đ thay vì 1.190.000đ. Suất tính khi Shop Gọn xác nhận đã nhận tiền."
+},
+{
+"id": 5,
+"nhom": "Giới thiệu & giá gói",
+"q": "Còn bao nhiêu suất ưu đãi 990k?",
+"a": "Số suất còn lại hiện trên màn thanh toán trong app. Hỏi Sale hoặc cộng tác viên để biết chính xác hôm nay."
+},
+{
+"id": 6,
+"nhom": "Giới thiệu & giá gói",
+"q": "Gói 3 năm có lợi gì?",
+"a": "2.690.000đ cho 3 năm, rẻ hơn mua 3 lần gói 1 năm đến 880.000đ, khỏi lo gia hạn hằng năm."
+},
+{
+"id": 7,
+"nhom": "Giới thiệu & giá gói",
+"q": "Có gói theo tháng không?",
+"a": "Hiện chỉ có gói 1 năm và 3 năm."
+},
+{
+"id": 8,
+"nhom": "Giới thiệu & giá gói",
+"q": "Có gói 2 năm không?",
+"a": "Không. Shop Gọn chỉ bán gói 1 năm và 3 năm."
+},
+{
+"id": 9,
+"nhom": "Giới thiệu & giá gói",
+"q": "Gói có giới hạn số máy, số đơn không?",
+"a": "Không giới hạn số máy, số đơn, số phụ kiện. Giới hạn duy nhất là số tài khoản nhân viên (3 người, mua thêm gói 10 nhân viên nếu cần)."
+},
+{
+"id": 10,
+"nhom": "Giới thiệu & giá gói",
+"q": "Gói gồm những gì?",
+"a": "Đủ tính năng app (IMEI, kho, bảo hành, lời lỗ, hoá đơn QR, công nợ, nhân viên, chấm công lương), website bảng giá, tờ rơi, ảnh truyền thông, và Sale hỗ trợ nhập tồn lần đầu tối đa 50 mã hàng + hướng dẫn sử dụng."
+},
+{
+"id": 11,
+"nhom": "Giới thiệu & giá gói",
+"q": "Gói 10 nhân viên giá bao nhiêu?",
+"a": "500.000đ/năm. Mua xong shop có tổng 10 tài khoản nhân viên (không phải 3 + 10), hạn 1 năm tính từ ngày mua."
+},
+{
+"id": 12,
+"nhom": "Giới thiệu & giá gói",
+"q": "Hết hạn gói 10 nhân viên thì sao?",
+"a": "Shop về lại tối đa 3 nhân viên. Nhân viên thứ 4 trở đi bị tạm khoá đăng nhập, không bị xoá — gia hạn là dùng lại."
+},
+{
+"id": 13,
+"nhom": "Giới thiệu & giá gói",
+"q": "Shop trên 50 mã hàng thì Sale có nhập giúp không?",
+"a": "Gói chuẩn Sale nhập giúp tối đa 50 mã bán chạy, giá trị cao. Muốn nhập full shop thì thương lượng với Sale gói hỗ trợ riêng. Shop cũng có thể tự nhập tồn bằng file Excel mẫu."
+},
+{
+"id": 14,
+"nhom": "Giới thiệu & giá gói",
+"q": "Có dùng thử miễn phí không?",
+"a": "Có 2 cách: (1) bấm Tài khoản test để xem thử với dữ liệu mẫu, không cần đăng nhập; (2) đăng ký bằng Gmail là được dùng thật 7 ngày, chuyển khoản sau."
+},
+{
+"id": 15,
+"nhom": "Giới thiệu & giá gói",
+"q": "Dùng thử 7 ngày có mất dữ liệu khi mua không?",
+"a": "Không. Sổ 7 ngày dùng thử là sổ thật của shop trong Google Drive, chuyển khoản xong dùng tiếp trên sổ đó."
+},
+{
+"id": 16,
+"nhom": "Giới thiệu & giá gói",
+"q": "Có xuất hoá đơn điện tử (VAT) không?",
+"a": "Không. Shop Gọn tập trung quản lý bán hàng, kiểm soát chi phí và lời lỗ. Shop là công ty cần hoá đơn điện tử thì dùng phần mềm hoá đơn riêng của kế toán."
+},
+{
+"id": 17,
+"nhom": "Giới thiệu & giá gói",
+"q": "App dùng cho shop gì?",
+"a": "Làm cho shop điện thoại: máy mới, máy cũ, phụ kiện, sim, sửa chữa, thu hộ, chuyển tiền. Bán nhiều hãng đều được."
+},
+{
+"id": 18,
+"nhom": "Giới thiệu & giá gói",
+"q": "Shop bán iPhone cũ dùng được không?",
+"a": "Được, rất hợp: mỗi máy theo IMEI riêng, giá nhập riêng, nên biết lời thật từng máy. Có thu cũ đổi mới, máy thu vào kho tên kèm chữ (cũ)."
+},
+{
+"id": 19,
+"nhom": "Giới thiệu & giá gói",
+"q": "Shop nhỏ 1 người dùng có cần không?",
+"a": "Cần nhất ở chỗ biết lời thật từng máy, nhớ khách và bảo hành, không lo quên nợ. Bán 1 đơn chỉ mất vài giây trên điện thoại."
+},
+{
+"id": 20,
+"nhom": "Giới thiệu & giá gói",
+"q": "Ai làm ra Shop Gọn?",
+"a": "Shop Gọn do đội ngũ shopgon.vn phát triển, bán qua Sale và cộng tác viên tại khu vực. Cần hỗ trợ liên hệ Sale đã cài app cho shop."
+},
+{
+"id": 21,
+"nhom": "Giới thiệu & giá gói",
+"q": "Thanh toán gói vào tài khoản nào?",
+"a": "Quét mã QR trên màn thanh toán trong app — số tiền, tài khoản và nội dung đã điền sẵn đúng gói."
+},
+{
+"id": 22,
+"nhom": "Giới thiệu & giá gói",
+"q": "Nội dung chuyển khoản ghi gì?",
+"a": "Giữ nguyên nội dung QR điền sẵn: phần Gmail trước @ + tên gói, VD: LKMOBILE GOI 1 NAM / GOI 3 NAM / GOI 10 NV. Chuyển tay thì gõ đúng như vậy."
+},
+{
+"id": 23,
+"nhom": "Giới thiệu & giá gói",
+"q": "Chuyển khoản xong bao lâu thì được kích hoạt?",
+"a": "Gửi ảnh chuyển khoản cho Sale; Shop Gọn kiểm tiền về là xác nhận, thường trong ngày. Trong lúc chờ shop vẫn dùng được nhờ 7 ngày dùng thử."
+},
+{
+"id": 24,
+"nhom": "Giới thiệu & giá gói",
+"q": "Gia hạn thế nào?",
+"a": "Vào Thêm › Gia hạn, chọn gói, quét QR chuyển khoản rồi gửi ảnh cho Sale. Gia hạn được cộng nối tiếp, không mất ngày còn lại.",
+"go": "giahan"
+},
+{
+"id": 25,
+"nhom": "Giới thiệu & giá gói",
+"q": "Có hoàn tiền nếu không dùng nữa không?",
+"a": "Chính sách hoàn tiền trao đổi trực tiếp với Sale hoặc Shop Gọn. Nên dùng thử 7 ngày trước khi chuyển khoản."
+},
+{
+"id": 26,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Đăng ký Shop Gọn thế nào?",
+"a": "Mở shopgon.vn/app bằng Chrome (Android) hoặc Safari (iPhone) › Đăng nhập bằng Gmail › chọn Gmail của shop, cho phép quyền Google Drive › điền tên shop, SĐT, SĐT cộng tác viên › gửi đăng ký. Dùng được ngay 7 ngày."
+},
+{
+"id": 27,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Chủ shop đăng nhập bằng gì?",
+"a": "Bằng Gmail của shop. Nhân viên đăng nhập bằng SĐT + mật khẩu do chủ shop đặt."
+},
+{
+"id": 28,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Dùng Gmail nào để đăng ký?",
+"a": "Một Gmail cá nhân cố định của chủ shop, nhớ mật khẩu. Không dùng Gmail công ty hay Gmail của con (hay bị chặn), và mọi máy phải dùng cùng 1 Gmail đó."
+},
+{
+"id": 29,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Đăng nhập Gmail có lộ thư, tài liệu của tôi không?",
+"a": "Không. Shop Gọn chỉ xin quyền với đúng file sổ do chính app tạo trong Drive, không đọc được thư hay file khác. Mật khẩu chỉ nhập trên trang của Google."
+},
+{
+"id": 30,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Google hỏi quyền Google Drive có cần tích không?",
+"a": "Phải tích. App cần quyền này để tạo và ghi sổ bán hàng trong Drive của shop. Bỏ tích sẽ báo 'Chưa tạo được sổ dữ liệu'."
+},
+{
+"id": 31,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Báo 'Chưa tạo được sổ dữ liệu trong Google Drive'?",
+"a": "Lúc Google hỏi quyền đã bỏ ô Google Drive. Bấm Đăng nhập bằng Gmail lại, tích ô Google Drive rồi Tiếp tục."
+},
+{
+"id": 32,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Báo 'Bạn đã bấm Hủy hoặc chưa cho phép'?",
+"a": "Bấm Đăng nhập bằng Gmail lại › chọn Gmail › bấm Tiếp tục đến hết, không đóng trang Google giữa chừng."
+},
+{
+"id": 33,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Bấm đăng nhập không thấy gì trên iPhone?",
+"a": "Vào Cài đặt › Safari › tắt 'Chặn cửa sổ bật lên', rồi bấm đăng nhập lại."
+},
+{
+"id": 34,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Mở link trong Zalo/Facebook không đăng nhập được?",
+"a": "Google chặn đăng nhập trong trình duyệt của Zalo/Facebook. Bấm ⋮ hoặc ··· › Mở bằng trình duyệt, hoặc mở Chrome/Safari gõ shopgon.vn/app."
+},
+{
+"id": 35,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Đăng nhập báo Lỗi 500 trang Google?",
+"a": "Lỗi tạm thời phía Google. Bấm ✕, tắt hẳn app mở lại rồi đăng nhập. Vẫn lỗi: mở Chrome vào shopgon.vn/app đăng nhập; xoá cookie 1 giờ qua; đổi Wi-Fi/4G. Làm hết vẫn lỗi thì báo Sale kèm Gmail + giờ bị."
+},
+{
+"id": 36,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Gmail công ty bị chặn đăng nhập?",
+"a": "Một số Gmail công ty/trường học bị quản trị chặn ứng dụng ngoài. Dùng Gmail cá nhân thường của chủ shop."
+},
+{
+"id": 37,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Quên mật khẩu Gmail thì sao?",
+"a": "Lấy lại mật khẩu ở trang của Google (accounts.google.com). Shop Gọn không giữ và không đổi được mật khẩu Gmail."
+},
+{
+"id": 38,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "App báo 'Chờ duyệt'?",
+"a": "Shop đã đăng ký nhưng chưa được xác nhận. Đăng ký mới được dùng thử 7 ngày tự động; nếu vẫn thấy chờ duyệt, bấm Kiểm tra lại hoặc báo Sale."
+},
+{
+"id": 39,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "App báo bị khoá?",
+"a": "Gói hết hạn hoặc hết 7 ngày dùng thử mà chưa xác nhận tiền. Vào Thêm › Gia hạn chuyển khoản, gửi ảnh cho Sale. Dữ liệu vẫn còn nguyên trong Drive."
+},
+{
+"id": 40,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Đã chuyển khoản mà chưa mở khoá?",
+"a": "Kiểm đã gửi ảnh chuyển khoản cho Sale chưa. Shop Gọn thấy tiền về là xác nhận. Sau đó tắt app mở lại hoặc bấm Kiểm tra lại."
+},
+{
+"id": 41,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Mở lại app thấy dữ liệu mẫu, mất sổ?",
+"a": "Không mất. Bấm Đăng nhập, chọn đúng Gmail của shop — sổ vẫn nằm trong Google Drive của Gmail đó."
+},
+{
+"id": 42,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Đăng nhập nhầm Gmail khác?",
+"a": "Đăng xuất (Thêm › Đăng xuất) rồi đăng nhập lại đúng Gmail của shop. Gmail khác là sổ khác, số liệu không lẫn vào nhau."
+},
+{
+"id": 43,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Một Gmail dùng cho 2 shop được không?",
+"a": "Mỗi shop 1 Gmail riêng. Chủ có nhiều shop dùng tính năng Chuỗi cửa hàng: mỗi shop con 1 Gmail, shop mẹ xem tổng."
+},
+{
+"id": 44,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Dùng 2 máy cho 1 shop được không?",
+"a": "Được. Mở shopgon.vn/app trên máy thứ 2, đăng nhập cùng Gmail của shop. App tự đồng bộ giữa các máy."
+},
+{
+"id": 45,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Đổi Gmail đăng ký sang Gmail khác được không?",
+"a": "Sổ gắn với Gmail. Muốn đổi, báo Sale/Shop Gọn để chuyển tài khoản; dữ liệu cũ dùng Sao lưu ngoài Gmail hoặc file Excel để chuyển."
+},
+{
+"id": 46,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Thẻ đỏ 'Đăng nhập lại Google' là gì?",
+"a": "Phiên Google hết hạn. Bấm ngay để đăng nhập lại — không bấm thì máy vẫn bán được nhưng đơn chưa lên Drive."
+},
+{
+"id": 47,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Đăng xuất ở đâu?",
+"a": "Thêm › Đăng xuất. Đăng xuất không xoá dữ liệu, sổ vẫn trong Drive."
+},
+{
+"id": 48,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Ô SĐT cộng tác viên là gì?",
+"a": "Số của Sale/cộng tác viên đã cài app cho shop, để ghi nhận người hỗ trợ shop. Mở app bằng link/QR của Sale thì ô này tự điền."
+},
+{
+"id": 49,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Không có ai giới thiệu thì ô cộng tác viên để trống được không?",
+"a": "Được, để trống vẫn đăng ký bình thường."
+},
+{
+"id": 50,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Tên shop hiện trên app sửa ở đâu?",
+"a": "Thêm › Cài đặt › Tên shop. Tên hiện to trên đầu app, trên hoá đơn và website."
+},
+{
+"id": 51,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Tài khoản test là gì?",
+"a": "Bản xem thử với dữ liệu mẫu, không cần đăng nhập, không lưu gì vào Drive. Dùng để xem app trước khi đăng ký."
+},
+{
+"id": 52,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Dữ liệu tài khoản test có chuyển sang sổ thật không?",
+"a": "Không. Sổ thật bắt đầu trống, nhập tồn của shop vào."
+},
+{
+"id": 53,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Thoát tài khoản test thế nào?",
+"a": "Bấm Thoát trên dải 'Tài khoản test' ở đầu app."
+},
+{
+"id": 54,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Có cần mạng để đăng nhập không?",
+"a": "Cần mạng lần đầu đăng nhập và kích hoạt. Sau đó mất mạng vẫn mở app và bán được nếu đã cài app."
+},
+{
+"id": 55,
+"nhom": "Đăng ký, đăng nhập, kích hoạt",
+"q": "Đăng ký 1 Gmail được dùng thử mấy lần?",
+"a": "Mỗi Gmail được dùng thử 7 ngày 1 lần."
+},
+{
+"id": 56,
+"nhom": "Cài app, cập nhật, thiết bị",
+"q": "Có tải app trên CH Play/App Store không?",
+"a": "Không cần. Mở shopgon.vn/app rồi cài lên màn hình chính là dùng như app thật."
+},
+{
+"id": 57,
+"nhom": "Cài app, cập nhật, thiết bị",
+"q": "Cài lên màn hình chính trên Android?",
+"a": "Mở shopgon.vn/app bằng Chrome › bấm ⋮ góc trên phải › Thêm vào màn hình chính (hoặc Cài đặt ứng dụng) › Thêm."
+},
+{
+"id": 58,
+"nhom": "Cài app, cập nhật, thiết bị",
+"q": "Cài lên màn hình chính trên iPhone?",
+"a": "Mở shopgon.vn/app bằng Safari › nút Chia sẻ (ô vuông mũi tên lên) › Thêm vào MH chính › Thêm. iPhone bắt buộc cài qua Safari."
+},
+{
+"id": 59,
+"nhom": "Cài app, cập nhật, thiết bị",
+"q": "Vì sao iPhone phải cài app, không mở bằng trình duyệt?",
+"a": "iPhone có thể tự xoá bộ nhớ của trang web không cài, làm mất đơn chưa kịp lên Drive. Cài lên màn hình chính thì an toàn."
+},
+{
+"id": 60,
+"nhom": "Cài app, cập nhật, thiết bị",
+"q": "Dùng trên máy tính được không?",
+"a": "Được. Mở shopgon.vn/app bằng Chrome trên máy tính, đăng nhập cùng Gmail của shop."
+},
+{
+"id": 61,
+"nhom": "Cài app, cập nhật, thiết bị",
+"q": "Máy tính bảng dùng được không?",
+"a": "Được, như điện thoại."
+},
+{
+"id": 62,
+"nhom": "Cài app, cập nhật, thiết bị",
+"q": "Máy cũ, yếu có chạy được không?",
+"a": "Chạy được trên hầu hết điện thoại Android/iPhone còn dùng Chrome/Safari bản mới. Máy quá cũ nên cập nhật trình duyệt."
+},
+{
+"id": 63,
+"nhom": "Cài app, cập nhật, thiết bị",
+"q": "Không thấy tính năng mới?",
+"a": "Tắt hẳn app rồi mở lại — app tự tải bản mới. Làm vậy trên mọi máy của shop."
+},
+{
+"id": 64,
+"nhom": "Cài app, cập nhật, thiết bị",
+"q": "Làm sao biết app đã lên bản mới?",
+"a": "Có bản mới app tự tải lại. Mở lại app trên mọi máy 1 lần để chắc chắn đang chạy bản mới nhất."
+},
+{
+"id": 65,
+"nhom": "Cài app, cập nhật, thiết bị",
+"q": "App có tự cập nhật không?",
+"a": "Có. Khi có bản mới app tự tải; shop chỉ cần mở lại app."
+},
+{
+"id": 66,
+"nhom": "Cài app, cập nhật, thiết bị",
+"q": "App có tốn dung lượng không?",
+"a": "Rất nhẹ. Sổ dữ liệu nằm trong Google Drive, máy chỉ giữ bản tạm."
+},
+{
+"id": 67,
+"nhom": "Cài app, cập nhật, thiết bị",
+"q": "Mở app 2 cửa sổ được không?",
+"a": "Không nên. Mỗi máy chỉ mở 1 cửa sổ Shop Gọn. Mở 2 chỗ thì cửa sổ cũ tự dừng và báo đang mở ở chỗ khác."
+},
+{
+"id": 68,
+"nhom": "Cài app, cập nhật, thiết bị",
+"q": "Đổi màu giao diện app?",
+"a": "Thêm › Màu giao diện, chọn 1 trong 8 màu."
+},
+{
+"id": 69,
+"nhom": "Cài app, cập nhật, thiết bị",
+"q": "Tắt bớt chức năng không dùng?",
+"a": "Thêm › Tiện ích: bật/tắt phụ kiện, sim số, sửa chữa, thu hộ… cho app gọn."
+},
+{
+"id": 70,
+"nhom": "Cài app, cập nhật, thiết bị",
+"q": "Chữ nhỏ quá khó đọc?",
+"a": "Dùng chức năng phóng to chữ của điện thoại (Cài đặt › Màn hình › Cỡ chữ) — app tự giãn theo."
+},
+{
+"id": 71,
+"nhom": "Cài app, cập nhật, thiết bị",
+"q": "Giờ trên đơn bị sai?",
+"a": "Đặt giờ điện thoại về tự động: Cài đặt › Ngày giờ › Tự động. Giờ máy sai thì đơn ghi sai ngày."
+},
+{
+"id": 72,
+"nhom": "Cài app, cập nhật, thiết bị",
+"q": "Đổi điện thoại mới thì làm sao?",
+"a": "Cài app trên máy mới, đăng nhập đúng Gmail của shop là thấy lại toàn bộ sổ. Trước khi bỏ máy cũ, mở app có mạng để chắc đơn đã lên Drive."
+},
+{
+"id": 73,
+"nhom": "Cài app, cập nhật, thiết bị",
+"q": "Xoá app có mất dữ liệu không?",
+"a": "Đơn đã lên Drive thì không mất. Chỉ xoá app khi chắc chắn không còn đơn chờ (đã thấy 'Đã lưu lên Google Drive')."
+},
+{
+"id": 74,
+"nhom": "Cài app, cập nhật, thiết bị",
+"q": "Dùng máy quét mã vạch cầm tay được không?",
+"a": "Được. Máy quét kiểu bàn phím (USB/Bluetooth) quét IMEI hoặc mã vạch phụ kiện vào ô tìm/ô IMEI như gõ phím."
+},
+{
+"id": 75,
+"nhom": "Cài app, cập nhật, thiết bị",
+"q": "Máy in hoá đơn nào dùng được?",
+"a": "Máy in nhiệt Bluetooth: trên Android cài app RawBT (CH Play), ghép Bluetooth máy in trong RawBT, rồi bấm In RawBT trên hoá đơn. Máy tính dùng máy in thường. Khổ giấy chọn ở Thêm › Cài đặt."
+},
+{
+"id": 76,
+"nhom": "Bán hàng",
+"q": "Bán 1 điện thoại thế nào?",
+"a": "Tab Bán › Điện thoại & PK › chọn hãng ở cột trái › chọn máy (hoặc quét IMEI ở ô tìm) › chọn đúng IMEI › Chọn bán › Thanh toán. App tự trừ kho, tính lời, hiện hoá đơn.",
+"go": "sell"
+},
+{
+"id": 77,
+"nhom": "Bán hàng",
+"q": "Quét IMEI bằng camera thế nào?",
+"a": "Ở ô tìm của màn Bán bấm biểu tượng quét, đưa camera vào mã vạch IMEI trên hộp hoặc máy. Lần đầu bấm Cho phép camera.",
+"go": "sell"
+},
+{
+"id": 78,
+"nhom": "Bán hàng",
+"q": "Quét IMEI không ăn?",
+"a": "Đưa mã vạch vào giữa khung, đủ sáng, giữ yên 1–2 giây. Không được thì gõ tay vài số cuối IMEI vào ô tìm."
+},
+{
+"id": 79,
+"nhom": "Bán hàng",
+"q": "Giá bán lấy từ đâu?",
+"a": "Từ giá đã đặt ở tab Kho hàng. Đổi giá ở Kho là màn Bán và website đổi theo."
+},
+{
+"id": 80,
+"nhom": "Bán hàng",
+"q": "Bán giá khác giá Kho được không?",
+"a": "Thêm khuyến mãi giảm giá ở đơn (nút ＋ / Khuyến mãi cho khách). Muốn đổi giá hẳn thì sửa ở Kho hàng."
+},
+{
+"id": 81,
+"nhom": "Bán hàng",
+"q": "Bán phụ kiện thế nào?",
+"a": "Tab Bán › thanh con Phụ kiện › chọn món, số lượng › thêm vào đơn. Có tem mã vạch thì quét là món tự vào đơn."
+},
+{
+"id": 82,
+"nhom": "Bán hàng",
+"q": "Bán nhiều món trong 1 đơn?",
+"a": "Cứ chọn tiếp máy, phụ kiện, dịch vụ — tất cả vào cùng 1 đơn rồi Thanh toán 1 lần."
+},
+{
+"id": 83,
+"nhom": "Bán hàng",
+"q": "Thu tiền mặt hay chuyển khoản chọn ở đâu?",
+"a": "Khi thanh toán chọn Tiền mặt / Chuyển khoản / Cả hai. Chọn chuyển khoản app hiện QR đúng số tiền vào tài khoản của shop."
+},
+{
+"id": 84,
+"nhom": "Bán hàng",
+"q": "Khách trả 1 phần tiền mặt, 1 phần chuyển khoản?",
+"a": "Chọn Cả hai, nhập số tiền mặt, phần còn lại app tính là chuyển khoản. Két chỉ cộng phần tiền mặt."
+},
+{
+"id": 85,
+"nhom": "Bán hàng",
+"q": "QR chuyển khoản lấy tài khoản ngân hàng nào?",
+"a": "Tài khoản shop cài ở Thêm › Cài đặt (ngân hàng, số tài khoản, tên). Chưa cài thì app không hiện QR."
+},
+{
+"id": 86,
+"nhom": "Bán hàng",
+"q": "In hoá đơn thế nào?",
+"a": "Bán xong app hiện hoá đơn (thông tin shop, hàng, QR) › bấm In hoá đơn. Có thể chụp màn hình gửi khách qua Zalo."
+},
+{
+"id": 87,
+"nhom": "Bán hàng",
+"q": "Khách chưa trả đủ tiền (ghi nợ)?",
+"a": "Trên hoá đơn sau bán bấm Ghi nợ, nhập số khách còn nợ. Thu nợ sau ở Thêm › Khách hàng hoặc Đơn đã bán."
+},
+{
+"id": 88,
+"nhom": "Bán hàng",
+"q": "Bán trả góp ghi thế nào?",
+"a": "Khi thanh toán chọn Trả góp: chọn công ty tài chính, số trả trước (0–50% hoặc gõ số), trả trước tiền mặt hay chuyển khoản. Két chỉ cộng phần trả trước."
+},
+{
+"id": 89,
+"nhom": "Bán hàng",
+"q": "Thu cũ đổi mới thế nào?",
+"a": "Ở màn Bán bấm ♻️ Thu máy cũ của khách › quét IMEI máy cũ, nhập giá thu › tiền trừ vào đơn, máy cũ vào kho tên kèm chữ (cũ)."
+},
+{
+"id": 90,
+"nhom": "Bán hàng",
+"q": "Chỉ thu mua máy cũ, không bán gì?",
+"a": "Vẫn dùng Thu máy cũ của khách; hoá đơn ghi 'Shop trả khách'. Máy cũ vào kho để bán lại."
+},
+{
+"id": 91,
+"nhom": "Bán hàng",
+"q": "Ghi tên, SĐT khách khi bán có lợi gì?",
+"a": "Để tra bảo hành, thu nợ, biết khách mua mấy lần. Gõ SĐT khách cũ app tự hiện tên và số lần đã mua."
+},
+{
+"id": 92,
+"nhom": "Bán hàng",
+"q": "Gõ SĐT hiện 'Khách cũ: đã mua n lần' là gì?",
+"a": "App nhận ra số này đã mua trước đó, hiện số lần mua và lần cuối. Từ 3 lần có nhãn Khách quen — nên chăm sóc kỹ."
+},
+{
+"id": 93,
+"nhom": "Bán hàng",
+"q": "Tặng phụ kiện cho khách trong đơn?",
+"a": "Bấm Khuyến mãi cho khách › Tặng phụ kiện › chọn món. Món tặng trừ kho, khách không trả tiền, vốn món tặng trừ vào lời đơn."
+},
+{
+"id": 94,
+"nhom": "Bán hàng",
+"q": "Giảm giá cho khách?",
+"a": "Bấm Khuyến mãi cho khách › Giảm tiền (số tiền) hoặc Giảm % › áp vào đơn. Mỗi đơn 1 dòng giảm giá."
+},
+{
+"id": 95,
+"nhom": "Bán hàng",
+"q": "Tặng quà không có trong kho (gói cước, dán màn)?",
+"a": "Khuyến mãi cho khách › Quà khác: gõ tên quà và giá trị vốn (để tính lời đúng)."
+},
+{
+"id": 96,
+"nhom": "Bán hàng",
+"q": "Khách đứng cạnh có thấy tiền lời không?",
+"a": "Không. Lúc lên đơn app không hiện giá nhập và tiền lời. Lời xem ở Báo cáo."
+},
+{
+"id": 97,
+"nhom": "Bán hàng",
+"q": "Bán dịch vụ (thu hộ, chuyển tiền, nạp tiền)?",
+"a": "Tab Bán › Dịch vụ khác › chọn Thu hộ / Chuyển khoản / Khác › nhập số tiền, phí."
+},
+{
+"id": 98,
+"nhom": "Bán hàng",
+"q": "Bán sim số thế nào?",
+"a": "Nhập sim như hàng khác (nhóm Sim) rồi bán ở thanh Phụ kiện/hàng khác. Có thể gõ số sim để tìm."
+},
+{
+"id": 99,
+"nhom": "Bán hàng",
+"q": "Bán máy không có trong kho?",
+"a": "Phải nhập vào kho trước (Nhập hàng) rồi mới bán, để app tính lời và bảo hành đúng."
+},
+{
+"id": 100,
+"nhom": "Bán hàng",
+"q": "Tìm máy theo tên nhanh?",
+"a": "Gõ vài chữ tên máy ở ô tìm màn Bán, không cần dấu."
+},
+{
+"id": 101,
+"nhom": "Bán hàng",
+"q": "Bán xong muốn bán tiếp đơn mới?",
+"a": "Đóng hoá đơn là về màn Bán, đơn mới trống sẵn."
+},
+{
+"id": 102,
+"nhom": "Bán hàng",
+"q": "Chọn nhầm máy trong đơn trước khi thanh toán?",
+"a": "Bấm ✕ ở dòng đó để bỏ khỏi đơn."
+},
+{
+"id": 103,
+"nhom": "Bán hàng",
+"q": "Thời hạn bảo hành ghi ở đâu?",
+"a": "Khi bán có số tháng bảo hành cho máy; tra lại ở Thêm › Tra IMEI · Bảo hành."
+},
+{
+"id": 104,
+"nhom": "Bán hàng",
+"q": "Báo đỏ bán trùng IMEI?",
+"a": "2 máy bán cùng 1 IMEI lúc mất mạng. Mở Trang chủ › dải đỏ › huỷ đơn sau hoặc đổi đúng IMEI."
+},
+{
+"id": 105,
+"nhom": "Bán hàng",
+"q": "Vì sao 2 máy không bán trùng 1 IMEI?",
+"a": "Khi có mạng, app giữ IMEI đang bán 10 phút nên máy kia không chọn được máy đó."
+},
+{
+"id": 106,
+"nhom": "Bán hàng",
+"q": "Mất mạng có bán được không?",
+"a": "Được, nếu đã cài app và từng mở sổ. Đơn nằm trên máy, tự lên Drive khi có mạng lại — đừng xoá app lúc đó."
+},
+{
+"id": 107,
+"nhom": "Bán hàng",
+"q": "Bán xong tắt app ngay có sao không?",
+"a": "Nên để app mở vài giây có mạng, thấy dòng 'Đã lưu lên Google Drive' rồi mới tắt."
+},
+{
+"id": 108,
+"nhom": "Bán hàng",
+"q": "Chia hàng (bán sỉ) là gì?",
+"a": "Chủ shop bán sỉ cho shop khác: chọn mẫu máy › nút đỏ Chia hàng › app hiện giá nhập từng IMEI để canh giá › chọn máy hoặc bắn IMEI, nhập giá chia. Nhân viên không có nút này."
+},
+{
+"id": 109,
+"nhom": "Bán hàng",
+"q": "Đơn chia hàng có tính thưởng nhân viên không?",
+"a": "Không. Đơn chia hàng do chủ shop lên, không vào thưởng doanh số nhân viên."
+},
+{
+"id": 110,
+"nhom": "Bán hàng",
+"q": "Nhân viên bán giá có sửa được không?",
+"a": "Nhân viên bán theo giá shop đã đặt, chỉ thêm khuyến mãi. Không sửa được giá bán ở Kho."
+},
+{
+"id": 111,
+"nhom": "Khuyến mãi",
+"q": "Đặt khuyến mãi sẵn cho máy?",
+"a": "Tab Khuyến mãi › chọn hãng › ＋ KM ở từng mẫu (giảm giá, tặng phụ kiện, trả góp 0%…). KM đã lưu tự gắn vào đơn khi bán.",
+"go": "km"
+},
+{
+"id": 112,
+"nhom": "Khuyến mãi",
+"q": "Áp khuyến mãi cho cả hãng 1 lần?",
+"a": "Tab Khuyến mãi › chọn hãng › ＋ KM cả hãng — áp cho mọi máy của hãng đó.",
+"go": "km"
+},
+{
+"id": 113,
+"nhom": "Khuyến mãi",
+"q": "Khuyến mãi có hiện trên website khách không?",
+"a": "Có. KM đã lưu hiện trên website bảng giá của shop."
+},
+{
+"id": 114,
+"nhom": "Khuyến mãi",
+"q": "Khuyến mãi có hạn dùng không?",
+"a": "Có thể đặt hạn. Đầu tab Khuyến mãi báo số mẫu đang có KM, chưa có KM và hết hạn trong 10 ngày."
+},
+{
+"id": 115,
+"nhom": "Khuyến mãi",
+"q": "Nhân viên có dùng khuyến mãi không?",
+"a": "Có. KM chủ shop đặt tự gắn khi nhân viên bán; nhân viên cũng thêm KM được trong đơn."
+},
+{
+"id": 116,
+"nhom": "Khuyến mãi",
+"q": "Copy bài đăng khuyến mãi?",
+"a": "Tab Khuyến mãi › Copy bài đăng: app viết sẵn bài kèm link website shop để dán Zalo, Facebook."
+},
+{
+"id": 117,
+"nhom": "Khuyến mãi",
+"q": "Sửa giá ở tab Khuyến mãi được không?",
+"a": "Không. Giá chỉ sửa ở tab Kho hàng; tab Khuyến mãi chỉ thêm KM."
+},
+{
+"id": 118,
+"nhom": "Khuyến mãi",
+"q": "Xoá khuyến mãi đã đặt?",
+"a": "Mở mẫu máy trong tab Khuyến mãi, xoá dòng KM rồi lưu."
+},
+{
+"id": 119,
+"nhom": "Khuyến mãi",
+"q": "Khuyến mãi bị trừ lời thế nào?",
+"a": "Lời đơn = giá bán − giá vốn − khuyến mãi (tiền giảm + vốn quà tặng)."
+},
+{
+"id": 120,
+"nhom": "Khuyến mãi",
+"q": "Trang chủ báo 'mẫu chưa có khuyến mãi'?",
+"a": "Mục Việc cần làm nhắc mẫu đang tồn mà chưa có KM. Bấm vào là tới đúng chỗ thêm KM."
+},
+{
+"id": 121,
+"nhom": "Khuyến mãi",
+"q": "KM trả góp 0% ghi thế nào?",
+"a": "Thêm dòng KM dạng chữ 'Trả góp 0%' ở mẫu máy; hiện cho khách xem trên đơn và website."
+},
+{
+"id": 122,
+"nhom": "Khuyến mãi",
+"q": "Giảm giá theo %?",
+"a": "Trong đơn: Khuyến mãi cho khách › Giảm % › nhập %."
+},
+{
+"id": 123,
+"nhom": "Khuyến mãi",
+"q": "KM tặng phụ kiện hết hàng thì sao?",
+"a": "App chỉ cho tặng món còn tồn. Hết thì nhập thêm hoặc đổi quà khác."
+},
+{
+"id": 124,
+"nhom": "Khuyến mãi",
+"q": "Khuyến mãi theo mùa (Noel, Tết)?",
+"a": "Đặt KM ở tab Khuyến mãi cho các mẫu muốn đẩy, kèm hạn kết thúc; ảnh truyền thông có mẫu theo mùa."
+},
+{
+"id": 125,
+"nhom": "Khuyến mãi",
+"q": "Vì sao đơn tự có dòng khuyến mãi?",
+"a": "Mẫu máy đó đã có KM đặt sẵn ở tab Khuyến mãi nên app tự gắn. Bỏ được bằng ✕ ở dòng KM trong đơn."
+},
+{
+"id": 126,
+"nhom": "Sau bán: sửa đơn, trả hàng, đổi máy, bảo hành",
+"q": "Lên đơn sai sửa thế nào?",
+"a": "Thêm › Đơn đã bán › mở đơn › Sửa.",
+"go": "hist"
+},
+{
+"id": 127,
+"nhom": "Sau bán: sửa đơn, trả hàng, đổi máy, bảo hành",
+"q": "Xoá đơn bán nhầm?",
+"a": "Thêm › Đơn đã bán › mở đơn › Xoá. Máy/phụ kiện tự trả lại kho.",
+"go": "hist"
+},
+{
+"id": 128,
+"nhom": "Sau bán: sửa đơn, trả hàng, đổi máy, bảo hành",
+"q": "Khách trả hàng?",
+"a": "Thêm › Khách trả hàng › tìm đơn (quét IMEI, gõ SĐT, tên hoặc mã HĐ) › nhận lại hàng, nhập tiền hoàn. Hàng về kho."
+},
+{
+"id": 129,
+"nhom": "Sau bán: sửa đơn, trả hàng, đổi máy, bảo hành",
+"q": "Khách đổi máy lỗi?",
+"a": "Thêm › Đơn đã bán › mở đơn › Đổi máy › quét IMEI máy mới. Máy lỗi chuyển sang chờ bảo hành ở Kho."
+},
+{
+"id": 130,
+"nhom": "Sau bán: sửa đơn, trả hàng, đổi máy, bảo hành",
+"q": "Tra bảo hành máy khách mang tới?",
+"a": "Thêm › Tra IMEI · Bảo hành › quét/gõ IMEI: máy bán cho ai, ngày nào, còn bảo hành bao nhiêu ngày.",
+"go": "look"
+},
+{
+"id": 131,
+"nhom": "Sau bán: sửa đơn, trả hàng, đổi máy, bảo hành",
+"q": "Tra được máy bán năm ngoái không?",
+"a": "Được. Tra IMEI · Bảo hành tra cả sổ các năm cũ."
+},
+{
+"id": 132,
+"nhom": "Sau bán: sửa đơn, trả hàng, đổi máy, bảo hành",
+"q": "Khách nợ thu thế nào?",
+"a": "Thêm › Khách hàng › chọn khách › Xem / thu nợ, hoặc Đơn đã bán › lọc đơn nợ › thu."
+},
+{
+"id": 133,
+"nhom": "Sau bán: sửa đơn, trả hàng, đổi máy, bảo hành",
+"q": "Xem danh sách khách đang nợ?",
+"a": "Thêm › Đơn đã bán › lọc Nợ; ở Khách hàng khách nợ có nhãn đỏ 'Nợ …'."
+},
+{
+"id": 134,
+"nhom": "Sau bán: sửa đơn, trả hàng, đổi máy, bảo hành",
+"q": "Huỷ đơn có mất dấu vết không?",
+"a": "Không. Đơn huỷ vẫn hiện gạch ngang; Nhật ký thay đổi ghi ai huỷ, lúc nào, máy nào."
+},
+{
+"id": 135,
+"nhom": "Sau bán: sửa đơn, trả hàng, đổi máy, bảo hành",
+"q": "Ai sửa/xoá đơn thì xem ở đâu?",
+"a": "Thêm › Dữ liệu & sao lưu › Nhật ký thay đổi: ai sửa, huỷ, xoá gì · lúc nào · trên máy nào."
+},
+{
+"id": 136,
+"nhom": "Sau bán: sửa đơn, trả hàng, đổi máy, bảo hành",
+"q": "In lại hoá đơn cũ?",
+"a": "Thêm › Đơn đã bán › mở đơn › bấm Hóa đơn để xem và in lại."
+},
+{
+"id": 137,
+"nhom": "Sau bán: sửa đơn, trả hàng, đổi máy, bảo hành",
+"q": "Tìm đơn cũ nhanh?",
+"a": "Thêm › Đơn đã bán › ô tìm: tên khách, SĐT, IMEI, ghi chú."
+},
+{
+"id": 138,
+"nhom": "Sau bán: sửa đơn, trả hàng, đổi máy, bảo hành",
+"q": "Máy chờ bảo hành xem ở đâu?",
+"a": "Ở tab Kho hàng, mục máy chờ bảo hành (máy lỗi từ Đổi máy)."
+},
+{
+"id": 139,
+"nhom": "Sau bán: sửa đơn, trả hàng, đổi máy, bảo hành",
+"q": "Khách trả 1 phần đơn (trả 1 phụ kiện)?",
+"a": "Khách trả hàng › tìm đơn › chỉ chọn món khách trả và số lượng."
+},
+{
+"id": 140,
+"nhom": "Sau bán: sửa đơn, trả hàng, đổi máy, bảo hành",
+"q": "Hoàn tiền khách trả hàng tính vào két không?",
+"a": "Có, tiền hoàn trừ vào tiền mặt/chuyển khoản theo cách hoàn."
+},
+{
+"id": 141,
+"nhom": "Sau bán: sửa đơn, trả hàng, đổi máy, bảo hành",
+"q": "Trả hàng có trừ thưởng nhân viên không?",
+"a": "Có. Doanh thu tính thưởng nhân viên đã trừ hàng khách trả."
+},
+{
+"id": 142,
+"nhom": "Sau bán: sửa đơn, trả hàng, đổi máy, bảo hành",
+"q": "Đổi máy có tính lại lời không?",
+"a": "Có. App tính lại theo máy mới và giá vốn mới."
+},
+{
+"id": 143,
+"nhom": "Sau bán: sửa đơn, trả hàng, đổi máy, bảo hành",
+"q": "Sửa SĐT, tên khách trên đơn cũ?",
+"a": "Đơn đã bán › mở đơn › sửa tên/SĐT khách › lưu."
+},
+{
+"id": 144,
+"nhom": "Sau bán: sửa đơn, trả hàng, đổi máy, bảo hành",
+"q": "Đơn nhân viên bán sai, chủ shop sửa được không?",
+"a": "Được. Chủ shop sửa/xoá mọi đơn ở Đơn đã bán; Nhật ký ghi lại."
+},
+{
+"id": 145,
+"nhom": "Sau bán: sửa đơn, trả hàng, đổi máy, bảo hành",
+"q": "Khách mất hoá đơn có tra bảo hành được không?",
+"a": "Được, chỉ cần IMEI máy hoặc SĐT khách."
+},
+{
+"id": 146,
+"nhom": "Sau bán: sửa đơn, trả hàng, đổi máy, bảo hành",
+"q": "Xoá đơn rồi có khôi phục được không?",
+"a": "Đơn xoá trong app vào Nhật ký. Cần khôi phục cả sổ thì dùng Thêm › Sổ dữ liệu · Sao lưu › Khôi phục bản trước."
+},
+{
+"id": 147,
+"nhom": "Sau bán: sửa đơn, trả hàng, đổi máy, bảo hành",
+"q": "Đơn của ngày hôm qua sửa được không?",
+"a": "Được, mọi đơn đều sửa được ở Đơn đã bán."
+},
+{
+"id": 148,
+"nhom": "Sau bán: sửa đơn, trả hàng, đổi máy, bảo hành",
+"q": "Bảo hành tính từ ngày nào?",
+"a": "Từ ngày bán ghi trên đơn, theo số tháng bảo hành của máy."
+},
+{
+"id": 149,
+"nhom": "Sau bán: sửa đơn, trả hàng, đổi máy, bảo hành",
+"q": "Gửi lại hoá đơn qua Zalo?",
+"a": "Thêm › Đơn đã bán › mở đơn › Hóa đơn › chụp màn hình gửi khách qua Zalo."
+},
+{
+"id": 150,
+"nhom": "Sau bán: sửa đơn, trả hàng, đổi máy, bảo hành",
+"q": "Đơn trả góp còn chờ công ty tài chính?",
+"a": "Đơn trả góp giữ hồ sơ (công ty, trả trước, tổng). Theo dõi ở Đơn đã bán."
+},
+{
+"id": 151,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Nhập điện thoại thế nào?",
+"a": "Nhập hàng › Điện thoại › gõ tên máy › chọn đúng cấu hình + màu › quét IMEI liên tục cả lô › giá nhập, giá bán › ＋ Thêm vào phiếu nhập › chọn NCC › Lưu phiếu vào kho.",
+"go": "add"
+},
+{
+"id": 152,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Phiếu nhập là gì?",
+"a": "Mỗi lần nhà cung cấp giao hàng là 1 phiếu. Thêm từng mẫu vào phiếu, lưu 1 lần là tất cả vào kho, có tổng tiền đối chiếu hoá đơn."
+},
+{
+"id": 153,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Nhập phụ kiện thế nào?",
+"a": "Nhập hàng › Hàng khác › gõ tên món hoặc quét mã vạch › chọn đúng món cũ trong danh sách (hoặc thêm món mới) › số lượng, giá nhập, giá bán › Thêm vào phiếu › Lưu phiếu.",
+"go": "add"
+},
+{
+"id": 154,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Nhập lại phụ kiện đã có không chọn được món cũ?",
+"a": "Gõ vài chữ tên món (không cần dấu) hoặc quét mã vạch → bấm chọn đúng món trong danh sách hiện ra. Thấy dòng xanh '✓ Đã có trong kho' là đúng món cũ. Nhanh nhất: Kho › Tồn kho phụ kiện › ＋ Nhập thêm."
+},
+{
+"id": 155,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Nút '＋ Nhập thêm' ở Tồn kho phụ kiện?",
+"a": "Bấm ở món cần nhập: app tự điền tên, nhóm, giá cũ, chỉ cần gõ số lượng rồi Thêm vào phiếu và Lưu phiếu."
+},
+{
+"id": 156,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "App báo 'Hàng mới' mà là hàng cũ?",
+"a": "Đừng lưu — tên đang lệch. Bấm chọn lại món trong danh sách gợi ý để khỏi tạo 2 món trùng."
+},
+{
+"id": 157,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Lỡ tạo 2 món phụ kiện trùng tên?",
+"a": "Bán/nhập tiếp vào 1 món chính. Món dư sửa số lượng về 0 ở Kho hoặc báo Sale hỗ trợ gộp."
+},
+{
+"id": 158,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Máy không có trong danh sách khi nhập?",
+"a": "Chọn 'Sản phẩm ngoài list' và gõ tay tên máy."
+},
+{
+"id": 159,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Vì sao phải chọn màu khi nhập máy?",
+"a": "Màu là 1 phần tên máy để tồn kho, bán và website khớp đúng màu khách hỏi."
+},
+{
+"id": 160,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Nhập bằng ảnh hoá đơn?",
+"a": "Nhập hàng › Ảnh hóa đơn › chụp phiếu của nhà cung cấp › app đọc các dòng hàng › kiểm lại rồi thêm vào phiếu; máy thì quét IMEI ở từng dòng."
+},
+{
+"id": 161,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Nhập tồn ban đầu nhiều hàng?",
+"a": "Dùng Nhập hàng › Ảnh/Excel › tải file mẫu, điền tồn (máy chọn tên + màu từ danh sách có sẵn), tải lên là vào phiếu nhập. Đọc được cả file KiotViet/Sapo."
+},
+{
+"id": 162,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "File Excel mẫu nhập tồn lấy ở đâu?",
+"a": "Nhập hàng › tab Ảnh / Excel › Tải file mẫu."
+},
+{
+"id": 163,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Đang dùng KiotViet/Sapo chuyển sang được không?",
+"a": "Được. Xuất file tồn kho từ phần mềm cũ, tải lên ở Nhập hàng › Ảnh / Excel, app đọc vào phiếu nhập."
+},
+{
+"id": 164,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Giá bán bỏ trống khi nhập thì sao?",
+"a": "Giữ giá đang bán; máy mới lấy giá niêm yết tự cập nhật mỗi sáng."
+},
+{
+"id": 165,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Xem lại phiếu đã nhập?",
+"a": "Nhập hàng › Đã nhập: theo ngày/tuần/tháng, tìm theo NCC, tên máy, IMEI; mỗi phiếu có Sửa và Xoá."
+},
+{
+"id": 166,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Sửa phiếu nhập sai?",
+"a": "Nhập hàng › Đã nhập › mở phiếu › Sửa. Máy đã bán thì không xoá khỏi phiếu được."
+},
+{
+"id": 167,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Xoá phiếu nhập?",
+"a": "Nhập hàng › Đã nhập › mở phiếu › Xoá (chỉ khi hàng trong phiếu chưa bán)."
+},
+{
+"id": 168,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Nhân viên nhập hàng được không?",
+"a": "Được: nhân viên chọn sản phẩm + số lượng/IMEI rồi gửi phiếu, không thấy giá nhập. Chủ shop bấm Duyệt là hàng vào kho."
+},
+{
+"id": 169,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Duyệt phiếu nhân viên gửi ở đâu?",
+"a": "App chủ shop báo phiếu chờ duyệt ở mục Nhập hàng; mở phiếu, điền giá nếu cần, bấm Duyệt."
+},
+{
+"id": 170,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Quản lý nhà cung cấp?",
+"a": "Thêm › Nhà cung cấp: công nợ, trả tiền, trả hàng cho từng NCC.",
+"go": "ncc"
+},
+{
+"id": 171,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Nhập hàng chưa trả tiền NCC?",
+"a": "Khi lưu phiếu ghi số còn nợ; công nợ hiện ở Thêm › Nhà cung cấp."
+},
+{
+"id": 172,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Trả tiền nợ nhà cung cấp?",
+"a": "Thêm › Nhà cung cấp › chọn NCC › Trả tiền › nhập số tiền."
+},
+{
+"id": 173,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Trả hàng cho nhà cung cấp?",
+"a": "Thêm › Nhà cung cấp › chọn NCC › Trả hàng › chọn máy/món trả. Trừ kho và trừ nợ."
+},
+{
+"id": 174,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Thêm nhà cung cấp mới?",
+"a": "Gõ tên NCC mới ngay ở ô Nhà cung cấp khi lưu phiếu nhập, hoặc trong Thêm › Nhà cung cấp."
+},
+{
+"id": 175,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Nhập máy cũ thu của khách?",
+"a": "Dùng Thu máy cũ ở màn Bán; máy tự vào kho tên kèm (cũ), giá thu là giá vốn."
+},
+{
+"id": 176,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Quét IMEI cả lô liên tục?",
+"a": "Ở ô IMEI bấm quét, quét lần lượt từng máy; mỗi lần quét app tự thêm 1 dòng IMEI."
+},
+{
+"id": 177,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Nhập trùng IMEI đã có trong kho?",
+"a": "App báo trùng và không nhận IMEI đó. Kiểm lại máy hoặc phiếu trước."
+},
+{
+"id": 178,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Báo sắp hết hàng phụ kiện?",
+"a": "Khi nhập món, điền ô 'Báo sắp hết khi còn'. Trang chủ › Việc cần làm sẽ nhắc."
+},
+{
+"id": 179,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Nhập linh kiện sửa chữa?",
+"a": "Nhập hàng › Hàng khác › nhóm Linh kiện › số lượng, giá."
+},
+{
+"id": 180,
+"nhom": "Nhập hàng & nhà cung cấp",
+"q": "Giá vốn phụ kiện tính thế nào khi nhập nhiều lần giá khác nhau?",
+"a": "App tính giá vốn bình quân theo số lượng mỗi lần nhập."
+},
+{
+"id": 181,
+"nhom": "Kho hàng, giá, kiểm kho",
+"q": "Xem tồn kho ở đâu?",
+"a": "Tab Kho hàng: tổng máy tồn, phụ kiện, tổng vốn. Máy gom theo hãng, mẫu; bấm vào xem từng IMEI.",
+"go": "kho"
+},
+{
+"id": 182,
+"nhom": "Kho hàng, giá, kiểm kho",
+"q": "Sửa giá bán máy?",
+"a": "Tab Kho hàng › bấm ▾ trên mẫu máy › sửa Giá bán · hiện trên web. Giá này dùng khi bán và trên website."
+},
+{
+"id": 183,
+"nhom": "Kho hàng, giá, kiểm kho",
+"q": "Lấy lại giá niêm yết?",
+"a": "Tab Kho hàng › mẫu máy › bấm ↺ Theo giá niêm yết."
+},
+{
+"id": 184,
+"nhom": "Kho hàng, giá, kiểm kho",
+"q": "Giá niêm yết lấy từ đâu?",
+"a": "App tự cập nhật giá niêm yết thị trường mỗi sáng để gợi ý cho máy chưa có giá. Shop vẫn tự quyết giá bán ở Kho."
+},
+{
+"id": 185,
+"nhom": "Kho hàng, giá, kiểm kho",
+"q": "Vì sao chỉ sửa giá ở 1 chỗ?",
+"a": "Để giá bán, giá nhân viên bán và giá trên website luôn khớp nhau — sửa ở Kho là mọi nơi đổi theo."
+},
+{
+"id": 186,
+"nhom": "Kho hàng, giá, kiểm kho",
+"q": "Máy tồn lâu xem ở đâu?",
+"a": "Kho hàng sắp máy tồn lâu lên trên; Trang chủ › Việc cần làm nhắc máy tồn trên 45 ngày."
+},
+{
+"id": 187,
+"nhom": "Kho hàng, giá, kiểm kho",
+"q": "Xem tồn kho máy dạng bảng?",
+"a": "Kho hàng › Tồn kho máy: bảng Hãng · Model · Số lượng · Giá vốn; bấm hãng xổ model, 'Xem từng máy' ra chi tiết IMEI."
+},
+{
+"id": 188,
+"nhom": "Kho hàng, giá, kiểm kho",
+"q": "Xem tồn phụ kiện?",
+"a": "Kho hàng › Tồn kho phụ kiện (Hàng khác): từng món, số còn, giá; có nút ＋ Nhập thêm."
+},
+{
+"id": 189,
+"nhom": "Kho hàng, giá, kiểm kho",
+"q": "Kiểm kho thế nào?",
+"a": "Thêm › Kiểm kho: quét IMEI đối chiếu tồn, đếm phụ kiện — máy thiếu, thừa hiện ngay.",
+"go": "kk"
+},
+{
+"id": 190,
+"nhom": "Kho hàng, giá, kiểm kho",
+"q": "Kiểm kho phát hiện thiếu máy?",
+"a": "Xem lại máy thiếu: tra IMEI ở Tra IMEI · Bảo hành xem đã bán chưa, kiểm Nhật ký thay đổi xem ai sửa/xoá."
+},
+{
+"id": 191,
+"nhom": "Kho hàng, giá, kiểm kho",
+"q": "Tạo mã vạch cho phụ kiện?",
+"a": "Kho hàng › 🏷 Mã vạch: app tạo mã SG000001… hoặc quét mã có sẵn trên hộp; in tem rồi dán lên hàng."
+},
+{
+"id": 192,
+"nhom": "Kho hàng, giá, kiểm kho",
+"q": "In tem mã vạch khổ nào?",
+"a": "Tem cuộn 40×30, 50×30 hoặc giấy A4 65 tem."
+},
+{
+"id": 193,
+"nhom": "Kho hàng, giá, kiểm kho",
+"q": "Bán phụ kiện bằng tem mã vạch?",
+"a": "Ở màn Bán quét tem (camera hoặc máy quét cầm tay) — món tự vào đơn. Nhân viên dùng được."
+},
+{
+"id": 194,
+"nhom": "Kho hàng, giá, kiểm kho",
+"q": "Hộp phụ kiện có sẵn mã vạch hãng dùng được không?",
+"a": "Được. Ở mục Mã vạch quét mã trên hộp để gắn cho món đó, khỏi in tem."
+},
+{
+"id": 195,
+"nhom": "Kho hàng, giá, kiểm kho",
+"q": "Điều chuyển hàng sang shop khác?",
+"a": "Kho hàng › 🔁 Điều chuyển: chọn máy/phụ kiện › tạo phiếu › gửi link hoặc QR. Shop nhận bấm 'Nhận vào kho' là hàng vào kho họ."
+},
+{
+"id": 196,
+"nhom": "Kho hàng, giá, kiểm kho",
+"q": "Huỷ phiếu điều chuyển?",
+"a": "Huỷ được khi shop nhận chưa bấm nhận. Đã nhận thì không huỷ được."
+},
+{
+"id": 197,
+"nhom": "Kho hàng, giá, kiểm kho",
+"q": "Điều chuyển có tính nợ nhà cung cấp không?",
+"a": "Không. Phiếu nhận ghi 'Chuyển từ…', không tạo nợ NCC."
+},
+{
+"id": 198,
+"nhom": "Kho hàng, giá, kiểm kho",
+"q": "Website khách có thấy số lượng tồn không?",
+"a": "Không. Khách chỉ thấy Còn hàng hoặc Hết hàng."
+},
+{
+"id": 199,
+"nhom": "Kho hàng, giá, kiểm kho",
+"q": "Tổng vốn tồn kho xem ở đâu?",
+"a": "Đầu tab Kho hàng có tổng vốn; bảng Tồn kho máy có giá vốn theo hãng, model."
+},
+{
+"id": 200,
+"nhom": "Kho hàng, giá, kiểm kho",
+"q": "Sửa tên phụ kiện, nhóm hàng?",
+"a": "Kho hàng › Tồn kho phụ kiện › mở món › sửa tên, nhóm, mức báo sắp hết."
+},
+{
+"id": 201,
+"nhom": "Khách hàng",
+"q": "Danh sách khách hàng ở đâu?",
+"a": "Thêm › Khách hàng (hoặc Truy cập nhanh ở Trang chủ): lịch sử mua, bảo hành, nợ từng khách.",
+"go": "kh"
+},
+{
+"id": 202,
+"nhom": "Khách hàng",
+"q": "Khách tự lưu khi nào?",
+"a": "Khi bán có ghi tên hoặc SĐT khách, app tự lưu khách đó."
+},
+{
+"id": 203,
+"nhom": "Khách hàng",
+"q": "Thêm khách chưa mua hàng (hay làm dịch vụ)?",
+"a": "Thêm › Khách hàng › ＋ Thêm khách › Tên, SĐT, Ghi chú › Lưu khách. Khách hiện nhãn 'Chưa mua · lưu tay'.",
+"go": "kh"
+},
+{
+"id": 204,
+"nhom": "Khách hàng",
+"q": "Xem khách mua bao nhiêu lần?",
+"a": "Thêm › Khách hàng: mỗi khách ghi 'Mua n lần' và ngày mua lần cuối; từ 3 lần có nhãn Khách quen."
+},
+{
+"id": 205,
+"nhom": "Khách hàng",
+"q": "Ghi chú cho khách?",
+"a": "Mở khách › ✏️ Sửa (khách lưu tay) hoặc 📝 Thêm ghi chú (khách mua hàng). Tìm được theo ghi chú."
+},
+{
+"id": 206,
+"nhom": "Khách hàng",
+"q": "Gọi, nhắn Zalo cho khách từ app?",
+"a": "Thêm › Khách hàng › mở khách › 📞 Gọi hoặc 💬 Zalo."
+},
+{
+"id": 207,
+"nhom": "Khách hàng",
+"q": "Tìm khách theo IMEI máy đã mua?",
+"a": "Thêm › Khách hàng › ô tìm: gõ tên, SĐT, IMEI, tên máy hoặc ghi chú."
+},
+{
+"id": 208,
+"nhom": "Khách hàng",
+"q": "Lưu trùng số điện thoại khách?",
+"a": "App chặn lưu tay trùng số: tìm số đó để sửa thông tin."
+},
+{
+"id": 209,
+"nhom": "Khách hàng",
+"q": "Xoá khách đã lưu tay?",
+"a": "Mở khách › Bỏ lưu tay. Lịch sử mua hàng (nếu có) vẫn giữ."
+},
+{
+"id": 210,
+"nhom": "Khách hàng",
+"q": "Lưu tay được tối đa bao nhiêu khách?",
+"a": "500 khách lưu tay mỗi shop. Khách tự lưu khi bán không giới hạn."
+},
+{
+"id": 211,
+"nhom": "Báo cáo, lời lỗ, thu chi",
+"q": "Xem doanh thu, lợi nhuận hôm nay?",
+"a": "Trang chủ: chọn Hôm nay · Hôm qua · 7 ngày · Tháng. Bấm Báo cáo › để xem chi tiết.",
+"go": "home"
+},
+{
+"id": 212,
+"nhom": "Báo cáo, lời lỗ, thu chi",
+"q": "Lời từng máy xem ở đâu?",
+"a": "Báo cáo › Lãi lỗ: hãng → model → từng IMEI. Trang chủ › Tổng kết lãi gom theo model."
+},
+{
+"id": 213,
+"nhom": "Báo cáo, lời lỗ, thu chi",
+"q": "Tiền lời tính thế nào?",
+"a": "Lời = giá bán − giá vốn − khuyến mãi (tiền giảm + vốn quà tặng) của từng đơn."
+},
+{
+"id": 214,
+"nhom": "Báo cáo, lời lỗ, thu chi",
+"q": "Xem đơn của 1 ngày cụ thể?",
+"a": "Báo cáo › Bán hàng › 📅 Chọn ngày (hoặc bấm cột ngày) — hiện đơn ngày đó, lãi từng dòng và tổng."
+},
+{
+"id": 215,
+"nhom": "Báo cáo, lời lỗ, thu chi",
+"q": "Báo cáo tháng so với tháng trước thế nào?",
+"a": "Tháng đang chạy so với cùng kỳ tháng trước (cùng số ngày), không so cả tháng."
+},
+{
+"id": 216,
+"nhom": "Báo cáo, lời lỗ, thu chi",
+"q": "Xem doanh thu từng nhân viên?",
+"a": "Trang chủ › khối Nhân viên › Bấm để xem: doanh thu và lãi từng người theo kỳ; bấm 1 người xem từng món đã bán."
+},
+{
+"id": 217,
+"nhom": "Báo cáo, lời lỗ, thu chi",
+"q": "Vì sao khối Nhân viên, Tổng kết lãi bị thu gọn?",
+"a": "Để khách đứng cạnh không thấy số. Bấm vào mới mở."
+},
+{
+"id": 218,
+"nhom": "Báo cáo, lời lỗ, thu chi",
+"q": "Ghi chi phí (điện, mặt bằng, lương)?",
+"a": "Thêm › Thu chi › ghi khoản chi; hoặc Báo cáo › Lãi lỗ › ➕ Chi phí.",
+"go": "chi"
+},
+{
+"id": 219,
+"nhom": "Báo cáo, lời lỗ, thu chi",
+"q": "Chốt két cuối ngày?",
+"a": "Thêm › Thu chi › Chốt két (hoặc Báo cáo › Lãi lỗ › 💵 Tiền mặt trong két): nhập tiền đếm thực, app so với tiền mặt phải có."
+},
+{
+"id": 220,
+"nhom": "Báo cáo, lời lỗ, thu chi",
+"q": "Két lệch tiền?",
+"a": "Xem chi tiết thu chi trong ngày, đơn tiền mặt/chuyển khoản, đơn trả góp (két chỉ cộng phần trả trước). Kiểm Nhật ký nếu có đơn bị sửa/xoá."
+},
+{
+"id": 221,
+"nhom": "Báo cáo, lời lỗ, thu chi",
+"q": "Lời ròng tháng sau chi phí xem ở đâu?",
+"a": "Báo cáo › Lãi lỗ: lời theo hãng, phụ kiện, dịch vụ, trừ chi phí đã ghi."
+},
+{
+"id": 222,
+"nhom": "Báo cáo, lời lỗ, thu chi",
+"q": "Xem lời theo hãng máy?",
+"a": "Báo cáo › Lãi lỗ › theo hãng."
+},
+{
+"id": 223,
+"nhom": "Báo cáo, lời lỗ, thu chi",
+"q": "Ghi khoản thu khác (không phải bán hàng)?",
+"a": "Thêm › Thu chi › Thu khác."
+},
+{
+"id": 224,
+"nhom": "Báo cáo, lời lỗ, thu chi",
+"q": "Xem báo cáo tháng trước?",
+"a": "Báo cáo › chọn tháng."
+},
+{
+"id": 225,
+"nhom": "Báo cáo, lời lỗ, thu chi",
+"q": "App hiện số mấy tháng?",
+"a": "12 tháng gần nhất. Số năm cũ vẫn nằm trong sổ các năm trước ở Drive."
+},
+{
+"id": 226,
+"nhom": "Báo cáo, lời lỗ, thu chi",
+"q": "Trang chủ 'Việc cần làm' là gì?",
+"a": "Nhắc máy tồn trên 45 ngày, món sắp hết, mẫu chưa có khuyến mãi; bấm vào tới đúng chỗ xử lý."
+},
+{
+"id": 227,
+"nhom": "Báo cáo, lời lỗ, thu chi",
+"q": "Tải báo cáo ra Excel?",
+"a": "Thêm › Sổ dữ liệu · Sao lưu › Tải Excel."
+},
+{
+"id": 228,
+"nhom": "Báo cáo, lời lỗ, thu chi",
+"q": "Lương nhân viên có tính vào chi phí không?",
+"a": "Ghi khoản lương ở Thu chi để vào chi phí; bảng lương ở Chấm công · Lương cho biết tổng chi phí lương tháng."
+},
+{
+"id": 229,
+"nhom": "Nhân viên cửa hàng",
+"q": "Thêm nhân viên thế nào?",
+"a": "Thêm › Quản lý nhân viên › nhập tên, SĐT, đặt mật khẩu › Lưu. Gửi nhân viên link shopgon.vn/app + SĐT + mật khẩu.",
+"go": "nvch"
+},
+{
+"id": 230,
+"nhom": "Nhân viên cửa hàng",
+"q": "Nhân viên đăng nhập thế nào?",
+"a": "Mở shopgon.vn/app › Nhân viên: số điện thoại + mật khẩu. Đăng nhập 1 lần là app nhớ."
+},
+{
+"id": 231,
+"nhom": "Nhân viên cửa hàng",
+"q": "Mỗi shop được mấy nhân viên?",
+"a": "Tối đa 3. Cần thêm thì mua gói 10 nhân viên (500.000đ/năm, tổng 10 người)."
+},
+{
+"id": 232,
+"nhom": "Nhân viên cửa hàng",
+"q": "Nhân viên thấy được gì?",
+"a": "Bán theo giá shop, thêm khuyến mãi, tổng kết bán trong ngày của mình, nhập hàng (chờ chủ duyệt), tạo tờ rơi, chấm công."
+},
+{
+"id": 233,
+"nhom": "Nhân viên cửa hàng",
+"q": "Nhân viên có thấy giá vốn, tiền lời không?",
+"a": "Không. Nhân viên không thấy giá nhập, giá vốn, lời từng máy, báo cáo lời lỗ, thu chi."
+},
+{
+"id": 234,
+"nhom": "Nhân viên cửa hàng",
+"q": "Nhân viên quên mật khẩu?",
+"a": "Chủ shop vào Thêm › Quản lý nhân viên › đặt lại mật khẩu cho người đó."
+},
+{
+"id": 235,
+"nhom": "Nhân viên cửa hàng",
+"q": "Nhân viên không đăng nhập được?",
+"a": "Kiểm SĐT ở Thêm › Quản lý nhân viên đúng chưa, đặt lại mật khẩu. Nhân viên thứ 4+ khi hết gói 10 NV bị tạm khoá."
+},
+{
+"id": 236,
+"nhom": "Nhân viên cửa hàng",
+"q": "Nhân viên nghỉ việc?",
+"a": "Xoá nhân viên ở Quản lý nhân viên — tài khoản bị chặn ngay. Đơn đã bán vẫn giữ."
+},
+{
+"id": 237,
+"nhom": "Nhân viên cửa hàng",
+"q": "Đơn nhân viên bán về sổ shop khi nào?",
+"a": "Đơn nhân viên gửi về máy chủ, tự vào sổ của shop khi app chủ shop mở."
+},
+{
+"id": 238,
+"nhom": "Nhân viên cửa hàng",
+"q": "Nhân viên dùng điện thoại riêng được không?",
+"a": "Được. Nhân viên mở shopgon.vn/app trên máy mình, đăng nhập SĐT + mật khẩu."
+},
+{
+"id": 239,
+"nhom": "Nhân viên cửa hàng",
+"q": "Nhân viên có cần Gmail không?",
+"a": "Không. Chỉ cần SĐT + mật khẩu chủ shop đặt."
+},
+{
+"id": 240,
+"nhom": "Nhân viên cửa hàng",
+"q": "Biết đơn nào nhân viên nào bán?",
+"a": "Chủ shop xem ở Đơn đã bán và Báo cáo — ghi rõ ai bán từng đơn."
+},
+{
+"id": 241,
+"nhom": "Nhân viên cửa hàng",
+"q": "Nhân viên tạo tờ rơi được không?",
+"a": "Được, ở tab Truyền thông của app nhân viên. Ảnh truyền thông robot chỉ chủ shop dùng."
+},
+{
+"id": 242,
+"nhom": "Nhân viên cửa hàng",
+"q": "Nhân viên sửa giá bán được không?",
+"a": "Không. Nhân viên bán theo giá shop đặt, chỉ thêm khuyến mãi."
+},
+{
+"id": 243,
+"nhom": "Nhân viên cửa hàng",
+"q": "Nhân viên xoá đơn được không?",
+"a": "Không. Sửa/xoá đơn do chủ shop làm ở Đơn đã bán."
+},
+{
+"id": 244,
+"nhom": "Chấm công & lương",
+"q": "Chấm công thế nào?",
+"a": "Nhân viên tới shop › Trang chủ › 📷 Vào ca › chụp mặt; về bấm 📷 Ra ca. Lần đầu cho phép camera + vị trí."
+},
+{
+"id": 245,
+"nhom": "Chấm công & lương",
+"q": "Chủ shop cài chấm công lần đầu?",
+"a": "Thêm › Chấm công · Lương › 📍 Vị trí shop › Đặt vị trí (đứng tại shop). Rồi tab Lương › Cài lương tháng.",
+"go": "cc"
+},
+{
+"id": 246,
+"nhom": "Chấm công & lương",
+"q": "Báo 'cách shop … m' không chấm được?",
+"a": "Phải đứng trong bán kính 200m. Bật GPS, ra gần cửa rồi bấm lại. Shop dời chỗ thì chủ shop bấm Đặt lại vị trí."
+},
+{
+"id": 247,
+"nhom": "Chấm công & lương",
+"q": "Bấm Vào ca không mở camera?",
+"a": "Vào cài đặt trình duyệt (Chrome/Safari) › cho phép Camera và Vị trí với shopgon.vn, rồi mở lại app."
+},
+{
+"id": 248,
+"nhom": "Chấm công & lương",
+"q": "Giờ chấm công lấy theo máy nhân viên à?",
+"a": "Không. Giờ lấy theo máy chủ Shop Gọn, sửa giờ điện thoại không có tác dụng."
+},
+{
+"id": 249,
+"nhom": "Chấm công & lương",
+"q": "Có dùng ảnh có sẵn để chấm công được không?",
+"a": "Không. Chỉ chụp trực tiếp bằng camera."
+},
+{
+"id": 250,
+"nhom": "Chấm công & lương",
+"q": "Ca gãy (trưa về nghỉ)?",
+"a": "Mỗi buổi 1 cặp Vào ca / Ra ca; app tự cộng tổng giờ ngày."
+},
+{
+"id": 251,
+"nhom": "Chấm công & lương",
+"q": "Quên Ra ca?",
+"a": "Nhân viên mở thẻ chấm công › gửi giờ ra + lý do. Chủ shop duyệt ở tab Giải trình. Tối đa 2 lần/tháng; lần 3 trở đi ngày đó không tính công."
+},
+{
+"id": 252,
+"nhom": "Chấm công & lương",
+"q": "Cài lương thế nào?",
+"a": "Tab Lương › Cài lương tháng: định mức ngày công 26/28/30 (8 giờ/ngày), % thưởng máy và phụ kiện, bảng từng nhân viên: Lương cơ bản + Thưởng thêm › Lưu & tính lương."
+},
+{
+"id": 253,
+"nhom": "Chấm công & lương",
+"q": "Lương tính thế nào?",
+"a": "Đơn giá giờ = lương cơ bản ÷ giờ chuẩn; lương giờ công = giờ làm thật × đơn giá (tối đa bằng lương cơ bản) + thưởng máy + thưởng phụ kiện + thưởng thêm."
+},
+{
+"id": 254,
+"nhom": "Chấm công & lương",
+"q": "Làm vượt giờ có được cộng tiền không?",
+"a": "Không tự cộng. Chủ shop ghi vào Thưởng thêm nếu muốn thưởng."
+},
+{
+"id": 255,
+"nhom": "Chấm công & lương",
+"q": "Nhân viên hãng (PG) do hãng trả lương?",
+"a": "Để lương cơ bản trống/0: chỉ chấm công để theo dõi + thưởng doanh số nếu shop muốn."
+},
+{
+"id": 256,
+"nhom": "Chấm công & lương",
+"q": "Nhân viên xem thu nhập ở đâu?",
+"a": "Thẻ Thu nhập tháng ngay dưới nút Vào ca: giờ công, lương cơ bản, thưởng, tạm tính."
+},
+{
+"id": 257,
+"nhom": "Chấm công & lương",
+"q": "Chốt lương cuối tháng?",
+"a": "Duyệt hết giải trình › kiểm bảng lương › Lưu & tính lương › 🔒 Chốt lương tháng. Chốt rồi không sửa được."
+},
+{
+"id": 258,
+"nhom": "Chấm công & lương",
+"q": "Không chốt lương được?",
+"a": "Còn giải trình chờ duyệt — vào tab Giải trình duyệt hết rồi chốt."
+},
+{
+"id": 259,
+"nhom": "Truyền thông, website, tờ rơi",
+"q": "Website bảng giá của shop là gì?",
+"a": "Trang giá riêng tự tạo từ kho, link ngắn dạng shopgon.vn/s/<mã shop>. Khách xem giá, khuyến mãi rồi bấm Gọi hoặc Zalo."
+},
+{
+"id": 260,
+"nhom": "Truyền thông, website, tờ rơi",
+"q": "Lấy link website shop?",
+"a": "Trang chủ › Website & truyền thông › Xem website · Gửi link khách · Copy link."
+},
+{
+"id": 261,
+"nhom": "Truyền thông, website, tờ rơi",
+"q": "Website có giỏ hàng, đặt hàng không?",
+"a": "Không. Khách xem giá rồi gọi hoặc nhắn Zalo cho shop."
+},
+{
+"id": 262,
+"nhom": "Truyền thông, website, tờ rơi",
+"q": "Giá trên website lấy từ đâu?",
+"a": "Giá bán ở tab Kho hàng; khuyến mãi lấy từ tab Khuyến mãi. Sửa ở đó là web đổi theo."
+},
+{
+"id": 263,
+"nhom": "Truyền thông, website, tờ rơi",
+"q": "Website có hiện máy hết hàng không?",
+"a": "Hiện 'Hết hàng', không hiện số lượng tồn."
+},
+{
+"id": 264,
+"nhom": "Truyền thông, website, tờ rơi",
+"q": "Tạo tờ rơi?",
+"a": "Thêm › Ảnh truyền thông › Tạo tờ rơi (nhân viên: tab Truyền thông) › chọn Tồn nhiều + KM hoặc Theo hãng, 6/9/12 máy, 1 trong 5 màu › Tải ảnh hoặc Copy ảnh."
+},
+{
+"id": 265,
+"nhom": "Truyền thông, website, tờ rơi",
+"q": "Tờ rơi có bị trừ lượt không?",
+"a": "Không. Tờ rơi tạo ngay, không giới hạn."
+},
+{
+"id": 266,
+"nhom": "Truyền thông, website, tờ rơi",
+"q": "Tải tờ rơi không về máy?",
+"a": "Bấm Copy ảnh rồi dán vào Zalo/Facebook; hoặc mở app bằng Chrome để tải. Máy Xiaomi lỗi tạo ảnh thì tắt mở lại app."
+},
+{
+"id": 267,
+"nhom": "Truyền thông, website, tờ rơi",
+"q": "Ảnh 1 máy do robot thiết kế?",
+"a": "Thêm › Ảnh truyền thông › Ảnh 1 máy › chọn máy + khuyến mãi › robot dựng 15 mẫu kèm bài đăng trong vài phút."
+},
+{
+"id": 268,
+"nhom": "Truyền thông, website, tờ rơi",
+"q": "Mỗi tuần được mấy ảnh robot?",
+"a": "Mỗi tuần có số lượt cố định, lượt mới mỗi thứ Hai. Ảnh lưu 60 ngày."
+},
+{
+"id": 269,
+"nhom": "Truyền thông, website, tờ rơi",
+"q": "Bài đăng có viết sẵn không?",
+"a": "Có. Tờ rơi, ảnh robot, khuyến mãi đều có bài đăng viết sẵn kèm link website shop."
+},
+{
+"id": 270,
+"nhom": "Truyền thông, website, tờ rơi",
+"q": "Hình sản phẩm lấy ở đâu?",
+"a": "Kho ảnh máy chính hãng của Shop Gọn, cập nhật ngày 10, 20 và cuối tháng."
+},
+{
+"id": 271,
+"nhom": "Truyền thông, website, tờ rơi",
+"q": "Máy không có hình trên website?",
+"a": "Kho ảnh phủ phần lớn máy trên thị trường; máy hiếm chưa có ảnh thì báo Sale để bổ sung."
+},
+{
+"id": 272,
+"nhom": "Truyền thông, website, tờ rơi",
+"q": "Gửi link website cho khách qua Zalo?",
+"a": "Trang chủ › Website & truyền thông › Gửi link khách, chọn Zalo."
+},
+{
+"id": 273,
+"nhom": "Truyền thông, website, tờ rơi",
+"q": "Đổi màu tờ rơi?",
+"a": "Khi tạo tờ rơi chọn 1 trong 5 màu."
+},
+{
+"id": 274,
+"nhom": "Dữ liệu, sao lưu, đồng bộ, bảo mật",
+"q": "Dữ liệu của shop nằm ở đâu?",
+"a": "Trong Google Drive của chính chủ shop: mỗi năm 1 file, mỗi tháng 1 trang. Shop Gọn không giữ sổ sách của shop."
+},
+{
+"id": 275,
+"nhom": "Dữ liệu, sao lưu, đồng bộ, bảo mật",
+"q": "Shop Gọn có xem được dữ liệu của shop không?",
+"a": "Không. Sổ nằm trong Drive của shop; bản sao lưu ngoài Gmail cũng được khoá bằng mã chỉ shop giữ."
+},
+{
+"id": 276,
+"nhom": "Dữ liệu, sao lưu, đồng bộ, bảo mật",
+"q": "App có tự sao lưu không?",
+"a": "Có, mỗi ngày, giữ 14 bản gần nhất. Xem ở Thêm › Sổ dữ liệu · Sao lưu."
+},
+{
+"id": 277,
+"nhom": "Dữ liệu, sao lưu, đồng bộ, bảo mật",
+"q": "Khôi phục dữ liệu bản trước?",
+"a": "Thêm › Sổ dữ liệu · Sao lưu › Khôi phục › chọn bản."
+},
+{
+"id": 278,
+"nhom": "Dữ liệu, sao lưu, đồng bộ, bảo mật",
+"q": "Sao lưu ngoài Gmail là gì?",
+"a": "Bật 1 lần ở Sổ dữ liệu · Sao lưu: app tạo Mã shop + Mã khôi phục, mỗi ngày gửi 1 bản đã khoá lên máy chủ, giữ 14 bản. Mất Gmail vẫn lấy lại được."
+},
+{
+"id": 279,
+"nhom": "Dữ liệu, sao lưu, đồng bộ, bảo mật",
+"q": "Mất Gmail, bị hack thì lấy lại dữ liệu thế nào?",
+"a": "Đăng nhập Gmail mới › Sổ dữ liệu · Sao lưu › Khôi phục bằng mã… › nhập Mã shop + Mã khôi phục."
+},
+{
+"id": 280,
+"nhom": "Dữ liệu, sao lưu, đồng bộ, bảo mật",
+"q": "Mất Mã khôi phục?",
+"a": "Bản sao lưu ngoài Gmail không mở được. Lưu ảnh mã, ghi giấy cất két ngay khi bật. Vẫn nên tải Excel mỗi tháng."
+},
+{
+"id": 281,
+"nhom": "Dữ liệu, sao lưu, đồng bộ, bảo mật",
+"q": "Tải dữ liệu ra Excel?",
+"a": "Thêm › Sổ dữ liệu · Sao lưu › Tải Excel. Nên làm mỗi tháng 1 lần, cất riêng."
+},
+{
+"id": 282,
+"nhom": "Dữ liệu, sao lưu, đồng bộ, bảo mật",
+"q": "Lỡ xoá file sổ trong Drive?",
+"a": "drive.google.com › Thùng rác › Khôi phục (giữ 30 ngày). Rồi mở lại app."
+},
+{
+"id": 283,
+"nhom": "Dữ liệu, sao lưu, đồng bộ, bảo mật",
+"q": "Lỡ sửa ô trong file Google Sheets?",
+"a": "Mở file trên máy tính › Tệp › Lịch sử phiên bản › chọn giờ trước lúc sửa › Khôi phục. Mở lại app trên mọi máy."
+},
+{
+"id": 284,
+"nhom": "Dữ liệu, sao lưu, đồng bộ, bảo mật",
+"q": "Sửa trực tiếp trong file Google Sheets được không?",
+"a": "Không nên. Xoá tay trên Sheets app không biết là xoá thật nên tự ghi lại. Muốn sửa, xoá thì làm trong app."
+},
+{
+"id": 285,
+"nhom": "Dữ liệu, sao lưu, đồng bộ, bảo mật",
+"q": "2 máy dùng chung có đồng bộ không?",
+"a": "Có. App tự đồng bộ khoảng 90 giây/lần và mỗi lần mở lại; 2 máy cùng sửa 1 đơn vẫn giữ cả 2 phần sửa."
+},
+{
+"id": 286,
+"nhom": "Dữ liệu, sao lưu, đồng bộ, bảo mật",
+"q": "2 máy cùng bán 1 phụ kiện có trừ kho đúng không?",
+"a": "Có, trừ đủ cả 2."
+},
+{
+"id": 287,
+"nhom": "Dữ liệu, sao lưu, đồng bộ, bảo mật",
+"q": "Đơn bán lúc mất mạng có mất không?",
+"a": "Không. Đơn nằm trên máy, tự lên Drive khi có mạng lại. Đừng xoá app/xoá dữ liệu trình duyệt lúc đó."
+},
+{
+"id": 288,
+"nhom": "Dữ liệu, sao lưu, đồng bộ, bảo mật",
+"q": "Làm sao biết đơn đã lên Drive?",
+"a": "Thấy dòng 'Đã lưu lên Google Drive' sau khi bán."
+},
+{
+"id": 289,
+"nhom": "Dữ liệu, sao lưu, đồng bộ, bảo mật",
+"q": "Sang năm mới dữ liệu ra sao?",
+"a": "Ngày 01/01 app tự tạo sổ năm mới và chép số dư (tồn, nợ). Sổ năm cũ vẫn tra được."
+},
+{
+"id": 290,
+"nhom": "Dữ liệu, sao lưu, đồng bộ, bảo mật",
+"q": "Nhật ký thay đổi là gì?",
+"a": "Ghi lại ai sửa, huỷ, xoá gì · lúc nào · trên máy nào. Xem ở Thêm › Dữ liệu & sao lưu › Nhật ký thay đổi.",
+"go": "nk"
+},
+{
+"id": 291,
+"nhom": "Dữ liệu, sao lưu, đồng bộ, bảo mật",
+"q": "9 việc giữ dữ liệu an toàn?",
+"a": "Cài như app · 1 Gmail cho mọi máy · bán xong để app lên Drive · thấy thẻ đỏ đăng nhập lại ngay · 1 cửa sổ/máy · có bản mới mở lại app · không sửa tay Sheets · giờ máy tự động · tải Excel mỗi tháng.",
+"go": "antoan"
+},
+{
+"id": 292,
+"nhom": "Dữ liệu, sao lưu, đồng bộ, bảo mật",
+"q": "Có nên xoá dữ liệu trình duyệt không?",
+"a": "Không xoá khi còn đơn chưa lên Drive. Chỉ xoá khi đã thấy 'Đã lưu lên Google Drive' và có mạng."
+},
+{
+"id": 293,
+"nhom": "Dữ liệu, sao lưu, đồng bộ, bảo mật",
+"q": "Dữ liệu có bị giới hạn dung lượng không?",
+"a": "Mỗi năm 1 file Google Sheets, mỗi tháng 1 trang nên rất nhẹ; Drive miễn phí 15GB dư sức."
+},
+{
+"id": 294,
+"nhom": "Sửa chữa & dịch vụ",
+"q": "Nhận máy sửa chữa?",
+"a": "Tab Bán › Sửa chữa › nhận máy: tên khách, SĐT, sản phẩm (gợi ý từ danh mục), IMEI, lỗi, báo giá, cọc › lưu. App in biên nhận có mã QR."
+},
+{
+"id": 295,
+"nhom": "Sửa chữa & dịch vụ",
+"q": "Khách xem tiến độ sửa máy?",
+"a": "Khách quét QR trên biên nhận (shopgon.vn/sc/…) xem tiến độ; tên khách được che, không hiện SĐT, giá vốn."
+},
+{
+"id": 296,
+"nhom": "Sửa chữa & dịch vụ",
+"q": "Kỹ thuật cập nhật trạng thái sửa?",
+"a": "Tài khoản nhân viên mở phiếu sửa chữa › cập nhật: Đang kiểm tra, Đang sửa, Chờ linh kiện, Sửa xong, Đã trả máy…"
+},
+{
+"id": 297,
+"nhom": "Sửa chữa & dịch vụ",
+"q": "Thu cọc sửa chữa?",
+"a": "Khi nhận máy nhập tiền cọc; trả máy app trừ cọc và mở hoá đơn thu phần còn lại."
+},
+{
+"id": 298,
+"nhom": "Sửa chữa & dịch vụ",
+"q": "Trả máy sửa xong cho khách?",
+"a": "Mở phiếu › Đã trả máy › thu tiền qua hoá đơn (tiền mặt/chuyển khoản)."
+},
+{
+"id": 299,
+"nhom": "Sửa chữa & dịch vụ",
+"q": "Máy không có trong danh sách sửa chữa?",
+"a": "Gõ tay tên máy ở ô Sản phẩm."
+},
+{
+"id": 300,
+"nhom": "Sửa chữa & dịch vụ",
+"q": "Thu hộ, chuyển tiền có tính lời không?",
+"a": "Ghi ở Bán › Dịch vụ khác, nhập phí dịch vụ — phí là phần lời."
+},
+{
+"id": 301,
+"nhom": "Chuỗi cửa hàng & nhiều shop",
+"q": "Chủ có nhiều shop dùng thế nào?",
+"a": "Thêm › 🏬 Chuỗi cửa hàng: shop mẹ tạo mã CGxxxxx, shop con (mỗi shop 1 Gmail) xin vào, shop mẹ duyệt.",
+"go": "chuoi"
+},
+{
+"id": 302,
+"nhom": "Chuỗi cửa hàng & nhiều shop",
+"q": "Shop mẹ xem được gì của shop con?",
+"a": "Doanh thu, lời, vốn tồn, top mẫu bán theo Hôm nay/Hôm qua/7 ngày/Tháng, xếp hạng shop, nhắc shop chưa bán."
+},
+{
+"id": 303,
+"nhom": "Chuỗi cửa hàng & nhiều shop",
+"q": "Shop con có xem số shop khác không?",
+"a": "Không. Shop con chỉ thấy số của mình."
+},
+{
+"id": 304,
+"nhom": "Chuỗi cửa hàng & nhiều shop",
+"q": "Shop mẹ có xem đơn, khách của shop con không?",
+"a": "Không. Chỉ xem số tổng (doanh thu, lời, tồn, top mẫu), không xem đơn, khách, IMEI."
+},
+{
+"id": 305,
+"nhom": "Chuỗi cửa hàng & nhiều shop",
+"q": "Chuyển hàng giữa các shop trong chuỗi?",
+"a": "Điều chuyển kho, chọn shop nhận bằng chip; phiếu tự đến shop nhận, bấm Nhận vào kho."
+},
+{
+"id": 306,
+"nhom": "Chuỗi cửa hàng & nhiều shop",
+"q": "Mỗi shop con có phải mua gói riêng không?",
+"a": "Mỗi shop con là 1 tài khoản Gmail riêng nên cần gói riêng. Giá gói chuỗi trao đổi với Sale."
+},
+{
+"id": 307,
+"nhom": "Chuỗi cửa hàng & nhiều shop",
+"q": "Rời chuỗi?",
+"a": "Shop mẹ bỏ shop con khỏi chuỗi; dữ liệu shop con vẫn nằm trong Drive của shop con."
+},
+{
+"id": 308,
+"nhom": "Hỗ trợ & lỗi khác",
+"q": "Cần hỗ trợ liên hệ ai?",
+"a": "Sale hoặc cộng tác viên đã cài app cho shop, hoặc nhắn page Facebook Shop Gọn."
+},
+{
+"id": 309,
+"nhom": "Hỗ trợ & lỗi khác",
+"q": "Mở sổ tay hướng dẫn trong app?",
+"a": "Thêm › 📖 Hướng dẫn · An toàn dữ liệu › Hướng dẫn sử dụng, hoặc shopgon.vn/huong-dan.",
+"go": "hdsd"
+},
+{
+"id": 310,
+"nhom": "Hỗ trợ & lỗi khác",
+"q": "App chạy chậm, đơ?",
+"a": "Tắt hẳn app mở lại; kiểm mạng; chỉ mở 1 cửa sổ Shop Gọn. Vẫn chậm thì cập nhật Chrome/Safari."
+},
+{
+"id": 311,
+"nhom": "Hỗ trợ & lỗi khác",
+"q": "Màn hình trắng không vào được?",
+"a": "Tắt hẳn app mở lại; vẫn trắng thì mở shopgon.vn/app bằng Chrome để kiểm. Báo Sale kèm ảnh màn hình."
+},
+{
+"id": 312,
+"nhom": "Hỗ trợ & lỗi khác",
+"q": "Báo 'Shop Gọn đang mở ở chỗ khác'?",
+"a": "Đang mở 2 cửa sổ (app và trình duyệt, hoặc 2 tab). Đóng bớt, chỉ giữ 1."
+},
+{
+"id": 313,
+"nhom": "Hỗ trợ & lỗi khác",
+"q": "Giờ máy lệch năm app cảnh báo?",
+"a": "Đặt giờ điện thoại tự động: Cài đặt › Ngày giờ › Tự động."
+},
+{
+"id": 314,
+"nhom": "Hỗ trợ & lỗi khác",
+"q": "Báo cáo không khớp số tự tính?",
+"a": "Kiểm đơn huỷ/trả hàng, khuyến mãi (trừ vào lời), đơn trả góp (két chỉ cộng trả trước). Xem Nhật ký thay đổi nếu có sửa/xoá."
+},
+{
+"id": 315,
+"nhom": "Hỗ trợ & lỗi khác",
+"q": "Báo lỗi cho Shop Gọn cần gửi gì?",
+"a": "Gmail shop, giờ bị lỗi, ảnh chụp màn hình và máy đang dùng (Android/iPhone)."
+},
+{
+"id": 316,
+"nhom": "Hỗ trợ & lỗi khác",
+"q": "App có quảng cáo không?",
+"a": "Không."
+},
+{
+"id": 317,
+"nhom": "Hỗ trợ & lỗi khác",
+"q": "Góp ý tính năng mới?",
+"a": "Gửi qua Sale hoặc page Facebook Shop Gọn; tính năng được nhiều shop cần sẽ được làm."
+}
+]
+}
