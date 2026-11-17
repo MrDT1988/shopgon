@@ -885,7 +885,7 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
     const bs=(base&&base.shop)||{},ls=loc.shop||{},rs=rem.shop||ls;const sh={};
     new Set([...Object.keys(ls),...Object.keys(rs)]).forEach(k=>{const J=x=>JSON.stringify(x===undefined?null:x);sh[k]=J(ls[k])!==J(bs[k])?ls[k]:rs[k]});
     /* 09/11 v4: danh sách phiếu NV chờ duyệt / kết quả duyệt gộp theo từng phiếu (trước đây lấy cả mảng của 1 máy → mất phiếu máy kia) */
-    ['pnCho','nhapKq'].forEach(k=>{const A=x=>Array.isArray(x)?x:[],b0=new Set(A(bs[k]).map(o=>String(o&&o.id))),l0=new Map(A(ls[k]).map(o=>[String(o&&o.id),o])),r0=new Map(A(rs[k]).map(o=>[String(o&&o.id),o]));
+    ['pnCho','nhapKq','khs'].forEach(k=>{const A=x=>Array.isArray(x)?x:[],b0=new Set(A(bs[k]).map(o=>String(o&&o.id))),l0=new Map(A(ls[k]).map(o=>[String(o&&o.id),o])),r0=new Map(A(rs[k]).map(o=>[String(o&&o.id),o]));
       if(!l0.size&&!r0.size)return;const res=[];new Set([...l0.keys(),...r0.keys()]).forEach(id=>{const inL=l0.has(id),inR=r0.has(id);if(b0.has(id)&&(!inL||!inR))return;res.push(inL?l0.get(id):r0.get(id))});sh[k]=res});
     Object.keys(sh).forEach(k=>{if(sh[k]===undefined)delete sh[k]});out.shop=sh;
     /* nhật ký: chỉ cộng thêm, không bao giờ xóa theo máy khác */const NKm=new Map();[...(rem.nk||[]),...(loc.nk||[])].forEach(o=>{if(o&&o.id)NKm.set(String(o.id),o)});out.nk=[...NKm.values()].sort((a,b)=>String(a.t).localeCompare(String(b.t)));return out},
@@ -1639,7 +1639,7 @@ function renderCart(){if(!cart.length)return '';
     ${kmOpen?renderKm():`<button type="button" class="ghost kmplus" data-kmo="1" style="width:100%;margin-top:8px">🎁 Khuyến mãi cho khách${cart.some(isKm)?' · '+cart.filter(isKm).length+' mục':''}</button>`}
     ${cart.some(isKm)&&!NV?`<div style="display:flex;justify-content:space-between;color:#9a3412;font-size:12px;margin-top:6px"><span>Đơn này khuyến mãi (giảm + vốn quà)</span><b class="num">${money(cartKm())}</b></div>`:''}
     <div class="ctot"><span>${cartTotal()<0?'Shop trả khách':'Khách trả'}</span><b class="num">${money(Math.abs(cartTotal()))}</b></div>
-    <div class="two"><label>Tên khách<input id="cKh" value="${esc(cartKhach)}" placeholder="Không bắt buộc"></label><label>SĐT<input id="cSd" inputmode="tel" value="${esc(cartSdt)}" placeholder="Để tra bảo hành"></label></div>
+    <div class="two"><label>Tên khách<input id="cKh" value="${esc(cartKhach)}" placeholder="Không bắt buộc"></label><label>SĐT<input id="cSd" inputmode="tel" value="${esc(cartSdt)}" placeholder="Để tra bảo hành"></label></div><div id="cSdH" class="khhw">${khHint(cartSdt)}</div>
     <button class="btn" data-checkout="1" style="margin-top:10px">${cartTotal()<0?'Hoàn tất · shop trả khách '+money(-cartTotal()):'In hóa đơn · '+money(cartTotal())}</button></div>`}
 /* 02/11 học màn Bán hàng của Sổ: ô tìm + quét · chip hãng · lưới máy có ảnh · giỏ hàng cố định dưới đáy */
 let sellBrand='all', sellOld=false, sellGrp='';
@@ -2459,7 +2459,7 @@ document.addEventListener('submit',e=>{const f=e.target;if(!['fThu','fChi','fPin
 document.addEventListener('input',e=>{
   const t=e.target;
   if(t.id==='cKh'){cartKhach=t.value;return}
-  if(t.id==='cSd'){cartSdt=t.value;return}
+  if(t.id==='cSd'||t.id==='scSd'){if(t.id==='cSd')cartSdt=t.value;const h=$(t.id+'H');if(h)h.innerHTML=khHint(t.value);const o=khTra(t.value),kn=$(t.id==='cSd'?'cKh':'scKh');if(o&&o.ten&&kn&&!kn.value.trim()){kn.value=o.ten;if(t.id==='cSd')cartKhach=o.ten}return}
   if(t.id==='kmQ'){kmQ=t.value;renderSell();const i=$('kmQ');i.focus();i.setSelectionRange(i.value.length,i.value.length);return}
   if(t.id==='sImei'){const pos=t.selectionStart;sellImei=t.value.trim();const before=document.activeElement===t;renderSell();const i=$('sImei');if(before){i.focus();try{i.setSelectionRange(pos,pos)}catch(_){}}return}
   if(t.id==='sGia'){updSellProfit();return}
@@ -2511,6 +2511,12 @@ document.addEventListener('submit',e=>{
     if(fl&&fl.t==='may'){fl.imeis=[...(fl.imeis||[]),...lines];fl.ten=ten;fl.gn=gn;if(gb)fl.gb=gb;fl.hang=$('aHang').value;if(fl.can&&fl.imeis.length>=fl.can)delete fl.can;pnFill=null}
     else PN.dong.push({t:'may',ten,hang:$('aHang').value,gn,gb,imeis:lines});
     pnSave();render();window.scrollTo(0,0);toast(`Đã thêm ${lines.length} máy ${ten} vào phiếu`+(wrong.length?` · ${wrong.length} IMEI nên kiểm tra lại`:''));return}
+  if(f.id==='fKh'){const ten=$('khTen').value.trim(),sdt=$('khSd').value.trim(),note=$('khNote').value.trim(),err=$('khErr'),sd=sdtN(sdt);
+    if(!ten&&!sd){err.textContent='Nhập tên hoặc SĐT khách.';return}if(sd&&(sd.length<9||sd.length>11)){err.textContent='SĐT chưa đúng (9–11 số).';return}
+    const L=(db.shop.khs||[]).slice(),id=khForm&&khForm.id;
+    if(sd&&L.some(x=>x.id!==id&&sdtN(x.sdt)===sd)){err.textContent='Số này đã lưu rồi — tìm số đó để sửa.';return}
+    if(id){const i=L.findIndex(x=>x.id===id);if(i>=0)L[i]={...L[i],ten,sdt,note}}else{if(L.length>=KH_MAX){err.textContent='Đã lưu tối đa '+KH_MAX+' khách tay.';return}L.push({id:'kh'+Date.now().toString(36),ten,sdt,note,ngay:todayIso()})}
+    db.shop.khs=L;khForm=null;khQ='';khOpen=sd||(ten?'ten:'+nv0(ten):null);save();renderMore();toast(id?'Đã sửa khách':'Đã lưu khách '+(ten||sdt));return}
   if(f.id==='fCtv'){const v=$('ctvSdt').value.trim(),err=$('ctvErr');if(!/^[\d\s+.]{9,15}$/.test(v)){err.textContent='Nhập đúng số điện thoại.';return}
     err.textContent='Đang lưu…';fetch(GG.LICENSE_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({act:'ctv',email:GG.email,ctv:v})}).then(r=>r.json())
       .then(d=>{if(d.ok){GG.ctv=d.ctv;render();toast('Đã lưu cộng tác viên')}else err.textContent=d.msg||'Chưa lưu được.'}).catch(()=>{err.textContent='Chưa lưu được, kiểm tra mạng rồi thử lại.'});return}
@@ -2616,7 +2622,7 @@ function scFilt(){const q=noMark(scQ).toLowerCase();return (scL||[]).filter(p=>(
 function renderSc(el,back){
   if(scL===null&&!scBusy&&!scErr)scLoad();
   if(scSub==='new'){const f=scForm;el.innerHTML=`<button class="back" data-scs="list">‹ Sửa chữa</button><div class="panel"><h2>${f.k?'Sửa phiếu '+esc(f.ma||''):'Nhận máy sửa'}</h2><form id="fSc" autocomplete="off">
-      <div class="two"><label>Khách hàng<input id="scKh" value="${esc(f.khach||'')}" placeholder="Tên khách"></label><label>SĐT<input id="scSd" inputmode="tel" value="${esc(f.sdt||'')}"></label></div>
+      <div class="two"><label>Khách hàng<input id="scKh" value="${esc(f.khach||'')}" placeholder="Tên khách"></label><label>SĐT<input id="scSd" inputmode="tel" value="${esc(f.sdt||'')}"></label></div><div id="scSdH" class="khhw">${khHint(f.sdt||'')}</div>
       <label>Sản phẩm<small>Gõ vài chữ để chọn trong danh mục máy · máy đời cũ không có thì cứ gõ tay</small><input id="scSp" autocomplete="off" value="${esc(f.sp||'')}" placeholder="VD: a78, reno 14, ip 13"></label><div id="scSug" class="sug" hidden></div><label>IMEI (nếu có)<input id="scIm" inputmode="numeric" value="${esc(f.imei||'')}"></label>
       <div class="tgl">Loại hình sửa (chọn 1 hoặc nhiều)</div><div class="chips scloai">${SC_LOAI.map(x=>`<button type="button" class="chip" data-scl="${esc(x)}" aria-pressed="${(f.loai||[]).includes(x)}">${x}</button>`).join('')}</div>
       <label>Mô tả lỗi<textarea id="scLoi" style="min-height:64px" placeholder="VD: Rơi vỡ màn, cảm ứng chập chờn">${esc(f.loi||'')}</textarea></label>
@@ -3282,6 +3288,12 @@ function hSugRender(){const el=$('hSug'),inp=$('hTen');if(!el||!inp)return;const
   if(!L.length||document.activeElement!==inp&&!v){el.hidden=true;return}
   el.innerHTML=`<div class="hsugh">${v?'Món đã có khớp "'+esc(v)+'"':'Món đã có trong kho'} · bấm để chọn</div>`+L.map(h=>{const k=h.sl<=0?'r':hangLow(h)?'a':'g';return `<button type="button" data-hsug="${esc(h.id)}"><span class="dot"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7l9-4 9 4v10l-9 4-9-4zM3 7l9 4 9-4M12 11v10"/></svg></span><span class="t"><b>${esc(h.ten)}</b><small><span class="pill ${k}">${h.sl<=0?'Hết':'Còn '+h.sl}</span>${NV?'':' · nhập lần trước '+money(h.giaNhap)}</small></span></button>`}).join('');el.hidden=false}
 document.addEventListener('focusin',e=>{if(e.target.id==='hTen')hSugRender()});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-khadd],[data-khhuy],[data-khsua],[data-khxoa],[data-khghi]');if(!b)return;const d=b.dataset,L=db.shop.khs||[];
+  if(d.khadd){khForm={sdt:/^\d{9,11}$/.test(sdtN(khQ))?khQ:''}}else if(d.khhuy){khForm=null}
+  else if(d.khsua){const m=L.find(x=>x.id===d.khsua);if(m)khForm={...m}}
+  else if(d.khghi){const o=khachDs().find(x=>x.k===d.khghi);if(o)khForm={ten:o.ten,sdt:o.sdt,note:''}}
+  else if(d.khxoa){if(!confirm('Bỏ khách này khỏi danh sách lưu tay? Lịch sử mua hàng (nếu có) vẫn giữ.'))return;db.shop.khs=L.filter(x=>x.id!==d.khxoa);khOpen=null;save();toast('Đã bỏ lưu tay')}
+  renderMore();if(khForm)setTimeout(()=>{const i=$('khTen');if(i){i.scrollIntoView({block:'center'});i.focus()}},0)});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-hsug]');if(b){const h=db.hang.find(x=>x.id===b.dataset.hsug),i=$('hTen');if(!h||!i)return;i.value=h.ten;i.dispatchEvent(new Event('input',{bubbles:true}));$('hSug').hidden=true;const n=$('hSl');if(n){n.focus();if(n.select)n.select()}return}
   const el=$('hSug');if(el&&!el.hidden&&!e.target.closest('#hSug')&&e.target.id!=='hTen')el.hidden=true});
 /* 09/11 anh Thái: phiếu sửa chữa — ô Sản phẩm gợi ý từ danh mục 250 máy (kho-may.json, theo tên dòng máy, không tách màu/cấu hình) + máy shop đang có; không có thì gõ tay */
@@ -3301,7 +3313,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='scSp'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261117-1300';let verLuc=0;
+const BUILD='20261117-1830';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
@@ -3347,17 +3359,28 @@ const sdtN=x=>String(x||'').replace(/\D/g,'');
 function khachDs(){const M=new Map();db.don.forEach(d=>{const sd=sdtN(d.sdt),ten=(d.khach||'').trim();if(!sd&&!ten)return;const k=sd||'ten:'+nv0(ten);
     const o=M.get(k)||{k,sdt:d.sdt||'',ten:'',bills:new Set(),mua:0,no:0,cuoi:'',may:[],L:[]};if(ten&&!o.ten)o.ten=ten;if(!o.sdt&&d.sdt)o.sdt=d.sdt;
     if(!d.huy){o.mua+=+d.giaBan||0;o.bills.add(d.bill||d.id);if(d.loai==='may'&&!d.tra)o.may.push(d)}if(+d.no&&!d.huy)o.no+=+d.no;if((d.ngay||'')>o.cuoi)o.cuoi=d.ngay;o.L.push(d);M.set(k,o)});
+  /* 17/11 anh Thái: khách shop tự thêm (chưa mua / hay làm dịch vụ) — lưu ở db.shop.khs, gộp theo SĐT với khách mua hàng */
+  (db.shop&&db.shop.khs||[]).forEach(m=>{const sd=sdtN(m.sdt),k=sd||'ten:'+nv0(m.ten||'');if(k==='ten:')return;const o=M.get(k)||{k,sdt:m.sdt||'',ten:'',bills:new Set(),mua:0,no:0,cuoi:'',may:[],L:[]};
+    o.tay=m;if(!o.ten&&m.ten)o.ten=m.ten;if(!o.sdt&&m.sdt)o.sdt=m.sdt;if(!o.cuoi)o.cuoi=m.ngay||'';M.set(k,o)});
   return [...M.values()].sort((a,b)=>b.cuoi.localeCompare(a.cuoi))}
-let khQ='',khOpen=null;
+let khQ='',khOpen=null,khForm=null;const KH_MAX=500;
+function khTra(sd){const n=sdtN(sd);if(n.length<9)return null;return khachDs().find(o=>sdtN(o.sdt)===n)||null}
+function khHint(sd){const o=khTra(sd);if(!o)return sdtN(sd).length>=9?'<span class="khh new">Khách mới — bán xong app tự lưu</span>':'';const n=o.bills.size;
+  return `<span class="khh ${n?'old':'tay'}">${n?'✓ Khách cũ':'✓ Khách đã lưu'}: <b>${esc(o.ten||'Khách')}</b> · ${n?'đã mua <b>'+n+' lần</b> · lần cuối '+dmy(o.cuoi)+(n>=3?' · <span class="pill g">Khách quen</span>':''):'chưa mua lần nào'}${o.tay&&o.tay.note?' · '+esc(o.tay.note):''}</span>`}
+function khFormHtml(){const f=khForm||{};return `<form id="fKh" class="panel" autocomplete="off"><h2>${f.id?'Sửa khách':'＋ Thêm khách hàng'}</h2>
+  <div class="two"><label>Tên khách<input id="khTen" value="${esc(f.ten||'')}" placeholder="VD: Anh Tuấn"></label><label>SĐT<input id="khSd" inputmode="tel" value="${esc(f.sdt||'')}" placeholder="VD: 0901 234 567"></label></div>
+  <label>Ghi chú<input id="khNote" value="${esc(f.note||'')}" placeholder="VD: hay sửa máy, dán cường lực, khách quen"></label>
+  <div class="err" id="khErr"></div><div class="inrow" style="margin-top:8px"><button class="btn" type="submit">${f.id?'Lưu thay đổi':'Lưu khách'}</button><button type="button" class="ghost" data-khhuy="1">Huỷ</button></div></form>`}
 function bhCon(d){const end=new Date(d.ngay);end.setMonth(end.getMonth()+(+d.bh||0));return Math.ceil((end-new Date(todayIso()))/DAY)}
-function renderKhach(){const q=nv0(khQ).trim();let L=khachDs();const tong=L.length;if(q)L=L.filter(o=>nv0(o.ten+' '+o.sdt+' '+sdtN(o.sdt)+' '+o.L.map(d=>d.ten+' '+(d.imei||'')).join(' ')).includes(q));
-  return `<div class="panel"><h2>👥 Khách hàng · ${tong}</h2><input id="khQ" inputmode="search" placeholder="Tìm tên, SĐT, IMEI, tên máy" value="${esc(khQ)}">
-    <small style="color:#46506b;display:block;margin-top:6px">Khách tự lưu khi bán có ghi tên hoặc SĐT.</small></div>
-  <div class="panel"><div class="list">${L.length?L.slice(0,60).map(o=>{const op=khOpen===o.k;return `<div class="mg"><button class="mrow" data-khopen="${esc(o.k)}"><span class="n"><b>${esc(o.ten||'Khách')}${o.no>0?` <span class="pill r">Nợ ${short(o.no)}</span>`:''}</b><small class="num">${esc(o.sdt||'Chưa có SĐT')} · ${o.bills.size} đơn · mua lần cuối ${dmy(o.cuoi)}</small></span><span class="cnt num">${short(o.mua)}</span><span class="chev">${op?'▴':'▾'}</span></button>
+function renderKhach(){const q=nv0(khQ).trim();let L=khachDs();const tong=L.length;if(q)L=L.filter(o=>nv0(o.ten+' '+o.sdt+' '+sdtN(o.sdt)+' '+(o.tay&&o.tay.note||'')+' '+o.L.map(d=>d.ten+' '+(d.imei||'')).join(' ')).includes(q));
+  return `<div class="panel"><div class="khhd"><h2>👥 Khách hàng · ${tong}</h2>${XEM||NV?'':'<button type="button" class="ghost khadd" data-khadd="1">＋ Thêm khách</button>'}</div><input id="khQ" inputmode="search" placeholder="Tìm tên, SĐT, IMEI, tên máy, ghi chú" value="${esc(khQ)}">
+    <small style="color:#46506b;display:block;margin-top:6px">Khách tự lưu khi bán có ghi tên hoặc SĐT. Khách chưa mua (hay làm dịch vụ) bấm <b>＋ Thêm khách</b>.</small></div>${khForm?khFormHtml():''}
+  <div class="panel"><div class="list">${L.length?L.slice(0,60).map(o=>{const op=khOpen===o.k;return `<div class="mg"><button class="mrow" data-khopen="${esc(o.k)}"><span class="n"><b>${esc(o.ten||'Khách')}${o.no>0?` <span class="pill r">Nợ ${short(o.no)}</span>`:''}</b><small class="num">${esc(o.sdt||'Chưa có SĐT')} · ${o.bills.size?`<strong>Mua ${o.bills.size} lần</strong>${o.bills.size>=3?' <span class="pill g">Khách quen</span>':''}<br>Lần cuối ${dmy(o.cuoi)}`:'<span class="pill a">Chưa mua</span> · lưu tay'}${o.tay&&o.tay.note?'<br>📝 '+esc(o.tay.note):''}</small></span><span class="cnt num">${o.mua?short(o.mua):''}</span><span class="chev">${op?'▴':'▾'}</span></button>
     ${op?`<div class="imeis" style="padding:6px 12px 12px">${o.sdt?`<div class="inrow" style="margin-bottom:8px"><a class="ghost" href="tel:${esc(sdtN(o.sdt))}">📞 Gọi</a><a class="ghost" href="https://zalo.me/${esc(sdtN(o.sdt))}" target="_blank" rel="noopener">💬 Zalo</a></div>`:''}
       ${o.may.length?`<div class="eyebrow">Máy đã mua · bảo hành</div>${o.may.map(d=>{const l=bhCon(d);return `<div class="row"><div class="n"><b>${esc(d.ten)}</b><small class="num">IMEI ${esc(d.imei||'')} · mua ${dmy(d.ngay)}</small></div><div class="right">${+d.bh?(l>=0?`<span class="pill g">Còn BH ${l} ngày</span>`:'<span class="pill r">Hết BH</span>'):''}</div></div>`}).join('')}`:''}
-      <div class="eyebrow" style="margin-top:8px">Lịch sử</div>${o.L.slice().sort((a,b)=>(b.ngay+b.gio).localeCompare(a.ngay+a.gio)).slice(0,30).map(d=>`<div class="row"><div class="n"><b style="${d.huy?'text-decoration:line-through;opacity:.6':''}">${esc(d.ten)}</b><small class="num">${dmy(d.ngay)} ${esc(d.gio||'')}${+d.no?' · nợ '+money(d.no):''}</small></div><div class="right"><b class="num">${money(d.giaBan)}</b></div></div>`).join('')}
-      ${o.no>0?`<button class="ghost" data-more="hist" data-hdebt="1" style="width:100%;margin-top:8px">Xem / thu nợ ở Đơn đã bán</button>`:''}</div>`:''}</div>`}).join(''):'<div class="empty">Chưa có khách nào.<br><small>Khi bán, nhập tên hoặc SĐT khách là app tự lưu.</small><br><button type="button" class="ghost" data-go="sell" style="margin-top:10px">Bán hàng</button></div>'}</div></div>`}
+      ${o.L.length?'<div class="eyebrow" style="margin-top:8px">Lịch sử mua · '+o.bills.size+' lần</div>':''}${o.L.slice().sort((a,b)=>(b.ngay+b.gio).localeCompare(a.ngay+a.gio)).slice(0,30).map(d=>`<div class="row"><div class="n"><b style="${d.huy?'text-decoration:line-through;opacity:.6':''}">${esc(d.ten)}</b><small class="num">${dmy(d.ngay)} ${esc(d.gio||'')}${+d.no?' · nợ '+money(d.no):''}</small></div><div class="right"><b class="num">${money(d.giaBan)}</b></div></div>`).join('')}
+      ${o.no>0?`<button class="ghost" data-more="hist" data-hdebt="1" style="width:100%;margin-top:8px">Xem / thu nợ ở Đơn đã bán</button>`:''}
+      ${XEM||NV?'':`<div class="inrow" style="margin-top:8px">${o.tay?`<button type="button" class="ghost" data-khsua="${esc(o.tay.id)}">✏️ Sửa</button><button type="button" class="ghost" data-khxoa="${esc(o.tay.id)}">Bỏ lưu tay</button>`:`<button type="button" class="ghost" data-khghi="${esc(o.k)}">📝 Thêm ghi chú</button>`}</div>`}</div>`:''}</div>`}).join(''):'<div class="empty">Chưa có khách nào.<br><small>Khi bán, nhập tên hoặc SĐT khách là app tự lưu.</small><br><button type="button" class="ghost" data-go="sell" style="margin-top:10px">Bán hàng</button></div>'}</div></div>`}
 /* --- Nhà cung cấp: công nợ = Σ phiếu.no (phiếu nhập còn nợ +, trả tiền −, trả hàng trừ nợ −) --- */
 let nccOpen=null,nccAct='',nccTra=[];
 function nccDs(){const M=new Map();const g=n=>{const k=(n||'').trim()||'(Chưa ghi NCC)';if(!M.has(k))M.set(k,{ten:k,nhap:0,no:0,cuoi:'',P:[],ton:0});return M.get(k)};
@@ -4240,6 +4263,7 @@ button.csrow{display:block;width:100%;text-align:left;background:#fff;border:1.5
 .cshome{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:#fff;border:1.5px solid var(--pen-line,#cde7e3);border-radius:14px;padding:11px 13px;margin:0 0 12px;color:inherit;box-shadow:none}
 .cshome .n{flex:1;min-width:0}.cshome .n small{display:block;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cshome .num{font-size:17px;font-weight:800;color:var(--pen-dk)}
 .hsugh{padding:8px 10px;font-size:12px;color:#46506b;background:#f6faf9;border-bottom:1px solid #eef3f2}.sug button .pill{font-size:11px}.hnhap.hnhap{display:inline-flex;align-items:center;margin-top:6px;padding:0 12px;font-size:13px;min-height:44px;width:auto;white-space:nowrap;color:var(--pen-dk,#0f5f57);border-color:var(--pen-line,#cde7e3)}
+.khhd{display:flex;align-items:center;justify-content:space-between;gap:8px}.khhd h2{margin:0}.khadd.khadd{width:auto;min-height:44px;padding:0 14px;white-space:nowrap}.khhw{margin-top:6px;font-size:13px;line-height:1.45}.khh.old{color:#0f7a4f}.khh.tay{color:#0f5f57}.khh.new{color:#46506b}
 </style>
 <script>
 /* ===== 14/11 anh Thái "làm đi" — ĐỢT 2: SHOP MẸ XEM DOANH THU SHOP CON (máy chủ v24) =====

@@ -412,3 +412,10 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - Lỗi: ô Tên món dùng `<datalist>` → điện thoại (iPhone/app cài) gần như không hiện gợi ý; gõ lệch 1 chữ → tạo món trùng. Nút `data-addhang` có handler nhưng chưa gắn đâu.
 - Sửa (chỉ giao diện, không đổi dữ liệu): `hSugRender()` gợi ý tự vẽ `#hSug` (không phân biệt hoa/thường/dấu/khoảng trắng, tìm cả mã vạch, hiện Còn n + giá nhập lần trước — NV không thấy giá) · `hTimTen()` khớp tên chuẩn hoá khi Lưu → cộng vào món cũ, không tạo trùng · nút quét mã vạch cạnh ô Tên món (quét SG… ra đúng món) · nút "＋ Nhập thêm" từng món ở Kho › Tồn kho phụ kiện. Áp cả form chủ shop + form nhân viên.
 - Kiểm: toàn bộ 73/75 (2 lỗi cũ), 390/1280px không tràn, NV không thấy giá.
+
+## 68. (17/11 18h30) KHÁCH HÀNG: THÊM TAY + SỐ LẦN MUA — nhánh `khach-luu-tay` (đổi dữ liệu → chờ anh "OK lên main")
+- Thêm › Khách hàng: nút **＋ Thêm khách** (Tên · SĐT · Ghi chú) cho khách chưa mua / hay làm dịch vụ; lưu `db.shop.khs` [{id,ten,sdt,note,ngay}], tối đa `KH_MAX`=500 (ô Cài đặt giới hạn 50.000 ký tự); trùng SĐT chặn; Sửa / Bỏ lưu tay; khách mua hàng có nút 📝 Thêm ghi chú.
+- `khachDs()` gộp khách tay theo SĐT với khách mua; dòng khách hiện **Mua n lần** (+ "Khách quen" ≥3) · Lần cuối; khách tay chưa mua = "Chưa mua · lưu tay".
+- Bán hàng (`cSd`) + Sửa chữa (`scSd`): gõ SĐT ≥9 số → `khHint()` "✓ Khách cũ: Tên · đã mua n lần · lần cuối…" + tự điền tên nếu trống.
+- Đồng bộ: `merge` gộp `shop.khs` theo từng id (như pnCho/nhapKq) — đã thử 2 máy cùng thêm giữ cả 2, 1 máy xoá thì xoá.
+- Kiểm: toàn bộ 73/75 (2 lỗi cũ) · chống mất v4 14/14 · mở lại giữ đơn 8/8 · IndexedDB 13/13 · 360px không tràn.
