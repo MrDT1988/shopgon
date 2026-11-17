@@ -3357,7 +3357,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='scSp'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261117-1945';let verLuc=0;
+const BUILD='20261117-1950';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
@@ -4313,7 +4313,7 @@ button.csrow{display:block;width:100%;text-align:left;background:#fff;border:1.5
 .ngu{align-self:flex-end;background:var(--pen-dk,#0f5f57);color:#fff;border-radius:14px 14px 4px 14px;padding:9px 12px;font-size:14px;max-width:85%}
 .ngchip.ngchip{display:block;width:100%;text-align:left;margin-top:6px;padding:10px 12px;min-height:44px;border:1px solid #d6e6e3;border-radius:12px;background:#fff;font-size:13.5px;color:#13324a}
 .nggo.nggo{margin-top:8px;width:auto;min-height:44px}.ngfb{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:12.5px;color:#46506b;flex-wrap:wrap}.ngfb button{min-width:44px;min-height:44px;padding:0 12px;border:1px solid #d6e6e3;border-radius:10px;background:#fff;font-size:14px;font-weight:600}
-.ngrel{margin-top:8px}.ngrel small{color:#46506b;font-size:12px}.ngnhom{margin-top:8px}.ngnhom summary{cursor:pointer;font-size:13px;color:#0f5f57;font-weight:600;padding:6px 0}
+.ngfb>span{flex-basis:100%}.ngrel{margin-top:8px}.ngrel small{color:#46506b;font-size:12px}.ngnhom{margin-top:8px}.ngnhom summary{cursor:pointer;font-size:13px;color:#0f5f57;font-weight:600;padding:6px 0}
 form.ngin.ngin{display:flex;flex-direction:row;flex-wrap:nowrap;align-items:center;gap:8px;margin-top:12px;position:sticky;bottom:72px;background:#fff;padding:8px 0;z-index:2}form.ngin.ngin input{flex:1 1 auto;width:auto;min-width:0;min-height:46px;margin:0}form.ngin.ngin .btn{flex:0 0 auto;width:auto;min-height:46px;padding:0 18px;margin:0}
 </style>
 <script>
