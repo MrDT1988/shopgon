@@ -419,3 +419,10 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - Bán hàng (`cSd`) + Sửa chữa (`scSd`): gõ SĐT ≥9 số → `khHint()` "✓ Khách cũ: Tên · đã mua n lần · lần cuối…" + tự điền tên nếu trống.
 - Đồng bộ: `merge` gộp `shop.khs` theo từng id (như pnCho/nhapKq) — đã thử 2 máy cùng thêm giữ cả 2, 1 máy xoá thì xoá.
 - Kiểm: toàn bộ 73/75 (2 lỗi cũ) · chống mất v4 14/14 · mở lại giữ đơn 8/8 · IndexedDB 13/13 · 360px không tràn.
+
+## 69. (17/11 19h30) BÉ NGÂN — trợ lý chăm sóc khách trong app (anh Thái "làm đi")
+- Kho `app/kb.json` 317 câu (17 nhóm; nguồn sổ tay + setup + bàn giao; bản đọc: Project `claude/SHOP_GON_KHO_HOI_DAP_317.md`). Đổi tính năng → sửa câu trong kb.json.
+- Thêm › 📖 Hướng dẫn › **💬 Hỏi bé Ngân** (`more='ngan'`); NV: nút ở trang tài khoản (renderMore cho NV vào `ngan`). Ảnh `app/ngan.jpg`.
+- Tìm trên máy, không gọi AI: `ngTok` (bỏ dấu, từ tắt `NG.SYN`, bỏ từ đệm `NG.STOP`, cụm sao luu/vao ca/to roi), `ngTim` điểm = khớp từ câu hỏi × idf + cụm 2 từ − 0,5×từ thừa; trả lời khi điểm ≥8 và khớp ≥50%, ngược lại gợi 4 câu gần nhất + Gặp người hỗ trợ.
+- Trả lời có nút Đi tới (`NG.GO`: tab/more; NV chỉ sell/add), 👍👎 (`localStorage sg_ng_fb`), câu hụt (`sg_ng_miss`, 60 câu gần nhất — CHƯA gửi máy chủ). Hỗ trợ: Chép thông tin (shop, Gmail, BUILD, câu hỏi) · Zalo CTV (`GG.ctv`) · page Shop Gọn.
+- Kiểm: 20 câu hỏi thử khớp đúng 18 (2 câu ra câu gần đúng, câu đúng nằm trong Câu liên quan) · câu ngoài lề ("thời tiết") → gợi ý + hỗ trợ · toàn bộ 73/75 · quét hiển thị 0 ❌.

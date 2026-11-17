@@ -17,7 +17,7 @@
 {
 "id": 3,
 "nhom": "Giới thiệu & giá gói",
-"q": "Giá Shop Gọn bao nhiêu?",
+"q": "Shop Gọn giá bao nhiêu?",
 "a": "Gói 1 năm 1.190.000đ · gói 3 năm 2.690.000đ (giảm đến 880.000đ so với mua 3 lần gói 1 năm). 100 shop đầu tiên chỉ 990.000đ/năm."
 },
 {
@@ -1674,7 +1674,7 @@
 {
 "id": 276,
 "nhom": "Dữ liệu, sao lưu, đồng bộ, bảo mật",
-"q": "App có tự sao lưu không?",
+"q": "Sao lưu dữ liệu thế nào, app có tự sao lưu không?",
 "a": "Có, mỗi ngày, giữ 14 bản gần nhất. Xem ở Thêm › Sổ dữ liệu · Sao lưu."
 },
 {
