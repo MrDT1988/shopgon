@@ -424,5 +424,5 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - Kho `app/kb.json` 317 câu (17 nhóm; nguồn sổ tay + setup + bàn giao; bản đọc: Project `claude/SHOP_GON_KHO_HOI_DAP_317.md`). Đổi tính năng → sửa câu trong kb.json.
 - Thêm › 📖 Hướng dẫn › **💬 Hỏi bé Ngân** (`more='ngan'`); NV: nút ở trang tài khoản (renderMore cho NV vào `ngan`). Ảnh `app/ngan.jpg`.
 - Tìm trên máy, không gọi AI: `ngTok` (bỏ dấu, từ tắt `NG.SYN`, bỏ từ đệm `NG.STOP`, cụm sao luu/vao ca/to roi), `ngTim` điểm = khớp từ câu hỏi × idf + cụm 2 từ − 0,5×từ thừa; trả lời khi điểm ≥8 và khớp ≥50%, ngược lại gợi 4 câu gần nhất + Gặp người hỗ trợ.
-- Trả lời có nút Đi tới (`NG.GO`: tab/more; NV chỉ sell/add), 👍👎 (`localStorage sg_ng_fb`), câu hụt (`sg_ng_miss`, 60 câu gần nhất — CHƯA gửi máy chủ). Hỗ trợ: Chép thông tin (shop, Gmail, BUILD, câu hỏi) · Zalo CTV (`GG.ctv`) · page Shop Gọn.
+- Trả lời có nút Đi tới (`NG.GO`: tab/more; NV chỉ sell/add), ✅ Đúng / ❌ Sai (`localStorage sg_ng_fb`), câu hụt (`sg_ng_miss`, 60 câu gần nhất — CHƯA gửi máy chủ). Hỗ trợ: Chép thông tin (shop, Gmail, BUILD, câu hỏi) · Zalo CTV (`GG.ctv`) · page Shop Gọn.
 - Kiểm: 20 câu hỏi thử khớp đúng 18 (2 câu ra câu gần đúng, câu đúng nằm trong Câu liên quan) · câu ngoài lề ("thời tiết") → gợi ý + hỗ trợ · toàn bộ 73/75 · quét hiển thị 0 ❌.

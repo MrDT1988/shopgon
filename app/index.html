@@ -3281,7 +3281,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-sugngoai]'
 document.addEventListener('focusin',e=>{if(e.target.id==='aTen'){kmLoad();if(e.target.value)sugRender()}});
 
 /* ===== 17/11 anh Thái: BÉ NGÂN — trợ lý chăm sóc khách trong app. Trả lời từ kho hỏi đáp kb.json (317 câu), tìm ngay trên máy, KHÔNG gọi AI trả phí.
-   Câu chưa trả lời được → gợi ý câu gần nhất + nút Gặp người hỗ trợ (Zalo CTV / page Shop Gọn). 👍👎 + câu hụt lưu trên máy (sg_ng_*) để soát kho. ===== */
+   Câu chưa trả lời được → gợi ý câu gần nhất + nút Gặp người hỗ trợ (Zalo CTV / page Shop Gọn). ✅/❌ + câu hụt lưu trên máy (sg_ng_*) để soát kho. ===== */
 const NG={kb:null,busy:false,msgs:[],SYN:{km:'khuyen mai',nv:'nhan vien',ncc:'nha cung cap',pk:'phu kien',dt:'dien thoai',dthoai:'dien thoai',sdt:'so dien thoai',ck:'chuyen khoan',tm:'tien mat',bh:'bao hanh',hd:'hoa don',ime:'imei',emei:'imei',imie:'imei',sp:'san pham',tk:'tai khoan',mk:'mat khau',pass:'mat khau',dk:'dang ky',dn:'dang nhap',login:'dang nhap',mail:'gmail',email:'gmail',ko:'khong',hk:'khong',dc:'duoc',bn:'bao nhieu',ip:'iphone',ss:'samsung',app:'app',web:'website',zl:'zalo',fb:'facebook',ctv:'cong tac vien',ad:'admin',xoa:'xoa',huy:'huy',sl:'so luong',gia:'gia'},
   STOP:new Set('la gi the nao cua toi minh em anh chi co khong duoc lam sao o dau thi va cho voi bi nhu mot cai nay do a ah vay ha ne de ma roi nua nhe a oi khi neu sẽ se phai can muon biet hoi giup minh voi ak k z vs thoi luon dang'.split(' ')),
   GO:{sell:['go','sell','Mở màn Bán'],add:['go','add','Mở Nhập hàng'],kho:['go','stock','Mở Kho hàng'],km:['go','km','Mở Khuyến mãi'],home:['go','home','Về Trang chủ'],giahan:['more','giahan','Mở Gia hạn'],hist:['more','hist','Mở Đơn đã bán'],look:['more','look','Mở Tra IMEI · Bảo hành'],ncc:['more','ncc','Mở Nhà cung cấp'],kk:['more','kk','Mở Kiểm kho'],kh:['more','kh','Mở Khách hàng'],chi:['more','chi','Mở Thu chi'],nvch:['more','nvch','Mở Quản lý nhân viên'],cc:['more','cc','Mở Chấm công · Lương'],nk:['more','nk','Mở Nhật ký thay đổi'],antoan:['more','antoan','Xem 9 việc an toàn'],hdsd:['more','hdsd','Mở sổ tay hướng dẫn'],chuoi:['more','chuoi','Mở Chuỗi cửa hàng']},
@@ -3296,7 +3296,7 @@ function ngTim(q){const K=NG.kb||[],T=ngTok(q);if(!T.length)return [];const bg=[
     bg.forEach(b=>{if(o.qs.includes(b))s+=2});if(o.nq===nq)s+=6;const thua=[...o.qt].filter(x=>!TS.has(x)).length;return {o,s:s-0.5*thua+o.hot,p:hit/W}}).filter(x=>x.s>0).sort((a,b)=>b.s-a.s)}
 function ngGoBtn(k){const g=NG.GO[k];if(!g)return '';if(NV&&!['sell','add'].includes(k))return '';return g[0]==='go'?`<button type="button" class="ghost nggo" data-go="${g[1]}">${g[2]} ›</button>`:`<button type="button" class="ghost nggo" data-more="${g[1]}">${g[2]} ›</button>`}
 function ngTraLoi(o,rel){return `<div class="ngb"><b>${esc(o.q)}</b><div class="nga">${esc(o.a).replace(/ › /g,' <span class="ngar">›</span> ')}</div>${o.go?ngGoBtn(o.go):''}
-  <div class="ngfb"><span>Ngân trả lời đúng ý chưa?</span><button type="button" data-ngfb="${o.id}|1" aria-label="Đúng">👍</button><button type="button" data-ngfb="${o.id}|0" aria-label="Chưa đúng">👎</button></div>
+  <div class="ngfb"><span>Ngân trả lời đúng ý chưa?</span><button type="button" data-ngfb="${o.id}|1" aria-label="Đúng">✅ Đúng</button><button type="button" data-ngfb="${o.id}|0" aria-label="Sai">❌ Sai</button></div>
   ${rel&&rel.length?`<div class="ngrel"><small>Câu liên quan</small>${rel.map(x=>`<button type="button" class="ngchip" data-ngid="${x.id}">${esc(x.q)}</button>`).join('')}</div>`:''}</div>`}
 function ngHoTro(){const z=sdtN(GG.ctv||'');return `<div class="ngb"><b>Gặp người hỗ trợ</b><div class="nga">Bấm 📋 để chép thông tin shop + câu hỏi, rồi dán vào tin nhắn cho người hỗ trợ.</div>
   <div class="inrow" style="flex-wrap:wrap;margin-top:8px"><button type="button" class="ghost" data-ngcopy="1">📋 Chép thông tin</button>${z?`<a class="ghost" href="https://zalo.me/${esc(z)}" target="_blank" rel="noopener">💬 Zalo người cài app</a>`:''}<a class="ghost" href="https://www.facebook.com/profile.php?id=61595903296880" target="_blank" rel="noopener">📘 Page Shop Gọn</a></div>${z?'':'<small style="color:#46506b;display:block;margin-top:6px">Hoặc gọi Sale / cộng tác viên đã cài app cho shop.</small>'}</div>`}
@@ -3357,7 +3357,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='scSp'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261117-1930';let verLuc=0;
+const BUILD='20261117-1945';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
@@ -4312,7 +4312,7 @@ button.csrow{display:block;width:100%;text-align:left;background:#fff;border:1.5
 .ngbox{display:flex;flex-direction:column;gap:10px}.ngb{background:#f4faf8;border:1px solid #e1efec;border-radius:14px 14px 14px 4px;padding:10px 12px;max-width:100%}.ngb>b{display:block;margin-bottom:4px;font-size:14.5px}.nga{font-size:14px;line-height:1.5;color:#1d2a3a}.ngar{color:#0f5f57;font-weight:700}
 .ngu{align-self:flex-end;background:var(--pen-dk,#0f5f57);color:#fff;border-radius:14px 14px 4px 14px;padding:9px 12px;font-size:14px;max-width:85%}
 .ngchip.ngchip{display:block;width:100%;text-align:left;margin-top:6px;padding:10px 12px;min-height:44px;border:1px solid #d6e6e3;border-radius:12px;background:#fff;font-size:13.5px;color:#13324a}
-.nggo.nggo{margin-top:8px;width:auto;min-height:44px}.ngfb{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:12.5px;color:#46506b;flex-wrap:wrap}.ngfb button{min-width:44px;min-height:40px;border:1px solid #d6e6e3;border-radius:10px;background:#fff;font-size:16px}
+.nggo.nggo{margin-top:8px;width:auto;min-height:44px}.ngfb{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:12.5px;color:#46506b;flex-wrap:wrap}.ngfb button{min-width:44px;min-height:44px;padding:0 12px;border:1px solid #d6e6e3;border-radius:10px;background:#fff;font-size:14px;font-weight:600}
 .ngrel{margin-top:8px}.ngrel small{color:#46506b;font-size:12px}.ngnhom{margin-top:8px}.ngnhom summary{cursor:pointer;font-size:13px;color:#0f5f57;font-weight:600;padding:6px 0}
 form.ngin.ngin{display:flex;flex-direction:row;flex-wrap:nowrap;align-items:center;gap:8px;margin-top:12px;position:sticky;bottom:72px;background:#fff;padding:8px 0;z-index:2}form.ngin.ngin input{flex:1 1 auto;width:auto;min-width:0;min-height:46px;margin:0}form.ngin.ngin .btn{flex:0 0 auto;width:auto;min-height:46px;padding:0 18px;margin:0}
 </style>
