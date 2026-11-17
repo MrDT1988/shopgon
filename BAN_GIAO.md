@@ -407,3 +407,8 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - Sửa món (Phiếu đã nhập › Sửa) có ô **Mã vạch** + nút quét.
 - Test `_tam/test-ma-vach.py` 22/22 (390 + 1280, cần `pip install zxing-cpp pillow`), toàn bộ 73/75 (2 lỗi cũ), chia-dieu-chuyen 40/40. BUILD 20261114-1900.
 - 14/11 17h10: anh "OK lên main cả 2" → gộp `chuoi-cua-hang` + `ma-vach-pk` lên main, BUILD 20261114-2000; test chia 40/40 · chuỗi 24/24 · doanh thu chuỗi 20/20 · mã vạch 22/22 · toàn bộ 73/75.
+
+## 67. (17/11 13h) NHẬP LẠI PHỤ KIỆN CŨ — anh Thái "làm đi" (shop báo nhập lại mã cũ không chọn được)
+- Lỗi: ô Tên món dùng `<datalist>` → điện thoại (iPhone/app cài) gần như không hiện gợi ý; gõ lệch 1 chữ → tạo món trùng. Nút `data-addhang` có handler nhưng chưa gắn đâu.
+- Sửa (chỉ giao diện, không đổi dữ liệu): `hSugRender()` gợi ý tự vẽ `#hSug` (không phân biệt hoa/thường/dấu/khoảng trắng, tìm cả mã vạch, hiện Còn n + giá nhập lần trước — NV không thấy giá) · `hTimTen()` khớp tên chuẩn hoá khi Lưu → cộng vào món cũ, không tạo trùng · nút quét mã vạch cạnh ô Tên món (quét SG… ra đúng món) · nút "＋ Nhập thêm" từng món ở Kho › Tồn kho phụ kiện. Áp cả form chủ shop + form nhân viên.
+- Kiểm: toàn bộ 73/75 (2 lỗi cũ), 390/1280px không tràn, NV không thấy giá.
