@@ -669,6 +669,7 @@ button.hit{cursor:pointer}button.hit:active{background:var(--pen-bg)}
 <div class="welcome" id="welcome" hidden></div>
 <div class="scan" id="scan" hidden><div class="scv"><video id="cam" playsinline muted autoplay></video><i class="scfd"></i></div><p id="scanMsg">Đưa mã vạch IMEI vào giữa khung</p><div id="scanList" class="scl" hidden></div><div class="scb"><button class="ghost" id="scanTorch" hidden>🔦 Đèn</button><label class="ghost scph">📷 Chụp ảnh<input type="file" accept="image/*" capture="environment" id="scanPhoto" hidden></label><button class="btn" id="scanClose">Đóng</button></div></div>
 
+<script src="/app/tram.js?v=1"></script>
 <script>
 /* ===== Lớp lưu trữ =====
    LocalStore: lưu trên máy (bản dùng thử).
@@ -824,7 +825,10 @@ const SK={K:'sg_sk',d:null,
       const d={...pk(o),choNay:this.choNay(),...ds,may:this.may(),he,app,ben:ben?1:0,idb:(typeof IDBS!=='undefined'&&IDBS.ok)?1:0,build:BUILD,shop:(db.shop&&db.shop.ten)||''};
       const r=await fetch(GG.LICENSE_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({act:'sk',token:GG.token,d,homQua:pk(o.homQua)})}).then(x=>x.json());
       if(r&&r.ok){o.gui=1;delete o.homQua;this.luu()}}catch(_){}finally{this._g=false}}};
-const save=()=>{if(XEM||NV||TAB_DONG)return;if(typeof NK!=='undefined'&&NK)NK.ghi();Store.save(db);if(typeof linkHen==='function')linkHen();if(GG.token&&GG.sheetId&&!db.sample){SK.doi();GG.queue();nvQueue()}};
+const save=()=>{if(XEM||NV||TAB_DONG)return;if(typeof NK!=='undefined'&&NK)NK.ghi();Store.save(db);if(typeof linkHen==='function')linkHen();
+  /* 21/11 trạm mã hoá: gửi lô thay đổi qua trạm trước; máy phụ không ghi Drive (máy chính ghi) */
+  const tr=typeof TRAM!=='undefined'&&TRAM.bat()&&!!TRAM.S;if(tr)TRAM.ghi();
+  if(GG.token&&GG.sheetId&&!db.sample){if(!(tr&&!TRAM.chinh()))SK.doi();GG.queue();nvQueue()}};
 
 /* ===== Google: đăng nhập 1 bước + lưu vào Google Sheet trong Drive của shop =====
    Chỉ xin quyền drive.file: app chỉ thấy đúng file do chính nó tạo, không đụng file khác.
@@ -1056,7 +1060,9 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
     if(!sai.length){try{await this.api('https://www.googleapis.com/drive/v3/files/'+L.id,{method:'PATCH',body:JSON.stringify({name:(L.name||'Shop Gọn')+' (sổ cũ – bản lưu '+dmy(todayIso())+')',appProperties:{shopgon:'cu'}})})}catch(_){}}
     const shop={...(d.shop||{}),soNam:{...this.kq}};await this.ghiFile(id,{[this.SH.cd]:[['shop'],[JSON.stringify(shop)]]});
     db={v:1,sample:false,shop,may:o.may,don:o.don,hang:o.hang,pn:o.pn,chi:o.chi};this.setBase(db);Store.save(db)},
-  async push(){if(TAB_DONG){SK.tang('tab2');return false}if(this.busy){this.queue();return}const kiem=!!this._laKiem;if(this.chan&&!this.ep){ggStatus('Đang tạm dừng lưu lên Drive — xem cảnh báo ở Trang chủ');return}this.busy=true;try{const rem=await this.readRemote();const base=this.getBase();const ep=this.ep;this.ep=null;
+  async push(){if(TAB_DONG){SK.tang('tab2');return false}if(this.busy){this.queue();return}
+    /* 21/11 trạm: máy phụ không ghi Drive; máy chính chờ lô của mình lên trạm rồi mới ghi (mốc tramT phủ đủ) */
+    {const q=typeof TRAM!=='undefined'?TRAM.choPhepDrive():'ok';if(q==='phu'){ggStatus('Đã gửi qua trạm — máy chính lưu Drive');return true}if(q==='cho'){this.queue(3000);return}if(typeof TRAM!=='undefined'&&TRAM.bat()&&TRAM.ok&&TRAM.chinh())db.shop.tramT=TRAM.lastT}const kiem=!!this._laKiem;if(this.chan&&!this.ep){ggStatus('Đang tạm dừng lưu lên Drive — xem cảnh báo ở Trang chủ');return}this.busy=true;try{const rem=await this.readRemote();const base=this.getBase();const ep=this.ep;this.ep=null;
       const s0=JSON.stringify(db),L0=JSON.parse(s0);/* 09/11 v4: gộp trên BẢN CHÉP — bán trong lúc đang ghi không lẫn vào bản gốc */
       const m=rem.empty?{...L0,pn:L0.pn||[],chi:L0.chi||[]}:ep==='giu'?this.merge(base,L0,rem,true):this.merge(base,L0,rem);
       if(!ep&&!rem.empty){const k=this.mat(L0,rem,m);if(k){SK.tang('chan');this.chan={...k,loai:'mat'};ggStatus('Tạm dừng lưu lên Drive');try{await this.saoLuu('Trước khi gộp mất '+k.n+' dòng')}catch(_){}if(typeof render==='function')render();return false}}
@@ -1105,7 +1111,9 @@ const GG={CLIENT_ID:'1074133295161-6dfhj4qpal7ve4l4889j2p1evuitfl9m.apps.googleu
     return out},
   queue(ms=2500){clearTimeout(this.timer);this.timer=setTimeout(()=>this.push(),ms)},
   /* mở app: có bản gốc thì gộp (giữ đơn bán lúc mất mạng), chưa có thì lấy sổ trên Drive */
-  async pull(){const rem=await this.readRemote();const base=this.getBase();const loc=!db.sample&&(db.don.length||db.may.length||db.hang.length||(db.pn||[]).length||(db.chi||[]).length);
+  async pull(){/* 21/11 trạm: máy phụ đã chạy trạm thì KHÔNG gộp Drive nữa (Drive do máy chính ghi; gộp lại sẽ cộng trùng tồn) */
+    if(typeof TRAM!=='undefined'&&db&&db.shop&&db.shop.tram&&db.shop.tramW!==SK.may()&&TRAM.daChay())return;
+    const rem=await this.readRemote();const base=this.getBase();const loc=!db.sample&&(db.don.length||db.may.length||db.hang.length||(db.pn||[]).length||(db.chi||[]).length);
     if(base&&loc){const m=this.merge(base,db,rem);if(!rem.empty&&this.mat(db,rem,m)){this.chan={...this.mat(db,rem,m),loai:'mat'};return}db=m;this.setBase(rem);Store.save(db);this.datChu(this.email);this.queue(500);return}
     /* 08/11: máy đang có dữ liệu mà chưa có bản gốc của sổ này (đổi sổ năm, tách sổ lỗi, đổi Gmail) → KHÔNG đè bằng sổ trên Drive */
     if(loc){const c=this.chu();if(c&&c!==this.email){this.chan={loai:'gmail',cu:c};return}
@@ -1168,7 +1176,7 @@ async function afterLogin(){try{await Store.ready}catch(_){}GG.chan=null;GG.soCu
     const c0=GG.chu();if(!db.sample&&(db.don.length||db.may.length)&&c0&&c0!==GG.email)GG.chan={loai:'gmail',cu:c0};else await GG.push()}
   else await GG.pull();
   try{localStorage.setItem('shopgon_gg',JSON.stringify({email:GG.email,sheetId:GG.sheetId}))}catch(e){}
-  GG.OFF=false;closeWelcome();xemBar();render();toast(wasXem?'Shop Gọn đã kích hoạt — bắt đầu nhập tồn và bán hàng':'Đã kết nối '+GG.email);return true}
+  GG.OFF=false;closeWelcome();xemBar();render();if(typeof TRAM!=='undefined')TRAM.batDau();toast(wasXem?'Shop Gọn đã kích hoạt — bắt đầu nhập tồn và bán hàng':'Đã kết nối '+GG.email);return true}
 /* 24/10: Zalo/Facebook/TikTok mở link trong trình duyệt riêng, Google không cho đăng nhập ở đó (báo lỗi 400) → hướng dẫn mở bằng Chrome/Safari */
 const INAPP=/Zalo|FBAN|FBAV|FB_IAB|FBIOS|Instagram|Messenger|Line\/|musical_ly|TikTok|Bytedance|; wv\)/i.test(navigator.userAgent);
 const IOS=/iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -1565,7 +1573,7 @@ function renderHome(){if(NV){renderNvHome();return}
   const start=homeStart();
   /* 02/11 anh Thái: trang chủ gọn như Sổ Bán Hàng — số liệu chi tiết chuyển sang tab Báo cáo */
   $('v-home').innerHTML=`
-  <div class="choBar">${choBar()}</div>${chanBar()}${tamBar()}${homeMonth()}${homeSearch()}${homeTodo()}${start}
+  <div class="choBar">${choBar()}</div>${chanBar()}<div class="tramBar">${typeof tramBar==='function'?tramBar():''}</div>${tamBar()}${homeMonth()}${homeSearch()}${homeTodo()}${start}
   ${db.sample&&!XEM&&!DEMO?`<div class="alert amber"><b>Đang xem dữ liệu mẫu.</b><span>Bấm thử thoải mái. Khi dùng thật, vào Thêm → Cài đặt → Bắt đầu dữ liệu thật.</span></div>`:''}
   ${homeQuick()}${homeWeb()}`;
   $('v-home').insertAdjacentHTML('afterbegin',pnChoBar()+trungBar());
@@ -3203,7 +3211,14 @@ async function moOffline(gs){try{await Store.ready}catch(_){}
   const g=Store.goc;if(!gs||!gs.email||!lk||lk.e!==gs.email||Date.now()-lk.t>7*DAY)return false;
   if(!g||g.sample||!Array.isArray(g.don)||!Array.isArray(g.may)||GG.chu()!==gs.email)return false;
   XEM=false;db=g;GG.email=gs.email;GG.sheetId=gs.sheetId||'';GG.token=null;GG.OFF=true;
-  try{clearInterval(xTimer)}catch(_){}closeWelcome();xemBar();render();toast('Đang mất mạng — vẫn bán được, đơn lưu trên máy');return true}
+  try{clearInterval(xTimer)}catch(_){}closeWelcome();xemBar();render();if(typeof TRAM!=='undefined')TRAM.batDau();toast('Đang mất mạng — vẫn bán được, đơn lưu trên máy');return true}
+/* 21/11 trạm mã hoá: shop đã bật trạm + máy có chìa → mở app KHÔNG cần đăng nhập Google mỗi giờ. Máy phụ bán và đồng bộ qua trạm; máy chính hiện thẻ đỏ để đăng nhập lưu Drive. */
+async function moTram(gs){try{await Store.ready}catch(_){}if(typeof TRAM==='undefined'||!TRAM.coChia())return false;
+  let lk=null;try{lk=JSON.parse(localStorage.getItem('sg_licok')||'null')}catch(_){}
+  const g=Store.goc;if(!gs||!gs.email||!lk||lk.e!==gs.email||Date.now()-lk.t>7*DAY)return false;
+  if(!g||g.sample||!g.shop||!g.shop.tram||!Array.isArray(g.don)||GG.chu()!==gs.email)return false;
+  XEM=false;db=g;GG.email=gs.email;GG.sheetId=gs.sheetId||'';GG.token=null;GG.OFF=false;GG.het=g.shop.tramW===SK.may();
+  try{clearInterval(xTimer)}catch(_){}closeWelcome();xemBar();render();TRAM.batDau();return true}
 window.addEventListener('online',()=>{if(!GG.OFF||NV)return;let tk=null;try{tk=JSON.parse(localStorage.getItem('shopgon_tk')||'null')}catch(_){}
   if(tk&&tk.x>Date.now()&&tk.e===GG.email){GG.token=tk.t;afterLogin().then(ok=>{if(ok){GG.OFF=false;render()}}).catch(()=>{GG.token=null})}
   else{GG.OFF=false;GG.het=true;render();toast('Có mạng lại — bấm Đăng nhập lại Google để lưu đơn lên Drive')}});
@@ -3222,7 +3237,7 @@ function boot(){let gs=null,seen=null;try{gs=JSON.parse(localStorage.getItem('sh
       afterLogin().catch(e=>{GG.token=null;if(e&&e.where==='may')moOffline(gs).then(ok=>{if(!ok)showLogin(gs.email,ggErr(e))});else showLogin(gs.email,ggErr(e))})}
     else if(gs&&gs.email&&!INAPP&&!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)){GG.email=gs.email;GG.sheetId=gs.sheetId||'';showLoad('Đang đăng nhập lại…');
       GG.login(true).then(()=>afterLogin()).catch(()=>{moOffline(gs).then(ok=>{if(!ok)showLogin(gs.email)})})}
-    else if(gs&&gs.email){GG.sheetId=gs.sheetId||'';showLogin(gs.email)}
+    else if(gs&&gs.email){GG.sheetId=gs.sheetId||'';moTram(gs).then(ok=>{if(!ok)showLogin(gs.email)})}
     else showLogin();
     setInterval(()=>{if(GG.email&&!XEM)license(GG.email).then(l=>{if(l.status==='locked'||l.status==='expired'){Store.save(db);showPending(l)}}).catch(()=>{})},6*3600*1000);
   } else if(firstOpen&&!seen)showWelcome();}
@@ -3367,7 +3382,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='scSp'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261121-0715';let verLuc=0;
+const BUILD='20261121-1100';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}

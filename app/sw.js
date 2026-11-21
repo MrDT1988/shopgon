@@ -1,8 +1,8 @@
 // Shop Gọn — service worker.
 // 09/11 anh Thái (LỚP 1 CHỐNG MẤT): có mạng thì LUÔN lấy bản mới nhất từ mạng (như cũ) và cất 1 bản vào máy;
 // mất mạng thì mở bản đã cất → app vẫn mở được để bán, dữ liệu nằm trong IndexedDB của máy.
-const KHO = 'shopgon-app-v1';
-const GOC = ['/app/', '/app/manifest.json', '/app/icon-192.png', '/app/icon-512.png', '/mua.js',
+const KHO = 'shopgon-app-v2';
+const GOC = ['/app/', '/app/tram.js', '/app/manifest.json', '/app/icon-192.png', '/app/icon-512.png', '/mua.js',
   '/app/bd/ponyfill.js', '/app/bd/zxing_reader.wasm'];  // quét mã IMEI khi mất mạng
 
 self.addEventListener('install', e => {
@@ -24,7 +24,8 @@ self.addEventListener('fetch', e => {
       .catch(() => caches.match('/app/', { ignoreSearch: true }).then(r => r || Response.error())));
     return;
   }
-  if (u.origin === location.origin && GOC.includes(u.pathname)) {
+  // 21/11: gói Firebase của trạm mã hoá — chỉ shop bật trạm mới tải; tải rồi thì cất để mở offline
+  if (u.origin === location.origin && (GOC.includes(u.pathname) || u.pathname === '/app/fb.js')) {
     e.respondWith(fetch(q, { cache: 'no-store' }).then(r => cat(u.pathname, r)).catch(() => caches.match(u.pathname).then(r => r || Response.error())));
   }
   // còn lại (Google, Drive, máy chủ bản quyền, ver.json, ảnh kho…) đi mạng như cũ, không cất

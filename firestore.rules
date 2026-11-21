@@ -1,0 +1,20 @@
+rules_version = '2';
+// Shop Gọn — trạm trung chuyển mã hoá (21/11/2026).
+// Trạm CHỈ chứa sự kiện đã khoá AES-GCM trên máy shop. Không có chìa thì không đọc được.
+// Đường dẫn /t/{sid}/ev/{eid}: sid = mã băm từ chìa của shop (64 ký tự hex) → không biết chìa thì không biết đường.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /t/{sid}/ev/{eid} {
+      allow get, list: if request.auth != null && sid.size() == 64;
+      allow create: if request.auth != null && sid.size() == 64
+        && request.resource.data.keys().hasOnly(['c', 'iv', 'd', 't'])
+        && request.resource.data.c is string && request.resource.data.c.size() < 400000
+        && request.resource.data.iv is string && request.resource.data.iv.size() < 64
+        && request.resource.data.d is string && request.resource.data.d.size() < 64
+        && request.resource.data.t == request.time;
+      // sự kiện không bao giờ sửa; chỉ xoá khi đã quá 30 ngày (đã nằm trên Drive)
+      allow update: if false;
+      allow delete: if request.auth != null && resource.data.t < request.time - duration.value(30, 'd');
+    }
+  }
+}
