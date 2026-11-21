@@ -448,5 +448,6 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - Máy chính: lô `d='nv-…'` → mở bằng khoá riêng → `nvApply` (mã đơn trùng thì bỏ) → `save()`. Số PG không có trong `db.shop.nv` → bỏ. **Chỉ máy chính chạy `nvSync`** khi trạm bật. Shop bật trạm trước đợt 2: máy chính tự tạo cặp khoá + file chìa mới.
 - iPhone/iPad mở bằng Safari chưa cài (`iosChuaCai`): thanh đỏ hướng dẫn + chặn Thanh toán. Không chặn demo/test/chưa đăng nhập.
 - Test `_tam/test-tram.py` 33/33 · hồi quy đủ như mục 71 · quét hiển thị 0 ❌. Trang chủ + sổ tay + bé Ngân (319–321) đã ghi về trạm.
+- QR quét NGAY TRONG APP (nút 📷 ở Trang chủ PG, `NVT.quet`, BarcodeDetector qr_code / ponyfill ZXing) — iPhone: app ngoài màn hình chính có bộ nhớ riêng, quét bằng camera ngoài sẽ mở Safari → không nối. Test 35/35.
 - Chưa làm: nút "Đổi chìa" (PG nghỉ: xoá PG khỏi danh sách là đơn số đó bị bỏ).
 

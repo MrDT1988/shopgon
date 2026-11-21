@@ -135,9 +135,18 @@ document.addEventListener('click',async e=>{const b=e.target.closest('[data-tram
 const NVT={K:'sg_nvtram',KQ:'sg_nvtram_q',san:null,ok:false,loi:'',
   cfg(){return TRAM.docLS(this.K,null)},
   coNoi(){const c=this.cfg();return !!(c&&c.s&&c.p)},
-  docHash(){const m=/[#&]nvtram=([A-Za-z0-9_-]+)/.exec(location.hash||'');if(!m)return false;
-    try{const s=m[1].replace(/-/g,'+').replace(/_/g,'/');const o=JSON.parse(decodeURIComponent(escape(atob(s+'==='.slice((s.length+3)%4)))));if(o&&/^[0-9a-f]{64}$/.test(o.s)&&o.p&&o.p.n){TRAM.ghiLS(this.K,{s:o.s,p:o.p,t:o.t||'',luc:Date.now()});this._moi=1}}catch(_){}
-    try{history.replaceState(null,'',location.pathname+location.search)}catch(_){}return !!this._moi},
+  docHash(){const ok=this.docChuoi(location.hash||'');if(/nvtram=/.test(location.hash||''))try{history.replaceState(null,'',location.pathname+location.search)}catch(_){}return ok},
+  docChuoi(t){const m=/[#&]nvtram=([A-Za-z0-9_-]+)/.exec(t||'');if(!m)return false;
+    try{const s=m[1].replace(/-/g,'+').replace(/_/g,'/');const o=JSON.parse(decodeURIComponent(escape(atob(s+'==='.slice((s.length+3)%4)))));if(o&&/^[0-9a-f]{64}$/.test(o.s)&&o.p&&o.p.n){TRAM.ghiLS(this.K,{s:o.s,p:o.p,t:o.t||'',luc:Date.now()});this._moi=1;return true}}catch(_){}return false},
+  /* quét QR NGAY TRONG APP — iPhone: app cài ngoài màn hình chính có bộ nhớ riêng, quét bằng camera iPhone sẽ mở Safari (bộ nhớ khác) → phải quét trong app */
+  async quet(){const box=$('scan'),msg=$('scanMsg');scanTarget='nvtram';scanGot=[];box.hidden=false;try{drawScanList()}catch(_){}$('scanClose').textContent='Đóng';$('scanTorch').hidden=true;msg.textContent='Đang mở camera…';
+    let det;try{if('BarcodeDetector' in window&&(await BarcodeDetector.getSupportedFormats()).includes('qr_code'))det=new BarcodeDetector({formats:['qr_code']});
+      else{await loadBd();const A=window.BarcodeDetectionAPI;A.setZXingModuleOverrides({locateFile:(p,pre)=>p.endsWith('.wasm')?'/app/bd/zxing_reader.wasm':pre+p});det=new A.BarcodeDetector({formats:['qr_code']})}}
+    catch(e){msg.textContent='Chưa tải được bộ đọc mã, kiểm tra mạng.';return}
+    try{stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'}}});const v=$('cam');v.srcObject=stream;await v.play();msg.textContent='Đưa mã QR trên máy chủ shop vào khung';
+      scanTimer=setInterval(async()=>{if(scanBusy||!v.videoWidth)return;scanBusy=true;try{const r=await det.detect(v);const t=(r||[]).map(x=>x.rawValue).find(x=>/nvtram=/.test(x||''));
+        if(t){closeScan();if(this.docChuoi(t)){toast('⚡ Đã nối đồng bộ tức thì với shop');this.day();try{render()}catch(_){}}else toast('Mã QR không đúng, nhờ chủ shop mở lại mã')}}catch(_){}finally{scanBusy=false}},300)}
+    catch(e){msg.textContent='Không mở được camera. Cho phép camera cho Shop Gọn trong Cài đặt.'}},
   q(){return TRAM.docLS(this.KQ,[])},
   async khoa(o){const c=this.cfg();const pub=await crypto.subtle.importKey('jwk',c.p,{name:'RSA-OAEP',hash:'SHA-256'},false,['wrapKey']);
     const k=await crypto.subtle.generateKey({name:'AES-GCM',length:256},true,['encrypt']);const iv=crypto.getRandomValues(new Uint8Array(12));
@@ -149,8 +158,9 @@ const NVT={K:'sg_nvtram',KQ:'sg_nvtram_q',san:null,ok:false,loi:'',
   day(){const c=this.cfg();if(!c)return;const q=this.q();if(!q.length)return;
     (this.san||(this.san=TRAM.napFB().then(()=>TRAM.FB().dangNhap()))).then(()=>{this.ok=true;q.forEach(x=>TRAM.FB().ghi(c.s,x.id,{c:x.c,iv:x.iv,d:x.d}).then(()=>this.xong(x.id),er=>{if(/permission/i.test(String(er&&(er.code||er.message)||er)))this.xong(x.id);else this.loi='Chưa gửi được lên trạm'}))},er=>{this.san=null;this.loi='Chưa nối được trạm'})},
   xong(id){TRAM.ghiLS(this.KQ,this.q().filter(x=>x.id!==id));this.loi='';try{if(typeof view!=='undefined'&&view==='home')render()}catch(_){}},
-  the(){if(!this.coNoi())return `<div class="alert amber"><b>⚡ Chưa nối đồng bộ tức thì</b><span>Nhờ chủ shop mở <b>Thêm › Quản lý nhân viên › Mã QR cho máy PG</b>, dùng camera điện thoại này quét mã. Chưa quét vẫn bán được (đơn đi đường cũ).</span></div>`;
+  the(){if(!this.coNoi())return `<div class="alert amber"><b>⚡ Chưa nối đồng bộ tức thì</b><span>Nhờ chủ shop mở <b>Thêm › Quản lý nhân viên › Hiện mã QR</b>, rồi bấm nút dưới để quét <b>ngay trong app</b>. Chưa quét vẫn bán được (đơn đi đường cũ).</span><div class="inrow" style="margin-top:8px"><button class="btn" data-nvquet="1">📷 Quét mã QR đồng bộ</button></div></div>`;
     const n=this.q().length;return n?`<div class="alert amber"><b>⚡ ${n} đơn chưa lên trạm</b><span>Mất mạng? Có mạng app tự gửi. Đừng xoá app.</span></div>`:`<div class="alert chanb tramb"><b>⚡ Đồng bộ tức thì: đã nối</b><span>Bán xong, chủ shop thấy đơn trong vài giây.</span></div>`}};
 NVT.docHash();
 setInterval(()=>{try{if(NVT.coNoi()&&NVT.q().length)NVT.day()}catch(_){}},20000);
 window.addEventListener('online',()=>{try{NVT.day()}catch(_){}});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-nvquet]');if(b)NVT.quet()});

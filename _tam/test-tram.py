@@ -152,6 +152,10 @@ async def main():
         ok('Đơn của số PG không có trong danh sách bị bỏ', not await B.evaluate("()=>db.don.some(x=>x.bill==='pgla')"))
         raw = json.dumps(TRAM, ensure_ascii=False)
         ok('Đơn PG trên trạm cũng chỉ là chuỗi khoá', 'Ốp PG1' not in raw and '0901' not in raw.replace('nv-0901', ''))
+        N2 = await mk('N2')
+        await N2.evaluate("()=>{localStorage.clear();localStorage.setItem('shopgon_nv',JSON.stringify({sdt:'0901',ten:'PG A',phien:'p1'}))}"); await N2.reload(); await N2.wait_for_timeout(2500)
+        ok('PG chưa nối: Trang chủ PG có nút Quét mã QR trong app', await N2.evaluate("()=>!NVT.coNoi()&&NVT.the().includes('data-nvquet')"))
+        ok('Đọc mã QR quét trong app → nối trạm', await N2.evaluate("(q)=>NVT.docChuoi(q)&&NVT.coNoi()", qr))
         # 9) iPhone mở bằng Safari: chặn bán
         ci = await b.new_context(user_agent='Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1')
         await ci.route('**/*', lambda r: r.continue_() if 'localhost' in r.request.url else r.abort())

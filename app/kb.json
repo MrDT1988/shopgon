@@ -1945,7 +1945,7 @@
 "id": 320,
 "nhom": "Dữ liệu, sao lưu, đồng bộ, bảo mật",
 "q": "PG bán trên điện thoại riêng, quét mã QR đồng bộ thế nào? Đơn nhân viên về chậm",
-"a": "Bật Đồng bộ tức thì ở Trang chủ trước. Sau đó chủ shop vào Thêm › Quản lý nhân viên › Hiện mã QR. PG đăng nhập bằng số điện thoại + mật khẩu, rồi dùng camera điện thoại PG quét mã 1 lần. Đơn PG đến máy chủ shop trong vài giây. PG chỉ có khoá để gửi đơn, không đọc được giá vốn, lời của shop. Xoá PG khỏi danh sách thì đơn từ số đó bị bỏ.",
+"a": "Bật Đồng bộ tức thì ở Trang chủ trước. Sau đó chủ shop vào Thêm › Quản lý nhân viên › Hiện mã QR. PG đăng nhập bằng số điện thoại + mật khẩu, rồi ở Trang chủ của PG bấm \"📷 Quét mã QR đồng bộ\" để quét ngay trong app (không dùng camera ngoài, nhất là iPhone) — mỗi điện thoại quét 1 lần. Đơn PG đến máy chủ shop trong vài giây. PG chỉ có khoá để gửi đơn, không đọc được giá vốn, lời của shop. Xoá PG khỏi danh sách thì đơn từ số đó bị bỏ.",
 "go": "home"
 },
 {
