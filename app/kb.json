@@ -1,6 +1,6 @@
 {
 "capNhat": "2026-11-21",
-"tong": 318,
+"tong": 321,
 "ds": [
 {
 "id": 1,
@@ -1933,6 +1933,26 @@
 "q": "Thanh vàng/đỏ \"Còn đơn chưa lên Google Drive\" là gì? Đơn chưa lưu lên drive thì làm sao?",
 "a": "Thanh này hiện ở Trang chủ và màn Bán khi có đơn bán xong quá 1 phút mà app chưa lưu được lên Google Drive (vàng: dưới 1 giờ, đỏ: từ 1 giờ). Lúc đó đơn mới chỉ nằm trên máy này. Bấm \"Lưu lên Drive ngay\", chờ thanh tự tắt rồi mới tắt app. Nếu thanh báo hết phiên Google thì bấm \"Đăng nhập lại Google\". Mất mạng thì cứ bán, có mạng lại app tự lưu, nhưng không xoá app hay dữ liệu trình duyệt khi thanh còn hiện.",
 "go": "sell"
+},
+{
+"id": 319,
+"nhom": "Dữ liệu, sao lưu, đồng bộ, bảo mật",
+"q": "Đồng bộ tức thì là gì? Máy chính máy phụ là sao? Bán máy này máy kia không thấy đơn",
+"a": "Ở Trang chủ, chủ shop bấm \"⚡ Bật đồng bộ tức thì\" 1 lần trên máy bán chính. Từ đó bán ở máy nào, các máy khác thấy đơn trong vài giây. Máy bấm là máy chính: chỉ máy này lưu vào Google Drive. Máy phụ không cần đăng nhập Google lại mỗi giờ. Đơn chuyển giữa các máy đã được khoá trên máy shop, Shop Gọn không đọc được. Máy chính hỏng hoặc mất: ở máy khác bấm \"Đặt máy này làm máy chính\".",
+"go": "home"
+},
+{
+"id": 320,
+"nhom": "Dữ liệu, sao lưu, đồng bộ, bảo mật",
+"q": "PG bán trên điện thoại riêng, quét mã QR đồng bộ thế nào? Đơn nhân viên về chậm",
+"a": "Bật Đồng bộ tức thì ở Trang chủ trước. Sau đó chủ shop vào Thêm › Quản lý nhân viên › Hiện mã QR. PG đăng nhập bằng số điện thoại + mật khẩu, rồi dùng camera điện thoại PG quét mã 1 lần. Đơn PG đến máy chủ shop trong vài giây. PG chỉ có khoá để gửi đơn, không đọc được giá vốn, lời của shop. Xoá PG khỏi danh sách thì đơn từ số đó bị bỏ.",
+"go": "home"
+},
+{
+"id": 321,
+"nhom": "Dữ liệu, sao lưu, đồng bộ, bảo mật",
+"q": "iPhone không bán được, báo cài app trước khi bán, thêm vào màn hình chính",
+"a": "Trên iPhone, mở Shop Gọn bằng Safari mà chưa cài, máy có thể tự xoá đơn đã lưu. Vì vậy app chặn bán. Cách cài: mở shopgon.vn/app bằng Safari › bấm nút Chia sẻ (ô vuông mũi tên lên) › Thêm vào MH chính › mở Shop Gọn từ biểu tượng ngoài màn hình chính."
 }
 ]
 }

@@ -20,17 +20,23 @@ const TRAM={
   /* ---- mã hoá ---- */
   b64(u){let s='';const a=new Uint8Array(u);for(let i=0;i<a.length;i+=8192)s+=String.fromCharCode.apply(null,a.subarray(i,i+8192));return btoa(s)},
   ub64(s){const b=atob(s),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a},
-  async datChia(raw){const u=this.ub64(raw);this.k=await crypto.subtle.importKey('raw',u,'AES-GCM',false,['encrypt','decrypt']);this.raw=raw;
+  /* 21/11 đợt 2: cặp khoá RSA cho máy PG — PG chỉ có khoá CÔNG KHAI (khoá được, không mở được); máy chủ shop có khoá riêng để mở đơn PG */
+  async datNv(pub,priv){this.nvPub=pub||null;this.nvPriv=null;if(priv)try{this.nvPriv=await crypto.subtle.importKey('jwk',priv,{name:'RSA-OAEP',hash:'SHA-256'},false,['unwrapKey'])}catch(_){}this._nvPrivJ=priv||null},
+  async taoNv(){const kp=await crypto.subtle.generateKey({name:'RSA-OAEP',modulusLength:2048,publicExponent:new Uint8Array([1,0,1]),hash:'SHA-256'},true,['wrapKey','unwrapKey']);
+    return {pub:await crypto.subtle.exportKey('jwk',kp.publicKey),priv:await crypto.subtle.exportKey('jwk',kp.privateKey)}},
+  async giaiMaNv(c,iv){const all=this.ub64(c),w=all.slice(0,256),ct=all.slice(256);const k=await crypto.subtle.unwrapKey('raw',w,this.nvPriv,{name:'RSA-OAEP'},'AES-GCM',false,['decrypt']);
+    const p=await crypto.subtle.decrypt({name:'AES-GCM',iv:this.ub64(iv)},k,ct);return JSON.parse(new TextDecoder().decode(p))},
+  async datChia(raw,nv){const u=this.ub64(raw);if(nv)await this.datNv(nv.pub,nv.priv);this.k=await crypto.subtle.importKey('raw',u,'AES-GCM',false,['encrypt','decrypt']);this.raw=raw;
     const h=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('shopgon|'+raw));this.sid=[...new Uint8Array(h)].map(x=>x.toString(16).padStart(2,'0')).join('');
-    this.ghiLS(this.kK(),{raw,e:(typeof GG!=='undefined'&&GG.email)||''})},
+    this.ghiLS(this.kK(),{raw,e:(typeof GG!=='undefined'&&GG.email)||'',nvPub:this.nvPub||null,nvPriv:this._nvPrivJ||null})},
   async maHoa(o){const iv=crypto.getRandomValues(new Uint8Array(12));const c=await crypto.subtle.encrypt({name:'AES-GCM',iv},this.k,new TextEncoder().encode(JSON.stringify(o)));return {c:this.b64(c),iv:this.b64(iv)}},
   async giaiMa(c,iv){const p=await crypto.subtle.decrypt({name:'AES-GCM',iv:this.ub64(iv)},this.k,this.ub64(c));return JSON.parse(new TextDecoder().decode(p))},
   /* ---- chìa trong Drive shop ---- */
   async timChiaDrive(){const q=encodeURIComponent("appProperties has { key='shopgon' and value='chia' } and trashed=false");
-    const f=await GG.api('https://www.googleapis.com/drive/v3/files?q='+q+'&orderBy=createdTime&fields=files(id,name)');const x=f.files&&f.files[0];if(!x)return '';
-    const r=await fetch('https://www.googleapis.com/drive/v3/files/'+x.id+'?alt=media',{headers:{Authorization:'Bearer '+GG.token}});if(!r.ok)throw new Error('chia '+r.status);const o=await r.json();return o&&o.k||''},
-  async luuChiaDrive(raw){const tm=await GG.thuMuc();const meta={name:'Shop Gọn – chìa đồng bộ (KHÔNG xoá, KHÔNG gửi ai).json',parents:[tm],mimeType:'application/json',appProperties:{shopgon:'chia'}};
-    const b='sgb'+Date.now(),body='--'+b+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n'+JSON.stringify(meta)+'\r\n--'+b+'\r\nContent-Type: application/json\r\n\r\n'+JSON.stringify({k:raw,ghiChu:'Chìa mở dữ liệu đồng bộ Shop Gọn của shop. Mất file này thì máy mới phải đăng nhập máy chính để lấy lại.'})+'\r\n--'+b+'--';
+    const f=await GG.api('https://www.googleapis.com/drive/v3/files?q='+q+'&orderBy=createdTime desc&fields=files(id,name)');const x=f.files&&f.files[0];if(!x)return null;
+    const r=await fetch('https://www.googleapis.com/drive/v3/files/'+x.id+'?alt=media',{headers:{Authorization:'Bearer '+GG.token}});if(!r.ok)throw new Error('chia '+r.status);const o=await r.json();return o&&o.k?o:null},
+  async luuChiaDrive(raw,nv){const tm=await GG.thuMuc();const meta={name:'Shop Gọn – chìa đồng bộ (KHÔNG xoá, KHÔNG gửi ai).json',parents:[tm],mimeType:'application/json',appProperties:{shopgon:'chia'}};
+    const b='sgb'+Date.now(),body='--'+b+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n'+JSON.stringify(meta)+'\r\n--'+b+'\r\nContent-Type: application/json\r\n\r\n'+JSON.stringify({k:raw,nvPub:nv&&nv.pub||null,nvPriv:nv&&nv.priv||null,ghiChu:'Chìa mở dữ liệu đồng bộ Shop Gọn của shop. Mất file này thì máy mới phải đăng nhập máy chính để lấy lại.'})+'\r\n--'+b+'--';
     const r=await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart',{method:'POST',headers:{Authorization:'Bearer '+GG.token,'Content-Type':'multipart/related; boundary='+b},body});if(!r.ok)throw new Error('luu chia '+r.status)},
   /* ---- nạp gói Firebase tự host (chỉ shop bật trạm mới tải) ---- */
   napFB(){if(this.FB())return Promise.resolve();if(this._nap)return this._nap;this._nap=new Promise((ok,bad)=>{const s=document.createElement('script');s.src='/app/fb.js?v=1';s.onload=ok;s.onerror=e=>{this._nap=null;bad(e)};document.head.appendChild(s)});return this._nap},
@@ -68,17 +74,25 @@ const TRAM={
     return doi},
   async nhan(ds,pend,cache){this.fromCache=!!cache;ds.sort((a,b)=>a.t-b.t);let doi=0,cu=this.chinh();
     if(ds.some(d=>!this.da.has(d.id)&&d.d!==this.me()))this.ghi();          /* đẩy thay đổi trên máy trước khi nhận, ảnh chụp không nuốt thay đổi chưa gửi */
-    for(const d of ds){if(!this.da.has(d.id)&&d.d!==this.me()){try{const o=await this.giaiMa(d.c,d.iv);doi+=this.apDung(o.ops||[])}catch(e){this.loi='Không mở được 1 lô (sai chìa?)'}}
+    const nvDon=[];
+    for(const d of ds){if(!this.da.has(d.id)&&d.d!==this.me()){
+        if(String(d.d||'').startsWith('nv-')){/* đơn PG: CHỈ máy chính áp (máy khác nhận kết quả qua lô của máy chính) */if(this.chinh()&&this.nvPriv){try{nvDon.push(await this.giaiMaNv(d.c,d.iv))}catch(e){this.loi='Không mở được 1 đơn PG'}}}
+        else{try{const o=await this.giaiMa(d.c,d.iv);doi+=this.apDung(o.ops||[])}catch(e){this.loi='Không mở được 1 lô (sai chìa?)'}}}
       this.da.add(d.id);if(d.t>this.lastT)this.lastT=d.t}
     this.ghiLS(this.kT(),this.lastT);this.luuDa();
     if(doi){this.S=this.anh();Store.save(db);try{render()}catch(_){}
       if(this.chinh()&&typeof GG!=='undefined'&&GG.token&&GG.sheetId){SK.doi();GG.queue(1500)}
       if(cu&&!this.chinh())ggStatus('Máy khác đã làm máy chính — máy này chỉ gửi qua trạm')}
+    if(nvDon.length&&typeof nvApply==='function'){const dang=new Set(((db.shop&&db.shop.nv)||[]).map(x=>String(x.sdt)));let n=0;
+      nvDon.forEach(o=>{if(o&&o.id&&(!o.nv||dang.has(String(o.nv))))n+=nvApply(o)});   /* PG đã bị xoá khỏi danh sách thì bỏ đơn */
+      if(n){db.shop.nvCo=1;save();try{render()}catch(_){}try{toast('Nhận '+n+' đơn PG qua trạm')}catch(_){}}}
     this.ve()},
   luuDa(){const a=[...this.da];if(a.length>4000)this.da=new Set(a.slice(-3000));this.ghiLS(this.kD(),[...this.da])},
   /* ---- khởi động: có chìa trên máy thì chạy luôn, không cần Google ---- */
   async batDau(){if(!this.bat()||this.un||this._dang)return;this._dang=true;try{
-      if(!this.k){const c=this.docLS(this.kK(),null);if(c&&c.raw)await this.datChia(c.raw);else if(typeof GG!=='undefined'&&GG.token){const raw=await this.timChiaDrive();if(!raw){this.loi='Chưa có chìa trong Drive — mở máy chính';this.ve();return}await this.datChia(raw)}else{this.loi='Cần đăng nhập Google 1 lần để lấy chìa';this.ve();return}}
+      if(!this.k){const c=this.docLS(this.kK(),null);if(c&&c.raw&&(c.nvPriv||!(typeof GG!=='undefined'&&GG.token)))await this.datChia(c.raw,{pub:c.nvPub,priv:c.nvPriv});else if(typeof GG!=='undefined'&&GG.token){const o=await this.timChiaDrive();if(!o){this.loi='Chưa có chìa trong Drive — mở máy chính';this.ve();return}await this.datChia(o.k,{pub:o.nvPub,priv:o.nvPriv})}else{this.loi='Cần đăng nhập Google 1 lần để lấy chìa';this.ve();return}}
+      /* máy chính chưa có cặp khoá PG (shop bật trạm trước đợt 2) → tạo, cất bản chìa mới nhất vào Drive */
+      if(!this.nvPriv&&this.chinh()&&typeof GG!=='undefined'&&GG.token){try{const nv=await this.taoNv();await this.luuChiaDrive(this.raw,nv);await this.datChia(this.raw,nv)}catch(_){}}
       this.lastT=Math.max(+this.docLS(this.kT(),0)||0,+(db.shop&&db.shop.tramT)||0);this.da=new Set(this.docLS(this.kD(),[]));this.S=this.anh();this.ghiLS('sg_tram_on',1);
       const q0=this.docQ();if(q0.length&&!this.choTu)this.choTu=q0[0].luc||Date.now();
       this.san=this.napFB().then(()=>this.FB().dangNhap());await this.san;this.ok=true;this.loi='';
@@ -88,9 +102,10 @@ const TRAM={
       this.ve()}catch(e){this.loi='Chưa nối được trạm: '+String(e&&e.message||e).slice(0,80);this.ve()}finally{this._dang=false}},
   dung(){if(this.un){try{this.un()}catch(_){}}this.un=null;this.ok=false;this.san=null},
   /* ---- bật lần đầu (chủ shop, đang có Google): máy này làm máy chính ---- */
-  async batMoi(){if(!GG.token||!GG.sheetId)throw new Error('Đăng nhập Google trước');let raw=await this.timChiaDrive();
-    if(!raw){raw=this.b64(crypto.getRandomValues(new Uint8Array(32)));await this.luuChiaDrive(raw)}
-    await this.datChia(raw);db.shop.tram=1;db.shop.tramW=this.me();db.shop.tramT=+db.shop.tramT||0;this.ghiLS(this.kT(),Math.max(+this.docLS(this.kT(),0)||0,db.shop.tramT));
+  async batMoi(){if(!GG.token||!GG.sheetId)throw new Error('Đăng nhập Google trước');
+    let o=await this.timChiaDrive(),raw,nv;
+    if(o&&o.nvPriv){raw=o.k;nv={pub:o.nvPub,priv:o.nvPriv}}else{raw=o&&o.k||this.b64(crypto.getRandomValues(new Uint8Array(32)));nv=await this.taoNv();await this.luuChiaDrive(raw,nv)}
+    await this.datChia(raw,nv);db.shop.tram=1;db.shop.tramW=this.me();db.shop.tramT=+db.shop.tramT||0;this.ghiLS(this.kT(),Math.max(+this.docLS(this.kT(),0)||0,db.shop.tramT));
     this.dung();this.S=null;this.k=null;save();await GG.push();await this.batDau()},
   /* ---- nhận làm máy chính: lấy nguyên Drive làm gốc, giữ mọi dòng Drive có mà máy này thiếu (không xoá theo bàn giao) ---- */
   async lamChinh(){if(!GG.token||!GG.sheetId)throw new Error('Đăng nhập Google trước');if(this.choGui)throw new Error('Còn lô chưa lên trạm, chờ có mạng');
@@ -101,6 +116,8 @@ const TRAM={
   daChay(){return !!this.docLS('sg_tram_on',0)},
   /* có được ghi Drive không: máy phụ thì không; máy chính chờ lô của mình lên trạm (tối đa 10 phút) để mốc tramT phủ hết */
   choPhepDrive(){if(!this.bat())return 'ok';if(!this.chinh())return 'phu';if(this.k&&this.choGui&&Date.now()-(this.choTu||Date.now())<6e5)return 'cho';return 'ok'},
+  /* mã QR cho máy PG: đường trạm + khoá CÔNG KHAI (không có chìa mở dữ liệu) */
+  qrNv(){if(!this.sid||!this.nvPub)return '';const o={s:this.sid,p:this.nvPub,t:String((db.shop&&db.shop.ten)||'').slice(0,40)};return location.origin+'/app/#nvtram='+btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')},
   ve(){try{document.querySelectorAll('.tramBar').forEach(el=>{const h=tramBar();if(el.innerHTML!==h)el.innerHTML=h})}catch(_){}}
 };
 function tramBar(){if(typeof NV!=='undefined'&&NV||XEM||DEMO||!db||db.sample)return '';const on=!!(db.shop&&db.shop.tram);
@@ -112,3 +129,28 @@ document.addEventListener('click',async e=>{const b=e.target.closest('[data-tram
   try{if(b.dataset.tram==='bat'){toast('Đang bật đồng bộ tức thì…');await TRAM.batMoi();toast('Đã bật — máy này là máy chính')}
     else if(b.dataset.tram==='chinh'){toast('Đang nhận làm máy chính…');await TRAM.lamChinh();toast('Máy này đã là máy chính')}}
   catch(er){toast('Chưa xong: '+String(er&&er.message||er).slice(0,80))}finally{b.disabled=false;TRAM.ve();try{render()}catch(_){}}});
+/* ===== 21/11 đợt 2: MÁY PG (nhân viên bán trên điện thoại riêng) =====
+   PG quét mã QR ở máy chủ shop → máy PG nhớ đường trạm + khoá CÔNG KHAI. Bán xong: đơn khoá bằng khoá công khai → trạm → máy chính mở bằng khoá riêng.
+   PG KHÔNG có chìa của shop → không đọc được dữ liệu shop (giá vốn, lời) dù có mở bộ nhớ máy. Đường máy chủ cũ (nvBan) vẫn chạy song song: đơn đến đường nào trước thì nhận, mã đơn trùng thì bỏ. */
+const NVT={K:'sg_nvtram',KQ:'sg_nvtram_q',san:null,ok:false,loi:'',
+  cfg(){return TRAM.docLS(this.K,null)},
+  coNoi(){const c=this.cfg();return !!(c&&c.s&&c.p)},
+  docHash(){const m=/[#&]nvtram=([A-Za-z0-9_-]+)/.exec(location.hash||'');if(!m)return false;
+    try{const s=m[1].replace(/-/g,'+').replace(/_/g,'/');const o=JSON.parse(decodeURIComponent(escape(atob(s+'==='.slice((s.length+3)%4)))));if(o&&/^[0-9a-f]{64}$/.test(o.s)&&o.p&&o.p.n){TRAM.ghiLS(this.K,{s:o.s,p:o.p,t:o.t||'',luc:Date.now()});this._moi=1}}catch(_){}
+    try{history.replaceState(null,'',location.pathname+location.search)}catch(_){}return !!this._moi},
+  q(){return TRAM.docLS(this.KQ,[])},
+  async khoa(o){const c=this.cfg();const pub=await crypto.subtle.importKey('jwk',c.p,{name:'RSA-OAEP',hash:'SHA-256'},false,['wrapKey']);
+    const k=await crypto.subtle.generateKey({name:'AES-GCM',length:256},true,['encrypt']);const iv=crypto.getRandomValues(new Uint8Array(12));
+    const ct=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv},k,new TextEncoder().encode(JSON.stringify(o))));const w=new Uint8Array(await crypto.subtle.wrapKey('raw',k,pub,{name:'RSA-OAEP'}));
+    const all=new Uint8Array(w.length+ct.length);all.set(w,0);all.set(ct,w.length);return {c:TRAM.b64(all),iv:TRAM.b64(iv)}},
+  /* gửi 1 đơn: khoá → cất hàng chờ trên máy → trạm (mã lô = 'nv-'+mã đơn: gửi lại không thành 2 đơn) */
+  async gui(o){if(!this.coNoi()||!o||!o.id)return;try{const e=await this.khoa(o);const id='nv-'+String(o.id).replace(/[^A-Za-z0-9_-]/g,'').slice(0,80);
+      const q=this.q().filter(x=>x.id!==id);q.push({id,c:e.c,iv:e.iv,d:'nv-'+String(o.nv||'').slice(0,20)});TRAM.ghiLS(this.KQ,q);this.day()}catch(er){this.loi='Chưa khoá được đơn: '+String(er&&er.message||er).slice(0,60)}},
+  day(){const c=this.cfg();if(!c)return;const q=this.q();if(!q.length)return;
+    (this.san||(this.san=TRAM.napFB().then(()=>TRAM.FB().dangNhap()))).then(()=>{this.ok=true;q.forEach(x=>TRAM.FB().ghi(c.s,x.id,{c:x.c,iv:x.iv,d:x.d}).then(()=>this.xong(x.id),er=>{if(/permission/i.test(String(er&&(er.code||er.message)||er)))this.xong(x.id);else this.loi='Chưa gửi được lên trạm'}))},er=>{this.san=null;this.loi='Chưa nối được trạm'})},
+  xong(id){TRAM.ghiLS(this.KQ,this.q().filter(x=>x.id!==id));this.loi='';try{if(typeof view!=='undefined'&&view==='home')render()}catch(_){}},
+  the(){if(!this.coNoi())return `<div class="alert amber"><b>⚡ Chưa nối đồng bộ tức thì</b><span>Nhờ chủ shop mở <b>Thêm › Quản lý nhân viên › Mã QR cho máy PG</b>, dùng camera điện thoại này quét mã. Chưa quét vẫn bán được (đơn đi đường cũ).</span></div>`;
+    const n=this.q().length;return n?`<div class="alert amber"><b>⚡ ${n} đơn chưa lên trạm</b><span>Mất mạng? Có mạng app tự gửi. Đừng xoá app.</span></div>`:`<div class="alert chanb tramb"><b>⚡ Đồng bộ tức thì: đã nối</b><span>Bán xong, chủ shop thấy đơn trong vài giây.</span></div>`}};
+NVT.docHash();
+setInterval(()=>{try{if(NVT.coNoi()&&NVT.q().length)NVT.day()}catch(_){}},20000);
+window.addEventListener('online',()=>{try{NVT.day()}catch(_){}});

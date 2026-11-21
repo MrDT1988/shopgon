@@ -442,3 +442,11 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - Test: `_tam/test-tram.py` 23/23 (3 máy A/B/C, trạm + Drive giả lập: 2 máy cùng bán PK trừ đúng 2, mất mạng 5 đơn tắt mở lại còn đủ, hết phiên vẫn bán, máy mới không cộng trùng, trạm không có chữ nào của shop, đổi máy chính) · chống mất v4 14/14 · mở lại 8/8 · IndexedDB 13/13 · sức khoẻ 14/14 · offline 16/16 · sao lưu mã hoá 17/17 · thanh chờ Drive 12/12 · toàn bộ 73/75 (2 ❌ cũ). `_tam/gia-lap-dong-bo` (Node) hỏng TỪ TRƯỚC (thiếu SK trong giả lập, có cả trên main) — chưa sửa.
 - CHƯA làm (đợt 2): máy NV vào bằng QR (NV vẫn đi đường máy chủ cũ) · chặn Safari chưa cài app · trang chủ/sổ tay/bé Ngân ghi về trạm · dọn lô >30 ngày mới có hàm `FB.don` gọi 1 lần/ngày ở máy chính.
 
+## 72. (21/11 12h30) TRẠM ĐỢT 2 — máy PG quét QR · chặn iPhone Safari chưa cài (anh: "PG máy riêng nha e") BUILD 20261121-1230
+- Cặp khoá RSA-OAEP 2048 cho PG: khoá riêng nằm trong file chìa Drive (`nvPriv`) + máy chủ shop; mã QR (Thêm › Quản lý nhân viên) chỉ chứa sid + khoá CÔNG KHAI → PG khoá đơn được, KHÔNG mở được dữ liệu shop. Link `/app/#nvtram=…`.
+- Máy PG (`NVT` trong tram.js): `nvClose` → `NVT.gui(o)` → hàng chờ `sg_nvtram_q` → trạm, mã lô `nv-<mã đơn>`. Đường máy chủ cũ `nvBan` vẫn chạy song song.
+- Máy chính: lô `d='nv-…'` → mở bằng khoá riêng → `nvApply` (mã đơn trùng thì bỏ) → `save()`. Số PG không có trong `db.shop.nv` → bỏ. **Chỉ máy chính chạy `nvSync`** khi trạm bật. Shop bật trạm trước đợt 2: máy chính tự tạo cặp khoá + file chìa mới.
+- iPhone/iPad mở bằng Safari chưa cài (`iosChuaCai`): thanh đỏ hướng dẫn + chặn Thanh toán. Không chặn demo/test/chưa đăng nhập.
+- Test `_tam/test-tram.py` 33/33 · hồi quy đủ như mục 71 · quét hiển thị 0 ❌. Trang chủ + sổ tay + bé Ngân (319–321) đã ghi về trạm.
+- Chưa làm: nút "Đổi chìa" (PG nghỉ: xoá PG khỏi danh sách là đơn số đó bị bỏ).
+
