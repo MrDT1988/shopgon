@@ -426,3 +426,11 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - Tìm trên máy, không gọi AI: `ngTok` (bỏ dấu, từ tắt `NG.SYN`, bỏ từ đệm `NG.STOP`, cụm sao luu/vao ca/to roi), `ngTim` điểm = khớp từ câu hỏi × idf + cụm 2 từ − 0,5×từ thừa; trả lời khi điểm ≥8 và khớp ≥50%, ngược lại gợi 4 câu gần nhất + Gặp người hỗ trợ.
 - Trả lời có nút Đi tới (`NG.GO`: tab/more; NV chỉ sell/add), ✅ Đúng / ❌ Sai (`localStorage sg_ng_fb`), câu hụt (`sg_ng_miss`, 60 câu gần nhất — CHƯA gửi máy chủ). Hỗ trợ: Chép thông tin (shop, Gmail, BUILD, câu hỏi) · Zalo CTV (`GG.ctv`) · page Shop Gọn.
 - Kiểm: 20 câu hỏi thử khớp đúng 18 (2 câu ra câu gần đúng, câu đúng nằm trong Câu liên quan) · câu ngoài lề ("thời tiết") → gợi ý + hỗ trợ · toàn bộ 73/75 · quét hiển thị 0 ❌.
+
+## 70. (21/11 07h) THANH "⏳ ĐƠN CHƯA LÊN DRIVE" — anh Thái "duyệt, làm đi" (BUILD 20261121-0715)
+- Lý do: tổng kết bộ đếm 09–20/11 — 0 mất đơn, nhưng Hồng Nhi có đơn nằm trên máy qua đêm 13–17 giờ (12/11, 16/11).
+- `choBar()` + `choVe()` (app/index.html, trước `chanBar`): hiện ở Trang chủ + màn Bán (`.choBar`, class không dùng id vì 2 view cùng DOM) khi `SK.get().cho` chờ ≥1 phút. Đếm đơn có id thời gian ≥ `cho`. Vàng <60 phút, đỏ ≥60. Nút `data-choluu` → `GG.push()`. Hết phiên → nút Đăng nhập lại; mất mạng → chỉ nhắc. Ẩn với NV / xem thử / demo / dữ liệu mẫu / khi `GG.chan` (thẻ chặn riêng đã lo).
+- Tự cập nhật: `SK.len()` gọi `choVe()` (lưu xong thanh tắt ngay) · `SK.doi()` hẹn `choVe()` sau 61 giây · `setInterval(choVe,30000)`.
+- KHÔNG đổi cấu trúc dữ liệu, không đụng máy chủ. Test mới `_tam/test-cho-drive.py` 12/12 · chống mất v4 14/14 · mở lại 8/8 · IndexedDB 13/13 · sức khoẻ 14/14 · offline 16/16 · sao lưu mã hoá 17/17 · toàn bộ 73/75 (2 ❌ cũ, như trước) · quét hiển thị 320/360/412 0 ❌.
+- Bé Ngân: thêm câu 318 (kb.json) · sổ tay `huong-dan` mục an toàn thêm 1 câu.
+

@@ -803,8 +803,8 @@ const SK={K:'sg_sk',d:null,
     return this.d=o},
   luu(){try{localStorage.setItem(this.K,JSON.stringify(this.d))}catch(_){}},
   tang(k){const o=this.get();o[k]=(o[k]||0)+1;this.luu()},
-  doi(){const o=this.get();if(!o.cho){o.cho=Date.now();this.luu()}},
-  len(){const o=this.get(),n=Date.now();if(o.cho){const ph=Math.round((n-o.cho)/6e4);if(ph>o.choMax)o.choMax=ph;if(ph>=60)o.treo++}o.cho=0;o.len++;o.cuoi=n;this.luu()},
+  doi(){const o=this.get();if(!o.cho){o.cho=Date.now();this.luu()}setTimeout(()=>{try{choVe()}catch(_){}},61000)},
+  len(){const o=this.get(),n=Date.now();if(o.cho){const ph=Math.round((n-o.cho)/6e4);if(ph>o.choMax)o.choMax=ph;if(ph>=60)o.treo++}o.cho=0;o.len++;o.cuoi=n;this.luu();try{choVe()}catch(_){}},
   /* đơn còn chờ lên Drive tính tới lúc này (phút) */
   choNay(){const o=this.get();return o.cho?Math.round((Date.now()-o.cho)/6e4):0},
   /* đối soát: đơn tháng này + IMEI trên máy có mà Drive chưa có (bỏ dòng đã xoá, bỏ đơn mới <1 giờ) */
@@ -1531,6 +1531,16 @@ function homeLai(a,b,ten,luonMo){const L=homeDon(a,b);if(!L.length)return '';con
 function homeDay(){const t=todayIso(),y=iso(Date.now()-DAY),r=homeD==='yest'?sumRange(y,y):homeD==='week'?sumRange(iso(Date.now()-6*DAY),t):sumRange(t,t);
   const tb=(k,l)=>`<button type="button" data-hday="${k}" aria-pressed="${homeD===k}">${l}</button>`;
   return `<div class="panel hdp"><div class="seg" role="group">${tb('today','Hôm nay')}${tb('yest','Hôm qua')}${tb('week','7 ngày')}</div><div class="hdv"><small>Doanh thu</small><b class="num">${money(r.dt)}</b><i>${r.n} đơn · ${r.may} máy<span class="own"> · lời ${money(r.loi)}</span></i></div></div>`}
+/* 21/11 anh Thái: thanh "⏳ đơn chưa lên Drive" — bộ đếm 09–20/11 thấy đơn nằm trên máy qua đêm (13–17 giờ). Hiện khi có thay đổi chờ lưu quá 1 phút. */
+function choBar(){if(NV||XEM||DEMO||!GG.token||!GG.sheetId||(db&&db.sample)||GG.chan)return '';const o=SK.get();if(!o.cho)return '';const ph=SK.choNay();if(ph<1)return '';
+  const n=(db.don||[]).filter(x=>{if(x.xk)return false;const v=parseInt(String(x.id||'').slice(0,8),36);return v>1.7e12&&v>=o.cho-5000}).length;
+  const ai=n?`Còn ${n} đơn chưa lên Google Drive`:'Còn thay đổi chưa lên Google Drive',lau=ph<60?ph+' phút':Math.floor(ph/60)+' giờ '+(ph%60)+' phút';
+  if(GG.OFF)return `<div class="alert amber chanb chob"><b>⏳ ${ai} · ${lau}</b><span>Đang mất mạng. Có mạng lại app tự lưu. Chưa tắt app, chưa xoá app.</span></div>`;
+  if(GG.het)return `<div class="alert red chanb chob"><b>⏳ ${ai} · ${lau}</b><span>Phiên Google đã hết nên app chưa lưu được. Bấm đăng nhập lại rồi chờ chữ "Đã lưu lên Google Drive".</span><div class="inrow" style="margin-top:8px"><button class="btn" data-gg="login">Đăng nhập lại Google</button></div></div>`;
+  return `<div class="alert ${ph>=60?'red':'amber'} chanb chob"><b>⏳ ${ai} · ${lau}</b><span>Chưa tắt app khi thanh này còn hiện. Bấm lưu ngay, chờ thanh tắt là xong.</span><div class="inrow" style="margin-top:8px"><button class="btn" data-choluu="1">Lưu lên Drive ngay</button></div></div>`}
+function choVe(){const h=choBar();document.querySelectorAll('.choBar').forEach(el=>{if(el.innerHTML!==h)el.innerHTML=h})}
+setInterval(choVe,30000);
+document.addEventListener('click',async e=>{const b=e.target.closest('[data-choluu]');if(!b)return;b.disabled=true;b.textContent='Đang lưu…';const ok=await GG.push();toast(ok?'Đã lưu lên Google Drive':'Chưa lưu được, kiểm tra mạng rồi bấm lại');choVe()});
 /* 08/11 anh Thái: cảnh báo khi app TẠM DỪNG lưu Drive để chống mất dữ liệu */
 function chanBar(){if(NV||XEM||DEMO)return '';const c=GG.chan;
   if(GG.OFF)return `<div class="alert amber chanb"><b>📴 Đang mất mạng — vẫn bán được bình thường</b><span>Đơn lưu trên máy này. Có mạng lại app tự lưu lên Google Drive. Không xoá app, không xoá dữ liệu trình duyệt lúc này.</span></div>`;
@@ -1555,7 +1565,7 @@ function renderHome(){if(NV){renderNvHome();return}
   const start=homeStart();
   /* 02/11 anh Thái: trang chủ gọn như Sổ Bán Hàng — số liệu chi tiết chuyển sang tab Báo cáo */
   $('v-home').innerHTML=`
-  ${chanBar()}${tamBar()}${homeMonth()}${homeSearch()}${homeTodo()}${start}
+  <div class="choBar">${choBar()}</div>${chanBar()}${tamBar()}${homeMonth()}${homeSearch()}${homeTodo()}${start}
   ${db.sample&&!XEM&&!DEMO?`<div class="alert amber"><b>Đang xem dữ liệu mẫu.</b><span>Bấm thử thoải mái. Khi dùng thật, vào Thêm → Cài đặt → Bắt đầu dữ liệu thật.</span></div>`:''}
   ${homeQuick()}${homeWeb()}`;
   $('v-home').insertAdjacentHTML('afterbegin',pnChoBar()+trungBar());
@@ -1693,7 +1703,7 @@ function renderSell(){
   if(sellMode==='pk'&&!pkTabOn())sellMode='dv';
   if(sellMode==='sc'&&!on('sua'))sellMode='may';
   if(cartOpen&&sellMode!=='tra'){$('v-sell').innerHTML=`<button type="button" class="back" data-cclose="1">‹ Tiếp tục chọn hàng</button><h2 class="cxt">Xác nhận đơn</h2>${renderCart()}`;return}
-  $('v-sell').innerHTML=`
+  $('v-sell').innerHTML=`<div class="choBar">${choBar()}</div>
   ${sellMode==='tra'?`<button type="button" class="back" data-sm="may">‹ Về màn bán hàng</button>`:`<div class="seg top ssm" role="group"><button data-sm="may" aria-pressed="${sellMode==='may'||sellMode==='pk'}">${pkTabOn()?'Điện thoại & PK':'Điện thoại'}</button><button data-sm="dv" aria-pressed="${sellMode==='dv'}">Dịch vụ khác</button>${on('sua')?`<button data-sm="sc" aria-pressed="${sellMode==='sc'}">Sửa chữa${scL?`<small>${scL.filter(p=>!['Đã trả máy','Không sửa được'].includes(p.tt)).length}</small>`:''}</button>`:''}</div>${(sellMode==='may'||sellMode==='pk')&&pkTabOn()?`<div class="seg ssub" role="group"><button data-sm="may" aria-pressed="${sellMode==='may'}">📱 Điện thoại <small>${stock().length}</small></button><button data-sm="pk" aria-pressed="${sellMode==='pk'}">🎧 Phụ kiện <small>${db.hang.filter(h=>h.sl>0&&PK_G.includes(h.nhom)).length}</small></button></div>`:''}`}
   ${sellMode==='sc'?'<div id="sellSc"></div>':sellMode==='may'&&!NV||sellMode==='may'?`
   <div class="panel"><form id="fSell" autocomplete="off">
@@ -3357,7 +3367,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='scSp'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261117-1950';let verLuc=0;
+const BUILD='20261121-0715';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}

@@ -1,6 +1,6 @@
 {
-"capNhat": "2026-11-17",
-"tong": 317,
+"capNhat": "2026-11-21",
+"tong": 318,
 "ds": [
 {
 "id": 1,
@@ -1926,6 +1926,13 @@
 "nhom": "Hỗ trợ & lỗi khác",
 "q": "Góp ý tính năng mới?",
 "a": "Gửi qua Sale hoặc page Facebook Shop Gọn; tính năng được nhiều shop cần sẽ được làm."
+},
+{
+"id": 318,
+"nhom": "Dữ liệu, sao lưu, đồng bộ, bảo mật",
+"q": "Thanh vàng/đỏ \"Còn đơn chưa lên Google Drive\" là gì? Đơn chưa lưu lên drive thì làm sao?",
+"a": "Thanh này hiện ở Trang chủ và màn Bán khi có đơn bán xong quá 1 phút mà app chưa lưu được lên Google Drive (vàng: dưới 1 giờ, đỏ: từ 1 giờ). Lúc đó đơn mới chỉ nằm trên máy này. Bấm \"Lưu lên Drive ngay\", chờ thanh tự tắt rồi mới tắt app. Nếu thanh báo hết phiên Google thì bấm \"Đăng nhập lại Google\". Mất mạng thì cứ bán, có mạng lại app tự lưu, nhưng không xoá app hay dữ liệu trình duyệt khi thanh còn hiện.",
+"go": "sell"
 }
 ]
 }
