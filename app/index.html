@@ -3389,7 +3389,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='scSp'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261121-1230';let verLuc=0;
+const BUILD='20261125-1215';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
@@ -4286,7 +4286,7 @@ const CH={d:null,luc:0,msg:'',busy:false,den:[],di:{},hopLuc:0,bao:0};
 function chMau(){return !!(XEM||DEMO||db.sample)}
 const CH_MAU={ma:'CGLK8M2',ten:'Chuỗi LK Mobile',laChu:true,tt:'ok',chu:'lkmobile@gmail.com',shops:[{email:'lkmobile@gmail.com',ten:'LK Mobile Store (shop mẹ)',tt:'ok',chu:true},{email:'lk.chogao@gmail.com',ten:'LK Mobile Chợ Gạo',tt:'ok'},{email:'lk.goden@gmail.com',ten:'LK Mobile Gò Đen',tt:'ok'},{email:'lk.mytho@gmail.com',ten:'LK Mobile Mỹ Tho 2',tt:'cho'}]};
 function chKey(){return 'sg_chuoi_'+(GG.email||'')}
-function chNap(){if(chMau()){CH.d=CH_MAU;return}if(CH.d===null){try{CH.d=JSON.parse(localStorage.getItem(chKey())||'null')}catch(_){}}}
+function chNap(){const m=chMau();if(CH.mau!==undefined&&CH.mau!==m){/* 25/11 anh Thái: đổi xem thử ↔ shop thật → bỏ chuỗi + số chuỗi cũ (Xuân Thành hiện "LK Mobile Chợ Gạo" của chuỗi mẫu) */CH.d=null;CH.luc=0;CH.den=[];CH.di={};CS.ds=null;CS.luc=0;CS.sel='';CS.msg='';}CH.mau=m;if(m){CH.d=CH_MAU;return}if(CH.d===CH_MAU)CH.d=null;if(CH.d===null){try{CH.d=JSON.parse(localStorage.getItem(chKey())||'null')}catch(_){}}}
 async function chGoi(o){if(chMau())return {ok:false,msg:'Tài khoản test: chuỗi mẫu, không gửi máy chủ'};if(!GG.token||!GG.LICENSE_URL)return {ok:false,msg:'Cần đăng nhập Google của shop'};
   if(!navigator.onLine)return {ok:false,msg:'Đang mất mạng — thử lại khi có mạng'};
   try{const r=await Promise.race([nvPost({...o,token:GG.token,shopTen:db.shop.ten||''}),new Promise(ok=>setTimeout(()=>ok({ok:false,msg:'Máy chủ chậm, thử lại'}),15000))]);return r||{ok:false,msg:'Không kết nối được'}}catch(_){return {ok:false,msg:'Không kết nối được máy chủ'}}}

@@ -451,3 +451,8 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - QR quét NGAY TRONG APP (nút 📷 ở Trang chủ PG, `NVT.quet`, BarcodeDetector qr_code / ponyfill ZXing) — iPhone: app ngoài màn hình chính có bộ nhớ riêng, quét bằng camera ngoài sẽ mở Safari → không nối. Test 35/35.
 - Chưa làm: nút "Đổi chìa" (PG nghỉ: xoá PG khỏi danh sách là đơn số đó bị bỏ).
 
+
+## 73. (25/11 12h15) SỬA: CHUỖI MẪU KẸT Ở SHOP THẬT — nhánh `sua-chuoi-mau-ket` (BUILD 20261125-1215)
+- Lỗi: Xuân Thành Kim Sơn (shop thật, đã kích hoạt) hiện thẻ "Chuỗi hôm nay · 3 shop · 59tr · Đứng đầu: LK Mobile Chợ Gạo" = **chuỗi mẫu** `CH_MAU`/`csMau`. Nguyên nhân: máy mở xem thử trước → `CH.d=CH_MAU`, `CS.ds=csMau()` nằm trong bộ nhớ; vào shop thật `chNap` chỉ đọc localStorage khi `CH.d===null` → giữ nguyên chuỗi mẫu.
+- Sửa `chNap`: nhớ `CH.mau`; đổi xem thử ↔ shop thật thì xoá `CH.d/den/di` + `CS.ds/luc/sel/msg`; shop thật mà `CH.d===CH_MAU` cũng bỏ. Dữ liệu sổ/Drive không đụng.
+- Test mới `_tam/test-chuoi-mau-ket.py` 14/14 (bản cũ 4 ❌) · doanh thu chuỗi 20/20 · chuỗi 24/24 · toàn bộ 73/75 (2 lỗi cũ).
