@@ -384,6 +384,7 @@ body.nvmode nav.tabs button[data-v=add],body.nvmode nav.tabs button[data-v=rpt]{
 .hdp{padding:10px 12px 12px;margin-bottom:12px}.hdv{display:flex;flex-direction:column;gap:1px;padding:10px 4px 0}.hdv small{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.hdv b{font-size:clamp(20px,6.4vw,26px);font-weight:800;white-space:nowrap}.hdv i{font-style:normal;font-size:13px;color:var(--muted)}
 body.nv .hmg>div.own{display:none}
 .sclk{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line,#dfe3ea)}.sclkr{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--line,#eef0f4)}.sclkr span:first-child{display:flex;flex-direction:column;min-width:0}.sclkr small{color:var(--muted);font-size:12px}.sclkq{display:flex;align-items:center;gap:8px}.sclkq button{min-width:40px;min-height:40px;padding:0}.sclkg{display:flex;width:100%;justify-content:space-between;align-items:center;gap:8px;text-align:left;padding:10px 12px;margin-top:6px;border:1px solid var(--line,#dfe3ea);border-radius:10px;background:transparent;min-height:44px}.sclkg small{color:var(--muted);white-space:nowrap}
+.dvtt{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:4px 0 10px}.dvtt span{grid-column:1/-1;font-size:13px;color:var(--muted)}.dvtt button{min-height:44px;padding:0 14px;border-radius:10px}.dvtt button[aria-pressed="true"]{background:var(--pen,#0f766e);color:#fff;border-color:transparent}.thl .thsub{font-size:12.5px;opacity:.85;font-weight:600}
 .thl{display:grid;grid-template-columns:1fr auto;gap:3px 10px;align-items:baseline;margin-top:10px;padding-top:9px;border-top:1px dashed rgba(127,127,127,.4);font-size:13px}.thl b.num{font-size:14.5px;font-weight:800;white-space:nowrap}.thl small{opacity:.75;font-size:11.5px}body.nv .hmg{grid-template-columns:1fr}
 .pt .pp,.sc .spr{font-size:clamp(11.5px,3.6vw,13.5px)!important;white-space:nowrap;letter-spacing:-.01em}.pt b,.sc b{overflow-wrap:anywhere}
 .nvok,.nvno{display:block;font-size:12px;margin-top:2px}.nvok{color:var(--good,#15803d)}.nvno{color:#b45309;font-weight:700}.nvmkb{flex:none;padding:7px 10px;font-size:12.5px;margin-right:4px}.nvmkrow{margin:6px 0 2px}.nvmkrow input{flex:1;min-width:0}.nvmkh{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
@@ -745,6 +746,10 @@ const brandOn=b=>b==='Khác'||(db.shop.brands||BRAND_DEF).includes(b);
 const brandsOn=()=>BRANDS.filter(brandOn);
 const DV={thuho:['Tiền điện','Tiền nước','Internet, truyền hình','Trả góp hộ','Cước điện thoại','Khác'],ck:['Chuyển khoản hộ','Rút tiền mặt','Nạp tiền ví','Khác']};
 const isDv=k=>k==='thuho'||k==='ck';
+/* 26/11 anh Thái: dịch vụ chọn khách trả Tiền mặt / Chuyển khoản. Mặc định: Rút tiền mặt = khách chuyển khoản vào TK shop; còn lại = tiền mặt */
+let dvTt='';const dvTtCur=()=>dvTt||(($('dLoai')||{}).value==='Rút tiền mặt'?'Chuyển khoản':'Tiền mặt');
+document.addEventListener('click',e=>{const b=e.target.closest('[data-dvtt]');if(!b)return;dvTt=b.dataset.dvtt;document.querySelectorAll('[data-dvtt]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.dvtt===dvTt))});
+document.addEventListener('change',e=>{if(e.target.id!=='dLoai'||dvTt)return;const t=dvTtCur();document.querySelectorAll('[data-dvtt]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.dvtt===t))});
 const KHO=[{k:'pk',t:'Phụ kiện',l:['Cường lực','Ốp lưng','Sạc, cáp','Tai nghe','Loa','Pin dự phòng','Thẻ nhớ, USB','Đồng hồ thông minh','Giá đỡ, gậy selfie','Phụ kiện khác']},{k:'sim',t:'Sim số',l:['Sim số đẹp','Sim thường','Sim data','Thẻ cào','Sim khác']},{k:'sua',t:'Linh kiện sửa chữa',l:['Màn hình','Pin thay thế','Chân sạc','Camera','Loa, mic','Linh kiện khác']}];
 const khoOn=()=>KHO.filter(g=>on(g.k));
 const khoName={pk:'Phụ kiện',sim:'Sim số',sua:'Linh kiện'};
@@ -776,7 +781,7 @@ function sampleDb(){
   sold.forEach(([d,ten,gn,gb,tt],i)=>{const imei=makeImei(5000+i);const ngay=iso(Date.now()-d*DAY);may.push({imei,ten,hang:guessBrand(ten),giaNhap:gn,giaBan:gb,ngayNhap:iso(Date.now()-(d+8+i)*DAY),ncc:'NPP Mekong',tt:'ban'});
     don.push({id:'s'+i,ngay,gio:(9+i%10)+':'+String(10+i*3%50).padStart(2,'0'),loai:'may',imei,ten,hang:guessBrand(ten),giaBan:gb,giaVon:gn,tt,cty:tt==='Trả góp'?CTY[i%3]:'',traTruoc:tt==='Trả góp'?Math.round(gb*0.3/100000)*100000:0,kyHan:tt==='Trả góp'?[6,9,12][i%3]:0,maHS:tt==='Trả góp'?'HS'+(240100+i*37):'',tgTT:tt==='Trả góp'?TG_STEPS[i%3]:'',khach:names[i],sdt:'09'+String(10000000+i*7919).slice(0,8),bh:12,huy:null})});
   [[0,'pk','Cường lực + ốp',150000,45000],[0,'sim','Sim Viettel số đẹp',250000,180000],[0,'pk','Sạc nhanh 33W',290000,160000],[1,'sua','Thay pin',450000,220000],[1,'pk','Tai nghe Bluetooth',390000,210000],[2,'pk','Cáp Type-C',80000,25000],[3,'sim','Thẻ cào',200000,192000],[4,'pk','Cường lực',100000,25000],[5,'sua','Thay màn hình',1200000,800000],[6,'pk','Ốp lưng',120000,35000]].forEach(([d,n2,ten,gb,gv],i)=>don.push({id:'p'+i,ngay:iso(Date.now()-d*DAY),gio:'15:'+String(i*5).padStart(2,'0'),loai:n2,ten,giaBan:gb,giaVon:gv,tt:'Tiền mặt',huy:null}));
-  [[0,'thuho','Thu hộ Tiền điện',1250000,10000,'Cô Lan'],[0,'ck','Chuyển khoản hộ',3000000,15000,'Anh Bảy'],[0,'ck','Rút tiền mặt',2000000,20000,''],[1,'thuho','Thu hộ Trả góp hộ',1890000,10000,'Chị Hoa']].forEach(([d,l,ten,tien,phi,k],i)=>don.push({id:'d'+i,ngay:iso(Date.now()-d*DAY),gio:'1'+(i+1)+':2'+i,loai:l,ten,soTien:tien,giaBan:phi,giaVon:0,khach:k,tt:'Tiền mặt',huy:null}));
+  [[0,'thuho','Thu hộ Tiền điện',1250000,10000,'Cô Lan'],[0,'ck','Chuyển khoản hộ',3000000,15000,'Anh Bảy'],[0,'ck','Rút tiền mặt',2000000,20000,''],[1,'thuho','Thu hộ Trả góp hộ',1890000,10000,'Chị Hoa']].forEach(([d,l,ten,tien,phi,k],i)=>don.push({id:'d'+i,ngay:iso(Date.now()-d*DAY),gio:'1'+(i+1)+':2'+i,loai:l,ten,soTien:tien,giaBan:phi,giaVon:0,khach:k,tt:/^Rút/.test(ten)||k==='Anh Bảy'?'Chuyển khoản':'Tiền mặt',huy:null}));
   {let sd=11;const r=()=>((sd=sd*16807%2147483647)/2147483647);const pkL=[['pk','Cường lực',100000,25000],['pk','Ốp lưng',120000,35000],['sim','Sim số',300000,180000],['sua','Thay pin',450000,220000],['pk','Sạc nhanh',290000,160000]];
     for(let d=7;d<=160;d++){const ngay=iso(Date.now()-d*DAY);const nm=Math.floor(r()*4);for(let j=0;j<nm;j++){const [ten,gn,gb]=models[Math.floor(r()*models.length)];const imei=makeImei(9000+d*10+j);const off=Math.round((r()*0.08)*gb/10000)*10000;
       may.push({imei,ten,hang:guessBrand(ten),giaNhap:gn,giaBan:gb,ngayNhap:iso(Date.now()-(d+10)*DAY),ncc:'NPP Mekong',tt:'ban'});
@@ -1221,19 +1226,21 @@ const pinHash=v=>{let h=7;for(const c of String(v))h=(h*31+c.charCodeAt(0))%1000
 const CHI_LOAI=['Mặt bằng','Điện nước','Lương nhân viên','Ship, xăng xe','Ăn uống, lặt vặt','Khác'];
 const chiOf=(a,b)=>(db.chi||[]).filter(c=>c.ngay>=a&&c.ngay<=b).reduce((t,c)=>t+(+c.tien||0),0);
 function ketNgay(day){const L=live().filter(d=>d.ngay===day);const B={};L.forEach(d=>{(B[d.bill||d.id]=B[d.bill||d.id]||[]).push(d)});
-  let tm=0,ck=0,no=0,thuho=0,tg=0,tgTra=0,tgN=0;
-  Object.values(B).forEach(ls=>{const tt=ls[0].tt;let cash=0;ls.forEach(d=>{let v=d.giaBan;if(isDv(d.loai)&&d.soTien){if(/^Rút tiền/.test(d.ten))v-=d.soTien;else{v+=d.soTien;thuho+=d.soTien}}cash+=v});
+  let tm=0,ck=0,no=0,thuho=0,tg=0,tgTra=0,tgN=0,rut=0;
+  Object.values(B).forEach(ls=>{const tt=ls[0].tt;let cash=0;ls.forEach(d=>{let v=d.giaBan;if(isDv(d.loai)&&d.soTien){if(/^Rút tiền/.test(d.ten)){rut+=d.soTien;if(tt!=='Tiền mặt')v+=d.soTien/* khách chuyển khoản số tiền + phí vào TK shop */}else{v+=d.soTien;thuho+=d.soTien}}cash+=v});
     if(tt==='Trả góp'){/* 08/11 anh Thái: trả góp — khách đưa trước bao nhiêu thì vào két/TK bấy nhiêu, phần còn lại công ty TC trả sau */const tra=Math.min(cash,ls.reduce((a,x)=>a+(+x.traTruoc||0),0)),h=ls.find(x=>x.tgTT)||ls[0];if(h.ttTruoc==='Chuyển khoản')ck+=tra;else tm+=tra;tgTra+=tra;tg+=cash-tra;tgN++}
     else if(tt==='Tiền mặt + CK'){const t2=Math.min(cash,Math.max(0,+ls[0].tmPart||0));tm+=t2;ck+=cash-t2}
     else if(tt==='Chuyển khoản')ck+=cash;else if(tt==='Ghi nợ'){const n=+(ls[0].no||0);no+=n;tm+=cash-n}else tm+=cash});
   const chi=chiOf(day,day),dau=(db.shop.dau&&db.shop.dau.ngay===day)?+db.shop.dau.tien||0:0;
-  return {tm,ck,no,thuho,tg,tgTra,tgN,chi,dau,ket:dau+tm-chi}}
+  tm-=rut;/* rút tiền: shop đưa tiền mặt cho khách */
+  return {tm,ck,no,thuho,rut,tg,tgTra,tgN,chi,dau,ket:dau+tm-chi}}
 const profitOf=d=>d.giaBan-(d.giaVon||0);
 /* 26/11 anh Thái: tiền khách đưa để thu hộ / chuyển tiền (không phải doanh thu, lời chỉ là phí) — rút tiền mặt là tiền ra (âm) */
-const dvTien=d=>!d||!isDv(d.loai)||!(+d.soTien)?0:(/^Rút tiền/.test(d.ten||'')?-(+d.soTien):+d.soTien);
-function sumRange(fromIso,toIso){const L=live().filter(d=>d.ngay>=fromIso&&d.ngay<=toIso&&d.loai!=='thu');return {dt:L.reduce((s,d)=>s+d.giaBan,0),loi:L.reduce((s,d)=>s+profitOf(d),0),may:L.filter(d=>d.loai==='may').length,n:L.filter(d=>!d.lkSc).length,th:L.reduce((s,d)=>s+dvTien(d),0),nth:L.filter(d=>dvTien(d)).length}}
+const dvTien=d=>!d||!isDv(d.loai)||!(+d.soTien)?0:(/^Rút tiền/.test(d.ten||'')?(d.tt==='Tiền mặt'?-(+d.soTien):0):+d.soTien);
+function sumRange(fromIso,toIso){const L=live().filter(d=>d.ngay>=fromIso&&d.ngay<=toIso&&d.loai!=='thu');return {dt:L.reduce((s,d)=>s+d.giaBan,0),loi:L.reduce((s,d)=>s+profitOf(d),0),may:L.filter(d=>d.loai==='may').length,n:L.filter(d=>!d.lkSc).length,th:L.reduce((s,d)=>s+dvTien(d),0),nth:L.filter(d=>isDv(d.loai)&&+d.soTien).length,a:fromIso,b:toIso}}
+function ketTong(a,b){const o={tm:0,ck:0,no:0,rut:0};const t=todayIso();let k=a,i=0;while(k<=b&&k<=t&&i++<400){const x=ketNgay(k);o.tm+=x.tm;o.ck+=x.ck;o.no+=x.no;o.rut+=x.rut||0;k=iso(Date.parse(k+'T12:00:00')+DAY)}return o}
 /* dòng "thu hộ / chuyển tiền + Tổng tiền thu" dùng chung: chỉ hiện khi có giao dịch hộ */
-const thLine=(dt,th,nth)=>nth?`<div class="thl"><span>💸 Thu hộ / chuyển tiền${nth?' · '+nth+' lần':''}</span><b class="num">${th<0?'−':''}${money(Math.abs(th))}</b><span><b>Tổng tiền thu</b> <small>(khớp két + TK)</small></span><b class="num">${money(dt+th)}</b></div>`:'';
+const thLine=(dt,th,nth,a,b)=>{if(!nth)return '';const k=a&&b?ketTong(a,b):null;return `<div class="thl"><span>💸 Thu hộ / chuyển tiền · ${nth} lần</span><b class="num">${th<0?'−':''}${money(Math.abs(th))}</b>${k&&k.rut?`<span>Rút tiền mặt (đưa khách)</span><b class="num">−${money(k.rut)}</b>`:''}<span><b>Tổng tiền thu</b> <small>(khớp két + TK)</small></span><b class="num">${money(dt+th)}</b>${k?`<span class="thsub">💵 Tiền mặt vào két</span><b class="num thsub">${money(k.tm)}</b><span class="thsub">🏦 Chuyển khoản vào TK</span><b class="num thsub">${money(k.ck)}</b>${k.no?`<span class="thsub">📒 Ghi nợ</span><b class="num thsub">${money(k.no)}</b>`:''}`:''}</div>`};
 const stock=()=>db.may.filter(m=>m.tt==='ton');
 const tgPending=()=>live().filter(d=>d.tt==='Trả góp'&&d.tgTT&&d.tgTT!=='Đã giải ngân');
 const tgVay=d=>Math.max(0,(d.tgTong!=null?+d.tgTong:+d.giaBan||0)-(+d.traTruoc||0));
@@ -1254,14 +1261,14 @@ function reportPanel(){
     for(let d=1;d<=last;d++){const k=rm+'-'+String(d).padStart(2,'0');const r=d<=endD?sumRange(k,k):{dt:0,loi:0,may:0,n:0};bars.push({k,l:(d===1||d%5===0)?String(d):'',v:r.loi,r,lbl:'Ngày '+d+'/'+(+rm.slice(5))})}
     sum=sumRange(rm+'-01',rm+'-31');}
   else{const ms=monthsList().slice(0,12).reverse();ms.forEach(k=>{const r=sumRange(k+'-01',k+'-31');bars.push({k,l:'T'+(+k.slice(5)),v:r.loi,r,lbl:mLbl(k)})});
-    sum=bars.reduce((a,b)=>({dt:a.dt+b.r.dt,loi:a.loi+b.r.loi,may:a.may+b.r.may,n:a.n+b.r.n,th:a.th+b.r.th,nth:a.nth+b.r.nth}),{dt:0,loi:0,may:0,n:0,th:0,nth:0});}
+    sum=bars.reduce((a,b)=>({dt:a.dt+b.r.dt,loi:a.loi+b.r.loi,may:a.may+b.r.may,n:a.n+b.r.n,th:a.th+b.r.th,nth:a.nth+b.r.nth,a:a.a&&a.a<b.r.a?a.a:b.r.a,b:a.b>b.r.b?a.b:b.r.b}),{dt:0,loi:0,may:0,n:0,th:0,nth:0,a:'',b:''});}
   const mx=Math.max(...bars.map(b=>b.v),1);const sel=bars.find(b=>b.k===rptSel);
   let cmp='';if(rptMode==='ngay'){const pd=new Date(rm+'-01');pd.setMonth(pd.getMonth()-1);const pk=iso(pd).slice(0,7);/* 06/11 anh Thái: tháng đang chạy so CÙNG KỲ (1→hôm nay của tháng trước), tháng đã qua so cả tháng */const dang=rm===cur,nd=+t.slice(8),lastP=new Date(+pk.slice(0,4),+pk.slice(5),0).getDate(),den=dang?Math.min(nd,lastP):31;const p=sumRange(pk+'-01',pk+'-'+String(den).padStart(2,'0'));if(p.loi)cmp=` · ${sum.loi>=p.loi?'▲':'▼'} ${Math.abs(Math.round((sum.loi/p.loi-1)*100))}% lời so với ${dang?`cùng kỳ 1–${den}/${+pk.slice(5)}`:mLbl(pk).toLowerCase()}`}
   return `<div class="panel own"><div class="rh"><h2 style="margin:0">Tình hình kinh doanh</h2></div>
     <div class="seg" role="group" style="margin:10px 0"><button data-rm="ngay" aria-pressed="${rptMode==='ngay'}">Theo ngày</button><button data-rm="thang" aria-pressed="${rptMode==='thang'}">Theo tháng</button></div>
     ${rptMode==='ngay'?`<div class="rpick"><label>Tháng<select id="rMonth">${monthsList().map(k=>`<option value="${k}" ${k===rm?'selected':''}>${+k.slice(5)}/${k.slice(0,4)}</option>`).join('')}</select></label><label>📅 Chọn ngày<input id="rDay" type="date" max="${t}" value="${rptSel&&rptSel.length===10?rptSel:''}"></label></div>`
       :`<div class="rpick r1"><label>📅 Chọn tháng<select id="rThang"><option value="">— Chọn tháng để xem chi tiết —</option>${monthsList().slice(0,12).map(k=>`<option value="${k}" ${k===rptSel?'selected':''}>${mLbl(k)}</option>`).join('')}</select></label></div>`}
-    <div class="kpis" style="margin-bottom:12px"><div class="kpi"><div class="eyebrow">${rptMode==='ngay'?'Doanh thu':'DT 12 tháng'}</div><div class="v num" style="font-size:22px">${short(sum.dt)}</div><div class="d">${sum.may} máy · ${sum.n-sum.may} đơn</div></div><div class="kpi"><div class="eyebrow">Tiền lời</div><div class="v num good" style="font-size:22px">${short(sum.loi)}</div><div class="d">${sum.dt?'Biên '+Math.round(sum.loi/sum.dt*100)+'%':'—'}</div></div></div>${thLine(sum.dt,sum.th,sum.nth)}
+    <div class="kpis" style="margin-bottom:12px"><div class="kpi"><div class="eyebrow">${rptMode==='ngay'?'Doanh thu':'DT 12 tháng'}</div><div class="v num" style="font-size:22px">${short(sum.dt)}</div><div class="d">${sum.may} máy · ${sum.n-sum.may} đơn</div></div><div class="kpi"><div class="eyebrow">Tiền lời</div><div class="v num good" style="font-size:22px">${short(sum.loi)}</div><div class="d">${sum.dt?'Biên '+Math.round(sum.loi/sum.dt*100)+'%':'—'}</div></div></div>${thLine(sum.dt,sum.th,sum.nth,sum.a,sum.b)}
     <div class="bars rb">${bars.map(b=>`<button class="bar${b.k===rptSel?' now':''}" data-rsel="${b.k}" aria-label="${b.lbl}"><i style="height:${Math.max(0,b.v)/mx*100}%"></i><span>${b.l}</span></button>`).join('')}</div>
     <div class="rsel">${sel?`<b>${sel.lbl}</b><span class="num">Doanh thu ${money(sel.r.dt)} · lời <b class="good">${money(sel.r.loi)}</b> · ${sel.r.may} máy</span>`:`<span>${rptMode==='ngay'?'Chọn ngày ở lịch (hoặc bấm cột) để xem đơn ngày đó':'Chọn tháng (hoặc bấm cột) để xem lãi từng model'}${cmp}</span>`}</div>
     ${sel&&rptMode==='ngay'?rDonNgay(sel.k):''}
@@ -1502,7 +1509,7 @@ function homeMonth(){const t=todayIso(),y=iso(Date.now()-DAY);
   const k=K[homeD]?homeD:'today',r=sumRange(K[k][1],K[k][2]);
   const tb=x=>`<button type="button" data-hday="${x}" aria-pressed="${k===x}">${K[x][0]}</button>`;
   const body=(!r.n&&k==='today')?`<div class="hme"><b>Chưa có đơn hôm nay.</b><span>Bán xong đơn đầu tiên, doanh thu và tiền lời hiện ở đây.</span><button type="button" class="hmb" data-v="sell">Bán đơn đầu tiên</button></div>`
-    :`<div class="hmg"><div><small>Doanh thu</small><b class="num">${money(r.dt)}</b><i>${r.may} máy · ${r.n-r.may} đơn khác</i></div><div class="own"><small>Lợi nhuận</small><b class="num">${money(r.loi)}</b><i>Biên ${r.dt?Math.round(r.loi/r.dt*100):0}%</i></div></div>${thLine(r.dt,r.th,r.nth)}`;
+    :`<div class="hmg"><div><small>Doanh thu</small><b class="num">${money(r.dt)}</b><i>${r.may} máy · ${r.n-r.may} đơn khác</i></div><div class="own"><small>Lợi nhuận</small><b class="num">${money(r.loi)}</b><i>Biên ${r.dt?Math.round(r.loi/r.dt*100):0}%</i></div></div>${thLine(r.dt,r.th,r.nth,r.a,r.b)}`;
   return `<div class="hmo hmo2"><div class="hseg" role="group" aria-label="Kỳ">${['today','yest','week','month'].map(tb).join('')}</div>${body}<div class="hmh"><span>${k==='month'?'Tính từ 01/'+t.slice(5,7):''}</span><button type="button" class="hml" data-v="rpt">Báo cáo ›</button></div></div>${homeNv(K[k][1],K[k][2],K[k][0])}${homeLai(K[k][1],K[k][2],K[k][0])}`}
 /* 07/11 14h34 anh Thái: dưới thẻ doanh thu → doanh thu TỪNG NHÂN VIÊN theo đúng kỳ đang chọn (Hôm nay / Hôm qua / 7 ngày / Tháng), xếp từ cao xuống — nhìn biết ai bán tốt, ai yếu */
 /* 07/11 15h51 anh Thái (góp ý chủ shop): Trang chủ thấy LÃI theo kỳ — khối Nhân viên thêm lãi từng người + tổng lãi, bấm 1 người ra món đã bán;
@@ -1779,6 +1786,7 @@ function pkFormIn(){
 ${isDv(pkNhom)?`
       <label>Loại<select id="dLoai">${DV[pkNhom].map(x=>`<option>${x}</option>`).join('')}</select></label>
       <div class="two"><label>Số tiền giao dịch<input id="dTien" inputmode="numeric" class="num" placeholder="VD: 1.250.000"></label><label>Phí thu khách<input id="pGia" inputmode="numeric" class="num" placeholder="VD: 10.000"></label></div>
+      <div class="dvtt" role="radiogroup" aria-label="Khách trả bằng"><span>Khách trả bằng</span>${['Tiền mặt','Chuyển khoản'].map(t=>`<button type="button" class="ghost" data-dvtt="${t}" aria-pressed="${dvTtCur()===t}">${t==='Tiền mặt'?'💵 Tiền mặt':'🏦 Chuyển khoản'}</button>`).join('')}</div>
       <div class="two"><label>Tên khách<input id="dKhach" placeholder="Không bắt buộc"></label><label>Ghi chú<input id="dNote" placeholder="Mã KH, số TK…"></label></div>
       <small style="color:var(--muted)">Doanh thu và lời chỉ tính phí. Số tiền giao dịch ghi riêng để đối chiếu tiền mặt cuối ngày.</small>`:`
       <label>Tên món<input id="pTen" placeholder="${pkNhom==='sua'?'VD: Thay pin iPhone 11':'VD: Cường lực + ốp'}"></label>
@@ -2528,8 +2536,8 @@ document.addEventListener('submit',e=>{
       cart.push({type:'hang',hangId:it.id,ten:it.ten,nhom:it.nhom,gia:g,von:it.giaNhap,sl});kmGan(cart[cart.length-1],'h|'+it.id);
       pkPick=null;pkQ='';render();window.scrollTo(0,0);toast('Đã thêm '+it.ten+' vào đơn');return}
     if(isDv(pkNhom)){const tien=parseMoney($('dTien').value);if(!tien){$('pErr').textContent='Nhập số tiền giao dịch.';return}
-      const loai=$('dLoai').value;db.don.push({id:uid(),ngay:todayIso(),gio,loai:pkNhom,ten:(pkNhom==='thuho'?'Thu hộ ':'')+loai.toLowerCase().replace(/^./,c=>pkNhom==='thuho'?c:c.toUpperCase()),soTien:tien,giaBan:g,giaVon:0,khach:$('dKhach').value.trim(),note:$('dNote').value.trim(),tt:'Tiền mặt',huy:null});
-      save();render();toast(`Đã ghi ${loai} ${money(tien)} · phí ${money(g)}`);return}
+      const loai=$('dLoai').value;db.don.push({id:uid(),ngay:todayIso(),gio,loai:pkNhom,ten:(pkNhom==='thuho'?'Thu hộ ':'')+loai.toLowerCase().replace(/^./,c=>pkNhom==='thuho'?c:c.toUpperCase()),soTien:tien,giaBan:g,giaVon:0,khach:$('dKhach').value.trim(),note:$('dNote').value.trim(),tt:dvTtCur(),huy:null});dvTt='';
+      save();render();toast(`Đã ghi ${loai} ${money(tien)} · phí ${money(g)} · ${db.don[db.don.length-1].tt.toLowerCase()}`);return}
     const vRaw=$('pVon').value.trim();const v=vRaw?parseMoney(vRaw):Math.round(g*(1-db.shop.pct[pkNhom]/100));
     const ten=$('pTen').value.trim()||NHOM.find(x=>x.k===pkNhom).t;cart.push({type:'free',nhom:pkNhom,ten,gia:g,von:v,uocTinh:!vRaw,sl:1});render();window.scrollTo(0,0);toast('Đã thêm '+ten+' vào đơn');return}
   if(f.id==='fAddH'){{const e0=hTimTen($('hTen').value);if(e0)$('hTen').value=e0.ten}const ten=$('hTen').value.trim(),nhomRaw=$('hNhom').value,nhom=nhomRaw.split('|')[0],loai=nhomRaw.split('|')[1],sl=parseMoney($('hSl').value),gn=parseMoney($('hGN').value),gb=parseMoney(($('hGB')||{}).value||''),mn=parseMoney($('hMin').value);const err=$('hErr');
@@ -3415,7 +3423,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='scSp'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261126-1230';let verLuc=0;
+const BUILD='20261126-1800';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
