@@ -469,3 +469,10 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - Máy chưa từng đăng nhập Gmail: test/xem thử vẫn như cũ (để giới thiệu khách).
 - Anh Thái muốn vào shop test trên máy đã đăng nhập → dùng trình duyệt khác / tab ẩn danh.
 - Test `_tam/test-khoa-test.py` 18/18 · vận hành 3 46/46 · mẫu kẹt 14/14 · toàn bộ 73/75 (2 lỗi cũ).
+
+## 76. (26/11 12h30) SHOP MẸ XEM TỒN KHO CHI TIẾT TỪNG SHOP CON — nhánh `ton-kho-chuoi` (BUILD 20261126-1230), CHỜ anh "OK lên main"
+- `csTom` v3 thêm `kho` = `csKho(stock(),db.hang)`: `m:[[tên,sl,vốn,số >45 ngày,ngày nhập cũ nhất]]` gộp theo tên máy; `h:[[tên,nhóm,sl,vốn,mức báo]]` (còn hàng hoặc có mức báo); KHÔNG IMEI/NCC/khách. Gói kho >22KB thì bớt dần phụ kiện vốn thấp (`cat` = số món bị bớt) — cả gói ≤ ~45KB, ô Sheet 50.000 ký tự.
+- Thêm › Chuỗi có tab **📦 Tồn kho**: chip Cả chuỗi / từng shop · nhóm Điện thoại / Phụ kiện / Sim / Linh kiện · KPI (tồn, vốn, >45 ngày hoặc sắp hết) · ô tìm (`csKq`, chỉ vẽ lại danh sách) · mỗi mẫu ghi "Shop A 3 · Shop B 1" + vốn + tồn lâu + nhập cũ nhất. Shop con bản cũ → "Chưa gửi tồn kho: …".
+- Lối vào: Trang chủ panel chuỗi "📦 Tồn kho" · chi tiết shop nút "📦 Xem tồn kho chi tiết của shop này" (`data-cskho`).
+- Mẫu: 2 shop con lấy kho từ `sampleDb` (`kmau`), KPI tồn tính từ kho.
+- Test `_tam/test-ton-kho-chuoi.py` 26/26 · vận hành 3 46/46 · chuỗi 24/24 · doanh thu chuỗi 20/20 · mẫu kẹt 14/14 · khoá test 18/18 · toàn bộ 73/75 (2 lỗi cũ).
