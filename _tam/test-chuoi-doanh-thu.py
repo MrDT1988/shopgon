@@ -28,9 +28,9 @@ async def main():
     for w in (390,1280):
       ctx,pg,errs=await trang(b,w); E=pg.evaluate
       await E("go('home')"); await pg.wait_for_timeout(200)
-      ok(f'[{w}] Trang chủ shop mẹ có thẻ Chuỗi hôm nay (mẫu)', await pg.locator('.cshome').count()==1)
+      ok(f'[{w}] Trang chủ shop mẹ có thẻ Chuỗi hôm nay (mẫu)', await pg.locator('.cshp').count()==1)
       await pg.screenshot(path=f'/tmp/cs_home_{w}.png')
-      await E("document.querySelector('.cshome').click()"); await pg.wait_for_timeout(300)
+      await E("document.querySelector('[data-cshome]').click()"); await pg.wait_for_timeout(300)
       t=await E("document.getElementById('v-more').innerText")
       ok(f'[{w}] Bấm thẻ → tab Doanh thu, 3 shop xếp hạng', 'Doanh thu chuỗi' in t and 'LK Mobile Chợ Gạo' in t and 'Gò Đen' in t, t[:300])
       ok(f'[{w}] Nhắc shop chưa bán hôm nay', 'Chưa bán đơn nào hôm nay' in t)

@@ -22,7 +22,7 @@ async def trang(b,w):
     await pg.route('**/*',h); await pg.goto(URL+'/app/?demo=1'); await pg.wait_for_timeout(1200); return ctx,pg,errs
 async def home(pg):
     await pg.evaluate("go('home');render()"); await pg.wait_for_timeout(400)
-    return await pg.evaluate("(document.querySelector('.cshome')||{}).innerText||''")
+    return await pg.evaluate("(document.querySelector('.cshp')||{}).innerText||''")
 async def main():
   async with async_playwright() as p:
     b=await p.chromium.launch()
@@ -40,10 +40,10 @@ async def main():
       ctx,pg,errs=await trang(b,w); await home(pg)
       await pg.evaluate(MOCK(THAT)); await pg.evaluate("localStorage.setItem(chKey(),JSON.stringify("+THAT+"))")
       await home(pg); await pg.wait_for_timeout(600); t=await home(pg)
-      ok(f'[{w}] Shop thật có chuỗi: thẻ hiện shop thật, không Chợ Gạo', 'Chợ Gạo' not in t and 'Xuân Thành' in t and '2 shop' in t, t)
+      ok(f'[{w}] Shop thật có chuỗi: thẻ hiện shop thật, không Chợ Gạo', 'Chợ Gạo' not in t and 'Xuân Thành' in t and '2 cửa hàng' in t, t)
       # 3) shop thật → quay lại xem thử: hiện lại chuỗi mẫu, không lẫn số thật
       await pg.evaluate("window.chMau=()=>true"); t=await home(pg)
-      ok(f'[{w}] Quay lại xem thử: chuỗi mẫu 3 shop', 'Chợ Gạo' in t and '3 shop' in t, t)
+      ok(f'[{w}] Quay lại xem thử: chuỗi mẫu 3 shop', 'Chợ Gạo' in t and '3 cửa hàng' in t, t)
       ok(f'[{w}] Không lỗi console (2)', not errs, errs); await ctx.close()
     print(f'{sum(KQ)}/{len(KQ)}')
 asyncio.run(main())
