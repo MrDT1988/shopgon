@@ -463,3 +463,9 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 3. **Shop mẹ**: Trang chủ = panel `.cshp` "Chuỗi · n cửa hàng" + chip kỳ (`data-cshky`) + Tổng doanh thu/lời/máy·đơn (+ thu hộ) + từng cửa hàng (`data-cshsel` → Thêm › Chuỗi › chi tiết). `csChiTiet`: chip kỳ, KPI kỳ, **👥 Nhân viên** (từ `so.nv`), **📅 Doanh thu từng ngày**, 7 ngày, tồn, top. `csTom` v2: `ngay[k][4]`=thu hộ, `nv:{key:{t:tên,d:{ngày:[dt,lời,đơn,máy]}}}` 35 ngày (~5–10KB, không IMEI/khách). Máy chủ `ckSo` lưu json nguyên khối → không cần sửa máy chủ (nếu máy chủ lọc khoá thì chi tiết NV báo "shop con chưa gửi số theo nhân viên").
 - Test mới `_tam/test-van-hanh-3.py` **46/46** · chuỗi 24/24 · doanh thu chuỗi 20/20 · mẫu kẹt 14/14 · chia 40/40 · toàn bộ 73/75 (2 lỗi cũ).
 - Shop con phải mở app bản mới (có mạng) thì shop mẹ mới thấy số theo NV + thu hộ.
+
+## 75. (26/11 11h50) KHOÁ GIAO DIỆN TEST TRÊN MÁY ĐÃ ĐĂNG NHẬP GMAIL — cùng nhánh `van-hanh-3-van-de` (BUILD 20261126-1150)
+- `khoaTest()` = máy có `shopgon_gg.email` hoặc `shopgon_owner`. Khi khoá: `DEMO=false` (link `?demo=1` bị xoá, gỡ `shopgon_test`), gỡ phiên NV test (`shopgon_nv.test`/phiên TEST), màn đăng nhập ẩn tab **Tài khoản test**, ẩn nút **Xem thử tiếp** (chờ kích hoạt, showKh), chặn click `data-gg` xem/test/testnv.
+- Máy chưa từng đăng nhập Gmail: test/xem thử vẫn như cũ (để giới thiệu khách).
+- Anh Thái muốn vào shop test trên máy đã đăng nhập → dùng trình duyệt khác / tab ẩn danh.
+- Test `_tam/test-khoa-test.py` 18/18 · vận hành 3 46/46 · mẫu kẹt 14/14 · toàn bộ 73/75 (2 lỗi cũ).
