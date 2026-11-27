@@ -516,3 +516,7 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - `TRAM.layLai()`: đọc một lần toàn bộ lô trên trạm (`nghe(sid,0)`, bỏ ảnh cache, chờ ≤20s); lô nào có `don/may/pn` mà sổ chưa có (hoặc lệnh xoá dòng còn) → `apLai(ops)`: bỏ op shop, dòng đã có giữ bản trong sổ, dòng thiếu thì thêm, hàng `dl` thì cộng/trừ tồn của lô. Lô đã đủ → bỏ. Đơn PG: máy chính `nvApply` (tự bỏ đơn đã có). Lưu sổ + mốc `db._tram`; máy chính đẩy Drive.
 - Nút ở thẻ ⚡ (chính + phụ). Toast "Đã lấy lại n lô…" / "Đủ rồi — n lô đều đã có".
 - Test `_tam/test-tram-lay-lai.py` 9/9 (mất đơn kiểu cũ → lấy lại đủ, tồn đúng, bấm lần 2 không trùng, máy chính đủ không đổi) · trạm 35/35 · tải lại 7/7.
+
+## 84. (27/11 18h15) "LẤY LẠI ĐƠN" BÁO 0 LÔ TRÊN TRẠM — hiện MÃ TRẠM để so — nhánh `tram-ma` (BUILD 20261127-1815, tram.js?v=8)
+- Máy anh (máy chính LK) bấm Lấy lại → "Đủ rồi — 0 lô trên trạm". Trạm của mã (sid) máy anh KHÔNG có lô nào 30 ngày → hoặc LK không bán qua app gần đây, hoặc các máy LK dùng CHÌA KHÁC NHAU (khác sid → không thấy đơn nhau; máy cửa hàng thành máy phụ của sid khác → đơn không lên Drive). Drive connector của Claude không phải Gmail LK nên chưa kiểm được số file chìa.
+- Thẻ ⚡ hiện "Mã trạm: XXXXXX · máy: YYYY" để anh so giữa các máy.
