@@ -493,3 +493,9 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
   3. Sổ tay `sg_tram_nk` (20 dòng: lúc, lý do, tramW, máy, có Google, số đơn) để dò nguyên nhân thật trên máy LK.
 - Test mới `_tam/test-tram-tu-noi.py` 11/11 (bản cũ 8 ❌) · trạm 35/35 · toàn bộ 73/75 · khoá test 18/18 · dịch vụ 26/26.
 - Việc treo: 1–2 ngày sau đọc `localStorage.sg_tram_nk` trên máy LK để biết sổ mất cờ do đâu.
+
+## 80. (27/11 15h30) CHUỖI: GIỜ CẬP NHẬT + GÓI SỐ DẠNG CHUỖI — cùng nhánh `sua-dvtt-hien-thi` (BUILD 20261127-1530)
+- Ảnh Xuân Thành: dòng shop con hiện "Cập nhật Fri Nov 27 2026 13:11:00 GMT+0700 (Giờ Đông Dương)" → máy chủ trả `luc` dạng ngày JS (ô Sheet tự đổi). `csLucN` đổi về "YYYY-MM-DD HH:mm"; `csLuc`/`csCu` dùng chung → hiện "13:11" / "26/11 07:19" + "shop chưa mở app hôm nay" đúng.
+- `csTai` (2 chỗ): `s.so` là chuỗi JSON thì tự `JSON.parse` (phòng máy chủ trả chuỗi).
+- Song Thuận (26/11 12:16) / Phú Phong (26/11 07:19) gửi số TRƯỚC bản tồn kho (26/11 12:30) → "Chưa gửi tồn kho" là đúng tới khi shop đó mở app bản mới.
+- Test `_tam/test-chuoi-luc.py` 7/7 · chuỗi 24/24 · doanh thu chuỗi 20/20 · tồn kho chuỗi 26/26 · vận hành 3 46/46.

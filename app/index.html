@@ -3423,7 +3423,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='scSp'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261127-1400';let verLuc=0;
+const BUILD='20261127-1530';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
@@ -4428,9 +4428,11 @@ function csMau(){const t=Date.now(),ng=(base,lo)=>{const o={};for(let i=0;i<40;i
     {email:'lk.chogao@gmail.com',ten:'LK Mobile Chợ Gạo',luc,so:{ngay:ng(42e6,1),nv:nvm(['Ngọc Hân (mẫu)','Minh Tú (mẫu)','Chủ shop'],42e6,1),kho:kmau(1),ton:tk(kmau(1),4.5e6),top:[['OPPO A6 Pro 8/256GB',9],['OPPO Reno15 F 5G',6],['iPhone 15 128GB',3]]},nvCho:{[todayIso()]:{dt:5990000,don:1,may:1}}},
     {email:'lk.goden@gmail.com',ten:'LK Mobile Gò Đen',luc:'14:05',so:{ngay:ng(25e6,3),nv:nvm(['Thanh Vy (mẫu)','Chủ shop'],25e6,3),kho:kmau(2),ton:tk(kmau(2),0),top:[['OPPO A5i',5],['Samsung Galaxy A17',3]]},nvCho:{}}]}
 async function csTai(){if(chMau()){CS.ds=csMau();CS.luc=Date.now();return}CS.busy=true;CS.msg='';renderMore();await csGui(1);const r=await chGoi({act:'chuoiSo'});CS.busy=false;
-  if(r&&r.ok){CS.ds=(r.shops||[]).map(s=>s.chu?{...s,so:csTom(),luc:'bây giờ',nvCho:{}}:s);CS.luc=Date.now()}else CS.msg=(r&&r.msg)||'Không tải được doanh thu chuỗi';renderMore()}
-const csLuc=s=>s.luc?(/^\d{4}-\d\d-\d\d \d/.test(s.luc)?(s.luc.slice(0,10)===todayIso()?s.luc.slice(11):dmy(s.luc.slice(0,10))+' '+s.luc.slice(11)):s.luc):'chưa gửi số';
-const csCu=s=>/^\d{4}-\d\d-\d\d \d/.test(s.luc||'')&&s.luc.slice(0,10)<todayIso();
+  if(r&&r.ok){CS.ds=(r.shops||[]).map(s=>{if(typeof s.so==='string'){try{s={...s,so:JSON.parse(s.so)}}catch(_){s={...s,so:null}}}/* 27/11: máy chủ trả gói số dạng chuỗi thì tự đọc */return s.chu?{...s,so:csTom(),luc:'bây giờ',nvCho:{}}:s});CS.luc=Date.now()}else CS.msg=(r&&r.msg)||'Không tải được doanh thu chuỗi';renderMore()}
+/* 27/11: máy chủ có lúc trả giờ cập nhật dạng "Fri Nov 27 2026 13:11:00 GMT+0700…" (ô Sheet tự đổi sang ngày) → đổi về "YYYY-MM-DD HH:mm" */
+const csLucN=s=>{const v=String((s&&s.luc)||'').trim();if(!v)return '';if(/^\d{4}-\d\d-\d\d \d/.test(v))return v;const d=new Date(v);if(isNaN(d))return '';const p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+' '+p(d.getHours())+':'+p(d.getMinutes())};
+const csLuc=s=>{const v=csLucN(s);return v?(v.slice(0,10)===todayIso()?v.slice(11,16):dmy(v.slice(0,10))+' '+v.slice(11,16)):(s&&s.luc?String(s.luc):'chưa gửi số')};
+const csCu=s=>{const v=csLucN(s);return !!v&&v.slice(0,10)<todayIso()};
 /* 26/11 anh Thái: tab 📦 Tồn kho cả chuỗi — gộp theo mẫu, mỗi dòng ghi shop nào còn bao nhiêu; lọc theo shop, nhóm, tìm tên */
 const KN=[['may','📱 Điện thoại'],['pk','🎧 Phụ kiện'],['sim','📶 Sim'],['sua','🔧 Linh kiện']];
 function csKhoGop(){const ds=(CS.ds||[]).filter(s=>!CS.ks||s.email===CS.ks),q=(CS.kq||'').trim().toLowerCase(),G={},thieu=[];let tong=[0,0,0],cat=0;
@@ -4501,7 +4503,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||
 /* Trang chủ shop mẹ: thẻ "Chuỗi hôm nay" (dùng số đã tải gần nhất, tự tải lại tối đa 5 phút/lần) */
 const _renderHome0=renderHome;
 renderHome=function(){_renderHome0();if(NV)return;chNap();const d=CH.d;if(!d||!d.laChu)return;
-  if(!chMau()&&GG.token&&!CS.busy&&Date.now()-CS.luc>300000){CS.luc=Date.now();chGoi({act:'chuoiSo'}).then(r=>{if(r&&r.ok){CS.ds=(r.shops||[]).map(s=>s.chu?{...s,so:csTom(),luc:'bây giờ',nvCho:{}}:s);if(view==='home')render()}})}
+  if(!chMau()&&GG.token&&!CS.busy&&Date.now()-CS.luc>300000){CS.luc=Date.now();chGoi({act:'chuoiSo'}).then(r=>{if(r&&r.ok){CS.ds=(r.shops||[]).map(s=>{if(typeof s.so==='string'){try{s={...s,so:JSON.parse(s.so)}}catch(_){s={...s,so:null}}}/* 27/11: máy chủ trả gói số dạng chuỗi thì tự đọc */return s.chu?{...s,so:csTom(),luc:'bây giờ',nvCho:{}}:s});if(view==='home')render()}})}
   if(chMau()&&!CS.ds)CS.ds=csMau();if(!CS.ds)return;
   /* 26/11 anh Thái: Trang chủ shop mẹ = TỔNG doanh thu chuỗi, dưới là từng cửa hàng; bấm cửa hàng → chi tiết ngày + nhân viên */
   const K=csKy(CS.ky),L=CS.ds.map(s=>({s,o:csTong(s,K.a,K.b)})).sort((a,b)=>b.o.dt-a.o.dt),T=L.reduce((a,r)=>({dt:a.dt+r.o.dt,loi:a.loi+r.o.loi,may:a.may+r.o.may,don:a.don+r.o.don,th:a.th+r.o.th}),{dt:0,loi:0,may:0,don:0,th:0}),mx=Math.max(1,...L.map(r=>r.o.dt));
