@@ -55,8 +55,10 @@ const TRAM={
   /* ---- gửi: gọi trong save() ---- */
   /* hàng chờ lô chưa được trạm xác nhận: cất ở máy (localStorage) — tắt app giữa chừng, mở lại gửi tiếp */
   kQ(){return 'sg_tram_q_'+this.sid},docQ(){return this.docLS(this.kQ(),[])},
-  ghi(){if(!this.k||!this.S||!this.bat())return;const {ops,N}=this.khac();if(!ops.length)return;this.S=N;
-    const id=Date.now().toString(36)+'-'+this.me().slice(0,8)+'-'+Math.random().toString(36).slice(2,8);this.da.add(id);this.luuDa();
+  ghi(){if(!this.S||!this.bat())return;const {ops,N}=this.khac();if(!ops.length)return;this.S=N;
+    const id=Date.now().toString(36)+'-'+this.me().slice(0,8)+'-'+Math.random().toString(36).slice(2,8);
+    /* 27/11: MỌI thay đổi ghi vào NHẬT KÝ RIÊNG CỦA MÁY trên Drive shop (không phụ thuộc máy chính / chìa) */try{NKD.them(id,ops)}catch(_){}
+    if(!this.k)return;this.da.add(id);this.luuDa();
     if(!this.choTu)this.choTu=Date.now();if(!this.chinh())SK.doi();
     this.maHoa({v:1,ops,ts:Date.now()}).then(e=>{const q=this.docQ();q.push({id,c:e.c,iv:e.iv,luc:Date.now()});this.ghiLS(this.kQ(),q);this.gui({id,c:e.c,iv:e.iv})});this.ve()},
   get choGui(){return this.sid?this.docQ().length:0},set choGui(_){},
@@ -75,7 +77,8 @@ const TRAM={
   async nhan(ds,pend,cache){this.fromCache=!!cache;ds.sort((a,b)=>a.t-b.t);let doi=0,cu=this.chinh();
     if(ds.some(d=>!this.da.has(d.id)&&d.d!==this.me()))this.ghi();          /* đẩy thay đổi trên máy trước khi nhận, ảnh chụp không nuốt thay đổi chưa gửi */
     const nvDon=[];
-    for(const d of ds){if(!this.da.has(d.id)&&d.d!==this.me()){
+    const nkDa=new Set((db&&db._nkd&&db._nkd.da)||[]);
+    for(const d of ds){if(!this.da.has(d.id)&&!nkDa.has(d.id)&&d.d!==this.me()){
         if(String(d.d||'').startsWith('nv-')){/* đơn PG: CHỈ máy chính áp (máy khác nhận kết quả qua lô của máy chính) */if(this.chinh()&&this.nvPriv){try{nvDon.push(await this.giaiMaNv(d.c,d.iv))}catch(e){this.loi='Không mở được 1 đơn PG'}}}
         else{try{const o=await this.giaiMa(d.c,d.iv);doi+=this.apDung(o.ops||[])}catch(e){this.loi='Không mở được 1 lô (sai chìa?)'}}}
       this.da.add(d.id);if(d.t>this.lastT)this.lastT=d.t}
@@ -91,12 +94,12 @@ const TRAM={
     this.ve()},
   luuDa(){const a=[...this.da];if(a.length>4000)this.da=new Set(a.slice(-3000));this.ghiLS(this.kD(),[...this.da])},
   /* ---- khởi động: có chìa trên máy thì chạy luôn, không cần Google ---- */
-  async batDau(){if(!this.bat()||this.un||this._dang)return;this._dang=true;try{
+  async batDau(){if(this.bat()&&!this.S&&db)this.S=this.anh();/* 27/11: chưa có chìa/chưa nối trạm vẫn ghi nhật ký Drive */NKD.chay();if(!this.bat()||this.un||this._dang)return;this._dang=true;try{
       if(!this.k){const c=this.docLS(this.kK(),null);if(c&&c.raw&&(c.nvPriv||!(typeof GG!=='undefined'&&GG.token)))await this.datChia(c.raw,{pub:c.nvPub,priv:c.nvPriv});else if(typeof GG!=='undefined'&&GG.token){const o=await this.timChiaDrive();if(!o){this.loi='Chưa có chìa trong Drive — mở máy chính';this.ve();return}await this.datChia(o.k,{pub:o.nvPub,priv:o.nvPriv})}else{this.loi='Cần đăng nhập Google 1 lần để lấy chìa';this.ve();return}}
       /* máy chính chưa có cặp khoá PG (shop bật trạm trước đợt 2) → tạo, cất bản chìa mới nhất vào Drive */
       if(!this.nvPriv&&this.chinh()&&typeof GG!=='undefined'&&GG.token){try{const nv=await this.taoNv();await this.luuChiaDrive(this.raw,nv);await this.datChia(this.raw,nv)}catch(_){}}
       {const m=db&&db._tram;if(m&&m.sid===this.sid&&Array.isArray(m.da)){/* tin mốc nằm trong sổ (đã lưu cùng đơn) hơn mốc rời trên máy */this.lastT=Math.max(+m.t||0,+(db.shop&&db.shop.tramT)||0);this.da=new Set(m.da)}
-       else{this.lastT=Math.max(+this.docLS(this.kT(),0)||0,+(db.shop&&db.shop.tramT)||0);this.da=new Set(this.docLS(this.kD(),[]))}}this.S=this.anh();this.ghiLS('sg_tram_on',1);
+       else{this.lastT=Math.max(+this.docLS(this.kT(),0)||0,+(db.shop&&db.shop.tramT)||0);this.da=new Set(this.docLS(this.kD(),[]))}}if(!this.S)this.S=this.anh();this.ghiLS('sg_tram_on',1);setTimeout(()=>{NKD.gop();NKD.day()},2500);
       const q0=this.docQ();if(q0.length&&!this.choTu)this.choTu=q0[0].luc||Date.now();
       this.san=this.napFB().then(()=>this.FB().dangNhap());await this.san;this.ok=true;this.loi='';
       q0.forEach(x=>this.gui(x,true));
@@ -153,11 +156,82 @@ const TRAM={
   qrNv(){if(!this.sid||!this.nvPub)return '';const o={s:this.sid,p:this.nvPub,t:String((db.shop&&db.shop.ten)||'').slice(0,40)};return location.origin+'/app/#nvtram='+btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')},
   ve(){try{document.querySelectorAll('.tramBar').forEach(el=>{const h=tramBar();if(el.innerHTML!==h)el.innerHTML=h})}catch(_){}}
 };
+/* ===== 27/11/2026 anh Thái: "phải có cách xử lý chứ dễ mất như vậy sao làm" — NHẬT KÝ TỪNG MÁY TRÊN DRIVE SHOP =====
+   - Mỗi máy (đăng nhập Gmail shop) có 1 trang riêng "NK máy XXXX" trong sổ năm trên Drive shop. CHỈ máy đó ghi trang đó → không ai ghi đè ai.
+   - Mọi lô thay đổi (đơn, máy, phiếu nhập, chi, tồn) của máy ghi vào trang của nó ngay khi có mạng (giữ hàng chờ trên máy, mất mạng thì ghi sau).
+   - Máy nào cũng đọc trang của TẤT CẢ máy và gộp phần còn thiếu → không cần máy chính mở, không phụ thuộc chìa/trạm. Máy chính gộp xong thì lưu vào sổ chính.
+   - Gộp an toàn: lô đã nhận qua trạm (cùng mã lô) bỏ qua; dòng thiếu thì thêm (kèm tồn phụ kiện của đúng lô đó); dòng đã có thì lấy bản mới nhất của máy khác; không đụng dòng máy này đang chờ gửi; bỏ cài đặt shop.
+   - Lần đầu mỗi máy gửi "bản kê" mọi đơn/máy/phiếu 35 ngày (chỉ thêm dòng thiếu) → cứu đơn đang nằm kẹt trên máy. */
+const NKD={
+  TAB:'NK máy ',kQ:'sg_nkd_q',kBF:'sg_nkd_bf2',
+  tab(){return this.TAB+String(TRAM.me()).replace(/[^A-Za-z0-9]/g,'').slice(-6).toUpperCase()},
+  ok(){try{return !!(db&&!db.sample&&db.shop&&db.shop.tram)&&typeof NV!=='undefined'&&!NV&&!XEM&&!DEMO}catch(_){return false}},
+  coGG(){return typeof GG!=='undefined'&&!!GG.token&&!!GG.sheetId},
+  q(){return TRAM.docLS(this.kQ,[])},
+  them(id,ops,bf){if(!ops||!ops.length)return;const q=this.q();q.push({id,ts:Date.now(),j:JSON.stringify(ops),...(bf?{bf:1}:{})});TRAM.ghiLS(this.kQ,q);this.hen()},
+  hen(ms){clearTimeout(this._t);this._t=setTimeout(()=>this.day(),ms||3000)},
+  chay(){if(!this.ok())return;this.keBan();if(!this._iv){this._iv=setInterval(()=>{if(this.ok()){this.day();this.gop()}},180000)}this.hen(2000)},
+  /* bản kê lần đầu: mọi đơn/máy/phiếu/chi 35 ngày của máy này → chỉ thêm dòng máy khác thiếu */
+  keBan(){if(TRAM.docLS(this.kBF,0))return;const tu=iso(Date.now()-35*864e5),ops=[];
+    (db.don||[]).forEach(o=>{if(o&&o.id&&String(o.ngay||'')>=tu)ops.push({k:'don',id:String(o.id),v:o})});
+    (db.may||[]).forEach(o=>{if(o&&o.imei)ops.push({k:'may',id:String(o.imei),v:o})});
+    (db.pn||[]).forEach(o=>{if(o&&o.id&&String(o.ngay||'')>=tu)ops.push({k:'pn',id:String(o.id),v:o})});
+    (db.chi||[]).forEach(o=>{if(o&&o.id&&String(o.ngay||'')>=tu)ops.push({k:'chi',id:String(o.id),v:o})});
+    if(ops.length)this.them('bf-'+Date.now().toString(36)+'-'+String(TRAM.me()).slice(0,8),ops,1);TRAM.ghiLS(this.kBF,Date.now())},
+  async tabs(){const r=await GG.api(`https://sheets.googleapis.com/v4/spreadsheets/${GG.sheetId}?fields=sheets.properties.title`);return (r.sheets||[]).map(x=>x.properties.title)},
+  CH:40000,
+  rows(L){const R=[];L.forEach(x=>{const j=(x.bf?'B':'L')+x.j,n=Math.max(1,Math.ceil(j.length/this.CH));for(let i=0;i<n;i++)R.push([x.id,String(x.ts),String(TRAM.me()),i+'/'+n,j.slice(i*this.CH,(i+1)*this.CH)])});return R},
+  parse(V){const m=new Map();(V||[]).forEach(r=>{if(!r||!r[0]||r[0]==='id')return;const [id,ts,d,p,c]=r;const [i,n]=String(p||'0/1').split('/').map(Number);const o=m.get(id)||{id,ts:+ts||0,d:d||'',n:n||1,p:[]};o.p[i||0]=c||'';m.set(id,o)});
+    const out=[];m.forEach(o=>{let k=0;for(let i=0;i<o.n;i++)if(o.p[i]!==undefined)k++;if(k<o.n)return;const s=o.p.join('');try{out.push({id:o.id,ts:o.ts,d:o.d,bf:s[0]==='B',ops:JSON.parse(s.slice(1))})}catch(_){}});return out},
+  /* ---- ghi trang của máy này ---- */
+  async day(){if(this._b||!this.ok()||!this.coGG())return;const q=this.q();if(!q.length)return;this._b=1;const t=this.tab();
+    try{if(this._tab!==GG.sheetId+'|'+t){const T=await this.tabs();if(!T.includes(t)){await GG.api(`https://sheets.googleapis.com/v4/spreadsheets/${GG.sheetId}:batchUpdate`,{method:'POST',body:JSON.stringify({requests:[{addSheet:{properties:{title:t,gridProperties:{rowCount:300,columnCount:6}}}}]})});GG._gr=null;this._cu=[]}
+        else{const V=await GG.docFile(GG.sheetId,[t]);this._cu=V[t]||[]}this._tab=GG.sheetId+'|'+t}
+      const H=['id','ts','may','phan','ops (Shop Gọn tự ghi — KHÔNG sửa/xoá)'],han=Date.now()-36*864e5,cu=(this._cu||[]).filter(r=>r&&r[0]&&r[0]!=='id'&&(+r[1]||0)>=han),co=new Set(cu.map(r=>r[0]));
+      const R=[H,...cu,...this.rows(q.filter(x=>!co.has(x.id)))];
+      await GG.ghiFile(GG.sheetId,{[t]:R});this._cu=R;const len=new Set(R.map(r=>r[0]));
+      TRAM.ghiLS(this.kQ,this.q().filter(x=>!len.has(x.id)));this.loi='';this.luc=Date.now();TRAM.ghiLS('sg_nkd_luc',this.luc)}
+    catch(e){this.loi=String(e&&e.message||e).slice(0,80);this._tab='';this.hen(20000)}
+    finally{this._b=0;if(this.q().length&&!this.loi)this.hen(5000);try{TRAM.ve()}catch(_){}}},
+  /* ---- gộp trang của mọi máy ---- */
+  CO:{don:1,may:1,pn:1},
+  async gop(){if(this._g||!this.ok()||!this.coGG())return 0;this._g=1;let doi=0;
+    try{const T=(await this.tabs()).filter(t=>t.startsWith(this.TAB));if(!T.length)return 0;const V=await GG.docFile(GG.sheetId,T);
+      const L=[];T.forEach(t=>L.push(...this.parse(V[t])));L.sort((a,b)=>a.ts-b.ts||(a.id<b.id?-1:1));
+      const me=String(TRAM.me()),daNk=new Set((db._nkd&&db._nkd.da)||[]),daTr=TRAM.da||new Set();
+      const cho=new Set();this.q().forEach(x=>{try{JSON.parse(x.j).forEach(op=>cho.add(op.k+'|'+op.id))}catch(_){}});
+      const may={};
+      for(const l of L){may[l.d]=Math.max(may[l.d]||0,l.ts);if(daNk.has(l.id)||daTr.has(l.id))continue;
+        const cua=l.d===me,thieu=l.ops.some(op=>{if(!this.CO[op.k])return false;const f=TRAM.BANG[op.k],co=(db[op.k]||[]).some(r=>r&&String(r[f])===String(op.id));return op.x?co:!co});
+        for(const op of l.ops){if(op.k==='shop')continue;const f=TRAM.BANG[op.k];if(!f)continue;const A=db[op.k]=db[op.k]||[];const i=A.findIndex(o=>o&&String(o[f])===String(op.id));
+          if(cho.has(op.k+'|'+op.id))continue;                                  /* máy này đang có sửa chưa gửi trên dòng đó → giữ bản máy này */
+          if(op.x){if(!cua&&!l.bf&&i>=0){A.splice(i,1);doi++}continue}
+          if(op.k==='hang'&&op.dl!==undefined){if(l.bf)continue;if(thieu){if(i>=0)A[i]={...A[i],sl:(+A[i].sl||0)+(+op.dl||0)};else A.push({...op.v,sl:+op.dl||0});doi++}
+            else if(i>=0&&!cua){const v2={...A[i],...op.v,sl:A[i].sl};if(JSON.stringify(v2)!==JSON.stringify(A[i])){A[i]=v2;doi++}}continue}
+          if(i<0){A.push(op.v);doi++;
+            /* bản kê: đơn phụ kiện chưa từng về máy này → trừ tồn đúng 1 lần */
+            if(l.bf&&op.k==='don'&&op.v&&op.v.hangId&&!op.v.huy){const h=(db.hang||[]).find(x=>x.id===op.v.hangId);if(h)h.sl=(+h.sl||0)-(+op.v.sl||1)}}
+          else if(!l.bf&&!cua&&op.k!=='hang'&&JSON.stringify(A[i])!==JSON.stringify(op.v)){A[i]=op.v;doi++}
+          else if(l.bf&&op.k==='may'&&A[i].tt==='ton'&&op.v&&op.v.tt&&op.v.tt!=='ton'&&(db.don||[]).some(d=>d&&!d.huy&&String(d.imei||'')===String(op.id))){A[i]=op.v;doi++}}
+        daNk.add(l.id);if(TRAM.da)TRAM.da.add(l.id)}
+      this.may=may;db._nkd={da:[...daNk].slice(-6000)};
+      if(doi){TRAM.S=TRAM.anh();Store.save(db);try{render()}catch(_){}if(TRAM.chinh()&&this.coGG()){SK.doi();GG.queue(1500)}}
+      else Store.save(db);
+      this.gopLuc=Date.now();return doi}
+    catch(e){this.loiGop=String(e&&e.message||e).slice(0,80);return 0}finally{this._g=0;try{TRAM.ve()}catch(_){}}},
+  /* dòng trạng thái trong thẻ ⚡ */
+  html(){if(!this.ok())return '';const q=this.q(),tu=q.length?Math.min(...q.map(x=>x.ts)):0,ph=tu?Math.round((Date.now()-tu)/60000):0;
+    const luc=+TRAM.docLS('sg_nkd_luc',0)||0,hm=t=>{const d=new Date(t);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')};
+    let s;if(!q.length)s=`📒 Drive: đủ${luc?' · lưu lúc '+hm(luc):''}`;else if(ph>=30)s=`<b style="color:#b91c1c">🔴 ${q.length} lô CHƯA lên Drive (${ph} phút)</b> — ${this.coGG()?'đang thử lại, kiểm mạng':'máy hết phiên Google: bấm Đăng nhập Google'} · ĐỪNG xoá app`;else s=`🟡 ${q.length} lô đang chờ lên Drive`;
+    const M=Object.entries(this.may||{}).filter(([d])=>d).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([d,t])=>`${esc(String(d).slice(-4).toUpperCase())}${d===String(TRAM.me())?'(máy này)':''} ${hm(t)}`).join(' · ');
+    return `<br><small>${s}${M?'<br>Các máy ghi nhật ký: '+M:''}</small>${q.length&&ph>=30&&!this.coGG()?`<div class="inrow" style="margin-top:6px"><button class="ghost" data-gg="login">Đăng nhập Google</button></div>`:''}`}
+};
 function tramBar(){if(typeof NV!=='undefined'&&NV||XEM||DEMO||!db||db.sample)return '';TRAM.hoiPhuc();const on=!!(db.shop&&db.shop.tram);
   if(!on){if(!GG.token||!GG.sheetId)return '';if(!TRAM._kdXong){if(!TRAM._kdLoi)setTimeout(()=>TRAM.kiemDrive(),0);return TRAM._kdLoi?'':`<div class="alert chanb tramb"><b>⚡ Đồng bộ tức thì</b><span>⏳ Đang kiểm tra…</span></div>`}return `<div class="alert chanb tramb"><b>⚡ Đồng bộ tức thì giữa các máy</b><span>Bán ở máy nào, máy khác thấy ngay trong vài giây. Dữ liệu vẫn nằm trong Drive của shop; đồng bộ qua trạm đã khoá — Shop Gọn không đọc được. Máy đang mở sẽ làm máy chính lưu Drive.</span><div class="inrow" style="margin-top:8px"><button class="btn" data-tram="bat">Bật đồng bộ tức thì</button></div></div>`}
   const T=TRAM,ch=T.chinh();let tt,mau='';
   if(T.loi)tt='🔴 '+esc(T.loi),mau='red';else if(!T.ok)tt='⏳ Đang nối trạm…';else if(T.choGui)tt='🟡 '+T.choGui+' lô chưa lên trạm (mất mạng?) — đừng xoá app';else tt=T.fromCache?'🟡 Chưa thấy trạm (mất mạng?) — vẫn bán bình thường':'🟢 Đã đồng bộ với các máy';
   /* 27/11: hiện MÃ TRẠM để so giữa các máy — các máy cùng shop phải cùng mã; khác mã = dùng chìa khác nhau, không thấy đơn của nhau */
+  tt+=NKD.html();
   if(T.sid)tt+=`<br><small>Mã trạm: <b>${esc(T.sid.slice(0,6).toUpperCase())}</b> · máy: ${esc(T.me().slice(-4).toUpperCase())}</small>`;
   return `<div class="alert ${mau} chanb tramb"><b>⚡ Đồng bộ tức thì · ${ch?'Máy chính (lưu Drive)':'Máy phụ'}</b><span>${tt}${ch?'':'<br>Máy chính lưu vào Drive. Máy chính hỏng/mất → bấm nút dưới ở máy khác.'}</span><div class="inrow" style="margin-top:8px"><button class="ghost" data-tram="laylai">🔁 Lấy lại đơn từ trạm (30 ngày)</button></div>${!ch?(GG.token?`<div class="inrow" style="margin-top:8px"><button class="ghost" data-tram="chinh">Đặt máy này làm máy chính</button></div>`:`<small style="display:block;margin-top:6px">Máy này đang hết phiên Google nên chưa đặt làm máy chính được (vẫn bán & đồng bộ bình thường).</small><div class="inrow" style="margin-top:8px"><button class="ghost" data-gg="login">Đăng nhập Google để đặt làm máy chính</button></div>`):''}</div>`}
 document.addEventListener('click',async e=>{const b=e.target.closest('[data-tram]');if(!b)return;b.disabled=true;

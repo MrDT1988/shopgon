@@ -53,7 +53,7 @@ async def main():
                 m = re.search(r'/drive/v3/files/(\w+)\?alt=media', u)
                 if m: return await r.fulfill(body=FILES.get(m.group(1), '{}'), content_type='application/json')
                 if 'googleapis.com' in u:
-                    if 'values:batchUpdate' in u: GHI_DRIVE[ten] = GHI_DRIVE.get(ten, 0) + 1
+                    if 'values:batchUpdate' in u and 'NK m' not in (r.request.post_data or ''): GHI_DRIVE[ten] = GHI_DRIVE.get(ten, 0) + 1  # 27/11: ghi nhật ký riêng của máy không tính
                     try: return await r.fulfill(body=json.dumps(D.handle(r.request.method, u, json.loads(r.request.post_data or '{}'))), content_type='application/json')
                     except Exception as e: return await r.fulfill(status=400, body=json.dumps({'error': str(e)}), content_type='application/json')
                 await r.abort()
