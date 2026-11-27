@@ -105,12 +105,22 @@ const TRAM={
   async batMoi(){if(!GG.token||!GG.sheetId)throw new Error('Đăng nhập Google trước');
     let o=await this.timChiaDrive(),raw,nv;
     if(o&&o.nvPriv){raw=o.k;nv={pub:o.nvPub,priv:o.nvPriv}}else{raw=o&&o.k||this.b64(crypto.getRandomValues(new Uint8Array(32)));nv=await this.taoNv();await this.luuChiaDrive(raw,nv)}
-    await this.datChia(raw,nv);db.shop.tram=1;db.shop.tramW=this.me();db.shop.tramT=+db.shop.tramT||0;this.ghiLS(this.kT(),Math.max(+this.docLS(this.kT(),0)||0,db.shop.tramT));
+    await this.datChia(raw,nv);db.shop.tram=1;db.shop.tramW=this.me();this.ghiLS('sg_tram_toi',this.me());db.shop.tramT=+db.shop.tramT||0;this.ghiLS(this.kT(),Math.max(+this.docLS(this.kT(),0)||0,db.shop.tramT));
     this.dung();this.S=null;this.k=null;save();await GG.push();await this.batDau()},
   /* ---- nhận làm máy chính: lấy nguyên Drive làm gốc, giữ mọi dòng Drive có mà máy này thiếu (không xoá theo bàn giao) ---- */
   async lamChinh(){if(!GG.token||!GG.sheetId)throw new Error('Đăng nhập Google trước');if(this.choGui)throw new Error('Còn lô chưa lên trạm, chờ có mạng');
     const rem=await GG.readRemote();if(!rem.empty){for(const [t,[f,key]] of Object.entries(GG.T)){const L=db[f]=db[f]||[];const co=new Set(L.map(o=>String(o[key])));(rem[f]||[]).forEach(o=>{if(!co.has(String(o[key])))L.push(o)})}GG.setBase(rem)}
-    db.shop.tramW=this.me();save();await GG.push()},
+    db.shop.tramW=this.me();this.ghiLS('sg_tram_toi',this.me());save();await GG.push()},
+  /* 27/11 anh Thái: "TK LK ngày nào cũng phải bấm ⚡ Bật đồng bộ" — sổ mất cờ tram (máy mở chưa kịp lấy Drive / sổ bị đè) mà máy vẫn còn chìa.
+     (1) máy còn chìa + đã chạy trạm → tự bật lại, KHÔNG hỏi; máy này từng là máy chính thì giữ máy chính.
+     (2) máy chưa có chìa nhưng Drive shop ĐÃ có chìa → tự nối làm máy phụ. Nút "Bật" chỉ hiện khi Drive chưa có chìa. Ghi sổ tay sg_tram_nk để dò nguyên nhân. */
+  nk(ly){try{const a=this.docLS('sg_tram_nk',[]);a.push({luc:new Date().toISOString(),ly,w:(db&&db.shop&&db.shop.tramW)||'',me:this.me(),gg:!!(typeof GG!=='undefined'&&GG.token),n:(db&&db.don||[]).length});this.ghiLS('sg_tram_nk',a.slice(-20))}catch(_){}},
+  hoiPhuc(){try{if(!db||db.sample||!db.shop||db.shop.tram||(typeof NV!=='undefined'&&NV)||XEM||DEMO)return false;if(!(this.coChia()&&this.daChay()))return false;
+      db.shop.tram=1;if(!db.shop.tramW&&this.docLS('sg_tram_toi','')===this.me())db.shop.tramW=this.me();this.nk('may-con-chia');
+      setTimeout(()=>{try{save();this.batDau();toast('Đã tự nối lại đồng bộ tức thì')}catch(_){}},0);return true}catch(_){return false}},
+  async kiemDrive(){if(this._kd||this._kdXong||!(typeof GG!=='undefined'&&GG.token&&GG.sheetId)||!db||db.sample||db.shop.tram)return;this._kd=1;
+    try{const o=await this.timChiaDrive();if(o&&db&&!db.sample&&!db.shop.tram){db.shop.tram=1;this.nk('drive-co-chia');save();await this.batDau();try{toast('Đã tự nối đồng bộ tức thì')}catch(_){}}this._kdXong=1}
+    catch(_){this._kdLoi=1}finally{this._kd=0;this.ve();try{render()}catch(_){}}},
   pending(){return this.choGui},
   coChia(){const c=this.docLS(this.kK(),null);return !!(c&&c.raw)},
   daChay(){return !!this.docLS('sg_tram_on',0)},
@@ -120,8 +130,8 @@ const TRAM={
   qrNv(){if(!this.sid||!this.nvPub)return '';const o={s:this.sid,p:this.nvPub,t:String((db.shop&&db.shop.ten)||'').slice(0,40)};return location.origin+'/app/#nvtram='+btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'')},
   ve(){try{document.querySelectorAll('.tramBar').forEach(el=>{const h=tramBar();if(el.innerHTML!==h)el.innerHTML=h})}catch(_){}}
 };
-function tramBar(){if(typeof NV!=='undefined'&&NV||XEM||DEMO||!db||db.sample)return '';const on=!!(db.shop&&db.shop.tram);
-  if(!on){if(!GG.token||!GG.sheetId)return '';return `<div class="alert chanb tramb"><b>⚡ Đồng bộ tức thì giữa các máy</b><span>Bán ở máy nào, máy khác thấy ngay trong vài giây. Dữ liệu vẫn nằm trong Drive của shop; đồng bộ qua trạm đã khoá — Shop Gọn không đọc được. Máy đang mở sẽ làm máy chính lưu Drive.</span><div class="inrow" style="margin-top:8px"><button class="btn" data-tram="bat">Bật đồng bộ tức thì</button></div></div>`}
+function tramBar(){if(typeof NV!=='undefined'&&NV||XEM||DEMO||!db||db.sample)return '';TRAM.hoiPhuc();const on=!!(db.shop&&db.shop.tram);
+  if(!on){if(!GG.token||!GG.sheetId)return '';if(!TRAM._kdXong){if(!TRAM._kdLoi)setTimeout(()=>TRAM.kiemDrive(),0);return TRAM._kdLoi?'':`<div class="alert chanb tramb"><b>⚡ Đồng bộ tức thì</b><span>⏳ Đang kiểm tra…</span></div>`}return `<div class="alert chanb tramb"><b>⚡ Đồng bộ tức thì giữa các máy</b><span>Bán ở máy nào, máy khác thấy ngay trong vài giây. Dữ liệu vẫn nằm trong Drive của shop; đồng bộ qua trạm đã khoá — Shop Gọn không đọc được. Máy đang mở sẽ làm máy chính lưu Drive.</span><div class="inrow" style="margin-top:8px"><button class="btn" data-tram="bat">Bật đồng bộ tức thì</button></div></div>`}
   const T=TRAM,ch=T.chinh();let tt,mau='';
   if(T.loi)tt='🔴 '+esc(T.loi),mau='red';else if(!T.ok)tt='⏳ Đang nối trạm…';else if(T.choGui)tt='🟡 '+T.choGui+' lô chưa lên trạm (mất mạng?) — đừng xoá app';else tt=T.fromCache?'🟡 Chưa thấy trạm (mất mạng?) — vẫn bán bình thường':'🟢 Đã đồng bộ với các máy';
   return `<div class="alert ${mau} chanb tramb"><b>⚡ Đồng bộ tức thì · ${ch?'Máy chính (lưu Drive)':'Máy phụ'}</b><span>${tt}${ch?'':'<br>Máy chính lưu vào Drive. Máy chính hỏng/mất → bấm nút dưới ở máy khác.'}</span>${!ch&&GG.token?`<div class="inrow" style="margin-top:8px"><button class="ghost" data-tram="chinh">Đặt máy này làm máy chính</button></div>`:''}</div>`}

@@ -485,3 +485,11 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 
 ## 78. (27/11 12h45) SỬA HIỂN THỊ NÚT TIỀN MẶT / CHUYỂN KHOẢN — nhánh `sua-dvtt-hien-thi` (BUILD 20261127-1245)
 - Nút "🏦 Chuyển khoản" tràn ra ngoài khung form ở điện thoại (390px). `.dvtt` đổi `repeat(2,minmax(0,1fr))`, nút `min-width:0`, chữ được xuống dòng. Kiểm 320/360/390/1280: không tràn. Test dịch vụ 26/26.
+
+## 79. (27/11 14h00) ĐỒNG BỘ TỨC THÌ TỰ NỐI LẠI — KHÔNG PHẢI BẤM ⚡ MỖI NGÀY — cùng nhánh `sua-dvtt-hien-thi` (BUILD 20261127-1400, tram.js?v=4)
+- Anh Thái: TK LK ngày nào cũng phải bấm "⚡ Bật đồng bộ tức thì". Giả lập (A chính, B phụ, máy mới, hết phiên, sang ngày hôm sau) KHÔNG tái hiện → chưa rõ chỗ sổ mất cờ `db.shop.tram` trên máy thật. Sửa theo hướng tự lành:
+  1. `TRAM.hoiPhuc()` (gọi trong `tramBar`): máy còn chìa (`sg_tram_k`) + đã chạy trạm (`sg_tram_on`) mà sổ mất cờ → tự đặt `tram=1`, giữ máy chính nếu máy này từng làm chính (`sg_tram_toi`, ghi lúc `batMoi`/`lamChinh`), chạy `batDau`, toast "Đã tự nối lại…".
+  2. `TRAM.kiemDrive()`: máy chưa có chìa → tìm chìa trong Drive shop trước; có → tự nối làm MÁY PHỤ. Nút "Bật" CHỈ hiện khi Drive chưa có chìa (đang kiểm hiện "⏳ Đang kiểm tra…"; lỗi mạng thì không hiện nút).
+  3. Sổ tay `sg_tram_nk` (20 dòng: lúc, lý do, tramW, máy, có Google, số đơn) để dò nguyên nhân thật trên máy LK.
+- Test mới `_tam/test-tram-tu-noi.py` 11/11 (bản cũ 8 ❌) · trạm 35/35 · toàn bộ 73/75 · khoá test 18/18 · dịch vụ 26/26.
+- Việc treo: 1–2 ngày sau đọc `localStorage.sg_tram_nk` trên máy LK để biết sổ mất cờ do đâu.

@@ -672,7 +672,7 @@ button.hit{cursor:pointer}button.hit:active{background:var(--pen-bg)}
 <div class="welcome" id="welcome" hidden></div>
 <div class="scan" id="scan" hidden><div class="scv"><video id="cam" playsinline muted autoplay></video><i class="scfd"></i></div><p id="scanMsg">Đưa mã vạch IMEI vào giữa khung</p><div id="scanList" class="scl" hidden></div><div class="scb"><button class="ghost" id="scanTorch" hidden>🔦 Đèn</button><label class="ghost scph">📷 Chụp ảnh<input type="file" accept="image/*" capture="environment" id="scanPhoto" hidden></label><button class="btn" id="scanClose">Đóng</button></div></div>
 
-<script src="/app/tram.js?v=3"></script>
+<script src="/app/tram.js?v=4"></script>
 <script>
 /* ===== Lớp lưu trữ =====
    LocalStore: lưu trên máy (bản dùng thử).
@@ -3423,7 +3423,7 @@ document.addEventListener('focusin',e=>{if(e.target.id==='scSp'){kmLoad();if(e.t
 </script>
 <script>
 /* 26/10 anh Thái: TỰ CẬP NHẬT — mở app / quay lại app thì so bản trên shopgon.vn (ver.json), khác là tải bản mới ngay. Mỗi lần đẩy code phải đổi BUILD + app/ver.json cùng giá trị. */
-const BUILD='20261127-1245';let verLuc=0;
+const BUILD='20261127-1400';let verLuc=0;
 async function verCheck(){if(Date.now()-verLuc<60000)return;verLuc=Date.now();try{const r=await fetch('/app/ver.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const v=await r.json();
   if(v.b&&v.b!==BUILD){let n=0;try{n=+sessionStorage.getItem('sg_rl')||0}catch(_){}if(Date.now()-n<120000)return;try{sessionStorage.setItem('sg_rl',String(Date.now()))}catch(_){}
     if(typeof cart!=='undefined'&&cart.length)return;location.reload()}}catch(_){}}
