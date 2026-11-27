@@ -482,3 +482,6 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - `ketNgay`: dịch vụ vào đúng ô theo `tt`; rút tiền: khách đưa (số tiền + phí) theo `tt`, shop chi tiền mặt ra (`rut`, trừ `tm`). Đơn rút CŨ ghi Tiền mặt giữ cách tính cũ (két + phí − số tiền).
 - `dvTien`: rút + chuyển khoản = 0 (TK vào đúng bằng tiền mặt đưa ra) → Tổng tiền thu = tiền mặt + TK. `thLine(dt,th,nth,a,b)` thêm Rút tiền mặt, 💵 Tiền mặt vào két, 🏦 Chuyển khoản vào TK, 📒 Ghi nợ (`ketTong(a,b)` cộng `ketNgay` từng ngày).
 - Test `_tam/test-dv-tien-mat-ck.py` 26/26 · vận hành 3 46/46 · doanh thu chuỗi 20/20 · tồn kho chuỗi 26/26 · khoá test 18/18 · toàn bộ 73/75 (2 lỗi cũ).
+
+## 78. (27/11 12h45) SỬA HIỂN THỊ NÚT TIỀN MẶT / CHUYỂN KHOẢN — nhánh `sua-dvtt-hien-thi` (BUILD 20261127-1245)
+- Nút "🏦 Chuyển khoản" tràn ra ngoài khung form ở điện thoại (390px). `.dvtt` đổi `repeat(2,minmax(0,1fr))`, nút `min-width:0`, chữ được xuống dòng. Kiểm 320/360/390/1280: không tràn. Test dịch vụ 26/26.
