@@ -510,3 +510,9 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - Sửa: mốc + danh sách lô đã áp ghi VÀO SỔ `db._tram={sid,t,da}` cùng lần lưu; `batDau` ưu tiên `db._tram` (cùng sid) → sổ cũ thì phát lại đúng lô chưa có, không cộng trùng tồn.
 - Test `_tam/test-tram-tai-lai.py` 7/7 (bản cũ 4 ❌) · trạm 35/35 · tự nối 11/11 · toàn bộ 73/75.
 - Anh Thái chốt: **máy anh (Android) làm máy chính LK**, admin dùng chung Gmail để nhập hàng (máy phụ). Cách làm: máy anh đăng nhập Google lại → Trang chủ "Đặt máy này làm máy chính".
+
+## 83. (27/11 18h30) NÚT "🔁 LẤY LẠI ĐƠN TỪ TRẠM (30 NGÀY)" — nhánh `tram-lay-lai-don` (BUILD 20261127-1830, tram.js?v=7), CHỜ anh "OK lên main"
+- Anh Thái đã đặt máy Android của anh làm máy chính LK (17h48) nhưng đơn hôm nay vẫn không có: đơn bị mất trên máy anh TRƯỚC bản sửa 18h00 (lô đã đánh dấu nhận ở `kD` nhưng sổ chưa lưu) → không tự phát lại.
+- `TRAM.layLai()`: đọc một lần toàn bộ lô trên trạm (`nghe(sid,0)`, bỏ ảnh cache, chờ ≤20s); lô nào có `don/may/pn` mà sổ chưa có (hoặc lệnh xoá dòng còn) → `apLai(ops)`: bỏ op shop, dòng đã có giữ bản trong sổ, dòng thiếu thì thêm, hàng `dl` thì cộng/trừ tồn của lô. Lô đã đủ → bỏ. Đơn PG: máy chính `nvApply` (tự bỏ đơn đã có). Lưu sổ + mốc `db._tram`; máy chính đẩy Drive.
+- Nút ở thẻ ⚡ (chính + phụ). Toast "Đã lấy lại n lô…" / "Đủ rồi — n lô đều đã có".
+- Test `_tam/test-tram-lay-lai.py` 9/9 (mất đơn kiểu cũ → lấy lại đủ, tồn đúng, bấm lần 2 không trùng, máy chính đủ không đổi) · trạm 35/35 · tải lại 7/7.

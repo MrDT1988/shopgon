@@ -124,6 +124,26 @@ const TRAM={
   async kiemDrive(){if(this._kd||this._kdXong||!(typeof GG!=='undefined'&&GG.token&&GG.sheetId)||!db||db.sample||db.shop.tram)return;this._kd=1;
     try{const o=await this.timChiaDrive();if(o&&db&&!db.sample&&!db.shop.tram){db.shop.tram=1;this.nk('drive-co-chia');save();await this.batDau();try{toast('Đã tự nối đồng bộ tức thì')}catch(_){}}this._kdXong=1}
     catch(_){this._kdLoi=1}finally{this._kd=0;this.ve();try{render()}catch(_){}}},
+  /* 27/11 anh Thái: "làm máy chính rồi vẫn không có đơn" — đơn bị mất trên máy trước bản sửa 18h00 (lô đã đánh dấu nhận nhưng sổ chưa lưu).
+     Đọc lại TOÀN BỘ lô còn trên trạm (≤30 ngày), lô nào có đơn/máy/phiếu nhập mà sổ CHƯA có → áp lại cả lô (kèm trừ tồn của chính lô đó); lô đã có đủ → bỏ qua, không cộng trùng. Đơn PG: máy chính áp lại (nvApply tự bỏ đơn đã có). */
+  async layLai(){if(!this.ok||!this.sid||!this.k)throw new Error('Chưa nối trạm');await this.san;
+    const ds=await new Promise((ok,no)=>{let un=null,xong=false;const t=setTimeout(()=>{if(!xong){xong=true;try{un&&un()}catch(_){}no(new Error('Trạm không trả lời'))}},20000);
+      un=this.FB().nghe(this.sid,0,(d,p,c)=>{if(c||xong)return;xong=true;clearTimeout(t);setTimeout(()=>{try{un&&un()}catch(_){}},0);ok(d)},e=>{if(!xong){xong=true;clearTimeout(t);no(e)}})});
+    ds.sort((a,b)=>a.t-b.t);const CO={don:1,may:1,pn:1};let lo=0,dong=0,pg=0;const nvDon=[];
+    for(const d of ds){if(String(d.d||'').startsWith('nv-')){if(this.chinh()&&this.nvPriv){try{nvDon.push(await this.giaiMaNv(d.c,d.iv))}catch(_){}}continue}
+      let o;try{o=await this.giaiMa(d.c,d.iv)}catch(_){continue}const ops=o.ops||[];
+      const thieu=ops.some(op=>{if(!CO[op.k])return false;const f=this.BANG[op.k],A=db[op.k]||[],co=A.some(r=>r&&String(r[f])===op.id);return op.x?co:!co});
+      if(thieu){dong+=this.apLai(ops);lo++}this.da.add(d.id);if(d.t>this.lastT)this.lastT=d.t}
+    if(nvDon.length&&typeof nvApply==='function'){const dang=new Set(((db.shop&&db.shop.nv)||[]).map(x=>String(x.sdt)));nvDon.forEach(o=>{if(o&&o.id&&(!o.nv||dang.has(String(o.nv))))pg+=nvApply(o)})}
+    this.ghiLS(this.kT(),this.lastT);this.luuDa();if(!db.sample)db._tram={sid:this.sid,t:this.lastT,da:[...this.da].slice(-3000)};
+    if(lo||pg){this.S=this.anh();Store.save(db);if(this.chinh()&&typeof GG!=='undefined'&&GG.token&&GG.sheetId){SK.doi();GG.queue(1500)}}
+    this.nk('lay-lai:'+lo+'lo/'+pg+'pg');return {lo,dong,pg,tong:ds.length}},
+  /* áp lại lô cũ AN TOÀN: bỏ cài đặt shop; dòng đã có thì giữ bản mới trong sổ (chỉ cộng/trừ tồn của lô), dòng thiếu thì thêm */
+  apLai(ops){let doi=0;for(const op of ops){if(op.k==='shop')continue;const f=this.BANG[op.k];if(!f)continue;const A=db[op.k]=db[op.k]||[];const i=A.findIndex(o=>o&&String(o[f])===op.id);
+      if(op.x){if(i>=0){A.splice(i,1);doi++}continue}
+      if(op.k==='hang'&&op.dl!==undefined){if(i>=0)A[i]={...A[i],sl:(+A[i].sl||0)+(+op.dl||0)};else A.push({...op.v,sl:+op.dl||0});doi++;continue}
+      if(i<0){A.push(op.v);doi++}}
+    return doi},
   pending(){return this.choGui},
   coChia(){const c=this.docLS(this.kK(),null);return !!(c&&c.raw)},
   daChay(){return !!this.docLS('sg_tram_on',0)},
@@ -137,10 +157,11 @@ function tramBar(){if(typeof NV!=='undefined'&&NV||XEM||DEMO||!db||db.sample)ret
   if(!on){if(!GG.token||!GG.sheetId)return '';if(!TRAM._kdXong){if(!TRAM._kdLoi)setTimeout(()=>TRAM.kiemDrive(),0);return TRAM._kdLoi?'':`<div class="alert chanb tramb"><b>⚡ Đồng bộ tức thì</b><span>⏳ Đang kiểm tra…</span></div>`}return `<div class="alert chanb tramb"><b>⚡ Đồng bộ tức thì giữa các máy</b><span>Bán ở máy nào, máy khác thấy ngay trong vài giây. Dữ liệu vẫn nằm trong Drive của shop; đồng bộ qua trạm đã khoá — Shop Gọn không đọc được. Máy đang mở sẽ làm máy chính lưu Drive.</span><div class="inrow" style="margin-top:8px"><button class="btn" data-tram="bat">Bật đồng bộ tức thì</button></div></div>`}
   const T=TRAM,ch=T.chinh();let tt,mau='';
   if(T.loi)tt='🔴 '+esc(T.loi),mau='red';else if(!T.ok)tt='⏳ Đang nối trạm…';else if(T.choGui)tt='🟡 '+T.choGui+' lô chưa lên trạm (mất mạng?) — đừng xoá app';else tt=T.fromCache?'🟡 Chưa thấy trạm (mất mạng?) — vẫn bán bình thường':'🟢 Đã đồng bộ với các máy';
-  return `<div class="alert ${mau} chanb tramb"><b>⚡ Đồng bộ tức thì · ${ch?'Máy chính (lưu Drive)':'Máy phụ'}</b><span>${tt}${ch?'':'<br>Máy chính lưu vào Drive. Máy chính hỏng/mất → bấm nút dưới ở máy khác.'}</span>${!ch?(GG.token?`<div class="inrow" style="margin-top:8px"><button class="ghost" data-tram="chinh">Đặt máy này làm máy chính</button></div>`:`<small style="display:block;margin-top:6px">Máy này đang hết phiên Google nên chưa đặt làm máy chính được (vẫn bán & đồng bộ bình thường).</small><div class="inrow" style="margin-top:8px"><button class="ghost" data-gg="login">Đăng nhập Google để đặt làm máy chính</button></div>`):''}</div>`}
+  return `<div class="alert ${mau} chanb tramb"><b>⚡ Đồng bộ tức thì · ${ch?'Máy chính (lưu Drive)':'Máy phụ'}</b><span>${tt}${ch?'':'<br>Máy chính lưu vào Drive. Máy chính hỏng/mất → bấm nút dưới ở máy khác.'}</span><div class="inrow" style="margin-top:8px"><button class="ghost" data-tram="laylai">🔁 Lấy lại đơn từ trạm (30 ngày)</button></div>${!ch?(GG.token?`<div class="inrow" style="margin-top:8px"><button class="ghost" data-tram="chinh">Đặt máy này làm máy chính</button></div>`:`<small style="display:block;margin-top:6px">Máy này đang hết phiên Google nên chưa đặt làm máy chính được (vẫn bán & đồng bộ bình thường).</small><div class="inrow" style="margin-top:8px"><button class="ghost" data-gg="login">Đăng nhập Google để đặt làm máy chính</button></div>`):''}</div>`}
 document.addEventListener('click',async e=>{const b=e.target.closest('[data-tram]');if(!b)return;b.disabled=true;
   try{if(b.dataset.tram==='bat'){toast('Đang bật đồng bộ tức thì…');await TRAM.batMoi();toast('Đã bật — máy này là máy chính')}
-    else if(b.dataset.tram==='chinh'){toast('Đang nhận làm máy chính…');await TRAM.lamChinh();toast('Máy này đã là máy chính')}}
+    else if(b.dataset.tram==='chinh'){toast('Đang nhận làm máy chính…');await TRAM.lamChinh();toast('Máy này đã là máy chính')}
+    else if(b.dataset.tram==='laylai'){b.disabled=true;toast('Đang đọc lại các lô trên trạm…');const r=await TRAM.layLai();render();toast(r.lo||r.pg?`Đã lấy lại ${r.lo} lô${r.pg?' + '+r.pg+' đơn PG':''} (đọc ${r.tong} lô trên trạm)`:`Đủ rồi — ${r.tong} lô trên trạm đều đã có trong sổ`)}}
   catch(er){toast('Chưa xong: '+String(er&&er.message||er).slice(0,80))}finally{b.disabled=false;TRAM.ve();try{render()}catch(_){}}});
 /* ===== 21/11 đợt 2: MÁY PG (nhân viên bán trên điện thoại riêng) =====
    PG quét mã QR ở máy chủ shop → máy PG nhớ đường trạm + khoá CÔNG KHAI. Bán xong: đơn khoá bằng khoá công khai → trạm → máy chính mở bằng khoá riêng.
