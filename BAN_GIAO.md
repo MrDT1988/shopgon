@@ -504,3 +504,9 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - Ảnh máy Android LK (theme cam): "Máy phụ · Đã đồng bộ", KHÔNG có nút "Đặt máy này làm máy chính" vì `GG.token` trống (hết phiên Google). Thêm dòng giải thích + nút `data-gg="login"` "Đăng nhập Google để đặt làm máy chính".
 - Nghi vấn LK "mất số liệu": máy admin dùng chung Gmail LK bấm "⚡ Bật" (bản cũ) → `batMoi` giành máy chính; máy chính tắt app → đơn nằm chờ trạm, không lên Drive. Bản 27/11 15h30 đã chặn nút Bật khi Drive có chìa. Cần xác định máy chính LK hiện là máy nào.
 - Test trạm tự nối 11/11.
+
+## 82. (27/11 18h00) MÁY PHỤ "THẤY ĐƠN, TẢI LẠI THÌ MẤT ĐƠN" — nhánh `tram-khong-mat-don` (BUILD 20261127-1800, tram.js?v=6), CHỜ anh "OK lên main"
+- Nguyên nhân: `nhan()` ghi mốc lô (`kT`, `kD`) vào localStorage NGAY, còn sổ lưu sau (sổ lớn → localStorage đầy → IndexedDB chưa sẵn/chưa kịp ghi). Tải lại → sổ cũ nhưng mốc đã tiến → lô không phát lại → đơn mất trên máy đó.
+- Sửa: mốc + danh sách lô đã áp ghi VÀO SỔ `db._tram={sid,t,da}` cùng lần lưu; `batDau` ưu tiên `db._tram` (cùng sid) → sổ cũ thì phát lại đúng lô chưa có, không cộng trùng tồn.
+- Test `_tam/test-tram-tai-lai.py` 7/7 (bản cũ 4 ❌) · trạm 35/35 · tự nối 11/11 · toàn bộ 73/75.
+- Anh Thái chốt: **máy anh (Android) làm máy chính LK**, admin dùng chung Gmail để nhập hàng (máy phụ). Cách làm: máy anh đăng nhập Google lại → Trang chủ "Đặt máy này làm máy chính".

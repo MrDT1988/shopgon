@@ -80,6 +80,8 @@ const TRAM={
         else{try{const o=await this.giaiMa(d.c,d.iv);doi+=this.apDung(o.ops||[])}catch(e){this.loi='Không mở được 1 lô (sai chìa?)'}}}
       this.da.add(d.id);if(d.t>this.lastT)this.lastT=d.t}
     this.ghiLS(this.kT(),this.lastT);this.luuDa();
+    /* 27/11 anh Thái: "thấy đơn, bấm tải lại thì mất đơn" — mốc lô đã nhận ghi VÀO CHÍNH SỔ (cùng lần lưu với đơn). Máy chưa kịp lưu sổ mà tải lại → mốc trong sổ còn cũ → phát lại lô, đơn quay về; không cộng trùng vì danh sách lô đã áp nằm cùng sổ */
+    if(db&&!db.sample)db._tram={sid:this.sid,t:this.lastT,da:[...this.da].slice(-3000)};
     if(doi){this.S=this.anh();Store.save(db);try{render()}catch(_){}
       if(this.chinh()&&typeof GG!=='undefined'&&GG.token&&GG.sheetId){SK.doi();GG.queue(1500)}
       if(cu&&!this.chinh())ggStatus('Máy khác đã làm máy chính — máy này chỉ gửi qua trạm')}
@@ -93,7 +95,8 @@ const TRAM={
       if(!this.k){const c=this.docLS(this.kK(),null);if(c&&c.raw&&(c.nvPriv||!(typeof GG!=='undefined'&&GG.token)))await this.datChia(c.raw,{pub:c.nvPub,priv:c.nvPriv});else if(typeof GG!=='undefined'&&GG.token){const o=await this.timChiaDrive();if(!o){this.loi='Chưa có chìa trong Drive — mở máy chính';this.ve();return}await this.datChia(o.k,{pub:o.nvPub,priv:o.nvPriv})}else{this.loi='Cần đăng nhập Google 1 lần để lấy chìa';this.ve();return}}
       /* máy chính chưa có cặp khoá PG (shop bật trạm trước đợt 2) → tạo, cất bản chìa mới nhất vào Drive */
       if(!this.nvPriv&&this.chinh()&&typeof GG!=='undefined'&&GG.token){try{const nv=await this.taoNv();await this.luuChiaDrive(this.raw,nv);await this.datChia(this.raw,nv)}catch(_){}}
-      this.lastT=Math.max(+this.docLS(this.kT(),0)||0,+(db.shop&&db.shop.tramT)||0);this.da=new Set(this.docLS(this.kD(),[]));this.S=this.anh();this.ghiLS('sg_tram_on',1);
+      {const m=db&&db._tram;if(m&&m.sid===this.sid&&Array.isArray(m.da)){/* tin mốc nằm trong sổ (đã lưu cùng đơn) hơn mốc rời trên máy */this.lastT=Math.max(+m.t||0,+(db.shop&&db.shop.tramT)||0);this.da=new Set(m.da)}
+       else{this.lastT=Math.max(+this.docLS(this.kT(),0)||0,+(db.shop&&db.shop.tramT)||0);this.da=new Set(this.docLS(this.kD(),[]))}}this.S=this.anh();this.ghiLS('sg_tram_on',1);
       const q0=this.docQ();if(q0.length&&!this.choTu)this.choTu=q0[0].luc||Date.now();
       this.san=this.napFB().then(()=>this.FB().dangNhap());await this.san;this.ok=true;this.loi='';
       q0.forEach(x=>this.gui(x,true));
