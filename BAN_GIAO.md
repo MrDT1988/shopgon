@@ -499,3 +499,8 @@ Bàn giao Project: `claude/BAN_GIAO_PHIEN_04-11_SHOP_GON_NHAN_VIEN_IMEI_TO_ROI.m
 - `csTai` (2 chỗ): `s.so` là chuỗi JSON thì tự `JSON.parse` (phòng máy chủ trả chuỗi).
 - Song Thuận (26/11 12:16) / Phú Phong (26/11 07:19) gửi số TRƯỚC bản tồn kho (26/11 12:30) → "Chưa gửi tồn kho" là đúng tới khi shop đó mở app bản mới.
 - Test `_tam/test-chuoi-luc.py` 7/7 · chuỗi 24/24 · doanh thu chuỗi 20/20 · tồn kho chuỗi 26/26 · vận hành 3 46/46.
+
+## 81. (27/11 17h30) MÁY PHỤ HẾT PHIÊN GOOGLE: thẻ ⚡ ghi "bấm nút dưới" mà không có nút — nhánh `tram-phu-dang-nhap` (BUILD 20261127-1730, tram.js?v=5)
+- Ảnh máy Android LK (theme cam): "Máy phụ · Đã đồng bộ", KHÔNG có nút "Đặt máy này làm máy chính" vì `GG.token` trống (hết phiên Google). Thêm dòng giải thích + nút `data-gg="login"` "Đăng nhập Google để đặt làm máy chính".
+- Nghi vấn LK "mất số liệu": máy admin dùng chung Gmail LK bấm "⚡ Bật" (bản cũ) → `batMoi` giành máy chính; máy chính tắt app → đơn nằm chờ trạm, không lên Drive. Bản 27/11 15h30 đã chặn nút Bật khi Drive có chìa. Cần xác định máy chính LK hiện là máy nào.
+- Test trạm tự nối 11/11.
